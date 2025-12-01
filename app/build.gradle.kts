@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.littlelemon"
+    namespace = "com.littlelemon.application"
     compileSdk = 36
 
     defaultConfig {
