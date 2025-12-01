@@ -149,3 +149,5 @@ val Neutral300 = Gray300
 val Neutral200 = Gray200
 val Neutral100 = Gray100
 val Neutral50 =  Gray50
+val NeutralBlack =  Black
+val NeutralWhite =  White
