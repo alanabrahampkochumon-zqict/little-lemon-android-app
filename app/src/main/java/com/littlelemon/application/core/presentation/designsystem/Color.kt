@@ -1,5 +1,7 @@
 package com.littlelemon.application.core.presentation.designsystem
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -74,6 +76,8 @@ private val Yellow300 = Color(0xFFF8EA69)
 private val Yellow200 = Color(0xFFFAF094)
 private val Yellow100 = Color(0xFFFCF6BF)
 private val Yellow50 = Color(0xFFFEFCE5)
+
+private val Transparent = Color(0x00FFFFFF)
 
 // -------------------------------------------------------------------
 // ALIAS
@@ -151,3 +155,54 @@ val Neutral100 = Gray100
 val Neutral50 =  Gray50
 val NeutralBlack =  Black
 val NeutralWhite =  White
+
+
+@Immutable
+data class LittleLemonColors(
+    // Surface Colors
+    val primary: Color = NeutralWhite,
+    val secondary: Color = Neutral50,
+    val tertiary: Color = Neutral100,
+    val highlight: Color = Secondary600,
+    val highlightLight: Color = Secondary100,
+    val action: Color = Primary600,
+    val actionLight: Color = Primary100,
+    val actionHover: Color = Primary500,
+    val actionPressed: Color = Primary700,
+    val disabled: Color = Neutral100,
+    val warning: Color = Warning800,
+    val warningLight: Color = Warning50,
+    val error: Color = Error800,
+    val errorLight: Color = Error50,
+    val success: Color = Success800,
+    val successLight: Color = Success50,
+
+    // Border/Outline
+    val outlinePrimary: Color = Neutral300,
+    val outlineSecondary: Color = Neutral200,
+    val outlineDisabled: Color = Neutral200,
+    val outlineHighlight: Color = Secondary700,
+    val outlineActive: Color = Neutral800,
+    val outlineAccent: Color = Primary600,
+    val outlineWarning: Color = Warning700,
+    val outlineError: Color = Error700,
+    val outlineSuccess: Color = Success700,
+
+    // Content Color -> Icons + Text
+    val contentPrimary: Color = Neutral900,
+    val contentSecondary: Color = Neutral800,
+    val contentTertiary: Color = Neutral700,
+    val contentPlaceholder: Color = Neutral600,
+    val contentDisabled: Color = Neutral400,
+    val contentAccent: Color = Primary700,
+    val contentHighlight: Color = Secondary700,
+    val contentOnColor: Color = NeutralWhite,
+    val contentWarning: Color = Warning700,
+    val contentError: Color = Error700,
+    val contentSuccess: Color = Success800,
+
+    // Transparent
+    val transparent: Color = Transparent
+)
+
+val LocalLittleLemonColors = staticCompositionLocalOf { LittleLemonColors() }

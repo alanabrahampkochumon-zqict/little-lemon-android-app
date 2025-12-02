@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">Little Lemon</string>
+    <!--    Image Descriptions    -->
+    <string name="desc_logo">Little Lemon Logo</string>
+
+    <!--    Actions    -->
+    <string name="act_send_otp">Send OTP</string>
+
+    <!--    Headings    -->
+    <string name="head_login">Sign up / Login</string>
+
+    <!--    Labels    -->
+    <string name="lab_email_address">Email address</string>
+
+    <!--    Placeholder    -->
+    <string name="placeholder_email_address">someone@example.com</string>
+
+
+
+
 </resources>

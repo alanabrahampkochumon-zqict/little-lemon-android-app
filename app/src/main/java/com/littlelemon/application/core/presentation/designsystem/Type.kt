@@ -1,6 +1,8 @@
 package com.littlelemon.application.core.presentation.designsystem
 
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -21,7 +23,7 @@ val KarlaFontFamily = FontFamily(
 )
 
 // Set of Material typography styles to start with
-val Typography = Typography(
+private val Typography = Typography(
 
     // Display Font
     displayLarge = TextStyle(
@@ -130,3 +132,27 @@ val Typography = Typography(
     ),
 
 )
+
+// Custom Type System
+@Immutable
+data class LittleLemonTypography(
+    val displayLarge: TextStyle = Typography.displayLarge,
+    val displayMedium: TextStyle = Typography.displayMedium,
+    val displaySmall: TextStyle = Typography.displaySmall,
+
+    val headlineXLarge: TextStyle = Typography.headlineLarge,
+    val headlineLarge: TextStyle = Typography.headlineMedium,
+    val headlineMedium: TextStyle = Typography.headlineSmall,
+    val headlineSmall: TextStyle = Typography.titleLarge,
+
+    val labelLarge: TextStyle = Typography.labelLarge,
+    val labelMedium: TextStyle = Typography.labelMedium,
+    val labelSmall: TextStyle = Typography.labelSmall,
+
+    val bodyLarge: TextStyle = Typography.titleMedium,
+    val bodyMedium: TextStyle = Typography.bodyLarge,
+    val bodySmall: TextStyle = Typography.bodyMedium,
+    val bodyXSmall: TextStyle = Typography.bodySmall,
+)
+
+val LocalCustomTypography = staticCompositionLocalOf { LittleLemonTypography() }
