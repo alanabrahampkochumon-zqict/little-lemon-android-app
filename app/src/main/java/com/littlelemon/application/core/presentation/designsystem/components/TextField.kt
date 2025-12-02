@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -35,6 +36,7 @@ fun TextInputField(
     errorMessage: String? = null,
     @DrawableRes iconLeft: Int? = null,
     @DrawableRes iconRight: Int? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
     onValueChange: (String) -> Unit = {},
 ) {
 
@@ -70,6 +72,7 @@ fun TextInputField(
             trailingIcon = iconRight?.let { icon ->
                 { Icon(painter = painterResource(icon), contentDescription = null) }
             },
+            keyboardOptions = keyboardOptions,
             shape = MaterialTheme.shapes.small,
             isError = errorMessage != null,
         )

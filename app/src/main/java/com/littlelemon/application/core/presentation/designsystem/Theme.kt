@@ -54,23 +54,12 @@ fun LittleLemonTheme(
     val customTypography = LittleLemonTypography()
     val customDimension = Dimens()
 
-
+    //FIXME: May need to update this code
     // Forcing status bar color
     val view = LocalView.current
-
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-
-            // --- Force Status Bar Color Here ---
-            // Example 1: Force it to your M3 Primary color:
-            // window.statusBarColor = colorScheme.primary.toArgb()
-
-            // Example 2: Force it to a specific, static color:
-            // window.statusBarColor = Color.Magenta.toArgb()
-
-            // The following line makes the icons on the status bar dark/light
-            // based on the luminance of the color you set above.
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }

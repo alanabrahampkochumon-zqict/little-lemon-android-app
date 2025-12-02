@@ -1,14 +1,18 @@
 package com.littlelemon.application.auth.presentation
 
+import android.app.Activity
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +23,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -32,11 +37,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.ConfigurationCompat
+import androidx.core.view.WindowCompat
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.R
@@ -45,11 +57,6 @@ import com.littlelemon.application.core.presentation.designsystem.components.Tex
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
-
-//FIXME: Screen jumping on keyboard appear
-//FIXME: Button maxwidth: 320dp
-//FIXME: Orientation Support Add
-//FIXME: Statusbar color
 @Composable
 fun LoginScreen(modifier: Modifier = Modifier) {
     val illustrationAspectRatio = (375.0 / 402.0).toFloat()
@@ -61,92 +68,169 @@ fun LoginScreen(modifier: Modifier = Modifier) {
         mutableStateOf<String?>(null)
     }
 
-    Scaffold(modifier = modifier, containerColor = MaterialTheme.colors.primary) { innerPadding ->
+    // Forcing status bar content to be dark
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            // Force Icons to be BLACK (True) because the image is Light
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
+        }
+    }
+
+    // Handle Orientation
+    val configuration = LocalConfiguration.current
+    val orientation = configuration.orientation
+
+    Scaffold(
+        modifier = modifier,
+        containerColor = MaterialTheme.colors.primary,
+        contentWindowInsets = WindowInsets.systemBars.only(
+            WindowInsetsSides.Bottom
+        )
+    ) { innerPadding ->
+
+        when (orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .imePadding()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    // Hero Image
+                    Image(
+                        painter = painterResource(R.drawable.illustration_people_dining),
+                        contentDescription = null,
+                        Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(illustrationAspectRatio),
+                        contentScale = ContentScale.FillBounds
+                    )
+
+                    Content(
+                        emailAddress,
+                        onValueChange = { newEmail ->
+                            emailAddress = newEmail
+                        },
+                        modifier = Modifier.padding(
+                            start = MaterialTheme.dimens.spacingLG,
+                            end = MaterialTheme.dimens.spacingLG,
+                            top = MaterialTheme.dimens.spacingXL
+                        ),
+                        errorMessage = errorMessage
+                    )
+                }
+            }
+
+            else -> {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacingLG)
+                ) {
+                    // Hero Image
+                    Image(
+                        painter = painterResource(R.drawable.illustration_people_dining),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        contentScale = ContentScale.Crop
+                    )
+
+                    Content(
+                        emailAddress,
+                        onValueChange = { newEmail ->
+                            emailAddress = newEmail
+                        },
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(
+                                end = MaterialTheme.dimens.spacing2XL
+                            ).imePadding()
+                            .verticalScroll(rememberScrollState()),
+                        errorMessage = errorMessage
+                    )
+                }
+            }
+        }
+
+    }
+}
+
+@Composable
+private fun Content(
+    emailAddress: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    errorMessage: String? = null
+) {
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacing2XL),
+        modifier = modifier
+    ) {
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .imePadding()
-                .verticalScroll(rememberScrollState())
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(
+                MaterialTheme.dimens.spacing3XL
+            ),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            // Hero Image
-            Image(
-                painter = painterResource(R.drawable.illustration_people_dining),
-                contentDescription = null,
-                modifier
-                    .fillMaxWidth()
-                    .aspectRatio(illustrationAspectRatio),
-                contentScale = ContentScale.FillBounds
-            )
-
-
-            // Content
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacing2XL),
-                modifier = Modifier.padding(
-                    start = MaterialTheme.dimens.spacingLG,
-                    end = MaterialTheme.dimens.spacingLG,
-                    top = MaterialTheme.dimens.spacingXL
+            // Header
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                // Logo
+                Image(
+                    painter = painterResource(R.drawable.logo),
+                    contentDescription = stringResource(R.string.desc_logo)
                 )
-            ) {
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.spacing3XL
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    // Header
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        // Logo
-                        Image(
-                            painter = painterResource(R.drawable.logo),
-                            contentDescription = stringResource(R.string.desc_logo)
-                        )
-                        Text(
-                            stringResource(R.string.head_login),
-                            style = MaterialTheme.typeStyle.headlineXLarge,
-                            color = MaterialTheme.colors.contentHighlight
-                        )
-                    }
-
-                    // Input Field with Label
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacingMD),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .widthIn(max = 320.dp)
-                    ) {
-                        Text(
-                            stringResource(R.string.lab_email_address),
-                            style = MaterialTheme.typeStyle.labelMedium,
-                            color = MaterialTheme.colors.contentPrimary
-                        )
-                        TextInputField(
-                            value = emailAddress,
-                            placeholder = stringResource(R.string.placeholder_email_address),
-                            onValueChange = { newEmail ->
-                                emailAddress = newEmail
-                            }, modifier = Modifier.fillMaxWidth(),
-                            errorMessage = errorMessage
-                        )
-                    }
-                }
-
-                Button(
-                    label = stringResource(R.string.act_send_otp),
-                    onClick = {},
-                    modifier = Modifier.fillMaxWidth()
+                Text(
+                    stringResource(R.string.head_login),
+                    style = MaterialTheme.typeStyle.headlineXLarge,
+                    color = MaterialTheme.colors.contentHighlight
                 )
             }
-            Spacer(modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom)))
-            // Add a little extra space for aesthetics
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacingLG))
 
+            // Input Field with Label
+            Column(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacingMD),
+                modifier = Modifier
+                    .widthIn(max = 320.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    stringResource(R.string.lab_email_address),
+                    style = MaterialTheme.typeStyle.labelMedium,
+                    color = MaterialTheme.colors.contentPrimary
+                )
+                TextInputField(
+                    value = emailAddress,
+                    placeholder = stringResource(R.string.placeholder_email_address),
+                    onValueChange = onValueChange,
+                    modifier = Modifier.fillMaxWidth(),
+                    errorMessage = errorMessage,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Send
+                    )
+
+                    // FIXME: Change keyboard theme
+                    // FIXME: Change keyboard action
+                )
+            }
         }
+
+        Button(
+            label = stringResource(R.string.act_send_otp),
+            onClick = {},
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
