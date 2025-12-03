@@ -77,7 +77,6 @@ fun Button(
         modifier = Modifier
             .minimumInteractiveComponentSize()
             .defaultMinSize(minHeight = 48.dp)
-            .widthIn(max = 320.dp)
             .then(modifier),
         colors = colors,
         shape = MaterialTheme.shapes.medium,

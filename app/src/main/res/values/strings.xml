@@ -5,6 +5,9 @@
 
     <!--    Actions    -->
     <string name="act_send_otp">Send OTP</string>
+    <string name="act_resend_otp">Resend Code</string>
+    <string name="act_edit_email">Edit Email</string>
+    <string name="act_verify">Verify</string>
 
     <!--    Headings    -->
     <string name="head_login">Sign up / Login</string>
@@ -18,6 +21,7 @@
 
     <!--    Body Text    -->
     <string name="body_verification_code_send">Enter the 4-digit OTP (One Time Password) sent to your email address</string>
+    <string name="body_no_otp_received">Didn\'t receive the code?</string>
 
 
 </resources>

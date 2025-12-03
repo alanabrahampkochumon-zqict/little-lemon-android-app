@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -41,9 +42,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.components.Button
 import com.littlelemon.application.core.presentation.designsystem.components.TextInputField
 import com.littlelemon.application.core.presentation.designsystem.dimens
@@ -89,7 +90,8 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                         .fillMaxSize()
                         .padding(innerPadding)
                         .imePadding()
-                        .verticalScroll(rememberScrollState())
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Hero Image
                     Image(
@@ -134,19 +136,28 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                         contentScale = ContentScale.Crop
                     )
 
-                    Content(
-                        emailAddress,
-                        onValueChange = { newEmail ->
-                            emailAddress = newEmail
-                        },
+                    Box(
                         modifier = Modifier
                             .weight(1f)
                             .padding(
                                 end = MaterialTheme.dimens.spacing2XL
-                            ).imePadding()
-                            .verticalScroll(rememberScrollState()),
-                        errorMessage = errorMessage
-                    )
+                            )
+                            .imePadding()
+                            .widthIn(max = 488.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+
+                        Content(
+                            emailAddress,
+                            onValueChange = { newEmail ->
+                                emailAddress = newEmail
+                            },
+                            modifier = Modifier
+                                .verticalScroll(rememberScrollState()),
+                            errorMessage = errorMessage
+                        )
+                    }
                 }
             }
         }
@@ -166,6 +177,8 @@ private fun Content(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacing2XL),
         modifier = modifier
+            .widthIn(max = 488.dp)
+            .fillMaxWidth()
     ) {
 
         Column(
@@ -193,7 +206,6 @@ private fun Content(
             Column(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacingMD),
                 modifier = Modifier
-                    .widthIn(max = 320.dp)
                     .fillMaxWidth()
             ) {
                 Text(

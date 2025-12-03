@@ -140,7 +140,6 @@ private fun OTPInputFieldPreview() {
                 onFocusChanged = {},
                 onNumberChanged = {},
                 onKeyboardBack = {},
-//            modifier = Modifier.size(56.dp)
             )
             OTPInputField(
                 number = 2,
@@ -149,7 +148,6 @@ private fun OTPInputFieldPreview() {
                 onNumberChanged = {},
                 onKeyboardBack = {},
                 errorMessage = "Message"
-//            modifier = Modifier.size(56.dp)
             )
             OTPInputField(
                 number = 2,
@@ -158,7 +156,6 @@ private fun OTPInputFieldPreview() {
                 onNumberChanged = {},
                 onKeyboardBack = {},
                 enabled = false
-//            modifier = Modifier.size(56.dp)
             )
         }
     }

@@ -53,6 +53,7 @@ fun LittleLemonTheme(
     val customColors = LittleLemonColors()
     val customTypography = LittleLemonTypography()
     val customDimension = Dimens()
+    val customElevation = ShadowElevation()
 
     //FIXME: May need to update this code
     // Forcing status bar color
@@ -77,7 +78,8 @@ fun LittleLemonTheme(
     CompositionLocalProvider(
         LocalLittleLemonColors provides customColors,
         LocalCustomTypography provides customTypography,
-        LocalDimensions provides customDimension
+        LocalDimensions provides customDimension,
+        LocalShadowElevation provides customElevation
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
@@ -100,3 +102,7 @@ val MaterialTheme.typeStyle: LittleLemonTypography
 val MaterialTheme.dimens: Dimens
     @Composable
     get() = LocalDimensions.current
+
+val MaterialTheme.shadowElevation: ShadowElevation
+    @Composable
+    get() = LocalShadowElevation.current
