@@ -1,0 +1,165 @@
+package com.littlelemon.application.auth.presentation.components
+
+import android.view.KeyEvent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
+import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
+import com.littlelemon.application.core.presentation.designsystem.colors
+import com.littlelemon.application.core.presentation.designsystem.typeStyle
+
+@Composable
+fun OTPInputField(
+    focusRequester: FocusRequester,
+    number: Int?,
+    onFocusChanged: (Boolean) -> Unit,
+    onKeyboardBack: () -> Unit,
+    onNumberChanged: (Int?) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    errorMessage: String? = null,
+) {
+
+    var text by remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = number?.toString().orEmpty(),
+                selection = TextRange(
+                    index = if (number != null) 1 else 0
+                )
+            )
+        )
+    }
+
+    var isFocused by remember {
+        mutableStateOf(false)
+    }
+
+
+    val borderColor = if (errorMessage != null) {
+        MaterialTheme.colors.outlineError
+    } else if (!enabled) {
+        MaterialTheme.colors.outlineDisabled
+    } else if (isFocused) {
+        MaterialTheme.colors.outlineAccent
+    } else {
+        MaterialTheme.colors.outlinePrimary
+    }
+
+    val backgroundColor = if (!enabled) {
+        MaterialTheme.colors.disabled
+    } else {
+        MaterialTheme.colors.primary
+    }
+
+    val textColor = if (!enabled) {
+        MaterialTheme.colors.contentDisabled
+    } else {
+        MaterialTheme.colors.contentPrimary
+    }
+
+    Box(
+        modifier = modifier
+            .size(56.dp)
+            .background(backgroundColor, shape = MaterialTheme.shapes.small)
+            .border(width = 1.dp, color = borderColor, shape = MaterialTheme.shapes.small),
+        contentAlignment = Alignment.Center,
+
+        ) {
+        BasicTextField(
+            value = text,
+            onValueChange = { newText ->
+                val newNumber = newText.text
+                if (newNumber.isEmpty() && newNumber.isDigitsOnly()) {
+                    onNumberChanged(newNumber.toIntOrNull())
+                }
+            },
+            cursorBrush = SolidColor(MaterialTheme.colors.contentAccent),
+            textStyle = MaterialTheme.typeStyle.displayLarge.copy(
+                textAlign = TextAlign.Center,
+                color = textColor
+            ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier
+                .width(IntrinsicSize.Min)
+                .focusRequester(focusRequester)
+                .onFocusChanged { state ->
+                    isFocused = state.isFocused
+                    onFocusChanged(state.isFocused)
+                }
+                .onKeyEvent { event ->
+                    val delPressed = event.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_DEL
+                    if (delPressed && number == null) {
+                        onKeyboardBack()
+                    }
+                    false
+                },
+            decorationBox = { innerBox ->
+                innerBox()
+            }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun OTPInputFieldPreview() {
+    LittleLemonTheme {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(8.dp)) {
+            OTPInputField(
+                number = 2,
+                focusRequester = remember { FocusRequester() },
+                onFocusChanged = {},
+                onNumberChanged = {},
+                onKeyboardBack = {},
+//            modifier = Modifier.size(56.dp)
+            )
+            OTPInputField(
+                number = 2,
+                focusRequester = remember { FocusRequester() },
+                onFocusChanged = {},
+                onNumberChanged = {},
+                onKeyboardBack = {},
+                errorMessage = "Message"
+//            modifier = Modifier.size(56.dp)
+            )
+            OTPInputField(
+                number = 2,
+                focusRequester = remember { FocusRequester() },
+                onFocusChanged = {},
+                onNumberChanged = {},
+                onKeyboardBack = {},
+                enabled = false
+//            modifier = Modifier.size(56.dp)
+            )
+        }
+    }
+}

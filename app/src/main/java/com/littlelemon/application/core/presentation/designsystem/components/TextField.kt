@@ -54,6 +54,8 @@ fun TextInputField(
         focusedBorderColor = MaterialTheme.colors.outlineAccent,
         unfocusedBorderColor = MaterialTheme.colors.outlinePrimary,
         errorBorderColor = MaterialTheme.colors.outlineError,
+
+        cursorColor = MaterialTheme.colors.contentAccent
     )
     Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacingXS)) {
 
@@ -72,6 +74,7 @@ fun TextInputField(
             trailingIcon = iconRight?.let { icon ->
                 { Icon(painter = painterResource(icon), contentDescription = null) }
             },
+            singleLine = true,
             keyboardOptions = keyboardOptions,
             shape = MaterialTheme.shapes.small,
             isError = errorMessage != null,

@@ -8,6 +8,7 @@
 
     <!--    Headings    -->
     <string name="head_login">Sign up / Login</string>
+    <string name="verify_email">Verify Email Address</string>
 
     <!--    Labels    -->
     <string name="lab_email_address">Email address</string>
@@ -15,7 +16,8 @@
     <!--    Placeholder    -->
     <string name="placeholder_email_address">someone@example.com</string>
 
-
+    <!--    Body Text    -->
+    <string name="body_verification_code_send">Enter the 4-digit OTP (One Time Password) sent to your email address</string>
 
 
 </resources>
