@@ -75,7 +75,6 @@ fun Button(
     Button(
         onClick = onClick,
         modifier = Modifier
-            .minimumInteractiveComponentSize()
             .defaultMinSize(minHeight = 48.dp)
             .then(modifier),
         colors = colors,
