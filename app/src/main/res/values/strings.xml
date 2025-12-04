@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Little Lemon</string>
+
     <!--    Image Descriptions    -->
     <string name="desc_logo">Little Lemon Logo</string>
 
@@ -7,6 +8,7 @@
     <string name="act_send_otp">Send OTP</string>
     <string name="act_resend_otp">Resend Code</string>
     <string name="act_edit_email">Edit Email</string>
+    <string name="act_change_email">Change email address</string>
     <string name="act_verify">Verify</string>
 
     <!--    Headings    -->
@@ -20,8 +22,12 @@
     <string name="placeholder_email_address">someone@example.com</string>
 
     <!--    Body Text    -->
-    <string name="body_verification_code_send">Enter the 4-digit OTP (One Time Password) sent to your email address</string>
+    <string name="body_verification_code_send">Enter the 4-digit OTP sent to</string>
     <string name="body_no_otp_received">Didn\'t receive the code?</string>
+
+
+    <!--    Misc.    -->
+    <string name="or">or</string>
 
 
 </resources>

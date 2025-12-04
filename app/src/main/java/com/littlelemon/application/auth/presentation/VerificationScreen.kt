@@ -1,6 +1,7 @@
 package com.littlelemon.application.auth.presentation
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
@@ -49,6 +51,8 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
     val orientation = configuration.orientation
     val isLandscape = orientation == Configuration.ORIENTATION_LANDSCAPE
 
+    val emailAddress = "mitch.lebron@gmail.com" // TODO("Replace with VM data")
+
     val scrollBehaviour = TopAppBarDefaults.enterAlwaysScrollBehavior(
         rememberTopAppBarState()
     )
@@ -66,15 +70,16 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                 label = stringResource(R.string.verify_email)/*TODO: Implement Actions*/
             )
         }) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .imePadding()
-                .verticalScroll(rememberScrollState()),
-            contentAlignment = Alignment.TopCenter,
-        ) {
-            if (isLandscape) {
+
+        if (isLandscape) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .imePadding()
+                    .verticalScroll(rememberScrollState()),
+                contentAlignment = Alignment.TopCenter,
+            ) {
                 Column(
                     modifier = Modifier
                         .padding(
@@ -94,10 +99,11 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                         modifier = Modifier
                             .widthIn(max = 488.dp)
                     ) {
-                        Text(
-                            text = stringResource(R.string.body_verification_code_send),
-                            style = MaterialTheme.typeStyle.bodyLarge
-                        )
+                        Title(emailAddress = emailAddress)
+//                        Text(
+//                            text = stringResource(R.string.body_verification_code_send),
+//                            style = MaterialTheme.typeStyle.bodyLarge
+//                        )
                         OTPFields()
                         ResendSection(onResend = {/* TODO */ })
                     }
@@ -107,7 +113,15 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                         onEditEmail = {/* TODO */ },
                         onVerify = {/* TODO */ })
                 }
-            } else {
+            }
+        } else {
+
+            Box(
+                modifier = Modifier
+                    .widthIn(max = 488.dp)
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
                 Column(
                     modifier = Modifier
                         .padding(
@@ -116,35 +130,51 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                             top = MaterialTheme.dimens.spacing3XL,
                             bottom = MaterialTheme.dimens.spacingXL
                         )
-                        .widthIn(max = 488.dp)
-                        .fillMaxSize()
+                        .fillMaxHeight()
+                        .imePadding(), verticalArrangement = Arrangement.SpaceBetween
+
                 ) {
 
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacing2XL),
-                        modifier = Modifier.fillMaxHeight()
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = stringResource(R.string.body_verification_code_send),
-                            style = MaterialTheme.typeStyle.bodyLarge,
-                        )
+                        Title(emailAddress = emailAddress)
+                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing2XL))
                         OTPFields()
+                        Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing4XL))
                         ResendSection(onResend = {/* TODO */ })
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f)
-                        )
-                        ActionStack(onEditEmail = {/* TODO */ }, onVerify = {/* TODO */ })
                     }
+                    Button(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .widthIn(max = 488.dp),
+                        label = stringResource(R.string.act_verify),
+                        onClick = { /* TODO() */ }
+                    )
+//                    ActionStack(onEditEmail = {/* TODO */ }, onVerify = {/* TODO */ })
                 }
 
             }
-
         }
+
     }
 }
+
+@Composable
+private fun Title(emailAddress: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = stringResource(R.string.body_verification_code_send),
+            style = MaterialTheme.typeStyle.bodyLarge.copy(textAlign = TextAlign.Center)
+        )
+        Text(
+            text = emailAddress,
+            style = MaterialTheme.typeStyle.labelMedium.copy(textAlign = TextAlign.Center)
+        )
+    }
+}
+
 
 @Composable
 private fun OTPFields() {
@@ -192,11 +222,41 @@ private fun ResendSection(onResend: () -> Unit) {
             style = MaterialTheme.typeStyle.labelMedium,
             color = MaterialTheme.colors.contentTertiary
         )
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacingMD))
         Button(
             label = stringResource(R.string.act_resend_otp),
             onClick = onResend,
             variant = ButtonVariant.GHOST
         )
+        OrSeparator()
+        Button(
+            label = stringResource(R.string.act_change_email),
+            onClick = onResend,
+            variant = ButtonVariant.GHOST
+        )
+    }
+}
+
+@Composable
+fun OrSeparator(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colors.outlinePrimary)
+                .fillMaxWidth()
+                .height(1.dp)
+        )
+        Box(modifier = Modifier.background(MaterialTheme.colors.primary).padding(horizontal = MaterialTheme.dimens.spacingSM)) {
+            Text(
+                text = stringResource(R.string.or),
+                style = MaterialTheme.typeStyle.labelSmall,
+                color = MaterialTheme.colors.contentPlaceholder
+            )
+        }
     }
 }
 
@@ -229,7 +289,7 @@ private fun ActionStack(
             Button(
                 modifier = Modifier
                     .weight(1f),
-                label = stringResource(R.string.verify_email),
+                label = stringResource(R.string.act_verify),
                 onClick = onVerify
             )
         }
@@ -245,16 +305,17 @@ private fun ActionStack(
             Button(
                 modifier = Modifier
                     .fillMaxWidth(),
+                label = stringResource(R.string.act_verify),
+                onClick = onVerify
+            )
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
                 label = stringResource(R.string.act_edit_email),
                 onClick = onEditEmail,
                 variant = ButtonVariant.SECONDARY,
                 iconLeft = R.drawable.ic_pencilsimple
-            )
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                label = stringResource(R.string.verify_email),
-                onClick = onVerify
             )
         }
     }
