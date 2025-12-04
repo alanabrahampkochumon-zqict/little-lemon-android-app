@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.littlelemon.application.auth.presentation.VerificationScreen
+import com.littlelemon.application.core.presentation.NavigationRoot
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,9 +13,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LittleLemonTheme {
+                NavigationRoot()
 //                LoginScreen()
 
-                VerificationScreen()
+//                VerificationScreen()
             }
         }
     }

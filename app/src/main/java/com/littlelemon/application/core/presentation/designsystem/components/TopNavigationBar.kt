@@ -65,6 +65,7 @@ fun TopNavigationBar(
                     Icon(
                         painter = painterResource(icon),
                         contentDescription = navigationIconDescription,
+                        tint = MaterialTheme.colors.contentPrimary,
                         modifier = Modifier
                             .minimumInteractiveComponentSize()
                     )

@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -67,53 +70,29 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .imePadding(),
-            contentAlignment = Alignment.TopCenter
+                .imePadding()
+                .verticalScroll(rememberScrollState()),
+            contentAlignment = Alignment.TopCenter,
         ) {
-            when (orientation) {
-                Configuration.ORIENTATION_PORTRAIT -> {
-                    Column(
-                        modifier = Modifier
-                            .padding(
-                                start = MaterialTheme.dimens.spacingXL,
-                                end = MaterialTheme.dimens.spacingXL,
-                                top = MaterialTheme.dimens.spacing3XL,
-                                bottom = MaterialTheme.dimens.spacingXL
-                            )
-                            .widthIn(max = 488.dp)
-                            .fillMaxWidth()
-                    ) {
+            if (isLandscape) {
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            start = MaterialTheme.dimens.spacingXL,
+                            end = MaterialTheme.dimens.spacingXL,
+                            top = MaterialTheme.dimens.spacing2XL,
+                            bottom = MaterialTheme.dimens.spacingXL,
+                        )
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
 
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacing2XL),
-                            modifier = Modifier
-                                .weight(1f)
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            Text(
-                                text = stringResource(R.string.body_verification_code_send),
-                                style = MaterialTheme.typeStyle.bodyLarge
-                            )
-                            OTPFields()
-                            ResendSection(onResend = {/* TODO */ })
-                        }
-                        ActionStack(onEditEmail = {/* TODO */ }, onVerify = {/* TODO */ })
-                    }
-                }
-
-                else -> {
                     Column(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = MaterialTheme.dimens.spacingXL,
-                                vertical = MaterialTheme.dimens.spacingXL
-                            )
-                            .widthIn(max = 488.dp)
-                            .fillMaxWidth()
-                            .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacing2XL)
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacing2XL),
+                        modifier = Modifier
+                            .widthIn(max = 488.dp)
                     ) {
                         Text(
                             text = stringResource(R.string.body_verification_code_send),
@@ -121,9 +100,46 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                         )
                         OTPFields()
                         ResendSection(onResend = {/* TODO */ })
+                    }
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing2XL))
+                    ActionStack(
+                        landscape = true,
+                        onEditEmail = {/* TODO */ },
+                        onVerify = {/* TODO */ })
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            start = MaterialTheme.dimens.spacingXL,
+                            end = MaterialTheme.dimens.spacingXL,
+                            top = MaterialTheme.dimens.spacing3XL,
+                            bottom = MaterialTheme.dimens.spacingXL
+                        )
+                        .widthIn(max = 488.dp)
+                        .fillMaxSize()
+                ) {
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacing2XL),
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.body_verification_code_send),
+                            style = MaterialTheme.typeStyle.bodyLarge,
+                        )
+                        OTPFields()
+                        ResendSection(onResend = {/* TODO */ })
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f)
+                        )
                         ActionStack(onEditEmail = {/* TODO */ }, onVerify = {/* TODO */ })
                     }
                 }
+
             }
 
         }
@@ -187,31 +203,62 @@ private fun ResendSection(onResend: () -> Unit) {
 @Composable
 private fun ActionStack(
     modifier: Modifier = Modifier,
+    landscape: Boolean = false,
     onEditEmail: () -> Unit,
     onVerify: () -> Unit
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(
-            MaterialTheme.dimens.spacingLG
-        )
-    ) {
-        Button(
-            modifier = Modifier
+
+    if (landscape) {
+        Row(
+            modifier = modifier
+                .widthIn(max = 800.dp)
                 .fillMaxWidth(),
-            label = stringResource(R.string.act_edit_email),
-            onClick = onEditEmail,
-            variant = ButtonVariant.SECONDARY,
-            iconLeft = R.drawable.ic_pencilsimple
-        )
-        Button(
-            modifier = Modifier
-                .fillMaxWidth(),
-            label = stringResource(R.string.verify_email),
-            onClick = onVerify
-        )
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(
+                MaterialTheme.dimens.spacingLG
+            )
+        ) {
+            Button(
+                modifier = Modifier
+                    .weight(1f),
+                label = stringResource(R.string.act_edit_email),
+                onClick = onEditEmail,
+                variant = ButtonVariant.SECONDARY,
+                iconLeft = R.drawable.ic_pencilsimple
+            )
+            Button(
+                modifier = Modifier
+                    .weight(1f),
+                label = stringResource(R.string.verify_email),
+                onClick = onVerify
+            )
+        }
+    } else {
+        // Portrait
+        Column(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(
+                MaterialTheme.dimens.spacingLG
+            )
+        ) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                label = stringResource(R.string.act_edit_email),
+                onClick = onEditEmail,
+                variant = ButtonVariant.SECONDARY,
+                iconLeft = R.drawable.ic_pencilsimple
+            )
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                label = stringResource(R.string.verify_email),
+                onClick = onVerify
+            )
+        }
     }
+
 }
 
 

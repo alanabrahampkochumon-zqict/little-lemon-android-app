@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -51,7 +53,10 @@ import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
+
+//    val viewModel = koinViewModel<AuthViewModel>()
+
     val illustrationAspectRatio = (375.0 / 402.0).toFloat()
 
     var emailAddress by remember {
@@ -76,7 +81,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
     val orientation = configuration.orientation
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colors.primary,
         contentWindowInsets = WindowInsets.systemBars.only(
             WindowInsetsSides.Bottom
@@ -108,12 +113,15 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                         onValueChange = { newEmail ->
                             emailAddress = newEmail
                         },
-                        modifier = Modifier.padding(
-                            start = MaterialTheme.dimens.spacingLG,
-                            end = MaterialTheme.dimens.spacingLG,
-                            top = MaterialTheme.dimens.spacingXL
-                        ),
-                        errorMessage = errorMessage
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(
+                                start = MaterialTheme.dimens.spacingLG,
+                                end = MaterialTheme.dimens.spacingLG,
+                                top = MaterialTheme.dimens.spacingXL
+                            ),
+                        errorMessage = errorMessage,
+                        onSendOtp = onSendOtp
                     )
                 }
             }
@@ -143,7 +151,8 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                                 end = MaterialTheme.dimens.spacing2XL
                             )
                             .imePadding()
-                            .widthIn(max = 488.dp),
+                            .widthIn(max = 488.dp)
+                            .fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
 
@@ -155,7 +164,8 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                             },
                             modifier = Modifier
                                 .verticalScroll(rememberScrollState()),
-                            errorMessage = errorMessage
+                            errorMessage = errorMessage,
+                            onSendOtp = onSendOtp
                         )
                     }
                 }
@@ -168,6 +178,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun Content(
     emailAddress: String,
+    onSendOtp: () -> Unit,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     errorMessage: String? = null
@@ -175,10 +186,10 @@ private fun Content(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacing2XL),
-        modifier = modifier
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
             .widthIn(max = 488.dp)
-            .fillMaxWidth()
+            .then(modifier)
     ) {
 
         Column(
@@ -228,10 +239,14 @@ private fun Content(
                 )
             }
         }
-
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing2XL))
         Button(
             label = stringResource(R.string.act_send_otp),
-            onClick = {},
+            onClick = {
+                onSendOtp()
+                // TODO()
+
+            },
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -241,6 +256,6 @@ private fun Content(
 @Composable
 private fun LoginScreenPreview() {
     LittleLemonTheme {
-        LoginScreen()
+        LoginScreen({})
     }
 }
