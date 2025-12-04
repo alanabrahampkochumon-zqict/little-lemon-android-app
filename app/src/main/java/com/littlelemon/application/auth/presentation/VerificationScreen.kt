@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -64,10 +63,6 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
     )
     else modifier
 
-    val scrollableModifier =
-        if (isLandscape) Modifier.verticalScroll(rememberScrollState()) else Modifier
-
-
     Scaffold(
         modifier = scaffoldModifier,
         containerColor = MaterialTheme.colors.primary,
@@ -80,15 +75,15 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
         }) { innerPadding ->
 
         Column(
-            modifier = scrollableModifier
+            modifier = Modifier
                 .padding(innerPadding)
-                .imePadding()
                 .padding(
                     start = MaterialTheme.dimens.spacingXL,
                     end = MaterialTheme.dimens.spacingXL,
                     top = MaterialTheme.dimens.spacing3XL,
                     bottom = MaterialTheme.dimens.spacingXL
                 )
+                .imePadding()
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
 
@@ -100,6 +95,9 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .widthIn(max = 488.dp)
                         .fillMaxWidth()
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = MaterialTheme.dimens.spacingXL)
                 ) {
                     Title(emailAddress = emailAddress)
                     Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing2XL))
@@ -113,7 +111,7 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                         OTPFields()
                         Button(
                             modifier = Modifier
-                                .widthIn(max = 120.dp)
+                                .fillMaxWidth()
                                 .height(56.dp),
                             label = stringResource(R.string.act_verify),
                             onClick = { /* TODO() */ }
