@@ -63,6 +63,11 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
         scrollBehaviour.nestedScrollConnection
     )
     else modifier
+
+    val scrollableModifier =
+        if (isLandscape) Modifier.verticalScroll(rememberScrollState()) else Modifier
+
+
     Scaffold(
         modifier = scaffoldModifier,
         containerColor = MaterialTheme.colors.primary,
@@ -74,35 +79,31 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
             )
         }) { innerPadding ->
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.TopCenter
+        Column(
+            modifier = scrollableModifier
+                .padding(innerPadding)
+                .imePadding()
+                .padding(
+                    start = MaterialTheme.dimens.spacingXL,
+                    end = MaterialTheme.dimens.spacingXL,
+                    top = MaterialTheme.dimens.spacing3XL,
+                    bottom = MaterialTheme.dimens.spacingXL
+                )
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(
-                        start = MaterialTheme.dimens.spacingXL,
-                        end = MaterialTheme.dimens.spacingXL,
-                        top = MaterialTheme.dimens.spacing3XL,
-                        bottom = MaterialTheme.dimens.spacingXL
-                    )
-                    .widthIn(max = 488.dp)
-                    .fillMaxHeight()
-                    .imePadding()
-
-            ) {
-
+            if (isLandscape) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
+                        .widthIn(max = 488.dp)
                         .fillMaxWidth()
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState())
                 ) {
                     Title(emailAddress = emailAddress)
                     Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing2XL))
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(
@@ -110,32 +111,46 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                         )
                     ) {
                         OTPFields()
-                        if (isLandscape) {
-                            Button(
-                                modifier = Modifier
-                                    .widthIn(max = 120.dp)
-                                    .fillMaxHeight(),
-                                label = stringResource(R.string.act_verify),
-                                onClick = { /* TODO() */ }
-                            )
-                        }
+                        Button(
+                            modifier = Modifier
+                                .widthIn(max = 120.dp)
+                                .height(56.dp),
+                            label = stringResource(R.string.act_verify),
+                            onClick = { /* TODO() */ }
+                        )
                     }
+
                     Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing4XL))
                     ResendSection(onResend = {/* TODO */ })
                 }
-                if (!isLandscape) {
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .widthIn(max = 488.dp),
-                        label = stringResource(R.string.act_verify),
-                        onClick = { /* TODO() */ }
-                    )
+            } else {
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .widthIn(max = 488.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    Title(emailAddress = emailAddress)
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing2XL))
+                    OTPFields()
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing4XL))
+                    ResendSection(onResend = {/* TODO */ })
                 }
+                Button(
+                    modifier = Modifier
+                        .widthIn(max = 488.dp)
+                        .fillMaxWidth(),
+                    label = stringResource(R.string.act_verify),
+                    onClick = { /* TODO() */ }
+                )
+
             }
         }
     }
 }
+
 
 @Composable
 private fun Title(emailAddress: String) {
