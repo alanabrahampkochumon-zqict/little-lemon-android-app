@@ -3,14 +3,20 @@ package com.littlelemon.application.auth.presentation
 import android.app.Activity
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
@@ -80,22 +87,31 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
     val configuration = LocalConfiguration.current
     val orientation = configuration.orientation
 
+    val windowInsets = if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+        WindowInsets.systemBars.only(
+            WindowInsetsSides.Bottom
+        )
+    } else {
+        WindowInsets.systemBars.only(
+            WindowInsetsSides.Bottom
+        ).add(WindowInsets.displayCutout)
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colors.primary,
-        contentWindowInsets = WindowInsets.systemBars.only(
-            WindowInsetsSides.Bottom
-        )
+        contentWindowInsets = windowInsets
     ) { innerPadding ->
 
         when (orientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
                         .padding(innerPadding)
+                        .fillMaxSize()
                         .imePadding()
-                        .verticalScroll(rememberScrollState()),
+                        .verticalScroll(rememberScrollState())
+                        .height(IntrinsicSize.Max),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Hero Image
@@ -118,7 +134,8 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                             .padding(
                                 start = MaterialTheme.dimens.spacingLG,
                                 end = MaterialTheme.dimens.spacingLG,
-                                top = MaterialTheme.dimens.spacingXL
+                                top = MaterialTheme.dimens.spacingXL,
+                                bottom = MaterialTheme.dimens.spacingXL,
                             ),
                         errorMessage = errorMessage,
                         onSendOtp = onSendOtp
@@ -126,11 +143,13 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                 }
             }
 
+
             else -> {
                 Row(
                     modifier = Modifier
+                        .padding(innerPadding)
                         .fillMaxSize()
-                        .padding(innerPadding),
+                    ,
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacingLG)
                 ) {
@@ -162,8 +181,7 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                             onValueChange = { newEmail ->
                                 emailAddress = newEmail
                             },
-                            modifier = Modifier
-                                .verticalScroll(rememberScrollState()),
+                            modifier = Modifier.verticalScroll(rememberScrollState()),
                             errorMessage = errorMessage,
                             onSendOtp = onSendOtp
                         )
@@ -197,7 +215,8 @@ private fun Content(
             verticalArrangement = Arrangement.spacedBy(
                 MaterialTheme.dimens.spacing3XL
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
             // Header
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -249,6 +268,59 @@ private fun Content(
             },
             modifier = Modifier.fillMaxWidth()
         )
+    }
+}
+
+@Composable
+private fun ContentInputsOnly( // New Composable
+    emailAddress: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    errorMessage: String? = null
+) {
+    // This is the inner column of your original Content function
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(
+            MaterialTheme.dimens.spacing3XL
+        ),
+        modifier = modifier.fillMaxWidth() // Use the modifier passed in
+    ) {
+        // Header
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painter = painterResource(R.drawable.logo),
+                contentDescription = stringResource(R.string.desc_logo)
+            )
+            Text(
+                stringResource(R.string.head_login),
+                style = MaterialTheme.typeStyle.headlineXLarge,
+                color = MaterialTheme.colors.contentHighlight
+            )
+        }
+
+        // Input Field with Label
+        Column(
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacingMD),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                stringResource(R.string.lab_email_address),
+                style = MaterialTheme.typeStyle.labelMedium,
+                color = MaterialTheme.colors.contentPrimary
+            )
+            TextInputField(
+                value = emailAddress,
+                placeholder = stringResource(R.string.placeholder_email_address),
+                onValueChange = onValueChange,
+                modifier = Modifier.fillMaxWidth(),
+                errorMessage = errorMessage,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Send
+                )
+            )
+        }
     }
 }
 
