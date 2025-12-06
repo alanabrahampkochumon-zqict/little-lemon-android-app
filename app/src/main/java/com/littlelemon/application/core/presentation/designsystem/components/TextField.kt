@@ -3,6 +3,7 @@ package com.littlelemon.application.core.presentation.designsystem.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -62,7 +63,7 @@ fun TextInputField(
             placeholder = {
                 Text(text = placeholder, style = MaterialTheme.typeStyle.labelMedium)
             },
-            modifier = modifier.minimumInteractiveComponentSize(),
+            modifier = Modifier.minimumInteractiveComponentSize().fillMaxWidth().then(modifier),
             colors = colors,
             enabled = enabled,
             leadingIcon = iconLeft?.let { icon ->

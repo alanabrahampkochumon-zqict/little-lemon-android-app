@@ -10,16 +10,28 @@
     <string name="act_edit_email">Edit Email</string>
     <string name="act_change_email">Change email address</string>
     <string name="act_verify">Verify</string>
+    <string name="act_back">Navigate back to %s</string>
+    <string name="act_cancel">Cancel</string>
+    <string name="act_go">Let\'s Go!</string>
+
 
     <!--    Headings    -->
     <string name="head_login">Sign up / Login</string>
-    <string name="verify_email">Verify Email Address</string>
+    <string name="head_personalize">Let\'s get to know you</string>
+
+    <!--    Navigation Headings    -->
+    <string name="nav_verify_email">Verify Email Address</string>
+    <string name="nav_personal_information">Personal Information</string>
 
     <!--    Labels    -->
-    <string name="lab_email_address">Email address</string>
+    <string name="lab_email_address">Email Address</string>
+    <string name="lab_first_name">First Name</string>
+    <string name="lab_last_name">Last Name</string>
 
     <!--    Placeholder    -->
     <string name="placeholder_email_address">someone@example.com</string>
+    <string name="placeholder_first_name">E.g: Jane</string>
+    <string name="placeholder_last_name">E.g: Doe</string>
 
     <!--    Body Text    -->
     <string name="body_verification_code_send">Enter the 4-digit OTP sent to</string>

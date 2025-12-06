@@ -142,8 +142,6 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                     )
                 }
             }
-
-
             else -> {
                 Row(
                     modifier = Modifier

@@ -59,15 +59,13 @@ fun TopNavigationBar(
                     modifier = Modifier
                         .minimumInteractiveComponentSize()
                         .fillMaxHeight()
-                        .clickable { onNavigate() }
                         .clickable { onNavigate() }, contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(icon),
                         contentDescription = navigationIconDescription,
                         tint = MaterialTheme.colors.contentPrimary,
-                        modifier = Modifier
-                            .minimumInteractiveComponentSize()
+                        modifier = Modifier.minimumInteractiveComponentSize()
                     )
                 }
             }
@@ -78,8 +76,7 @@ fun TopNavigationBar(
                     Text(
                         text = it,
                         style = MaterialTheme.typeStyle.labelMedium.copy(textAlign = TextAlign.Center),
-                        modifier = Modifier
-                            .fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
@@ -90,14 +87,12 @@ fun TopNavigationBar(
                     modifier = Modifier
                         .minimumInteractiveComponentSize()
                         .fillMaxHeight()
-                        .clickable { onAction() },
-                    contentAlignment = Alignment.Center
+                        .clickable { onAction() }, contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(icon),
                         contentDescription = actionIconDescription,
-                        modifier = Modifier
-                            .minimumInteractiveComponentSize()
+                        modifier = Modifier.minimumInteractiveComponentSize()
                     )
                 }
             }
@@ -112,8 +107,7 @@ fun TopNavigationBar(
 private fun TopNavigationBarPreview() {
     LittleLemonTheme {
         Column(
-            modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
             TopNavigationBar(
@@ -123,12 +117,12 @@ private fun TopNavigationBarPreview() {
                 modifier = Modifier.width(320.dp)
             )
             TopNavigationBar(
-                navigationIcon = R.drawable.ic_x, label = "Test Label",
+                navigationIcon = R.drawable.ic_x,
+                label = "Test Label",
                 modifier = Modifier.width(320.dp)
             )
             TopNavigationBar(
-                navigationIcon = R.drawable.ic_x,
-                modifier = Modifier.width(320.dp)
+                navigationIcon = R.drawable.ic_x, modifier = Modifier.width(320.dp)
             )
         }
     }
