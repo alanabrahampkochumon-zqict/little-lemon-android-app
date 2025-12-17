@@ -19,9 +19,9 @@ interface AuthRepository {
 
     suspend fun getUserSession(): Resource<SessionToken?>
 
-    suspend fun validateAccessToken(): Resource<Unit>
-
-    suspend fun validateRefreshToken(): Resource<Unit>
-
-    suspend fun refreshToken(session: SessionToken?): Resource<Unit>
+//    suspend fun validateAccessToken(): Resource<Unit>
+//
+//    suspend fun validateRefreshToken(): Resource<Unit>
+//
+//    suspend fun refreshToken(session: SessionToken?): Resource<SessionToken?>
 }
