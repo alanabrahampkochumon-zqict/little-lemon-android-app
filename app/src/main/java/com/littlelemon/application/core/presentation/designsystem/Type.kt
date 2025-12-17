@@ -9,7 +9,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.littlelemon.application.R
-import org.w3c.dom.Text
 
 // Font Families
 val MarkaziTextFamily = FontFamily(
@@ -131,7 +130,7 @@ private val Typography = Typography(
         letterSpacing = 0.sp
     ),
 
-)
+    )
 
 // Custom Type System
 @Immutable

@@ -3,11 +3,8 @@ package com.littlelemon.application.auth.presentation
 import android.app.Activity
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -40,7 +37,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
@@ -87,7 +83,7 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
     val configuration = LocalConfiguration.current
     val orientation = configuration.orientation
 
-    val windowInsets = if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+    val windowInsets = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
         WindowInsets.systemBars.only(
             WindowInsetsSides.Bottom
         )
@@ -142,12 +138,12 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                     )
                 }
             }
+
             else -> {
                 Row(
                     modifier = Modifier
                         .padding(innerPadding)
-                        .fillMaxSize()
-                    ,
+                        .fillMaxSize(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacingLG)
                 ) {
