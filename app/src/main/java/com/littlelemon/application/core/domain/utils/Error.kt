@@ -1,7 +1,7 @@
 package com.littlelemon.application.core.domain.utils
 
 sealed interface Error {
-    sealed class NetworkError(val code: Int) {
+    sealed class NetworkError(val code: Int) : Error {
         class BadRequest : NetworkError(400)
         class Unauthorized : NetworkError(401)
         class Forbidden : NetworkError(403)
@@ -9,5 +9,5 @@ sealed interface Error {
         class Unknown : NetworkError(0) // General Network Errors
     }
 
-    data object PermissionError
+    data object PermissionDenied : Error
 }

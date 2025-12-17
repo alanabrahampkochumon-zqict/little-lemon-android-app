@@ -1,14 +1,22 @@
 package com.littlelemon.application.auth.domain.usecase
 
-import com.littlelemon.application.auth.domain.AuthRepository
 import com.littlelemon.application.core.domain.UseCase
-import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.core.domain.utils.ValidationError
+import com.littlelemon.application.core.domain.utils.ValidationResult
 
-class ValidateVerificationCodeUseCase(private val repository: AuthRepository) :
-    UseCase<String, Resource<Unit>> {
+class ValidateVerificationCodeUseCase : UseCase<String, ValidationResult> {
 
-    override fun invoke(input: String): Resource<Unit> =
-        repository.validateVerificationCode(input)
+    override suspend fun invoke(input: String): ValidationResult {
+        val regex = Regex("^[0-9]{4}$")
+        return if (input.matches(regex)) {
+            ValidationResult.Success
+        } else {
+            ValidationResult.Failure(
+                ValidationError.InvalidFormat,
+                "Invalid Verification Code"
+            )
+        }
+    }
 
 
 }

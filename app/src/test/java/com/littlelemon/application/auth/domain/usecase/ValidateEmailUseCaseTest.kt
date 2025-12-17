@@ -1,54 +1,64 @@
 package com.littlelemon.application.auth.domain.usecase
 
 import com.littlelemon.application.core.domain.utils.ValidationResult
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 
 class ValidateEmailUseCaseTest {
-    private val validEmails = listOf("test@example.com", "user@domain.com", "user@yahoo.com")
-    private val invalidEmails = listOf("test", "email.com", "")
+    private lateinit var validEmails: List<String>
+    private lateinit var invalidEmails: List<String>
 
-    private val validateEmail = ValidateEmailUseCase()
+    private lateinit var useCase: ValidateEmailUseCase
+
+    @Before
+    fun setUp() {
+        validEmails = listOf("test@example.com", "user@domain.com", "user@yahoo.com")
+        invalidEmails = listOf("test", "email.com", "")
+        useCase = ValidateEmailUseCase()
+    }
+
 
     @Test
-    fun givenValidEmail_ValidatorReturns_Success() {
+    fun givenValidEmail_ValidatorReturns_success() = runTest {
         for (email in validEmails) {
-            val result = validateEmail(email)
+            val result = useCase(email)
             assertTrue(result is ValidationResult.Success)
         }
     }
 
     @Test
-    fun givenInvalidEmail_ValidatorReturns_Failure() {
+    fun givenInvalidEmail_ValidatorReturns_failure() = runTest {
         for (email in invalidEmails) {
-            val result = validateEmail(email)
+            val result = useCase(email)
             assertTrue(result is ValidationResult.Failure)
         }
     }
 
     @Test
-    fun givenEmptyEmail_ValidatorReturns_Failure() {
+    fun givenEmptyEmail_ValidatorReturns_failure() = runTest {
         val emptyEmail = ""
-        val result = validateEmail(emptyEmail)
+        val result = useCase(emptyEmail)
         assertTrue(result is ValidationResult.Failure)
     }
 
     @Test
-    fun givenVeryLongEmail_ValidatorReturns_Failure() {
+    fun givenVeryLongEmail_ValidatorReturns_failure() = runTest {
         val email = "a".repeat(250) + "@email.com"
-        val result = validateEmail(email)
+        val result = useCase(email)
         assertTrue(result is ValidationResult.Success)
     }
 
     @Test
-    fun givenEmailWithLeadingSpaces_ValidatorReturns_Failure() {
-        val result = validateEmail("\t    validemail@email.com    ")
+    fun givenEmailWithLeadingSpaces_ValidatorReturns_failure() = runTest {
+        val result = useCase("\t    validemail@email.com    ")
         assertTrue(result is ValidationResult.Failure)
     }
 
     @Test
-    fun givenWhitespaces_ValidatorReturns_Failure() {
-        val result = validateEmail("\t   \n")
+    fun givenWhitespaces_ValidatorReturns_failure() = runTest {
+        val result = useCase("\t   \n")
         assertTrue(result is ValidationResult.Failure)
     }
 }

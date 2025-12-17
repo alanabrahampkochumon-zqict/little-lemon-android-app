@@ -8,7 +8,7 @@ class SendVerificationCodeUseCase(
     private val repository: AuthRepository
 ) : UseCase<String, Resource<Unit>> {
 
-    override fun invoke(input: String): Resource<Unit> {
+    override suspend fun invoke(input: String): Resource<Unit> {
         return repository.sendVerificationCode(input)
     }
 

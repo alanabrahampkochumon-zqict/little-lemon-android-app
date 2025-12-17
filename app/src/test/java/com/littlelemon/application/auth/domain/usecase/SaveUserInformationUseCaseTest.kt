@@ -1,24 +1,39 @@
 package com.littlelemon.application.auth.domain.usecase
 
 import com.littlelemon.application.auth.domain.AuthRepository
+import com.littlelemon.application.auth.domain.models.User
+import com.littlelemon.application.auth.domain.usecase.params.UserInfoParams
 import com.littlelemon.application.core.domain.utils.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Test
 
 class SaveUserInformationUseCaseTest {
     private lateinit var repository: AuthRepository
     private lateinit var useCase: SaveUserInformationUseCase
+    private lateinit var userInformation: UserInfoParams
+    private lateinit var user: User
+
 
     @Before
     fun setUp() {
-        repository = mockk<AuthRepository>();
+        repository = mockk<AuthRepository>()
         useCase = SaveUserInformationUseCase(repository)
+        userInformation = UserInfoParams(firstName = "John", lastName = "Doe")
+        user = User(
+            firstName = userInformation.firstName,
+            lastName = userInformation.lastName,
+            email = "user@test.com"
+        )
     }
 
-    fun givenEmptyFirstName_useCaseReturn_error() {
+    @Test
+    fun givenRepositoryReturnFailure_useCaseReturn_failure() = runTest {
         // Arrange
-        val userInformation = UserInformation(firstName = "", lastName = "lastname")
         val message = "error"
         coEvery {
             repository.saveUserInformation(
@@ -27,7 +42,32 @@ class SaveUserInformationUseCaseTest {
             )
         } returns Resource.Failure(message)
 
-//        val
+        // Act
+        val result = useCase(userInformation)
+        // Assert
+        assertTrue(result is Resource.Failure)
+        assertEquals(message, (result as Resource.Failure).errorMessage)
     }
+
+    @Test
+    fun givenRepositoryReturnSuccess_useCaseReturn_successWithUserInformation() = runTest {
+        // Arrange
+        coEvery {
+            repository.saveUserInformation(
+                userInformation.firstName,
+                userInformation.lastName
+            )
+        } returns Resource.Success(user)
+
+        // Act
+        val result = useCase(userInformation)
+        // Assert
+        assertTrue(result is Resource.Success)
+        val resUser = (result as Resource.Success).data
+        assertEquals(user.firstName, resUser?.firstName)
+        assertEquals(user.lastName, resUser?.lastName)
+        assertEquals(user.email, resUser?.email)
+    }
+
 
 }

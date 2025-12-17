@@ -1,52 +1,77 @@
 package com.littlelemon.application.auth.domain.usecase
 
-import com.littlelemon.application.auth.domain.AuthRepository
-import com.littlelemon.application.core.domain.utils.Resource
-import io.mockk.coEvery
-import io.mockk.mockk
+import com.littlelemon.application.core.domain.utils.ValidationResult
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
 class ValidateVerificationCodeUseCaseTest {
-    private lateinit var repository: AuthRepository
     private lateinit var useCase: ValidateVerificationCodeUseCase
-    private lateinit var otp: String
 
     @Before
     fun setUp() {
-        repository = mockk<AuthRepository>();
-        useCase = ValidateVerificationCodeUseCase(repository)
-        otp = "3316"
+        useCase = ValidateVerificationCodeUseCase()
     }
 
 
     @Test
-    fun givenRepositoryReturnSuccess_useCaseReturn_success() {
+    fun givenEmptyOTP_validatorReturns_failure() = runTest {
         // Arrange
-        coEvery { repository.validateVerificationCode(otp) } returns Resource.Success(
-            Unit
-        )
+        val otp = ""
         // Act
         val result = useCase(otp)
-
         // Assert
-        Assert.assertTrue(result is Resource.Success)
-        Assert.assertEquals(Unit, (result as Resource.Success).data)
+        Assert.assertTrue(result is ValidationResult.Failure)
     }
 
     @Test
-    fun givenRepositoryReturnsFailure_useCaseReturn_failure() {
+    fun givenPartialOTP_validatorReturns_failure() = runTest {
         // Arrange
-        val message = "error"
-        coEvery { repository.validateVerificationCode(otp) } returns Resource.Failure(
-            message
-        )
+        val otp = "123"
         // Act
         val result = useCase(otp)
-
         // Assert
-        Assert.assertTrue(result is Resource.Failure)
-        Assert.assertEquals(message, (result as Resource.Failure).errorMessage)
+        Assert.assertTrue(result is ValidationResult.Failure)
+    }
+
+    @Test
+    fun givenLettersInOTP_validatorReturns_failure() = runTest {
+        // Arrange
+        val otp = "abcd"
+        // Act
+        val result = useCase(otp)
+        // Assert
+        Assert.assertTrue(result is ValidationResult.Failure)
+    }
+
+    @Test
+    fun givenWhitespaceInOTP_validatorReturns_failure() = runTest {
+        // Arrange
+        val otp = "\t  "
+        // Act
+        val result = useCase(otp)
+        // Assert
+        Assert.assertTrue(result is ValidationResult.Failure)
+    }
+
+    @Test
+    fun givenMoreThanFourDigitOTP_validatorReturns_failure() = runTest {
+        // Arrange
+        val otp = "12345"
+        // Act
+        val result = useCase(otp)
+        // Assert
+        Assert.assertTrue(result is ValidationResult.Failure)
+    }
+
+    @Test
+    fun givenFourNumberOTP_validatorReturns_success() = runTest {
+        // Arrange
+        val otp = "1234"
+        // Act
+        val result = useCase(otp)
+        // Assert
+        Assert.assertTrue(result is ValidationResult.Success)
     }
 }

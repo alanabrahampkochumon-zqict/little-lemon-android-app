@@ -4,6 +4,7 @@ import com.littlelemon.application.auth.domain.AuthRepository
 import com.littlelemon.application.core.domain.utils.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -24,7 +25,7 @@ class SendVerificationCodeUseCaseTest {
 
 
     @Test
-    fun givenRepositoryReturnSuccess_useCaseReturn_success() {
+    fun givenRepositoryReturnSuccess_useCaseReturn_success() = runTest {
         // Arrange
         coEvery { repository.sendVerificationCode(email) } returns Resource.Success(
             Unit
@@ -33,12 +34,12 @@ class SendVerificationCodeUseCaseTest {
         val result = useCase(email)
 
         // Assert
-        assertTrue(result is Resource.Success<*>)
-        assertEquals(Unit, (result as Resource.Success<*>).data)
+        assertTrue(result is Resource.Success)
+        assertEquals(Unit, (result as Resource.Success).data)
     }
 
     @Test
-    fun givenRepositoryReturnsFailure_useCaseReturn_failure() {
+    fun givenRepositoryReturnsFailure_useCaseReturn_failure() = runTest {
         // Arrange
         val message = "Unknown error"
         coEvery { repository.sendVerificationCode(email) } returns Resource.Failure(
