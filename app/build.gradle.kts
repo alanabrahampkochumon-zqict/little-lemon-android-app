@@ -68,6 +68,10 @@ dependencies {
     implementation(libs.io.ktor.client)
     implementation(libs.io.ktor.cio)
 
+    implementation(platform(libs.supbase.bom))
+    implementation(libs.supbase.auth)
+    implementation(libs.supbase.postgres)
+
 
     coreLibraryDesugaring(libs.desugar.jdk)
 

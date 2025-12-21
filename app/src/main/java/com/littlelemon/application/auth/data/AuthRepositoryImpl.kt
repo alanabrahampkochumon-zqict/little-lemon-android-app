@@ -1,12 +1,17 @@
 package com.littlelemon.application.auth.data
 
+import com.littlelemon.application.auth.data.local.AuthLocalDataSource
+import com.littlelemon.application.auth.data.remote.AuthRemoteDataSource
 import com.littlelemon.application.auth.domain.AuthRepository
 import com.littlelemon.application.auth.domain.models.Location
 import com.littlelemon.application.auth.domain.models.SessionToken
 import com.littlelemon.application.auth.domain.models.User
 import com.littlelemon.application.core.domain.utils.Resource
 
-class AuthRepositoryImpl : AuthRepository {
+class AuthRepositoryImpl(
+    private val remoteDataSource: AuthRemoteDataSource,
+    private val localDataSource: AuthLocalDataSource
+) : AuthRepository {
     override suspend fun sendVerificationCode(email: String): Resource<Unit> {
         TODO("Not yet implemented")
     }

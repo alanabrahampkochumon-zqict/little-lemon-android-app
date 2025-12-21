@@ -1,6 +1,8 @@
 package com.littlelemon.application.auth.data.models
 
-data class RemoteSessionToken(
+data class LocalSessionToken(
     val accessToken: String,
-    val refreshToken: String
+    val accessExpiry: Long,
+    val refreshToken: String,
+    val refreshExpiry: Long,
 )

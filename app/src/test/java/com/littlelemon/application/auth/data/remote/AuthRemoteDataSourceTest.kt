@@ -1,16 +1,21 @@
 package com.littlelemon.application.auth.data.remote
 
+import io.github.jan.supabase.SupabaseClient
 import org.junit.Before
 import org.junit.Test
 
 class AuthRemoteDataSourceTest {
+    private lateinit var client: SupabaseClient
+
     @Before
     fun setUp() {
         TODO("Not yet implemented")
     }
 
+
+    // { data: { user: null, session: null }, error: null }
     @Test
-    fun onSendVerificationCode_ReturnHttpException_ThrowException() {
+    fun onSendVerificationCode_exceptionThrown() {
     }
 
     @Test
