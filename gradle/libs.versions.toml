@@ -19,12 +19,15 @@ room = "2.8.4"
 ksp = "2.3.3"
 ktor = "3.3.3"
 supabase = "3.2.6"
+junitJunit = "4.12"
+robolectric = "4.16"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
 junit = { group = "org.junit.jupiter", name = "junit-jupiter"}
 junit-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine" }
+junit-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine" }
 junit-platform = { group = "org.junit.platform", name = "junit-platform-launcher" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -53,6 +56,10 @@ androidx-room-testing = { group = "androidx.room", name = "room-testing", versio
 #Ktor
 io-ktor-client = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 io-ktor-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+io-ktor-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
+
+#RoboElectric
+roboelectric= {group = "org.robolectric", name= "robolectric", version.ref="robolectric"}
 
 desugar-jdk = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
 
@@ -63,6 +70,7 @@ supbase-bom = { group = "io.github.jan-tennert.supabase", name = "bom", version.
 supbase-postgres = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt" }
 supbase-auth = { group = "io.github.jan-tennert.supabase", name = "auth-kt" }
 supbase-realtime = { group = "io.github.jan-tennert.supabase", name = "realtime-kt" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 
 
 

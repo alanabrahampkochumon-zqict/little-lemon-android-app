@@ -12,12 +12,7 @@ import io.ktor.http.headersOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
-@RunWith(RobolectricTestRunner::class)
-@Config(sdk = [34])
 class AuthRemoteDataSourceTest {
     private lateinit var client: SupabaseClient
     private lateinit var datasource: AuthRemoteDataSource
@@ -45,32 +40,7 @@ class AuthRemoteDataSourceTest {
 
     @Test
     fun onVerificationCode_noExceptionThrown() = runTest {
-        datasource.sendVerificationCode("test@email.com")
-    }
 
-    // { data: { user: null, session: null }, error: null }
-    @Test
-    fun onSendVerificationCode_exceptionThrown() {
+        datasource.sendVerificationCode(EMAIL_ADDRESS)
     }
-
-    @Test
-    fun verifyVerificationCode() {
-    }
-
-    @Test
-    fun savePersonalInformation() {
-    }
-
-    @Test
-    fun getSessionToken() {
-    }
-
-    @Test
-    fun validateSessionToken() {
-    }
-
-    @Test
-    fun refreshToken() {
-    }
-
 }
