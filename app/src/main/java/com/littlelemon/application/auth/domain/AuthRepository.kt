@@ -7,9 +7,11 @@ import com.littlelemon.application.core.domain.utils.Resource
 
 interface AuthRepository {
 
-    suspend fun sendVerificationCode(email: String): Resource<Unit>
+    suspend fun sendVerificationCode(emailAddress: String): Resource<Unit>
 
-    suspend fun verifyVerificationCode(otp: String): Resource<User>
+    suspend fun verifyVerificationCode(emailAddress: String, verificationCode: String): Resource<User>
+
+    suspend fun resendVerificationCode(emailAddress: String): Resource<Unit>
 
     suspend fun saveUserInformation(firstName: String, lastName: String = ""): Resource<User>
 
@@ -18,10 +20,4 @@ interface AuthRepository {
     suspend fun getLocation(): Resource<Location>
 
     suspend fun getUserSession(): Resource<SessionToken?>
-
-//    suspend fun validateAccessToken(): Resource<Unit>
-//
-//    suspend fun validateRefreshToken(): Resource<Unit>
-//
-//    suspend fun refreshToken(session: SessionToken?): Resource<SessionToken?>
 }

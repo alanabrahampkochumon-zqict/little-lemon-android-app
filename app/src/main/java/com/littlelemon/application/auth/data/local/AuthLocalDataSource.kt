@@ -1,10 +1,20 @@
 package com.littlelemon.application.auth.data.local
 
-import com.littlelemon.application.auth.data.models.LocalSessionToken
+import android.location.Location
+
 
 class AuthLocalDataSource {
 
-    suspend fun getSessionToken(): LocalSessionToken? {
-        TODO()
+    fun checkLocationPermission() {
+        //TODO: Implementation
+    }
+
+    fun getLocationPermission() {
+        //TODO: Implementation
+    }
+
+    fun getLocation(): Location? {
+        //TODO: Implementation
+        return null
     }
 }

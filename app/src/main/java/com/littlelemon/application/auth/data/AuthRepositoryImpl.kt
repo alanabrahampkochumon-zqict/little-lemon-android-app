@@ -12,11 +12,18 @@ class AuthRepositoryImpl(
     private val remoteDataSource: AuthRemoteDataSource,
     private val localDataSource: AuthLocalDataSource
 ) : AuthRepository {
-    override suspend fun sendVerificationCode(email: String): Resource<Unit> {
+    override suspend fun sendVerificationCode(emailAddress: String): Resource<Unit> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun verifyVerificationCode(otp: String): Resource<User> {
+    override suspend fun verifyVerificationCode(
+        emailAddress: String,
+        verificationCode: String
+    ): Resource<User> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun resendVerificationCode(emailAddress: String): Resource<Unit> {
         TODO("Not yet implemented")
     }
 

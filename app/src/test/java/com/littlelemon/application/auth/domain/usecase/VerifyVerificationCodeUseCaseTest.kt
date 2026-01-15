@@ -2,6 +2,7 @@ package com.littlelemon.application.auth.domain.usecase
 
 import com.littlelemon.application.auth.domain.AuthRepository
 import com.littlelemon.application.auth.domain.models.User
+import com.littlelemon.application.auth.domain.usecase.params.VerificationParams
 import com.littlelemon.application.core.domain.utils.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -14,26 +15,29 @@ import org.junit.jupiter.api.Test
 class VerifyVerificationCodeUseCaseTest {
     private lateinit var repository: AuthRepository
     private lateinit var useCase: VerifyVerificationCodeUseCase
-    private lateinit var otp: String
     private lateinit var user: User
+
+    private companion object {
+        const val EMAIL = "test@email.com"
+        const val OTP = "3316"
+    }
 
     @BeforeEach
     fun setUp() {
         repository = mockk<AuthRepository>()
         useCase = VerifyVerificationCodeUseCase(repository)
-        otp = "3316"
-        user = User("test@email.com")
+        user = User(EMAIL)
     }
 
 
     @Test
     fun givenRepositoryReturnSuccess_useCaseReturn_successWithUser() = runTest {
         // Arrange
-        coEvery { repository.verifyVerificationCode(otp) } returns Resource.Success(
+        coEvery { repository.verifyVerificationCode(EMAIL, OTP) } returns Resource.Success(
             user
         )
         // Act
-        val result = useCase(otp)
+        val result = useCase(VerificationParams(EMAIL, OTP))
 
         // Assert
         assertTrue(result is Resource.Success)
@@ -44,11 +48,11 @@ class VerifyVerificationCodeUseCaseTest {
     fun givenRepositoryReturnsFailure_useCaseReturn_failure() = runTest {
         // Arrange
         val message = "error"
-        coEvery { repository.verifyVerificationCode(otp) } returns Resource.Failure(
+        coEvery { repository.verifyVerificationCode(EMAIL, OTP) } returns Resource.Failure(
             message
         )
         // Act
-        val result = useCase(otp)
+        val result = useCase(VerificationParams(EMAIL, OTP))
 
         // Assert
         assertTrue(result is Resource.Failure)

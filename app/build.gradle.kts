@@ -80,7 +80,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
     implementation(libs.androidx.room.runtime)
-    testImplementation(libs.junit.junit)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.io.ktor.client)
@@ -98,10 +97,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.io.mockk)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
-    testImplementation(libs.roboelectric)
 
     testRuntimeOnly(libs.junit.engine)
-    testRuntimeOnly(libs.junit.vintage.engine)
     testRuntimeOnly(libs.junit.platform)
 
     implementation(libs.io.ktor.mock)
