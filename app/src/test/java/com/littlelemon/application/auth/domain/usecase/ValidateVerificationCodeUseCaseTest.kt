@@ -2,14 +2,14 @@ package com.littlelemon.application.auth.domain.usecase
 
 import com.littlelemon.application.core.domain.utils.ValidationResult
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class ValidateVerificationCodeUseCaseTest {
     private lateinit var useCase: ValidateVerificationCodeUseCase
 
-    @Before
+    @BeforeEach
     fun setUp() {
         useCase = ValidateVerificationCodeUseCase()
     }
@@ -22,7 +22,7 @@ class ValidateVerificationCodeUseCaseTest {
         // Act
         val result = useCase(otp)
         // Assert
-        Assert.assertTrue(result is ValidationResult.Failure)
+        assertTrue(result is ValidationResult.Failure)
     }
 
     @Test
@@ -32,7 +32,7 @@ class ValidateVerificationCodeUseCaseTest {
         // Act
         val result = useCase(otp)
         // Assert
-        Assert.assertTrue(result is ValidationResult.Failure)
+        assertTrue(result is ValidationResult.Failure)
     }
 
     @Test
@@ -42,7 +42,7 @@ class ValidateVerificationCodeUseCaseTest {
         // Act
         val result = useCase(otp)
         // Assert
-        Assert.assertTrue(result is ValidationResult.Failure)
+        assertTrue(result is ValidationResult.Failure)
     }
 
     @Test
@@ -52,7 +52,7 @@ class ValidateVerificationCodeUseCaseTest {
         // Act
         val result = useCase(otp)
         // Assert
-        Assert.assertTrue(result is ValidationResult.Failure)
+        assertTrue(result is ValidationResult.Failure)
     }
 
     @Test
@@ -62,7 +62,7 @@ class ValidateVerificationCodeUseCaseTest {
         // Act
         val result = useCase(otp)
         // Assert
-        Assert.assertTrue(result is ValidationResult.Failure)
+        assertTrue(result is ValidationResult.Failure)
     }
 
     @Test
@@ -72,6 +72,6 @@ class ValidateVerificationCodeUseCaseTest {
         // Act
         val result = useCase(otp)
         // Assert
-        Assert.assertTrue(result is ValidationResult.Success)
+        assertTrue(result is ValidationResult.Success)
     }
 }

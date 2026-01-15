@@ -6,9 +6,10 @@ import com.littlelemon.application.core.domain.utils.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class VerifyVerificationCodeUseCaseTest {
     private lateinit var repository: AuthRepository
@@ -16,7 +17,7 @@ class VerifyVerificationCodeUseCaseTest {
     private lateinit var otp: String
     private lateinit var user: User
 
-    @Before
+    @BeforeEach
     fun setUp() {
         repository = mockk<AuthRepository>()
         useCase = VerifyVerificationCodeUseCase(repository)
@@ -35,8 +36,8 @@ class VerifyVerificationCodeUseCaseTest {
         val result = useCase(otp)
 
         // Assert
-        Assert.assertTrue(result is Resource.Success)
-        Assert.assertEquals(user, (result as Resource.Success).data)
+        assertTrue(result is Resource.Success)
+        assertEquals(user, (result as Resource.Success).data)
     }
 
     @Test
@@ -50,7 +51,7 @@ class VerifyVerificationCodeUseCaseTest {
         val result = useCase(otp)
 
         // Assert
-        Assert.assertTrue(result is Resource.Failure)
-        Assert.assertEquals(message, (result as Resource.Failure).errorMessage)
+        assertTrue(result is Resource.Failure)
+        assertEquals(message, (result as Resource.Failure).errorMessage)
     }
 }

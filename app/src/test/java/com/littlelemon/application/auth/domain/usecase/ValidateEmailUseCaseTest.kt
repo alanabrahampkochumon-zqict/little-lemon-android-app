@@ -2,9 +2,9 @@ package com.littlelemon.application.auth.domain.usecase
 
 import com.littlelemon.application.core.domain.utils.ValidationResult
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class ValidateEmailUseCaseTest {
     private lateinit var validEmails: List<String>
@@ -12,7 +12,7 @@ class ValidateEmailUseCaseTest {
 
     private lateinit var useCase: ValidateEmailUseCase
 
-    @Before
+    @BeforeEach
     fun setUp() {
         validEmails = listOf("test@example.com", "user@domain.com", "user@yahoo.com")
         invalidEmails = listOf("test", "email.com", "")

@@ -44,6 +44,13 @@ android {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
         }
     }
+
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
+
     buildFeatures {
         compose = true
     }
@@ -81,10 +88,13 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk)
 
 
+    testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit)
-    testImplementation(libs.junit.jupiter)
     testImplementation(libs.io.mockk)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
+
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.platform)
 
 
     androidTestImplementation(libs.androidx.junit)

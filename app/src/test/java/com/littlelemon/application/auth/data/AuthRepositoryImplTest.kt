@@ -1,9 +1,9 @@
 package com.littlelemon.application.auth.data
 
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 
 class AuthRepositoryImplTest {
-    @Before
+    @BeforeEach
     fun setUp() {
         TODO("Not yet implemented")
     }

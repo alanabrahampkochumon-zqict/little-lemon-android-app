@@ -2,15 +2,15 @@ package com.littlelemon.application.auth.domain.usecase
 
 import com.littlelemon.application.core.domain.utils.ValidationResult
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 
 class ValidateFirstNameUseCaseTest {
     private lateinit var useCase: ValidateFirstNameUseCase
 
-    @Before
+    @BeforeEach
     fun setUp() {
         useCase = ValidateFirstNameUseCase()
     }

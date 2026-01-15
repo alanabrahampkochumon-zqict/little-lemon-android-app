@@ -7,10 +7,10 @@ import com.littlelemon.application.core.domain.utils.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class SaveUserInformationUseCaseTest {
     private lateinit var repository: AuthRepository
@@ -19,7 +19,7 @@ class SaveUserInformationUseCaseTest {
     private lateinit var user: User
 
 
-    @Before
+    @BeforeEach
     fun setUp() {
         repository = mockk<AuthRepository>()
         useCase = SaveUserInformationUseCase(repository)
