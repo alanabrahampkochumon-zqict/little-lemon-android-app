@@ -199,7 +199,7 @@ class AuthRemoteDataSourceTest {
             expiresIn = EXPIRES_IN,
             tokenType = "bearer"
         )
-        client.auth.importSession(createdSession)
+        client.auth.importSession(createdSession, autoRefresh = false)
 
         val dataSource = AuthRemoteDataSource(client)
 
@@ -277,7 +277,7 @@ class AuthRemoteDataSourceTest {
             expiresIn = EXPIRES_IN,
             tokenType = "bearer"
         )
-        client.auth.importSession(createdSession)
+        client.auth.importSession(createdSession, autoRefresh = false)
 
         val dataSource = AuthRemoteDataSource(client)
 
@@ -296,7 +296,7 @@ class AuthRemoteDataSourceTest {
         val engine = MockEngine {
             respond(
                 content = """{"error": "invalid_grant", "data": { "session": null, "user": null } }""",
-                status = HttpStatusCode.OK,
+                status = HttpStatusCode.BadRequest,
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
@@ -315,7 +315,7 @@ class AuthRemoteDataSourceTest {
             expiresIn = EXPIRES_IN,
             tokenType = "bearer"
         )
-        client.auth.importSession(createdSession)
+        client.auth.importSession(createdSession, autoRefresh = false)
 
         val dataSource = AuthRemoteDataSource(client)
 
