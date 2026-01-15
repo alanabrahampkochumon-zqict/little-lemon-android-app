@@ -2,10 +2,12 @@ package com.littlelemon.application.auth.domain.usecase
 
 import com.littlelemon.application.auth.domain.AuthRepository
 import com.littlelemon.application.auth.domain.models.SessionToken
+import com.littlelemon.application.auth.domain.models.User
 import com.littlelemon.application.core.domain.utils.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.toKotlinLocalDateTime
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -16,6 +18,12 @@ import java.util.UUID
 class ValidateUserSessionUseCaseTest {
     private lateinit var useCase: ValidateUserSessionUseCase
     private lateinit var repository: AuthRepository
+
+    private val user = User(
+        email = "test@email.com",
+        firstName = "first name",
+        lastName = "last name"
+    )
 
     @BeforeEach
     fun setUp() {
@@ -28,9 +36,9 @@ class ValidateUserSessionUseCaseTest {
         // Arrange
         val token = SessionToken(
             accessToken = UUID.randomUUID().toString(),
-            accessTokenExpiry = LocalDateTime.now().plusDays(2),
+            tokenExpiry = LocalDateTime.now().plusDays(2).toKotlinLocalDateTime(),
             refreshToken = UUID.randomUUID().toString(),
-            refreshTokenExpiry = LocalDateTime.now().plusDays(4)
+            user = user
         )
         coEvery { repository.getUserSession() } returns Resource.Success(token)
 

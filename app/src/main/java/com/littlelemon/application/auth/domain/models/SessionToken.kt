@@ -1,10 +1,11 @@
 package com.littlelemon.application.auth.domain.models
 
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDateTime
+
 
 data class SessionToken(
     val accessToken: String,
-    val accessTokenExpiry: LocalDateTime,
     val refreshToken: String,
-    val refreshTokenExpiry: LocalDateTime
+    val tokenExpiry: LocalDateTime,
+    val user: User
 )

@@ -7,8 +7,8 @@ import com.littlelemon.application.core.domain.UseCase
 import com.littlelemon.application.core.domain.utils.Resource
 
 class SaveUserInformationUseCase(private val repository: AuthRepository) :
-    UseCase<UserInfoParams, Resource<User>> {
-    override suspend fun invoke(input: UserInfoParams): Resource<User> =
+    UseCase<UserInfoParams, Resource<Unit>> {
+    override suspend fun invoke(input: UserInfoParams): Resource<Unit> =
         repository.saveUserInformation(input.firstName, input.lastName)
 
 }

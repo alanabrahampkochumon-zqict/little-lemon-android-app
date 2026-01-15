@@ -33,15 +33,12 @@ class VerifyVerificationCodeUseCaseTest {
     @Test
     fun givenRepositoryReturnSuccess_useCaseReturn_successWithUser() = runTest {
         // Arrange
-        coEvery { repository.verifyVerificationCode(EMAIL, OTP) } returns Resource.Success(
-            user
-        )
+        coEvery { repository.verifyVerificationCode(EMAIL, OTP) } returns Resource.Success()
         // Act
         val result = useCase(VerificationParams(EMAIL, OTP))
 
         // Assert
         assertTrue(result is Resource.Success)
-        assertEquals(user, (result as Resource.Success).data)
     }
 
     @Test

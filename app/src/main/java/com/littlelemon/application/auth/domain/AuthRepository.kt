@@ -9,11 +9,11 @@ interface AuthRepository {
 
     suspend fun sendVerificationCode(emailAddress: String): Resource<Unit>
 
-    suspend fun verifyVerificationCode(emailAddress: String, verificationCode: String): Resource<User>
+    suspend fun verifyVerificationCode(emailAddress: String, verificationCode: String): Resource<Unit>
 
     suspend fun resendVerificationCode(emailAddress: String): Resource<Unit>
 
-    suspend fun saveUserInformation(firstName: String, lastName: String = ""): Resource<User>
+    suspend fun saveUserInformation(firstName: String, lastName: String = ""): Resource<Unit>
 
     suspend fun getLocationPermission(): Resource<Unit>
 

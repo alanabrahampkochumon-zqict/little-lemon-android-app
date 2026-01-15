@@ -57,16 +57,12 @@ class SaveUserInformationUseCaseTest {
                 userInformation.firstName,
                 userInformation.lastName
             )
-        } returns Resource.Success(user)
+        } returns Resource.Success()
 
         // Act
         val result = useCase(userInformation)
         // Assert
         assertTrue(result is Resource.Success)
-        val resUser = (result as Resource.Success).data
-        assertEquals(user.firstName, resUser?.firstName)
-        assertEquals(user.lastName, resUser?.lastName)
-        assertEquals(user.email, resUser?.email)
     }
 
 

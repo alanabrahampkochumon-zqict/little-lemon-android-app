@@ -7,9 +7,9 @@ import com.littlelemon.application.core.domain.UseCase
 import com.littlelemon.application.core.domain.utils.Resource
 
 class VerifyVerificationCodeUseCase(private val repository: AuthRepository) :
-    UseCase<VerificationParams, Resource<User>> {
+    UseCase<VerificationParams, Resource<Unit>> {
 
-    override suspend fun invoke(input: VerificationParams): Resource<User> =
+    override suspend fun invoke(input: VerificationParams): Resource<Unit> =
         repository.verifyVerificationCode(emailAddress = input.emailAddress, verificationCode = input.verificationCode)
 
 }

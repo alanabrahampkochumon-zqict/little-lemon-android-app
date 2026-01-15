@@ -89,6 +89,8 @@ dependencies {
     implementation(libs.supbase.auth)
     implementation(libs.supbase.postgres)
 
+    implementation(libs.kotlinx.datetime)
+
 
     coreLibraryDesugaring(libs.desugar.jdk)
 
