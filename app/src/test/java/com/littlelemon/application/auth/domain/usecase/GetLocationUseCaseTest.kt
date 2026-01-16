@@ -1,7 +1,7 @@
 package com.littlelemon.application.auth.domain.usecase
 
 import com.littlelemon.application.auth.domain.AuthRepository
-import com.littlelemon.application.auth.domain.models.Location
+import com.littlelemon.application.auth.domain.models.LocalLocation
 import com.littlelemon.application.core.domain.utils.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 class GetLocationUseCaseTest {
     private lateinit var repository: AuthRepository
     private lateinit var useCase: GetLocationUseCase
-    private val location = Location(1.234, 2.342)
+    private val localLocation = LocalLocation(1.234, 2.342)
 
     @BeforeEach
     fun setUp() {
@@ -39,14 +39,14 @@ class GetLocationUseCaseTest {
     @Test
     fun givenLocationReceived_useCaseReturns_successWithData() = runTest {
         // Arrange
-        coEvery { repository.getLocation() } returns Resource.Success(data = location)
+        coEvery { repository.getLocation() } returns Resource.Success(data = localLocation)
 
         // Act
         val result = useCase()
 
         // Assert
         assertTrue(result is Resource.Success)
-        assertEquals(location, (result as Resource.Success).data)
+        assertEquals(localLocation, (result as Resource.Success).data)
     }
 
 

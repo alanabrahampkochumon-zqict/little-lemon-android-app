@@ -52,7 +52,7 @@ android {
         unitTests.isIncludeAndroidResources = true
     }
 
-    tasks.withType<Test>{
+    tasks.withType<Test> {
         useJUnitPlatform()
     }
 
@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.rules)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.io.ktor.client)
@@ -90,6 +91,9 @@ dependencies {
     implementation(libs.supbase.postgres)
 
     implementation(libs.kotlinx.datetime)
+
+    implementation(libs.play.services.location)
+    implementation(libs.kotlinx.coroutines.play.services) // For .await for cb based methods of google play services like location
 
 
     coreLibraryDesugaring(libs.desugar.jdk)
@@ -109,6 +113,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.kotlinx.coroutines.play.services)
     androidTestImplementation(kotlin("test"))
 
 

@@ -1,17 +1,16 @@
 package com.littlelemon.application.auth.data
 
 import com.littlelemon.application.auth.data.local.AuthLocalDataSource
+import com.littlelemon.application.auth.data.models.toLocalLocation
 import com.littlelemon.application.auth.data.models.toSessionToken
 import com.littlelemon.application.auth.data.remote.AuthRemoteDataSource
 import com.littlelemon.application.auth.domain.AuthRepository
-import com.littlelemon.application.auth.domain.models.Location
+import com.littlelemon.application.auth.domain.models.LocalLocation
 import com.littlelemon.application.auth.domain.models.SessionToken
-import com.littlelemon.application.auth.domain.models.User
 import com.littlelemon.application.core.domain.utils.Error
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.toNetworkError
 import io.github.jan.supabase.exceptions.RestException
-import io.ktor.http.HttpStatusCode
 
 class AuthRepositoryImpl(
     private val remoteDataSource: AuthRemoteDataSource,
@@ -67,12 +66,18 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun getLocationPermission(): Resource<Unit> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getLocation(): Resource<Location> {
-        TODO("Not yet implemented")
+    override suspend fun getLocation(): Resource<LocalLocation> {
+        return try {
+            val location = localDataSource.getLocation()
+            if (location != null)
+                Resource.Success(location.toLocalLocation())
+            else
+                Resource.Failure(errorMessage = "Failed to fetch location")
+//            location ? Resource.Succes(location) : Resource.Failure(errorMessage = "Failed to fetch location")
+        } catch (e: Exception) {
+            //TODO
+            Resource.Failure(errorMessage = "TODO")
+        }
     }
 
     override suspend fun getUserSession(): Resource<SessionToken?> {

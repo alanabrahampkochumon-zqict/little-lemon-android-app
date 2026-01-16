@@ -7,6 +7,6 @@ import com.littlelemon.application.core.domain.utils.Resource
 class GetLocationPermissionUseCase(private val repository: AuthRepository) :
     DefaultUseCase<Resource<Unit>> {
 
-    override suspend fun invoke(): Resource<Unit> = repository.getLocationPermission()
+    override suspend fun invoke(): Resource<Unit> = TODO()
 
 }
