@@ -1,6 +1,8 @@
 package com.littlelemon.application.auth.data.local
 
+import android.Manifest
 import android.location.Location
+import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.tasks.await
@@ -13,6 +15,7 @@ class AuthLocalDataSource(
         private const val LOCATION_STALE_TIME = 10 * 60 * 1000L
     }
 
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     suspend fun getLocation(): Location {
         val staleTime = System.currentTimeMillis() - LOCATION_STALE_TIME
 
