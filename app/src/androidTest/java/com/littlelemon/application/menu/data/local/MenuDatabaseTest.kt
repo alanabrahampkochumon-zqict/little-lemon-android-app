@@ -170,33 +170,5 @@ class MenuDatabaseTest {
         }
         return categories
     }
-
-    private fun assertDishEquals(
-        expected: DishEntity,
-        actual: DishEntity,
-        ignoreId: Boolean = true
-    ) {
-        if (!ignoreId) {
-            assertEquals(expected, actual)
-        } else {
-            assertEquals(expected.title, actual.title)
-            assertEquals(expected.description, actual.description)
-            assertEquals(expected.price, actual.price)
-            assertEquals(expected.image, actual.image)
-            assertEquals(expected.stock, actual.stock)
-            assertEquals(expected.nutritionInfo, actual.nutritionInfo)
-            assertEquals(expected.discountedPrice, actual.discountedPrice)
-        }
-    }
-
-    private fun assertCategoryExists(
-        categoryToSearch: CategoryEntity,
-        categoryList: List<CategoryEntity>
-    ) {
-        for (category in categoryList) {
-            if (category == categoryToSearch)
-                return assertTrue(true)
-        }
-        assertTrue(false)
-    }
+    
 }
