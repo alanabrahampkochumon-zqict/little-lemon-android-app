@@ -107,13 +107,17 @@ dependencies {
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.platform)
 
-    implementation(libs.io.ktor.mock)
+
+
+    implementation(libs.io.ktor.mock) // TODO: Check if necessary, else remove
+
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.kotlinx.coroutines.play.services)
+    androidTestImplementation(libs.kotlin.faker)
     androidTestImplementation(kotlin("test"))
 
 

@@ -1,19 +1,26 @@
 package com.littlelemon.application.menu.data.local.models
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
 data class DishEntity(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val dishId: Long? = null,
     val title: String,
     val description: String,
     val price: Double,
     val image: String,
     val stock: Int,
-    val nutritionInfo: NutritionInfoEntity,
+    @Embedded val nutritionInfo: Nutrition?,
     val discountedPrice: Double,
-    val category: List<CategoryEntity>
-)
+) {
+    data class Nutrition(
+        val calories: Int,
+        val protein: Int,
+        val carbs: Int,
+        val fats: Int
+    )
+}
 
 

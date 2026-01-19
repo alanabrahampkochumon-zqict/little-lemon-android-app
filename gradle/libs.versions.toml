@@ -24,6 +24,7 @@ junitJunit = "4.12"
 robolectric = "4.16"
 playServicesLocation = "21.0.1"
 rules = "1.7.0"
+kotlinFaker = "1.16.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -59,10 +60,14 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+
 #Ktor
 io-ktor-client = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 io-ktor-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 io-ktor-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
+
+#Kotlin Faker
+kotlin-faker = { group = "io.github.serpro69", name = "kotlin-faker", version.ref = "kotlinFaker" }
 
 #RoboElectric
 roboelectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }

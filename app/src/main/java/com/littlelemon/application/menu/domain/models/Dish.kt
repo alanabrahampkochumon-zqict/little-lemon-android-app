@@ -1,5 +1,7 @@
 package com.littlelemon.application.menu.domain.models
 
+import com.littlelemon.application.menu.data.local.models.DishEntity
+
 data class Dish(
     val id: Int,
     val title: String,
@@ -7,7 +9,7 @@ data class Dish(
     val price: Double,
     val image: String,
     val stock: Int,
-    val nutritionInfo: NutritionInfo,
+    val nutritionInfo: DishEntity.Nutrition,
     val discountedPrice: Double,
     val category: List<Category>
 )
