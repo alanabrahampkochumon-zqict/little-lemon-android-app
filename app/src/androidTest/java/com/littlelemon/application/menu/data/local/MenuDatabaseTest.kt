@@ -155,6 +155,7 @@ class MenuDatabaseTest {
             stock = (Math.random() * 1000).roundToInt(),
             nutritionInfo = nutrition,
             discountedPrice = Math.random() * 1000,
+            popularityIndex = (0..100).random()
         )
     }
 
@@ -170,5 +171,5 @@ class MenuDatabaseTest {
         }
         return categories
     }
-    
+
 }
