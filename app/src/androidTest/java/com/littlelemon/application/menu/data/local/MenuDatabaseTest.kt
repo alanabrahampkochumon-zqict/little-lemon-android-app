@@ -17,14 +17,18 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Clock
 
 @RunWith(AndroidJUnit4::class)
 class MenuDatabaseTest {
 
     private lateinit var database: MenuDatabase
     private lateinit var dao: DishWithCategoriesDao
+
+    private val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
 
     @Before
     fun setUp() {
@@ -138,7 +142,150 @@ class MenuDatabaseTest {
 
     }
 
-    private fun generateDish(): DishEntity {
+    @Test
+    fun dishesSortedByPopularity_whenQueried_returnsListOfDishesSortedByPopularity() = runTest {
+        // Arrange
+        val numDishes = 7
+        repeat(numDishes) {
+            val dish = DishWithCategories(
+                dish = generateDish(),
+                categories = generateCategories(it)
+            )
+            dao.insertDish(dish)
+        }
+
+        // Act
+        val result = dao.getDishesSortedByPopularity().first()
+
+        // Assert
+        assertEquals(numDishes, result.size)
+        assertTrue(result.zipWithNext { firstDish, secondDish -> firstDish.dish.popularityIndex >= secondDish.dish.popularityIndex }
+            .all { it })
+    }
+
+    @Test
+    fun dishesSortedByRecently_whenQueried_returnsListOfDishesSortedByDateDescending() = runTest {
+        // Arrange
+        val numDishes = 7
+        repeat(numDishes) {
+            val dish = DishWithCategories(
+                dish = generateDish(),
+                categories = generateCategories(it)
+            )
+            dao.insertDish(dish)
+        }
+
+        // Act
+        val result = dao.getDishesSortedByAdded(ascending = false).first()
+
+        // Assert
+        assertEquals(numDishes, result.size)
+        assertTrue(result.zipWithNext { firstDish, secondDish -> firstDish.dish.dateAdded >= secondDish.dish.dateAdded }
+            .all { it })
+    }
+
+    @Test
+    fun dishesSortedByCaloriesAscending_whenQueried_returnsListOfDishesSortedByCaloriesAscending() =
+        runTest {
+            // Arrange
+            val numDishes = 7
+            repeat(numDishes) {
+                val dish = DishWithCategories(
+                    dish = generateDish(),
+                    categories = generateCategories(it)
+                )
+                dao.insertDish(dish)
+            }
+
+            // Act
+            val result = dao.getDishesSortedByCalories().first()
+
+            // Assert
+            assertEquals(numDishes, result.size)
+            assertTrue(result.zipWithNext { firstDish, secondDish ->
+                (firstDish.dish.nutritionInfo?.calories
+                    ?: 0) <= (secondDish.dish.nutritionInfo?.calories ?: 0)
+            }
+                .all { it })
+        }
+
+    @Test
+    fun dishesSortedByCaloriesDescending_whenQueried_returnsListOfDishesSortedByCaloriesDescending() =
+        runTest {
+            // Arrange
+            val numDishes = 7
+            repeat(numDishes) {
+                val dish = DishWithCategories(
+                    dish = generateDish(),
+                    categories = generateCategories(it)
+                )
+                dao.insertDish(dish)
+            }
+
+            // Act
+            val result = dao.getDishesSortedByCalories(ascending = false).first()
+
+            // Assert
+            assertEquals(numDishes, result.size)
+            assertTrue(result.zipWithNext { firstDish, secondDish ->
+                (firstDish.dish.nutritionInfo?.calories
+                    ?: 0) >= (secondDish.dish.nutritionInfo?.calories ?: 0)
+            }
+                .all { it })
+        }
+
+    @Test
+    fun dishesSortedByProteinAscending_whenQueried_returnsListOfDishesSortedByProteinAscending() =
+        runTest {
+            // Arrange
+            val numDishes = 7
+            repeat(numDishes) {
+                val dish = DishWithCategories(
+                    dish = generateDish(),
+                    categories = generateCategories(it)
+                )
+                dao.insertDish(dish)
+            }
+
+            // Act
+            val result = dao.getDishesSortedByProtein().first()
+
+            // Assert
+            assertEquals(numDishes, result.size)
+            assertTrue(result.zipWithNext { firstDish, secondDish ->
+                (firstDish.dish.nutritionInfo?.protein
+                    ?: 0) <= (secondDish.dish.nutritionInfo?.protein ?: 0)
+            }
+                .all { it })
+        }
+
+    @Test
+    fun dishesSortedByProteinDescending_whenQueried_returnsListOfDishesSortedByProteinDescending() =
+        runTest {
+            // Arrange
+            val numDishes = 7
+            repeat(numDishes) {
+                val dish = DishWithCategories(
+                    dish = generateDish(),
+                    categories = generateCategories(it)
+                )
+                dao.insertDish(dish)
+            }
+
+            // Act
+            val result = dao.getDishesSortedByProtein(ascending = false).first()
+
+            // Assert
+            assertEquals(numDishes, result.size)
+            assertTrue(result.zipWithNext { firstDish, secondDish ->
+                (firstDish.dish.nutritionInfo?.protein
+                    ?: 0) >= (secondDish.dish.nutritionInfo?.protein ?: 0)
+            }
+                .all { it })
+        }
+
+
+    private fun generateDish(popularityIndex: Int? = null): DishEntity {
         val faker = faker {}
         val nutrition = DishEntity.Nutrition(
             calories = (Math.random() * 1000).roundToInt(),
@@ -146,6 +293,8 @@ class MenuDatabaseTest {
             carbs = (Math.random() * 1000).roundToInt(),
             fats = (Math.random() * 1000).roundToInt(),
         )
+
+        val timeNowMillis = Clock.System.now().toEpochMilliseconds()
 
         return DishEntity(
             title = faker.dessert.dessert()(),
@@ -155,7 +304,8 @@ class MenuDatabaseTest {
             stock = (Math.random() * 1000).roundToInt(),
             nutritionInfo = nutrition,
             discountedPrice = Math.random() * 1000,
-            popularityIndex = (0..100).random()
+            popularityIndex = popularityIndex ?: (0..100).random(),
+            dateAdded = (timeNowMillis - Math.random() * FOUR_YEARS_IN_MILLIS).roundToLong() // TODO: Update
         )
     }
 
@@ -171,5 +321,6 @@ class MenuDatabaseTest {
         }
         return categories
     }
+
 
 }

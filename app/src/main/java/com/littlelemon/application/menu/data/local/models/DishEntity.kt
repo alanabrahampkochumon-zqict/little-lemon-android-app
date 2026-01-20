@@ -15,6 +15,7 @@ data class DishEntity(
     @Embedded val nutritionInfo: Nutrition?,
     val discountedPrice: Double,
     val popularityIndex: Int = 0, // Used for categorizing products with best sales
+    val dateAdded: Long
 ) {
     data class Nutrition(
         val calories: Int,
