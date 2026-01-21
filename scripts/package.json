@@ -5,9 +5,9 @@
   "license": "ISC",
   "author": "Alan Abraham Puthenparambil Kochumon",
   "type": "module",
-  "main": "test.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node main.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.88.0"
