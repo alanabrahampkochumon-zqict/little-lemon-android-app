@@ -1,6 +1,5 @@
-import supabase from "./supabase.js";
+import { insertCategories } from "./database/menu.js";
 
-supabase.auth
-    .signInWithOtp({ email: "alanabrahampkochumon.zqict@gmail.com" })
-    .then((res) => console.log(res))
-    .catch((e) => console.log(e));
+// Menu Data Insertion
+insertNutritionInfo();
+insertCategories();

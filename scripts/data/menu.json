@@ -1,0 +1,286 @@
+{
+  "nutrition_info": [
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee775a", "calories": 320, "protein": 8, "carbs": 12, "fats": 24},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee775b", "calories": 128, "protein": 2, "carbs": 15, "fats": 6},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee775c", "calories": 450, "protein": 22, "carbs": 30, "fats": 25},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee775d", "calories": 210, "protein": 9, "carbs": 18, "fats": 12},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee775e", "calories": 150, "protein": 5, "carbs": 10, "fats": 8},
+    
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee775f", "calories": 850, "protein": 45, "carbs": 60, "fats": 35},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee7760", "calories": 167, "protein": 27, "carbs": 2, "fats": 7},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee7761", "calories": 620, "protein": 18, "carbs": 85, "fats": 15},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee7762", "calories": 780, "protein": 35, "carbs": 45, "fats": 40},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee7763", "calories": 550, "protein": 15, "carbs": 65, "fats": 20},
+
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee7764", "calories": 450, "protein": 6, "carbs": 55, "fats": 22},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee7765", "calories": 320, "protein": 4, "carbs": 40, "fats": 14},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee7766", "calories": 280, "protein": 12, "carbs": 25, "fats": 8},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee7767", "calories": 500, "protein": 5, "carbs": 60, "fats": 28},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee7768", "calories": 190, "protein": 4, "carbs": 35, "fats": 5},
+
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee7769", "calories": 120, "protein": 0, "carbs": 30, "fats": 0},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee776a", "calories": 80, "protein": 0, "carbs": 20, "fats": 0},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee776b", "calories": 5, "protein": 0, "carbs": 1, "fats": 0},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee776c", "calories": 125, "protein": 0, "carbs": 4, "fats": 0},
+    {"id": "6c84fb90-12c4-11e1-840d-7b25c5ee776d", "calories": 0, "protein": 0, "carbs": 0, "fats": 0}
+  ],
+
+  "category": [
+    {"id": "10000000-0000-0000-0000-000000000001", "category_name": "Starters"},
+    {"id": "20000000-0000-0000-0000-000000000002", "category_name": "Mains"},
+    {"id": "30000000-0000-0000-0000-000000000003", "category_name": "Desserts"},
+    {"id": "40000000-0000-0000-0000-000000000004", "category_name": "Drinks"}
+  ],
+
+  "dish": [
+    {
+      "id": "d1000000-0000-0000-0000-000000000001",
+      "title": "Greek Salad",
+      "description": "The famous Greek salad of crispy lettuce, peppers, olives and our Chicago style feta cheese, garnished with crunchy garlic and rosemary croutons.",
+      "price": 1299,
+      "discounted_price": 0,
+      "stock": 50,
+      "popularity_index": 95,
+      "date_added": "2026-01-15T12:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775a"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000002",
+      "title": "Bruschetta",
+      "description": "Grilled bread rubbed with garlic and topped with olive oil and salt, with fresh tomatoes and basil.",
+      "price": 495,
+      "discounted_price": 0,
+      "stock": 40,
+      "popularity_index": 80,
+      "date_added": "2026-01-05T16:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775b"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000003",
+      "title": "Fried Calamari",
+      "description": "Squid rings dusted with flour and fried until golden, served with marinara sauce.",
+      "price": 1050,
+      "discounted_price": 0,
+      "stock": 25,
+      "popularity_index": 70,
+      "date_added": "2026-01-20T10:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775c"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000004",
+      "title": "Hummus & Pita",
+      "description": "Creamy chickpea hummus drizzled with olive oil, served with warm, toasted pita bread.",
+      "price": 750,
+      "discounted_price": 0,
+      "stock": 60,
+      "popularity_index": 65,
+      "date_added": "2026-01-21T09:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775d"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000005",
+      "title": "Stuffed Mushrooms",
+      "description": "Mushrooms caps filled with a blend of cheeses and herbs, baked to perfection.",
+      "price": 899,
+      "discounted_price": 0,
+      "stock": 30,
+      "popularity_index": 55,
+      "date_added": "2026-01-21T10:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775e"
+    },
+    
+    {
+      "id": "d1000000-0000-0000-0000-000000000006",
+      "title": "Lemon Herb Chicken",
+      "description": "Grilled chicken breast marinated in lemon and herbs, served with roasted vegetables and quinoa.",
+      "price": 1850,
+      "discounted_price": 1650,
+      "stock": 25,
+      "popularity_index": 88,
+      "date_added": "2026-01-10T14:30:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775f"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000007",
+      "title": "Grilled Whole Fish",
+      "description": "Fresh whole fish grilled over charcoal, seasoned with olive oil and oregano. Served with roasted lemon potatoes.",
+      "price": 2985,
+      "discounted_price": 2500,
+      "stock": 15,
+      "popularity_index": 92,
+      "date_added": "2026-01-12T18:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7760"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000008",
+      "title": "Pasta A La Lemon",
+      "description": "Al dente spaghetti tossed in a creamy lemon garlic sauce with fresh parsley.",
+      "price": 1499,
+      "discounted_price": 0,
+      "stock": 40,
+      "popularity_index": 78,
+      "date_added": "2026-01-15T12:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7761"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000009",
+      "title": "Little Lemon Burger",
+      "description": "A juicy beef patty topped with feta cheese, cucumber, and tzatziki sauce on a brioche bun.",
+      "price": 1650,
+      "discounted_price": 0,
+      "stock": 35,
+      "popularity_index": 85,
+      "date_added": "2026-01-18T13:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7762"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000010",
+      "title": "Vegetarian Moussaka",
+      "description": "Layers of eggplant, potato, and spiced lentils topped with a creamy béchamel sauce.",
+      "price": 1550,
+      "discounted_price": 0,
+      "stock": 20,
+      "popularity_index": 60,
+      "date_added": "2026-01-19T11:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7763"
+    },
+
+    {
+      "id": "d1000000-0000-0000-0000-000000000011",
+      "title": "Baklava",
+      "description": "Layered pastry dessert made of filo pastry, filled with chopped nuts, and sweetened with syrup or honey.",
+      "price": 600,
+      "discounted_price": 0,
+      "stock": 100,
+      "popularity_index": 98,
+      "date_added": "2026-01-18T09:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7764"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000012",
+      "title": "Lemon Tart",
+      "description": "A zesty lemon custard filling in a buttery pastry shell, topped with fresh berries.",
+      "price": 550,
+      "discounted_price": 0,
+      "stock": 50,
+      "popularity_index": 82,
+      "date_added": "2026-01-20T14:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7765"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000013",
+      "title": "Greek Yogurt",
+      "description": "Thick and creamy Greek yogurt served with local honey and walnuts.",
+      "price": 450,
+      "discounted_price": 0,
+      "stock": 60,
+      "popularity_index": 75,
+      "date_added": "2026-01-21T08:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7766"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000014",
+      "title": "Chocolate Mousse",
+      "description": "Rich and airy chocolate mousse made with premium dark chocolate.",
+      "price": 700,
+      "discounted_price": 0,
+      "stock": 40,
+      "popularity_index": 88,
+      "date_added": "2026-01-22T10:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7767"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000015",
+      "title": "Rice Pudding",
+      "description": "Traditional creamy rice pudding dusted with cinnamon.",
+      "price": 400,
+      "discounted_price": 0,
+      "stock": 45,
+      "popularity_index": 65,
+      "date_added": "2026-01-22T11:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7768"
+    },
+
+    {
+      "id": "d1000000-0000-0000-0000-000000000016",
+      "title": "Fresh Lemonade",
+      "description": "Freshly squeezed lemons with a hint of mint and ginger.",
+      "price": 350,
+      "discounted_price": 0,
+      "stock": 200,
+      "popularity_index": 99,
+      "date_added": "2026-01-20T10:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7769"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000017",
+      "title": "Iced Tea",
+      "description": "House-brewed black tea served over ice with a lemon slice.",
+      "price": 300,
+      "discounted_price": 0,
+      "stock": 150,
+      "popularity_index": 85,
+      "date_added": "2026-01-21T09:30:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776a"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000018",
+      "title": "Greek Coffee",
+      "description": "Strong, rich coffee brewed in a traditional briki.",
+      "price": 350,
+      "discounted_price": 0,
+      "stock": 100,
+      "popularity_index": 70,
+      "date_added": "2026-01-21T08:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776b"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000019",
+      "title": "House Wine (Red)",
+      "description": "A glass of our house red wine, featuring notes of cherry and spice.",
+      "price": 800,
+      "discounted_price": 0,
+      "stock": 80,
+      "popularity_index": 60,
+      "date_added": "2026-01-22T17:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776c"
+    },
+    {
+      "id": "d1000000-0000-0000-0000-000000000020",
+      "title": "Sparkling Water",
+      "description": "Crisp and refreshing carbonated mineral water.",
+      "price": 250,
+      "discounted_price": 0,
+      "stock": 200,
+      "popularity_index": 50,
+      "date_added": "2026-01-22T09:00:00Z",
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776d"
+    }
+  ],
+  
+  "dish_category": [
+    {"dish_id": "d1000000-0000-0000-0000-000000000001", "category_id": "10000000-0000-0000-0000-000000000001"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000002", "category_id": "10000000-0000-0000-0000-000000000001"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000003", "category_id": "10000000-0000-0000-0000-000000000001"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000004", "category_id": "10000000-0000-0000-0000-000000000001"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000005", "category_id": "10000000-0000-0000-0000-000000000001"},
+
+    {"dish_id": "d1000000-0000-0000-0000-000000000006", "category_id": "20000000-0000-0000-0000-000000000002"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000007", "category_id": "20000000-0000-0000-0000-000000000002"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000008", "category_id": "20000000-0000-0000-0000-000000000002"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000009", "category_id": "20000000-0000-0000-0000-000000000002"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000010", "category_id": "20000000-0000-0000-0000-000000000002"},
+
+    {"dish_id": "d1000000-0000-0000-0000-000000000011", "category_id": "30000000-0000-0000-0000-000000000003"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000012", "category_id": "30000000-0000-0000-0000-000000000003"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000013", "category_id": "30000000-0000-0000-0000-000000000003"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000014", "category_id": "30000000-0000-0000-0000-000000000003"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000015", "category_id": "30000000-0000-0000-0000-000000000003"},
+
+    {"dish_id": "d1000000-0000-0000-0000-000000000016", "category_id": "40000000-0000-0000-0000-000000000004"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000017", "category_id": "40000000-0000-0000-0000-000000000004"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000018", "category_id": "40000000-0000-0000-0000-000000000004"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000019", "category_id": "40000000-0000-0000-0000-000000000004"},
+    {"dish_id": "d1000000-0000-0000-0000-000000000020", "category_id": "40000000-0000-0000-0000-000000000004"}
+  ]
+}

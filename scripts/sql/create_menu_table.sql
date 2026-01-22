@@ -14,19 +14,22 @@ CREATE TABLE
         fats INTEGER NOT NULL
     );
 
+--
 CREATE TABLE
     IF NOT EXISTS category (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
         category_name VARCHAR(255) NOT NULL
     );
 
+--
 CREATE TABLE
     IF NOT EXISTS dish (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
         title VARCHAR(255) NOT NULL,
         description TEXT,
         price BIGINT NOT NULL,
-        stock INTEGER NOT NULL DEFAULT 0,
+        discounted_price BIGINT NOT NULL DEFAULT 0,
+        stock INTEGER NOT NULL CHECK (stock >= 0) DEFAULT 0,
         popularity_index INTEGER NOT NULL CHECK (
             popularity_index > 0
             AND popularity_index <= 100
@@ -35,6 +38,7 @@ CREATE TABLE
         nutrition_info_id UUID REFERENCES nutrition_info (id)
     );
 
+--
 CREATE TABLE
     IF NOT EXISTS dish_category (
         dish_id UUID references dish (id) ON DELETE CASCADE,
