@@ -1,5 +1,6 @@
-import { insertCategories } from "./database/menu.js";
+import { insertDishes } from "./database/menu.js";
 
 // Menu Data Insertion
-insertNutritionInfo();
-insertCategories();
+// insertNutritionInfo();
+// insertCategories();
+insertDishes();

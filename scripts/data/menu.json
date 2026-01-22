@@ -42,7 +42,8 @@
       "stock": 50,
       "popularity_index": 95,
       "date_added": "2026-01-15T12:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775a"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775a",
+      "image": "greek-salad.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000002",
@@ -53,7 +54,8 @@
       "stock": 40,
       "popularity_index": 80,
       "date_added": "2026-01-05T16:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775b"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775b",
+      "image": "brushetta.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000003",
@@ -64,7 +66,8 @@
       "stock": 25,
       "popularity_index": 70,
       "date_added": "2026-01-20T10:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775c"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775c",
+      "image": "fried-calamari.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000004",
@@ -75,7 +78,8 @@
       "stock": 60,
       "popularity_index": 65,
       "date_added": "2026-01-21T09:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775d"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775d",
+      "image": "pita-and-hummus.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000005",
@@ -86,7 +90,8 @@
       "stock": 30,
       "popularity_index": 55,
       "date_added": "2026-01-21T10:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775e"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775e",
+      "image": "stuffed-mushrooms.png"
     },
     
     {
@@ -98,7 +103,8 @@
       "stock": 25,
       "popularity_index": 88,
       "date_added": "2026-01-10T14:30:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775f"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee775f",
+      "image": "herb-chicken.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000007",
@@ -109,7 +115,8 @@
       "stock": 15,
       "popularity_index": 92,
       "date_added": "2026-01-12T18:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7760"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7760",
+      "image": "grilled-fish.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000008",
@@ -120,7 +127,8 @@
       "stock": 40,
       "popularity_index": 78,
       "date_added": "2026-01-15T12:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7761"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7761",
+      "image": "pasta.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000009",
@@ -131,7 +139,8 @@
       "stock": 35,
       "popularity_index": 85,
       "date_added": "2026-01-18T13:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7762"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7762",
+      "image": "burger.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000010",
@@ -142,7 +151,8 @@
       "stock": 20,
       "popularity_index": 60,
       "date_added": "2026-01-19T11:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7763"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7763",
+      "image": "veg-mousakka.png"
     },
 
     {
@@ -154,7 +164,8 @@
       "stock": 100,
       "popularity_index": 98,
       "date_added": "2026-01-18T09:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7764"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7764",
+      "image": "baklava.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000012",
@@ -165,7 +176,8 @@
       "stock": 50,
       "popularity_index": 82,
       "date_added": "2026-01-20T14:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7765"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7765",
+      "image": "lemon-tart.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000013",
@@ -176,7 +188,8 @@
       "stock": 60,
       "popularity_index": 75,
       "date_added": "2026-01-21T08:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7766"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7766",
+      "image": "greek-yogurt.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000014",
@@ -187,7 +200,8 @@
       "stock": 40,
       "popularity_index": 88,
       "date_added": "2026-01-22T10:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7767"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7767",
+      "image": "chocolate-mousse.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000015",
@@ -198,7 +212,8 @@
       "stock": 45,
       "popularity_index": 65,
       "date_added": "2026-01-22T11:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7768"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7768",
+      "image": "rice-pudding.png"
     },
 
     {
@@ -210,7 +225,8 @@
       "stock": 200,
       "popularity_index": 99,
       "date_added": "2026-01-20T10:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7769"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee7769",
+      "image":"lemonade.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000017",
@@ -221,7 +237,8 @@
       "stock": 150,
       "popularity_index": 85,
       "date_added": "2026-01-21T09:30:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776a"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776a",
+      "image": "iced-tea.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000018",
@@ -232,7 +249,8 @@
       "stock": 100,
       "popularity_index": 70,
       "date_added": "2026-01-21T08:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776b"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776b",
+      "image": "greek-coffee.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000019",
@@ -243,7 +261,8 @@
       "stock": 80,
       "popularity_index": 60,
       "date_added": "2026-01-22T17:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776c"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776c",
+      "image": "wine.png"
     },
     {
       "id": "d1000000-0000-0000-0000-000000000020",
@@ -254,7 +273,8 @@
       "stock": 200,
       "popularity_index": 50,
       "date_added": "2026-01-22T09:00:00Z",
-      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776d"
+      "nutrition_info_id": "6c84fb90-12c4-11e1-840d-7b25c5ee776d",
+      "image": "sparkling-water.png"
     }
   ],
   
