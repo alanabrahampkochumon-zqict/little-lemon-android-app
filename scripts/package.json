@@ -5,12 +5,17 @@
   "license": "ISC",
   "author": "Alan Abraham Puthenparambil Kochumon",
   "type": "module",
-  "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "tsx ./src/main.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.88.0",
     "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.10",
+    "@types/sharp": "^0.31.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }

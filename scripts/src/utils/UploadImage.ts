@@ -7,7 +7,12 @@ import supabase from "../supabase.js";
  * @param file: The file to be uploaded
  * @param upsert: Whether to update the existing file
  */
-export async function uploadImage(bucketName, fileName, file, upsert) {
+export async function uploadImage(
+    bucketName: string,
+    fileName: string,
+    file: Buffer | ArrayBuffer | Uint8Array,
+    upsert: boolean = true,
+) {
     const { data, error } = await supabase.storage
         .from(bucketName)
         .upload(fileName, file, { upsert: upsert });
