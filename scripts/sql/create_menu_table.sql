@@ -36,7 +36,7 @@ CREATE TABLE
         ) DEFAULT 1,
         date_added TIMESTAMP NOT NULL DEFAULT NOW (),
         nutrition_info_id UUID REFERENCES nutrition_info (id),
-        image_url TEXT
+        image TEXT
     );
 
 --
