@@ -6,7 +6,8 @@
   "author": "Alan Abraham Puthenparambil Kochumon",
   "type": "module",
   "scripts": {
-    "start": "tsx ./src/main.ts"
+    "start": "tsx ./src/main.ts",
+    "fetch": "tsx ./src/database/fetch.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.88.0",

@@ -13,7 +13,7 @@ export async function uploadImage(
     fileName: string,
     file: Buffer | ArrayBuffer | Uint8Array,
     upsert: boolean = true,
-    contentType: "image/png",
+    contentType: string = "image/png",
 ) {
     const { data, error } = await supabase.storage
         .from(bucketName)
