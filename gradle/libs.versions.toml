@@ -25,6 +25,7 @@ robolectric = "4.16"
 playServicesLocation = "21.0.1"
 rules = "1.7.0"
 kotlinFaker = "1.16.0"
+slf4j = "2.0.9" # Logger
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +72,9 @@ kotlin-faker = { group = "io.github.serpro69", name = "kotlin-faker", version.re
 
 #RoboElectric
 roboelectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+
+# SLF4J Logger
+slf4j-nop = { group = "org.slf4j", name = "slf4j-nop", version.ref = "slf4j" }
 
 desugar-jdk = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
 
