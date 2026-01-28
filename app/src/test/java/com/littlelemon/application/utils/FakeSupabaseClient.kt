@@ -3,7 +3,6 @@ package com.littlelemon.application.utils
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.SupabaseClientBuilder
 import io.github.jan.supabase.createSupabaseClient
-import io.github.jan.supabase.logging.LogLevel
 import io.github.jan.supabase.postgrest.Postgrest
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
@@ -28,7 +27,6 @@ fun createFakeSupabaseClient(
         supabaseUrl = supabaseURL,
         supabaseKey = supabaseKey,
     ) {
-        defaultLogLevel = LogLevel.NONE // For Unit Testing, Logging is disabled
         install(Postgrest)
         httpEngine = MockEngine { request ->
             requestHandler(request)

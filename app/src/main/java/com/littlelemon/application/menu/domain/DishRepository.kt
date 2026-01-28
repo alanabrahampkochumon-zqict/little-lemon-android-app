@@ -8,12 +8,8 @@ interface DishRepository {
     suspend fun getDishes(
         max: Int = 10,
         sorting: DishSorting = DishSorting.BEST_SELLING,
-        filter: DishFilter = DishFilter.INCLUDE_OUT_OF_STOCK
+        filter: DishFilter = DishFilter.INCLUDE_OUT_OF_STOCK,
+        fetchFromRemote: Boolean = true
     )
-
-    suspend fun getDishDetail(
-        dishId: Int
-    )
-
 
 }

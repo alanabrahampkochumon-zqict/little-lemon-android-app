@@ -2,7 +2,7 @@ package com.littlelemon.application.menu.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.littlelemon.application.menu.data.local.dao.DishWithCategoriesDao
+import com.littlelemon.application.menu.data.local.dao.DishDao
 import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity
@@ -13,5 +13,5 @@ import com.littlelemon.application.menu.data.local.models.DishEntity
     exportSchema = false
 )
 abstract class MenuDatabase : RoomDatabase() {
-    abstract val dao: DishWithCategoriesDao
+    abstract val dao: DishDao
 }

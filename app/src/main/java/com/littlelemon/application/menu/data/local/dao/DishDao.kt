@@ -13,7 +13,7 @@ import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface DishWithCategoriesDao {
+interface DishDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCategory(category: CategoryEntity): Long
@@ -33,7 +33,7 @@ interface DishWithCategoriesDao {
 
         for (category in dishWithCategories.categories) {
             val catId = insertCategory(category)
-            Log.d("Testing", "DISHID: ${dishId}, CAT: ${catId}")
+            Log.d("Testing", "DISHID: ${dishId}, CAT: $catId")
             val crossRef = DishCategoryCrossRef(
                 dishId = dishId,
                 categoryId = catId

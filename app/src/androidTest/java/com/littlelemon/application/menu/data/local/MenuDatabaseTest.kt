@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.littlelemon.application.menu.data.local.dao.DishWithCategoriesDao
+import com.littlelemon.application.menu.data.local.dao.DishDao
 import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishEntity
 import com.littlelemon.application.menu.data.local.models.DishWithCategories
@@ -26,7 +26,7 @@ import kotlin.time.Clock
 class MenuDatabaseTest {
 
     private lateinit var database: MenuDatabase
-    private lateinit var dao: DishWithCategoriesDao
+    private lateinit var dao: DishDao
 
     private val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
 
