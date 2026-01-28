@@ -5,31 +5,19 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DishDTO(
-    val id: Int,
+    val id: String,
     val title: String,
-    val description: String,
-    val price: Double,
+    val description: String?,
+    val price: Long,
     val image: String,
     val stock: Int,
     @SerialName("nutrition_info")
-    val nutritionInfo: NutritionInfo,
+    val nutritionInfo: NutritionInfoDTO?,
     @SerialName("discounted_price")
     val discountedPrice: Double,
     @SerialName("popularity_index")
     val popularityIndex: Int,
-    val category: List<Category>
-)
-
-@Serializable
-data class NutritionInfo(
-    val calories: Int,
-    val protein: Int,
-    val carbs: Int,
-    val fats: Int
-)
-
-@Serializable
-data class Category(
-    @SerialName("category_name")
-    val categoryName: String
+    val dateAdded: Long,
+    @SerialName("categories")
+    val categories: List<CategoryDTO>
 )

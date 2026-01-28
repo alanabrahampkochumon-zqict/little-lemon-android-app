@@ -80,14 +80,16 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 # Testing
 io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 jetbrains-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+
+#Supabase
 supbase-bom = { group = "io.github.jan-tennert.supabase", name = "bom", version.ref = "supabase" }
 supbase-postgres = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt" }
 supbase-auth = { group = "io.github.jan-tennert.supabase", name = "auth-kt" }
 supbase-realtime = { group = "io.github.jan-tennert.supabase", name = "realtime-kt" }
+
+# Junit
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 androidx-rules = { group = "androidx.test", name = "rules", version.ref = "rules" }
-
-
 
 
 [plugins]

@@ -1,4 +1,10 @@
 package com.littlelemon.application.menu.data.remote.models
 
-class CategoryDTO {
-}
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class CategoryDTO(
+    @SerialName("category_name")
+    val categoryName: String
+)

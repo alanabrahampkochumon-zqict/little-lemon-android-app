@@ -103,6 +103,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.io.mockk)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
+    testImplementation(libs.kotlin.faker)
 
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.platform)

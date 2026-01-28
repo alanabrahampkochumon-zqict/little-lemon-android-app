@@ -14,4 +14,6 @@ interface DishRepository {
     suspend fun getDishDetail(
         dishId: Int
     )
+
+
 }
