@@ -143,6 +143,95 @@ class MenuDatabaseTest {
     }
 
     @Test
+    fun dishesSortedByNameAscending_whenQueried_returnsListOfDishesSortedByNameAscending() =
+        runTest {
+            // Arrange
+            val numDishes = 7
+            repeat(numDishes) {
+                val dish = DishWithCategories(
+                    dish = generateDish(),
+                    categories = generateCategories(it)
+                )
+                dao.insertDish(dish)
+            }
+
+            // Act
+            val result = dao.getDishesSortedByName(ascending = true).first()
+
+            // Assert
+            assertEquals(numDishes, result.size)
+            assertTrue(result.zipWithNext { firstDish, secondDish -> firstDish.dish.title <= secondDish.dish.title }
+                .all { it })
+        }
+
+    @Test
+    fun dishesSortedByNameDescending_whenQueried_returnsListOfDishesSortedByNameDescending() =
+        runTest {
+            // Arrange
+            val numDishes = 7
+            repeat(numDishes) {
+                val dish = DishWithCategories(
+                    dish = generateDish(),
+                    categories = generateCategories(it)
+                )
+                dao.insertDish(dish)
+            }
+
+            // Act
+            val result = dao.getDishesSortedByName(ascending = false).first()
+
+            // Assert
+            assertEquals(numDishes, result.size)
+            assertTrue(result.zipWithNext { firstDish, secondDish -> firstDish.dish.title >= secondDish.dish.title }
+                .all { it })
+        }
+
+    @Test
+    fun dishesSortedByPriceAscending_whenQueried_returnsListOfDishesSortedByPriceAscending() =
+        runTest {
+            // Arrange
+            val numDishes = 7
+            repeat(numDishes) {
+                val dish = DishWithCategories(
+                    dish = generateDish(),
+                    categories = generateCategories(it)
+                )
+                dao.insertDish(dish)
+            }
+
+            // Act
+            val result = dao.getDishesSortedByPrice(ascending = true).first()
+
+            // Assert
+            assertEquals(numDishes, result.size)
+            assertTrue(result.zipWithNext { firstDish, secondDish -> firstDish.dish.price <= secondDish.dish.price }
+                .all { it })
+        }
+
+    @Test
+    fun dishesSortedByPriceDescending_whenQueried_returnsListOfDishesSortedByPriceDescending() =
+        runTest {
+            // Arrange
+            val numDishes = 7
+            repeat(numDishes) {
+                val dish = DishWithCategories(
+                    dish = generateDish(),
+                    categories = generateCategories(it)
+                )
+                dao.insertDish(dish)
+            }
+
+            // Act
+            val result = dao.getDishesSortedByPrice(ascending = false).first()
+
+            // Assert
+            assertEquals(numDishes, result.size)
+            assertTrue(result.zipWithNext { firstDish, secondDish -> firstDish.dish.price >= secondDish.dish.price }
+                .all { it })
+        }
+
+
+    @Test
     fun dishesSortedByPopularity_whenQueried_returnsListOfDishesSortedByPopularity() = runTest {
         // Arrange
         val numDishes = 7

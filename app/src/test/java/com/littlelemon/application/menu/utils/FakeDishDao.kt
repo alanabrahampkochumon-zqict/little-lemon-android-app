@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeDishDao(
-    private val seedDatabase: Boolean = true
+    seedDatabase: Boolean = true
 ) : DishDao {
 
     private val dishes = mutableListOf<DishEntity>()
@@ -73,6 +73,24 @@ class FakeDishDao(
     override fun getDishesSortedByPopularity(): Flow<List<DishWithCategories>> = flow {
         val dishes = _getAllDishes().sortedBy { (dish, _) -> dish.popularityIndex }
         emit(dishes)
+    }
+
+    override fun getDishesSortedByName(ascending: Boolean): Flow<List<DishWithCategories>> = flow {
+        val dishes = _getAllDishes()
+        if (ascending) {
+            emit(dishes.sortedBy { (dish, _) -> dish.title })
+        } else {
+            emit(dishes.sortedByDescending { (dish, _) -> dish.title })
+        }
+    }
+
+    override fun getDishesSortedByPrice(ascending: Boolean): Flow<List<DishWithCategories>> = flow {
+        val dishes = _getAllDishes()
+        if (ascending) {
+            emit(dishes.sortedBy { (dish, _) -> dish.price })
+        } else {
+            emit(dishes.sortedByDescending { (dish, _) -> dish.price })
+        }
     }
 
     override fun getDishesSortedByAdded(

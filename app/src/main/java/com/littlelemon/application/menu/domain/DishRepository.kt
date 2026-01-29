@@ -7,7 +7,7 @@ interface DishRepository {
 
     suspend fun getDishes(
         max: Int = 10,
-        sorting: DishSorting = DishSorting.BEST_SELLING,
+        sorting: DishSorting = DishSorting.POPULARITY,
         filter: DishFilter = DishFilter.INCLUDE_OUT_OF_STOCK,
         fetchFromRemote: Boolean = true
     )

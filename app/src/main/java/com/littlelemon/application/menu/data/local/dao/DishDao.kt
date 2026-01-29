@@ -1,6 +1,5 @@
 package com.littlelemon.application.menu.data.local.dao
 
-import android.util.Log
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -33,7 +32,6 @@ interface DishDao {
 
         for (category in dishWithCategories.categories) {
             val catId = insertCategory(category)
-            Log.d("Testing", "DISHID: ${dishId}, CAT: $catId")
             val crossRef = DishCategoryCrossRef(
                 dishId = dishId,
                 categoryId = catId
@@ -53,6 +51,22 @@ interface DishDao {
     @Transaction
     @Query("SELECT * FROM dishentity ORDER BY popularityIndex DESC")
     fun getDishesSortedByPopularity(): Flow<List<DishWithCategories>>
+
+    @Transaction
+    @Query(
+        "SELECT * FROM dishentity ORDER BY " +
+                "CASE WHEN :ascending = 1 THEN title END ASC," +
+                "CASE WHEN :ascending = 0 THEN title END DESC"
+    )
+    fun getDishesSortedByName(ascending: Boolean = true): Flow<List<DishWithCategories>>
+
+    @Transaction
+    @Query(
+        "SELECT * FROM dishentity ORDER BY " +
+                "CASE WHEN :ascending = 1 THEN price END ASC," +
+                "CASE WHEN :ascending = 0 THEN price END DESC"
+    )
+    fun getDishesSortedByPrice(ascending: Boolean = true): Flow<List<DishWithCategories>>
 
     @Transaction
     @Query(
