@@ -18,7 +18,7 @@ class FakeDishDao(
 
     init {
         if (seedDatabase) {
-            val generator = MenuEntityGenerators()
+            val generator = MenuEntityGenerator()
             val dishCount = 20
             val categoryCount = 20
 
