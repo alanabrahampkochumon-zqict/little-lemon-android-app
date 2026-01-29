@@ -6,6 +6,7 @@ import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity
 import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class FakeDishDao(
     private val seedDatabase: Boolean = true
@@ -18,8 +19,8 @@ class FakeDishDao(
     init {
         if (seedDatabase) {
             val generator = MenuEntityGenerators()
-            val dishCount = 10
-            val categoryCount = 10
+            val dishCount = 20
+            val categoryCount = 20
 
             categories.addAll(generator.generateCategoryEntities(categoryCount))
             repeat(dishCount) {
@@ -53,36 +54,63 @@ class FakeDishDao(
         dishCategoryCrossRefs.add(crossRef)
     }
 
-    override fun getAllDishes(limit: Int): Flow<List<DishWithCategories>> {
-        TODO("Not yet implemented")
+    private fun _getAllDishes(): List<DishWithCategories> {
+        val returnedDishes = mutableListOf<DishWithCategories>()
+        for (dish in dishes) {
+            val categories =
+                dishCategoryCrossRefs.filter { (dishId, _) -> dishId == dish.dishId }
+                    .mapNotNull { (_, categoryId) -> categories.find { category -> categoryId == category.categoryId } }
+            returnedDishes.add(DishWithCategories(dish, categories))
+        }
+        return returnedDishes
     }
 
-    override fun getDishesSortedByPopularity(limit: Int): Flow<List<DishWithCategories>> {
-        TODO("Not yet implemented")
+    override fun getAllDishes(): Flow<List<DishWithCategories>> = flow {
+        val dishes = _getAllDishes()
+        emit(dishes)
+    }
+
+    override fun getDishesSortedByPopularity(): Flow<List<DishWithCategories>> = flow {
+        val dishes = _getAllDishes().sortedBy { (dish, _) -> dish.popularityIndex }
+        emit(dishes)
     }
 
     override fun getDishesSortedByAdded(
-        limit: Int,
         ascending: Boolean
-    ): Flow<List<DishWithCategories>> {
-        TODO("Not yet implemented")
+    ): Flow<List<DishWithCategories>> = flow {
+        val dishes = _getAllDishes()
+        if (ascending) {
+            emit(dishes.sortedBy { (dish, _) -> dish.dateAdded })
+        } else {
+            emit(dishes.sortedByDescending { (dish, _) -> dish.dateAdded })
+        }
     }
 
     override fun getDishesSortedByCalories(
-        limit: Int,
         ascending: Boolean
-    ): Flow<List<DishWithCategories>> {
-        TODO("Not yet implemented")
+    ): Flow<List<DishWithCategories>> = flow {
+        val dishes = _getAllDishes()
+        if (ascending) {
+            emit(dishes.sortedBy { (dish, _) -> dish.nutritionInfo?.calories })
+        } else {
+            emit(dishes.sortedByDescending { (dish, _) -> dish.nutritionInfo?.calories })
+        }
     }
 
     override fun getDishesSortedByProtein(
-        limit: Int,
         ascending: Boolean
-    ): Flow<List<DishWithCategories>> {
-        TODO("Not yet implemented")
+    ): Flow<List<DishWithCategories>> = flow {
+        val dishes = _getAllDishes()
+        if (ascending) {
+            emit(dishes.sortedBy { (dish, _) -> dish.nutritionInfo?.protein })
+        } else {
+            emit(dishes.sortedByDescending { (dish, _) -> dish.nutritionInfo?.protein })
+        }
     }
 
     override suspend fun deleteAllDishes() {
-        TODO("Not yet implemented")
+        dishes.clear()
+        categories.clear()
+        dishCategoryCrossRefs.clear()
     }
 }

@@ -46,23 +46,21 @@ interface DishDao {
     }
 
     @Transaction
-    @Query("SELECT * FROM dishentity LIMIT :limit")
-    fun getAllDishes(limit: Int = 10): Flow<List<DishWithCategories>>
+    @Query("SELECT * FROM dishentity")
+    fun getAllDishes(): Flow<List<DishWithCategories>>
 
 
     @Transaction
-    @Query("SELECT * FROM dishentity ORDER BY popularityIndex DESC LIMIT :limit")
-    fun getDishesSortedByPopularity(limit: Int = 10): Flow<List<DishWithCategories>>
+    @Query("SELECT * FROM dishentity ORDER BY popularityIndex DESC")
+    fun getDishesSortedByPopularity(): Flow<List<DishWithCategories>>
 
     @Transaction
     @Query(
         "SELECT * FROM dishentity ORDER BY " +
                 " CASE WHEN :ascending = 1 THEN dateAdded END ASC, " +
-                " CASE WHEN :ascending = 0 THEN dateAdded END DESC " +
-                " LIMIT :limit"
+                " CASE WHEN :ascending = 0 THEN dateAdded END DESC "
     )
     fun getDishesSortedByAdded(
-        limit: Int = 10,
         ascending: Boolean = true
     ): Flow<List<DishWithCategories>>
 
@@ -70,11 +68,9 @@ interface DishDao {
     @Query(
         "SELECT * FROM DishEntity ORDER BY " +
                 " CASE WHEN :ascending = 1 THEN calories END ASC, " +
-                " CASE WHEN :ascending = 0 THEN calories END DESC " +
-                " LIMIT :limit"
+                " CASE WHEN :ascending = 0 THEN calories END DESC "
     )
     fun getDishesSortedByCalories(
-        limit: Int = 10,
         ascending: Boolean = true
     ): Flow<List<DishWithCategories>>
 
@@ -82,11 +78,9 @@ interface DishDao {
     @Query(
         "SELECT * FROM DishEntity ORDER BY " +
                 " CASE WHEN :ascending = 1 THEN protein END ASC, " +
-                " CASE WHEN :ascending = 0 THEN protein END DESC " +
-                " LIMIT :limit"
+                " CASE WHEN :ascending = 0 THEN protein END DESC "
     )
     fun getDishesSortedByProtein(
-        limit: Int = 10,
         ascending: Boolean = true
     ): Flow<List<DishWithCategories>>
 
