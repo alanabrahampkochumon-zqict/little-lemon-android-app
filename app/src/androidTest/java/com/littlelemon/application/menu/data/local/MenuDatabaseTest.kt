@@ -58,7 +58,7 @@ class MenuDatabaseTest {
 
         // Assert
         assertEquals(1, result.size)
-        assertEquals(dish.dish, result.first().dish.copy(dishId = null))
+        assertEquals(dish.dish, result.first().dish.copy())
         assertEquals(0, result.first().categories.size)
     }
 
@@ -76,7 +76,7 @@ class MenuDatabaseTest {
 
         // Assert
         assertEquals(1, result.size)
-        assertEquals(dish.dish, result.first().dish.copy(dishId = null))
+        assertEquals(dish.dish, result.first().dish.copy())
         assertEquals(1, result.first().categories.size)
         assertTrue(result.first().categories.any { (_, actualCategoryName) -> actualCategoryName == dish.categories.first().categoryName })
     }
@@ -95,7 +95,7 @@ class MenuDatabaseTest {
 
         // Assert
         assertEquals(1, result.size)
-        assertEquals(dish.dish, result.first().dish.copy(dishId = null))
+        assertEquals(dish.dish, result.first().dish.copy())
         assertEquals(2, result.first().categories.size)
 
         for ((_, categoryName) in dish.categories) {

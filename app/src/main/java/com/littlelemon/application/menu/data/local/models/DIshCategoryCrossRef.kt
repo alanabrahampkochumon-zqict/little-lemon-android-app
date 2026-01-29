@@ -21,6 +21,6 @@ import androidx.room.ForeignKey
     ]
 )
 data class DishCategoryCrossRef(
-    val dishId: Long,
-    val categoryId: Long
+    val dishId: String,
+    val categoryId: String
 )

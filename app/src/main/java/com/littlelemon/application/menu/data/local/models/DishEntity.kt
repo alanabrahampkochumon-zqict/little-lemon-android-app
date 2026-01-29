@@ -1,12 +1,15 @@
 package com.littlelemon.application.menu.data.local.models
 
+import androidx.annotation.NonNull
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.UUID
 
 @Entity
 data class DishEntity(
-    @PrimaryKey(autoGenerate = true) val dishId: Long? = null,
+    @param:NonNull @PrimaryKey(autoGenerate = false) val dishId: String = UUID.randomUUID()
+        .toString(),
     val title: String,
     val description: String,
     val price: Double,

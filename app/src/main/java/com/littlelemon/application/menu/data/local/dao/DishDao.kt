@@ -28,13 +28,15 @@ interface DishDao {
      */
     @Transaction
     suspend fun insertDish(dishWithCategories: DishWithCategories) {
-        val dishId = insertDish(dishWithCategories.dish)
+        insertDish(dishWithCategories.dish)
+
+        val dishId = dishWithCategories.dish.dishId
 
         for (category in dishWithCategories.categories) {
-            val catId = insertCategory(category)
+            insertCategory(category)
             val crossRef = DishCategoryCrossRef(
                 dishId = dishId,
-                categoryId = catId
+                categoryId = category.categoryId
             )
             insertDishCategoryCrossRef(
                 crossRef
