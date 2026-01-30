@@ -33,7 +33,7 @@ class MenuDTOGenerator {
             image = faker.internet.domain(subdomain = true),
             stock = (Math.random() * 1000).roundToInt(),
             nutritionInfo = nutrition,
-            discountedPrice = Math.random() * 1000,
+            discountedPrice = (Math.random() * 10000).roundToLong(),
             popularityIndex = (0..100).random(),
             dateAdded = (timeNowMillis - Math.random() * FOUR_YEARS_IN_MILLIS).roundToLong(),
             categories = generateCategories((Math.random() * 10).roundToInt()),

@@ -3,6 +3,7 @@ package com.littlelemon.application.menu.data.mappers
 import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity
+import com.littlelemon.application.menu.data.mappers.utils.convertCentsToDollars
 import com.littlelemon.application.menu.data.remote.models.CategoryDTO
 import com.littlelemon.application.menu.data.remote.models.DishDTO
 import com.littlelemon.application.menu.data.remote.models.NutritionInfoDTO
@@ -22,7 +23,7 @@ fun List<DishDTO>.toDishWithCategories(): MenuDataBundle {
             image = dishDTO.image,
             stock = dishDTO.stock,
             nutritionInfo = dishDTO.nutritionInfo?.toNutritionInfoEntity(),
-            discountedPrice = dishDTO.discountedPrice,
+            discountedPrice = convertCentsToDollars(dishDTO.discountedPrice),
             popularityIndex = dishDTO.popularityIndex,
             dateAdded = dishDTO.dateAdded
         )
@@ -49,6 +50,3 @@ private fun NutritionInfoDTO.toNutritionInfoEntity(): DishEntity.Nutrition = Dis
     fats = this.fats
 )
 
-private fun convertCentsToDollars(cents: Long): Double {
-    return cents / 100.0
-}

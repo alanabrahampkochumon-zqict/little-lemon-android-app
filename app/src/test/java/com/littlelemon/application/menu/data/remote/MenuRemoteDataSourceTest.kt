@@ -1,7 +1,6 @@
 package com.littlelemon.application.menu.data.remote
 
-import com.littlelemon.application.menu.data.remote.models.DishDTO
-import com.littlelemon.application.menu.utils.generateDishDTO
+import com.littlelemon.application.menu.utils.MenuDTOGenerator
 import com.littlelemon.application.utils.createFakeSupabaseClient
 import io.github.jan.supabase.exceptions.RestException
 import io.ktor.client.engine.mock.respond
@@ -20,7 +19,8 @@ class MenuRemoteDataSourceTest {
     @Test
     fun fetchDishes_remoteSuccessWithCorrectJson_returnsCorrectDTOObject() = runTest {
         // Arrange
-        val dishes = List<DishDTO>(5) { generateDishDTO() }
+        val generator = MenuDTOGenerator()
+        val dishes = List(5) { generator.generateDishDTO() }
         val responseData = Json.encodeToString(dishes)
         val client = createFakeSupabaseClient(requestHandler = { request ->
             respond(

@@ -4,6 +4,7 @@ import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity
 import io.github.serpro69.kfaker.faker
+import java.util.UUID
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.time.Clock
@@ -24,7 +25,7 @@ class MenuEntityGenerator {
         val timeNowMillis = Clock.System.now().toEpochMilliseconds()
 
         return DishEntity(
-            dishId = Clock.System.now().toEpochMilliseconds(),
+            dishId = UUID.randomUUID().toString(),
             title = faker.dessert.dessert()(),
             description = faker.lorem.words(),
             price = Math.random() * 1000,
@@ -42,7 +43,7 @@ class MenuEntityGenerator {
         repeat(numCategories) {
             categories.add(
                 CategoryEntity(
-                    categoryId = it.toLong(),
+                    categoryId = it.toString(),
                     categoryName = faker.adjective.positive()
                 )
             )
@@ -59,8 +60,8 @@ class MenuEntityGenerator {
             categories.shuffled().drop((Math.random() * categories.size).roundToInt())
         return categoriesToInsert.map { (categoryId, _) ->
             DishCategoryCrossRef(
-                dishId = dish.dishId!!,
-                categoryId = categoryId!!
+                dishId = dish.dishId,
+                categoryId = categoryId
             )
         }
     }

@@ -14,7 +14,7 @@ data class DishDTO(
     @SerialName("nutrition_info")
     val nutritionInfo: NutritionInfoDTO?,
     @SerialName("discounted_price")
-    val discountedPrice: Double,
+    val discountedPrice: Long,
     @SerialName("popularity_index")
     val popularityIndex: Int,
     val dateAdded: Long,
