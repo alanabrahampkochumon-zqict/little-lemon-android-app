@@ -30,7 +30,6 @@ fun List<DishDTO>.toDishWithCategories(): MenuDataBundle {
             CategoryEntity(categoryName = categoryDTO.categoryName)
         }
 //        val crossRef = dishDTO.
-        // TODO: Change DAO to use string ID
         // TODO: Update Seeder, database, and tests to use long instead of double for discounted price
         // TODO: Change DishEntity.Nutrition to DishEntity.NutritionInfo
 
