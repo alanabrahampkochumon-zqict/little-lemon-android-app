@@ -18,7 +18,6 @@ fun HttpStatusCode.toNetworkError(): NetworkError? {
     }
 }
 
-// TODO: Write tests for these
 fun Int.toNetworkError(): NetworkError? {
     if (this < 350) return null
     return when (this) {
