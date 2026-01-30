@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 
-class ToDishWithCategoriesTest {
+class DishDTOMapperTest {
 
     @Test
     fun givenDishesWithCategories_whenConvertedToEntity_returnsCorrectDishesWithCategories() {
@@ -24,7 +24,7 @@ class ToDishWithCategoriesTest {
         // Act
         val (dishes, categories, crossRef) = dishDTOs.toDishWithCategories()
 
-        // Act
+        // Assert
         assertEquals(numDishes, dishes.size)
         assertEquals(numCategories * numDishes, categories.size)
         assertEquals(numCategories * numDishes, crossRef.size)
@@ -52,7 +52,7 @@ class ToDishWithCategoriesTest {
         // Act
         val (dishes, categories, crossRef) = dishDTOs.toDishWithCategories()
 
-        // Act
+        // Assert
         assertEquals(numDishes, dishes.size)
         assertEquals(numCategories, categories.size)
         assertEquals(numCategories, crossRef.size)
@@ -76,7 +76,7 @@ class ToDishWithCategoriesTest {
         // Act
         val (dishes, categories, crossRef) = dishDTOs.toDishWithCategories()
 
-        // Act
+        // Assert
         assertEquals(numDishes, dishes.size)
         assertEquals(2, categories.size)
         assertEquals(2, crossRef.size)

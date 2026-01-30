@@ -3,6 +3,7 @@ package com.littlelemon.application.menu.utils
 import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity
+import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import io.github.serpro69.kfaker.faker
 import java.util.UUID
 import kotlin.math.roundToInt
@@ -13,6 +14,19 @@ private const val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000
 
 class MenuEntityGenerator {
     private val faker = faker {}
+
+    fun generateDishWithCategories(
+        numDishes: Int = 2,
+        numCategories: Int = 5
+    ): List<DishWithCategories> {
+        return List(numDishes) {
+            DishWithCategories(
+                dish = generateDishEntity(),
+                categories = generateCategoryEntities(numCategories)
+            )
+        }
+    }
+
     fun generateDishEntity(): DishEntity {
 
         val nutritionInfo = DishEntity.NutritionInfo(

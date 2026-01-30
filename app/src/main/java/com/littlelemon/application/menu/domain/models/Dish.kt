@@ -1,5 +1,7 @@
 package com.littlelemon.application.menu.domain.models
 
+import kotlinx.datetime.LocalDateTime
+
 data class Dish(
     val title: String,
     val description: String?,
@@ -8,7 +10,9 @@ data class Dish(
     val stock: Int,
     val nutritionInfo: NutritionInfo?,
     val discountedPrice: Double,
-    val category: List<Category>
+    val category: List<Category>,
+    val dateAdded: LocalDateTime,
+    val popularityIndex: Int,
 )
 
 data class NutritionInfo(
