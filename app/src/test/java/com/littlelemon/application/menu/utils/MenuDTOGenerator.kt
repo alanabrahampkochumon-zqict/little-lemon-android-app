@@ -14,7 +14,7 @@ class MenuDTOGenerator {
         const val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
     }
 
-    fun generateDishDTO(): DishDTO {
+    fun generateDishDTO(numCategories: Int = 5): DishDTO {
         val faker = faker {}
         val nutrition = NutritionInfoDTO(
             calories = (Math.random() * 1000).roundToInt(),
@@ -36,7 +36,7 @@ class MenuDTOGenerator {
             discountedPrice = (Math.random() * 10000).roundToLong(),
             popularityIndex = (0..100).random(),
             dateAdded = (timeNowMillis - Math.random() * FOUR_YEARS_IN_MILLIS).roundToLong(),
-            categories = generateCategories((Math.random() * 10).roundToInt()),
+            categories = generateCategories(numCategories),
         )
     }
 
@@ -46,6 +46,7 @@ class MenuDTOGenerator {
         repeat(numCategories) {
             categories.add(
                 CategoryDTO(
+                    categoryId = UUID.randomUUID().toString(),
                     categoryName = faker.adjective.positive()
                 )
             )

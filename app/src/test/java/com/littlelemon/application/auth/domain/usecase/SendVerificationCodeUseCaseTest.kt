@@ -18,7 +18,7 @@ class SendVerificationCodeUseCaseTest {
 
     @BeforeEach
     fun setUp() {
-        repository = mockk<AuthRepository>();
+        repository = mockk<AuthRepository>()
         useCase = SendVerificationCodeUseCase(repository)
         email = "test@email.com"
     }

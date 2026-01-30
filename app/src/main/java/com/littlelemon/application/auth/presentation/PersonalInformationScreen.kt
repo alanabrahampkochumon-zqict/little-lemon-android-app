@@ -57,7 +57,7 @@ fun PersonalInformationScreen() {/*FIXME: Change to VM */
     // Configuration and Orientation
     val configuration = LocalConfiguration.current
     val orientation = configuration.orientation
-    val isPortrait = orientation == Configuration.ORIENTATION_PORTRAIT
+    orientation == Configuration.ORIENTATION_PORTRAIT
     val maxWidth = 488.dp
     val alignment = if (configuration.screenWidthDp.dp > maxWidth) {
         Alignment.CenterHorizontally

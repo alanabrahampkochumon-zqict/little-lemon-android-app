@@ -5,5 +5,5 @@ package com.littlelemon.application.core.domain
  * If your use case takes argument, then it is recommended to use `UseCase`.
  */
 interface DefaultUseCase<out OUTPUT> {
-    operator suspend fun invoke(): OUTPUT
+    suspend operator fun invoke(): OUTPUT
 }

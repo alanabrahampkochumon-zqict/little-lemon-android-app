@@ -9,7 +9,6 @@ class ConvertCentsToDollarsTest {
     @Test
     fun zeroCents_whenConverted_returnsZeroDollars() {
         // Arrange
-        val cents = 0
 
         // Act
         val dollars = convertCentsToDollars(0)
@@ -22,7 +21,7 @@ class ConvertCentsToDollarsTest {
     fun givenCents_whenConverted_returnNonZeroDollar() {
         // Arrange
         val cents = listOf(1000L, 100L, 150L, 90L, -2000L)
-        val expectedDollars = listOf(10.0, 1.0, 1.50, 0.90, -20.0)
+        listOf(10.0, 1.0, 1.50, 0.90, -20.0)
 
         // Act
         val dollars = cents.map { cent -> convertCentsToDollars(cent) }

@@ -376,7 +376,7 @@ class MenuDatabaseTest {
 
     private fun generateDish(popularityIndex: Int? = null): DishEntity {
         val faker = faker {}
-        val nutrition = DishEntity.Nutrition(
+        val nutritionInfo = DishEntity.NutritionInfo(
             calories = (Math.random() * 1000).roundToInt(),
             protein = (Math.random() * 1000).roundToInt(),
             carbs = (Math.random() * 1000).roundToInt(),
@@ -391,7 +391,7 @@ class MenuDatabaseTest {
             price = Math.random() * 1000,
             image = faker.internet.domain(subdomain = true),
             stock = (Math.random() * 1000).roundToInt(),
-            nutritionInfo = nutrition,
+            nutritionInfo = nutritionInfo,
             discountedPrice = Math.random() * 1000,
             popularityIndex = popularityIndex ?: (0..100).random(),
             dateAdded = (timeNowMillis - Math.random() * FOUR_YEARS_IN_MILLIS).roundToLong() // TODO: Update

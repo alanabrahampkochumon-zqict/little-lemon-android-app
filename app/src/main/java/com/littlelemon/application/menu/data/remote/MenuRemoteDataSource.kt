@@ -4,5 +4,5 @@ import com.littlelemon.application.menu.data.remote.models.DishDTO
 
 interface MenuRemoteDataSource {
 
-    suspend fun fetchDishes(): List<DishDTO>;
+    suspend fun fetchDishes(): List<DishDTO>
 }

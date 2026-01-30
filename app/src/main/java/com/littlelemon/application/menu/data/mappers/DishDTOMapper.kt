@@ -4,49 +4,55 @@ import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity
 import com.littlelemon.application.menu.data.mappers.utils.convertCentsToDollars
-import com.littlelemon.application.menu.data.remote.models.CategoryDTO
 import com.littlelemon.application.menu.data.remote.models.DishDTO
 import com.littlelemon.application.menu.data.remote.models.NutritionInfoDTO
 
 data class MenuDataBundle(
-    val dishes: List<DishDTO>,
-    val categories: List<CategoryDTO>,
+    val dishes: List<DishEntity>,
+    val categories: List<CategoryEntity>,
     val crossRef: List<DishCategoryCrossRef>
 )
 
 fun List<DishDTO>.toDishWithCategories(): MenuDataBundle {
-    val result = this.map { dishDTO ->
-        val dishEntity = DishEntity(
-            title = dishDTO.title,
-            description = dishDTO.description ?: "",
-            price = convertCentsToDollars(dishDTO.price),
-            image = dishDTO.image,
-            stock = dishDTO.stock,
-            nutritionInfo = dishDTO.nutritionInfo?.toNutritionInfoEntity(),
-            discountedPrice = convertCentsToDollars(dishDTO.discountedPrice),
-            popularityIndex = dishDTO.popularityIndex,
-            dateAdded = dishDTO.dateAdded
+    val dishes = mutableListOf<DishEntity>()
+    val categories = mutableListOf<CategoryEntity>()
+    val crossRefs = mutableListOf<DishCategoryCrossRef>()
+    val addedCategoryId = mutableSetOf<String>()
+    this.forEach { dishDTO ->
+        dishes.add(
+            DishEntity(
+                title = dishDTO.title,
+                description = dishDTO.description ?: "",
+                price = convertCentsToDollars(dishDTO.price),
+                image = dishDTO.image,
+                stock = dishDTO.stock,
+                nutritionInfo = dishDTO.nutritionInfo?.toNutritionInfoEntity(),
+                discountedPrice = convertCentsToDollars(dishDTO.discountedPrice),
+                popularityIndex = dishDTO.popularityIndex,
+                dateAdded = dishDTO.dateAdded
+            )
         )
-        val categories = dishDTO.categories.map { categoryDTO ->
-            CategoryEntity(categoryName = categoryDTO.categoryName)
+        dishDTO.categories.forEach { (categoryId, categoryName) ->
+            if (categoryId !in addedCategoryId) {
+                addedCategoryId.add(categoryId)
+                categories.add(CategoryEntity(categoryId = categoryId, categoryName = categoryName))
+                crossRefs.add(DishCategoryCrossRef(dishDTO.id, categoryId))
+            }
         }
-//        val crossRef = dishDTO.
-        // TODO: Update Seeder, database, and tests to use long instead of double for discounted price
-        // TODO: Change DishEntity.Nutrition to DishEntity.NutritionInfo
 
-//        return Triple(dishEntity, categories, crossRef)
     }
     return MenuDataBundle(
-        dishes = emptyList(),
-        categories = emptyList(),
-        crossRef = emptyList()
+        dishes = dishes,
+        categories = categories,
+        crossRef = crossRefs
     )
 }
 
-private fun NutritionInfoDTO.toNutritionInfoEntity(): DishEntity.Nutrition = DishEntity.Nutrition(
-    calories = this.calories,
-    protein = this.protein,
-    carbs = this.carbs,
-    fats = this.fats
-)
+private fun NutritionInfoDTO.toNutritionInfoEntity(): DishEntity.NutritionInfo =
+    DishEntity.NutritionInfo(
+        calories = this.calories,
+        protein = this.protein,
+        carbs = this.carbs,
+        fats = this.fats
+    )
 
