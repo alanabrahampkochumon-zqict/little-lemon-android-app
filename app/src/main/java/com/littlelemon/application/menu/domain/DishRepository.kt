@@ -10,8 +10,8 @@ interface DishRepository {
 
     suspend fun getDishes(
         sorting: DishSorting = DishSorting.POPULARITY,
-        filter: DishFilter = DishFilter.INCLUDE_OUT_OF_STOCK,
-        fetchFromRemote: Boolean = true
-    ): Flow<Resource<Dish>>
+        filter: DishFilter? = null,
+        fetchFromRemote: Boolean = false
+    ): Flow<Resource<List<Dish>>>
 
 }

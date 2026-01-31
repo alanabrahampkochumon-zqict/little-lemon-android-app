@@ -2,7 +2,7 @@ package com.littlelemon.application.menu.data
 
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.data.local.dao.DishDao
-import com.littlelemon.application.menu.data.remote.MenuRemoteDataSourceImpl
+import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
 import com.littlelemon.application.menu.domain.DishRepository
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.util.DishFilter
@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.Flow
 
 class DishRepositoryImpl(
     private val localDataSource: DishDao,
-    private val remoteDataSource: MenuRemoteDataSourceImpl
+    private val remoteDataSource: MenuRemoteDataSource
 ) : DishRepository {
 
     override suspend fun getDishes(
         sorting: DishSorting,
-        filter: DishFilter,
+        filter: DishFilter?,
         fetchFromRemote: Boolean
-    ): Flow<Resource<Dish>> {
+    ): Flow<Resource<List<Dish>>> {
         TODO("Not yet implemented")
     }
 }

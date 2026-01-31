@@ -12,8 +12,8 @@ import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
 
 class FakeDishRemoteDataSource(
-    private val throwError: Boolean,
-    private val defaultDishes: List<DishDTO>? = null
+    defaultDishes: List<DishDTO>? = null,
+    private val throwError: Boolean = false
 ) : MenuRemoteDataSource {
 
     private val dishes: MutableList<DishDTO> = mutableListOf()
