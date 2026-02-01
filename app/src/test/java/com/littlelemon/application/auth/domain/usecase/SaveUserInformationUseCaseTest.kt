@@ -40,7 +40,7 @@ class SaveUserInformationUseCaseTest {
                 userInformation.firstName,
                 userInformation.lastName
             )
-        } returns Resource.Failure(message)
+        } returns Resource.Failure(errorMessage = message)
 
         // Act
         val result = useCase(userInformation)

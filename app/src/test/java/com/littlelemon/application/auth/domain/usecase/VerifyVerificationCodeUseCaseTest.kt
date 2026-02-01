@@ -46,7 +46,7 @@ class VerifyVerificationCodeUseCaseTest {
         // Arrange
         val message = "error"
         coEvery { repository.verifyVerificationCode(EMAIL, OTP) } returns Resource.Failure(
-            message
+            errorMessage = message
         )
         // Act
         val result = useCase(VerificationParams(EMAIL, OTP))

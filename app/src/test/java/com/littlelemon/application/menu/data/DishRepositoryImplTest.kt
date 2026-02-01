@@ -8,15 +8,18 @@ import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
 import com.littlelemon.application.menu.utils.FakeDishDao
 import com.littlelemon.application.menu.utils.FakeDishRemoteDataSource
+import com.littlelemon.application.menu.utils.MenuDTOGenerator
 import com.littlelemon.application.menu.utils.MenuEntityGenerator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertNull
 import kotlin.math.roundToInt
 
 class DishRepositoryImplTest() {
@@ -285,33 +288,118 @@ class DishRepositoryImplTest() {
         private lateinit var remoteDataSource: MenuRemoteDataSource
         private lateinit var dishRepository: DishRepository
 
+        private val entityGenerator = MenuEntityGenerator()
+        private val dtoGenerator = MenuDTOGenerator()
+
+        private val ENTITY_TITLE_PREDICATE = "ENTITY: "
+        private val DTO_TITLE_PREDICATE = "REMOTE: "
+
         @BeforeEach
         fun setUp() {
 
             localDataSource = FakeDishDao(seedDatabase = false)
-            remoteDataSource = FakeDishRemoteDataSource()
+            remoteDataSource = FakeDishRemoteDataSource(emptyList())
             dishRepository = DishRepositoryImpl(localDataSource, remoteDataSource)
 
         }
 
         @Test
-        fun withFetchFromRemoteEnabled_whenGetDishesIsCalled_returnsDishesThatAreFetchedFromRemote() {
-            TODO()
+        fun withFetchFromRemoteEnabled_whenGetDishesIsCalled_returnsDishesThatAreFetchedFromRemote() =
+            runTest {
+                // Arrange
+                // Populate the data sources
+                val numDishEntities = 2
+                val dishEntities =
+                    List(numDishEntities) { entityGenerator.generateDishEntity() }.map { dish ->
+                        dish.copy(
+                            title = "$ENTITY_TITLE_PREDICATE: ${dish.title}"
+                        )
+                    }
+                for (entity in dishEntities)
+                    localDataSource.insertDish(entity)
+
+                val numDishDTO = 4
+                val dishDTO =
+                    List(numDishDTO) { dtoGenerator.generateDishDTO() }.map { dish ->
+                        dish.copy(
+                            title = "$DTO_TITLE_PREDICATE: ${dish.title}"
+                        )
+                    }
+                remoteDataSource = FakeDishRemoteDataSource(dishDTO)
+
+                //Act
+                val result = dishRepository.getDishes(fetchFromRemote = true).first()
+
+                // Assert
+                assertTrue(result is Resource.Success)
+                result as Resource.Success
+                assertNotNull(result.data)
+                assertEquals(numDishDTO, result.data.size)
+                assertTrue(result.data.all { dish -> dish.title.startsWith(DTO_TITLE_PREDICATE) })
+            }
+
+        @Test
+        fun withNoOfflineData_whenGetDishesIsCalled_returnsDishesFetchedFromRemote() = runTest {
+            // Arrange
+            // Populate the data sources
+            val numDishDTO = 5
+            val dishDTO =
+                List(numDishDTO) { dtoGenerator.generateDishDTO() }.map { dish -> dish.copy(title = "$DTO_TITLE_PREDICATE: ${dish.title}") }
+            remoteDataSource = FakeDishRemoteDataSource(dishDTO)
+
+            //Act
+            val result = dishRepository.getDishes().first()
+
+            // Assert
+            assertTrue(result is Resource.Success)
+            result as Resource.Success
+            assertNotNull(result.data)
+            assertEquals(numDishDTO, result.data.size)
+            assertTrue(result.data.all { dish -> dish.title.startsWith(DTO_TITLE_PREDICATE) })
         }
 
         @Test
-        fun withNoOfflineData_whenGetDishesIsCalled_returnsDishesFetchedFromRemote() {
-            TODO()
-        }
+        fun withRemoteFailure_whenGetDishesIsCalled_offlineCachedDataIsReturnedWithFetchError() =
+            runTest {
+                // Arrange
+                // Populate the data sources
+                val numDishEntities = 3
+                val dishEntities =
+                    List(numDishEntities) { entityGenerator.generateDishEntity() }.map { dish ->
+                        dish.copy(
+                            title = "$ENTITY_TITLE_PREDICATE: ${dish.title}"
+                        )
+                    }
+                for (entity in dishEntities)
+                    localDataSource.insertDish(entity)
+
+                remoteDataSource = FakeDishRemoteDataSource(throwError = true)
+
+                //Act
+                val result = dishRepository.getDishes().first()
+
+                // Assert
+                assertTrue(result is Resource.Failure)
+                result as Resource.Failure
+                assertNotNull(result.data)
+                assertEquals(numDishEntities, result.data.size)
+                assertTrue(result.data.all { dish -> dish.title.startsWith(ENTITY_TITLE_PREDICATE) })
+            }
 
         @Test
-        fun withRemoteFailure_whenGetDishesIsCalled_offlineCachedDataIsReturnedWithFetchError() {
-            TODO()
-        }
+        fun withRemoteFailureAndEmptyOfflineCache_whenGetDishesIsCalled_ReturnsFetchError() =
+            runTest {
+                // Arrange
+                remoteDataSource = FakeDishRemoteDataSource(throwError = true)
 
-        @Test
-        fun withRemoteFailureAndEmptyOfflineCache_whenGetDishesIsCalled_ReturnsFetchError() {
-            TODO()
-        }
+                //Act
+                val result = dishRepository.getDishes().first()
+
+                // Assert
+                assertTrue(result is Resource.Failure)
+                result as Resource.Failure
+                assertNull(result.data)
+                assertNotNull(result.errorMessage)
+            }
     }
 }

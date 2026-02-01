@@ -10,6 +10,10 @@ sealed interface Resource<out T> {
 
     data class Success<T>(val data: T? = null) : Resource<T>
 
-    data class Failure(val errorMessage: String? = null, val error: Error? = null) :
-        Resource<Nothing>
+    data class Failure<T>(
+        val data: T? = null,
+        val errorMessage: String? = null,
+        val error: Error? = null
+    ) :
+        Resource<T>
 }

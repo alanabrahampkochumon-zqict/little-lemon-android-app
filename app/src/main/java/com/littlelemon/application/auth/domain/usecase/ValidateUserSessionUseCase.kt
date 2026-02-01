@@ -15,12 +15,15 @@ class ValidateUserSessionUseCase(private val repository: AuthRepository) :
                 Resource.Success(result.data)
             } else {
                 Resource.Failure(
-                    "Session not found",
+                    errorMessage = "Session not found",
                     error = Error.SessionError.SessionTokenNotFound
                 )
             }
         } else {
-            Resource.Failure("Unknown error occurred", Error.SessionError.Unknown)
+            Resource.Failure(
+                errorMessage = "Unknown error occurred",
+                error = Error.SessionError.Unknown
+            )
         }
     }
 }

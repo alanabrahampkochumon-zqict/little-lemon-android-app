@@ -43,7 +43,7 @@ class SendVerificationCodeUseCaseTest {
         // Arrange
         val message = "Unknown error"
         coEvery { repository.sendVerificationCode(email) } returns Resource.Failure(
-            message
+            errorMessage = message
         )
         // Act
         val result = useCase(email)
