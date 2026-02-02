@@ -105,6 +105,7 @@ dependencies {
     testImplementation(libs.io.mockk)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.kotlin.faker)
+    testImplementation(libs.turbine)
 
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.platform)
