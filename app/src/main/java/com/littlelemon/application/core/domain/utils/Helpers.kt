@@ -25,6 +25,7 @@ fun Int.toNetworkError(): NetworkError? {
         401 -> NetworkError.Unauthorized()
         403 -> NetworkError.Forbidden()
         404 -> NetworkError.NotFound()
+        408 -> NetworkError.Timeout()
         else -> NetworkError.Unknown()
     }
 }

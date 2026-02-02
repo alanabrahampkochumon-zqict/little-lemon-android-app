@@ -216,7 +216,7 @@ class HelperTests {
 
             // Act
             val error = statusCode.toNetworkError()
-
+            print(error)
             // Assert
             assertTrue(error is Error.NetworkError.Timeout)
         }

@@ -20,12 +20,15 @@ data class DishEntity(
     val popularityIndex: Int = 0, // Used for categorizing products with best sales
     val dateAdded: Long
 ) {
+
     data class NutritionInfo(
         val calories: Int,
         val protein: Int,
         val carbs: Int,
         val fats: Int
     )
+
+
 }
 
 

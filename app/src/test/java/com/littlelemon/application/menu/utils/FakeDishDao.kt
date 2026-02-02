@@ -12,8 +12,8 @@ class FakeDishDao(
     seedDatabase: Boolean = true
 ) : DishDao {
 
-    private val dishes = mutableListOf<DishEntity>()
-    private val categories = mutableListOf<CategoryEntity>()
+    private val dishEntities = mutableListOf<DishEntity>()
+    private val categoryEntities = mutableListOf<CategoryEntity>()
     private val dishCategoryCrossRefs = mutableListOf<DishCategoryCrossRef>()
 
     init {
@@ -22,46 +22,48 @@ class FakeDishDao(
             val dishCount = 20
             val categoryCount = 20
 
-            categories.addAll(generator.generateCategoryEntities(categoryCount))
+            categoryEntities.addAll(generator.generateCategoryEntities(categoryCount))
             repeat(dishCount) {
                 val dish = generator.generateDishEntity()
-                dishes.add(dish)
+                dishEntities.add(dish)
                 dishCategoryCrossRefs.addAll(
                     generator.generateDishCategoryCrossRef(
                         dish,
-                        categories
+                        categoryEntities
                     )
                 )
             }
         }
     }
 
-    override suspend fun insertCategories(category: CategoryEntity): Long {
-        categories.removeIf { it.categoryId == category.categoryId }
-        categories.add(category)
-        return 1
+    override suspend fun insertCategories(categories: List<CategoryEntity>) {
+        categoryEntities.removeIf { it in categories }
+        categoryEntities.addAll(categories)
     }
 
-    override suspend fun insertDishes(dish: DishEntity): Long {
-        dishes.removeIf { it.dishId == dish.dishId }
-        dishes.add(dish)
-        return 1
+    override suspend fun insertDishes(dishes: List<DishEntity>) {
+        dishes.forEach { newDish ->
+            dishEntities.removeIf { dish -> dish == newDish }
+            dishEntities.add(newDish)
+        }
 
     }
 
-    override suspend fun insertDishCategoryCrossRefs(crossRef: DishCategoryCrossRef) {
-        dishCategoryCrossRefs.removeIf { it.categoryId == crossRef.categoryId && it.dishId == crossRef.dishId }
-        dishCategoryCrossRefs.add(crossRef)
+    override suspend fun insertDishCategoryCrossRefs(crossRefs: List<DishCategoryCrossRef>) {
+        crossRefs.forEach { newCrossRef ->
+            dishCategoryCrossRefs.removeIf { it.categoryId == newCrossRef.categoryId && it.dishId == newCrossRef.dishId }
+            dishCategoryCrossRefs.add(newCrossRef)
+        }
     }
 
-    override suspend fun getDishCount(): Int = dishes.size
+    override suspend fun getDishCount(): Int = dishEntities.size
 
     private fun _getAllDishes(): List<DishWithCategories> {
         val returnedDishes = mutableListOf<DishWithCategories>()
-        for (dish in dishes) {
+        for (dish in dishEntities) {
             val categories =
                 dishCategoryCrossRefs.filter { (dishId, _) -> dishId == dish.dishId }
-                    .mapNotNull { (_, categoryId) -> categories.find { category -> categoryId == category.categoryId } }
+                    .mapNotNull { (_, categoryId) -> categoryEntities.find { category -> categoryId == category.categoryId } }
             returnedDishes.add(DishWithCategories(dish, categories))
         }
         return returnedDishes
@@ -129,8 +131,8 @@ class FakeDishDao(
     }
 
     override suspend fun deleteAllDishes() {
-        dishes.clear()
-        categories.clear()
+        dishEntities.clear()
+        categoryEntities.clear()
         dishCategoryCrossRefs.clear()
     }
 }

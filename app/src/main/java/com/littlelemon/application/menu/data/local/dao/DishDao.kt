@@ -15,10 +15,10 @@ import kotlinx.coroutines.flow.Flow
 interface DishDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCategories(category: List<CategoryEntity>)
+    suspend fun insertCategories(categories: List<CategoryEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDishes(dish: List<DishEntity>)
+    suspend fun insertDishes(dishes: List<DishEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDishCategoryCrossRefs(crossRefs: List<DishCategoryCrossRef>)
