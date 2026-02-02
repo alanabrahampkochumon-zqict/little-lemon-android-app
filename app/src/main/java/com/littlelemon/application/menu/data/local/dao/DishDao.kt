@@ -15,13 +15,13 @@ import kotlinx.coroutines.flow.Flow
 interface DishDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCategory(category: CategoryEntity): Long
+    suspend fun insertCategories(category: List<CategoryEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDish(dish: DishEntity): Long
+    suspend fun insertDishes(dish: List<DishEntity>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertDishCategoryCrossRef(crossRef: DishCategoryCrossRef)
+    suspend fun insertDishCategoryCrossRefs(crossRefs: List<DishCategoryCrossRef>)
 
     @Query("SELECT COUNT(*) FROM dishentity")
     suspend fun getDishCount(): Int
@@ -30,22 +30,14 @@ interface DishDao {
      * Inserts dishes that have zero or more categories into the database.
      */
     @Transaction
-    suspend fun insertDish(dishWithCategories: DishWithCategories) {
-        insertDish(dishWithCategories.dish)
-
-        val dishId = dishWithCategories.dish.dishId
-
-        for (category in dishWithCategories.categories) {
-            insertCategory(category)
-            val crossRef = DishCategoryCrossRef(
-                dishId = dishId,
-                categoryId = category.categoryId
-            )
-            insertDishCategoryCrossRef(
-                crossRef
-            )
-        }
-
+    suspend fun insertDishes(
+        dishes: List<DishEntity>,
+        categories: List<CategoryEntity>,
+        crossRefs: List<DishCategoryCrossRef>
+    ) {
+        insertDishes(dishes)
+        insertCategories(categories)
+        insertDishCategoryCrossRefs(crossRefs)
     }
 
     @Transaction

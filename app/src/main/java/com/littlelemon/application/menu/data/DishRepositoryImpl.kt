@@ -40,15 +40,8 @@ class DishRepositoryImpl(
                 if (dishDTOs.isNotEmpty()) {
                     val (dishes, categories, crossRefs) = dishDTOs.toDishWithCategories()
 
-                    // TODO("Refactor to use single transaction")
                     localDataSource.deleteAllDishes()
-                    dishes.forEach { dish -> localDataSource.insertDish(dish) }
-                    categories.forEach { category -> localDataSource.insertCategory(category) }
-                    crossRefs.forEach { crossRef ->
-                        localDataSource.insertDishCategoryCrossRef(
-                            crossRef
-                        )
-                    }
+                    localDataSource.insertDishes(dishes, categories, crossRefs)
                 }
             } catch (e: Exception) {
                 val errorType = when (e) {

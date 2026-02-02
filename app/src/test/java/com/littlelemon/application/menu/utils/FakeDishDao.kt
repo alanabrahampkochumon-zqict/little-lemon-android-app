@@ -36,20 +36,20 @@ class FakeDishDao(
         }
     }
 
-    override suspend fun insertCategory(category: CategoryEntity): Long {
+    override suspend fun insertCategories(category: CategoryEntity): Long {
         categories.removeIf { it.categoryId == category.categoryId }
         categories.add(category)
         return 1
     }
 
-    override suspend fun insertDish(dish: DishEntity): Long {
+    override suspend fun insertDishes(dish: DishEntity): Long {
         dishes.removeIf { it.dishId == dish.dishId }
         dishes.add(dish)
         return 1
 
     }
 
-    override suspend fun insertDishCategoryCrossRef(crossRef: DishCategoryCrossRef) {
+    override suspend fun insertDishCategoryCrossRefs(crossRef: DishCategoryCrossRef) {
         dishCategoryCrossRefs.removeIf { it.categoryId == crossRef.categoryId && it.dishId == crossRef.dishId }
         dishCategoryCrossRefs.add(crossRef)
     }

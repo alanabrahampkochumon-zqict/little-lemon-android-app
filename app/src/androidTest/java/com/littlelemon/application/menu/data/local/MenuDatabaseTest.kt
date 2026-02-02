@@ -6,8 +6,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.littlelemon.application.menu.data.local.dao.DishDao
 import com.littlelemon.application.menu.data.local.models.CategoryEntity
+import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity
-import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import io.github.serpro69.kfaker.faker
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -28,7 +28,10 @@ class MenuDatabaseTest {
     private lateinit var database: MenuDatabase
     private lateinit var dao: DishDao
 
-    private val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
+    companion object {
+        private const val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
+
+    }
 
     @Before
     fun setUp() {
@@ -47,59 +50,74 @@ class MenuDatabaseTest {
     @Test
     fun dishWithNoCategoriesInserted_whenQueried_returnsCorrectDish() = runTest {
         // Arrange
-        val dish = DishWithCategories(
-            dish = generateDish(),
-            categories = emptyList()
-        )
+        val numCategories = 0
+        val dish = generateDish()
+        val categories = generateCategories(numCategories)
+        val crossRef = categories.map { (categoryId, _) ->
+            DishCategoryCrossRef(
+                dishId = dish.dishId,
+                categoryId = categoryId
+            )
+        }
+        dao.insertDishes(listOf(dish), categories, crossRef)
 
         // Act
-        dao.insertDish(dish)
         val result = dao.getAllDishes().first()
 
         // Assert
         assertEquals(1, result.size)
-        assertEquals(dish.dish, result.first().dish.copy())
-        assertEquals(0, result.first().categories.size)
+        assertEquals(dish, result.first().dish)
+        assertEquals(numCategories, result.first().categories.size)
     }
 
     @Test
-    fun dishWithOneCategoriesInserted_whenQueried_returnsCorrectDishWithTwoCategories() = runTest {
+    fun dishWithOneCategoriesInserted_whenQueried_returnsCorrectDishWithOneCategory() = runTest {
         // Arrange
-        val dish = DishWithCategories(
-            dish = generateDish(),
-            categories = generateCategories(1)
-        )
+        val numCategories = 1
+        val dish = generateDish()
+        val categories = generateCategories(numCategories)
+        val crossRef = categories.map { (categoryId, _) ->
+            DishCategoryCrossRef(
+                dishId = dish.dishId,
+                categoryId = categoryId
+            )
+        }
+        dao.insertDishes(listOf(dish), categories, crossRef)
 
         // Act
-        dao.insertDish(dish)
         val result = dao.getAllDishes().first()
 
         // Assert
         assertEquals(1, result.size)
-        assertEquals(dish.dish, result.first().dish.copy())
-        assertEquals(1, result.first().categories.size)
-        assertTrue(result.first().categories.any { (_, actualCategoryName) -> actualCategoryName == dish.categories.first().categoryName })
+        assertEquals(dish, result.first().dish.copy())
+        assertEquals(numCategories, result.first().categories.size)
+        assertEquals(categories.first(), result.first().categories[0])
     }
 
     @Test
     fun dishWithTwoCategoriesInserted_whenQueried_returnsCorrectDishWithTwoCategories() = runTest {
         // Arrange
-        val dish = DishWithCategories(
-            dish = generateDish(),
-            categories = generateCategories(2)
-        )
+        val numCategories = 2
+        val dish = generateDish()
+        val categories = generateCategories(numCategories)
+        val crossRef = categories.map { (categoryId, _) ->
+            DishCategoryCrossRef(
+                dishId = dish.dishId,
+                categoryId = categoryId
+            )
+        }
+        dao.insertDishes(listOf(dish), categories, crossRef)
 
         // Act
-        dao.insertDish(dish)
         val result = dao.getAllDishes().first()
 
         // Assert
         assertEquals(1, result.size)
-        assertEquals(dish.dish, result.first().dish.copy())
-        assertEquals(2, result.first().categories.size)
+        assertEquals(dish, result.first().dish.copy())
+        assertEquals(numCategories, result.first().categories.size)
 
-        for ((_, categoryName) in dish.categories) {
-            assertTrue(result.first().categories.any { (_, actualCategoryName) -> actualCategoryName == categoryName })
+        for (cat in categories) {
+            assertTrue(cat in result.first().categories)
         }
     }
 
@@ -117,13 +135,8 @@ class MenuDatabaseTest {
     fun nonEmptyDatabase_whenQueriedForDishCount_returnsCorrectItemCount() = runTest {
         // Arrange
         val numDishes = 5
-        val dishes = List(numDishes) {
-            DishWithCategories(
-                dish = generateDish(),
-                categories = generateCategories(2)
-            )
-        }
-        dishes.forEach { dish -> dao.insertDish(dish) }
+        val numCategories = 5
+        insertDishes(numDishes, numCategories)
 
         // Act
         val result = dao.getDishCount()
@@ -135,11 +148,9 @@ class MenuDatabaseTest {
     @Test
     fun dishesDeletedFromDBWithOnlyOneDish_whenQueried_returnsEmptyList() = runTest {
         // Arrange
-        val dish = DishWithCategories(
-            dish = generateDish(),
-            categories = generateCategories(2)
-        )
-        dao.insertDish(dish)
+        val numDishes = 1
+        val numCategories = 2
+        insertDishes(numDishes, numCategories)
 
         // Act
         dao.deleteAllDishes()
@@ -153,14 +164,7 @@ class MenuDatabaseTest {
     fun dishesDeletedFromDBWithMultipleDish_whenQueried_returnsListWithoutDeletedDish() = runTest {
         // Arrange
         val numDishes = 7
-        repeat(numDishes) {
-
-            val dish = DishWithCategories(
-                dish = generateDish(),
-                categories = generateCategories(it)
-            )
-            dao.insertDish(dish)
-        }
+        insertDishes(numDishes)
 
         // Act
         dao.deleteAllDishes()
@@ -176,13 +180,7 @@ class MenuDatabaseTest {
         runTest {
             // Arrange
             val numDishes = 7
-            repeat(numDishes) {
-                val dish = DishWithCategories(
-                    dish = generateDish(),
-                    categories = generateCategories(it)
-                )
-                dao.insertDish(dish)
-            }
+            insertDishes(numDishes)
 
             // Act
             val result = dao.getDishesSortedByName(ascending = true).first()
@@ -198,13 +196,7 @@ class MenuDatabaseTest {
         runTest {
             // Arrange
             val numDishes = 7
-            repeat(numDishes) {
-                val dish = DishWithCategories(
-                    dish = generateDish(),
-                    categories = generateCategories(it)
-                )
-                dao.insertDish(dish)
-            }
+            insertDishes(numDishes)
 
             // Act
             val result = dao.getDishesSortedByName(ascending = false).first()
@@ -220,13 +212,7 @@ class MenuDatabaseTest {
         runTest {
             // Arrange
             val numDishes = 7
-            repeat(numDishes) {
-                val dish = DishWithCategories(
-                    dish = generateDish(),
-                    categories = generateCategories(it)
-                )
-                dao.insertDish(dish)
-            }
+            insertDishes(numDishes)
 
             // Act
             val result = dao.getDishesSortedByPrice(ascending = true).first()
@@ -242,13 +228,7 @@ class MenuDatabaseTest {
         runTest {
             // Arrange
             val numDishes = 7
-            repeat(numDishes) {
-                val dish = DishWithCategories(
-                    dish = generateDish(),
-                    categories = generateCategories(it)
-                )
-                dao.insertDish(dish)
-            }
+            insertDishes(numDishes)
 
             // Act
             val result = dao.getDishesSortedByPrice(ascending = false).first()
@@ -264,13 +244,7 @@ class MenuDatabaseTest {
     fun dishesSortedByPopularity_whenQueried_returnsListOfDishesSortedByPopularity() = runTest {
         // Arrange
         val numDishes = 7
-        repeat(numDishes) {
-            val dish = DishWithCategories(
-                dish = generateDish(),
-                categories = generateCategories(it)
-            )
-            dao.insertDish(dish)
-        }
+        insertDishes(numDishes)
 
         // Act
         val result = dao.getDishesSortedByPopularity().first()
@@ -285,13 +259,7 @@ class MenuDatabaseTest {
     fun dishesSortedByRecently_whenQueried_returnsListOfDishesSortedByDateDescending() = runTest {
         // Arrange
         val numDishes = 7
-        repeat(numDishes) {
-            val dish = DishWithCategories(
-                dish = generateDish(),
-                categories = generateCategories(it)
-            )
-            dao.insertDish(dish)
-        }
+        insertDishes(numDishes)
 
         // Act
         val result = dao.getDishesSortedByAdded(ascending = false).first()
@@ -307,13 +275,7 @@ class MenuDatabaseTest {
         runTest {
             // Arrange
             val numDishes = 7
-            repeat(numDishes) {
-                val dish = DishWithCategories(
-                    dish = generateDish(),
-                    categories = generateCategories(it)
-                )
-                dao.insertDish(dish)
-            }
+            insertDishes(numDishes)
 
             // Act
             val result = dao.getDishesSortedByCalories().first()
@@ -332,13 +294,7 @@ class MenuDatabaseTest {
         runTest {
             // Arrange
             val numDishes = 7
-            repeat(numDishes) {
-                val dish = DishWithCategories(
-                    dish = generateDish(),
-                    categories = generateCategories(it)
-                )
-                dao.insertDish(dish)
-            }
+            insertDishes(numDishes)
 
             // Act
             val result = dao.getDishesSortedByCalories(ascending = false).first()
@@ -357,13 +313,7 @@ class MenuDatabaseTest {
         runTest {
             // Arrange
             val numDishes = 7
-            repeat(numDishes) {
-                val dish = DishWithCategories(
-                    dish = generateDish(),
-                    categories = generateCategories(it)
-                )
-                dao.insertDish(dish)
-            }
+            insertDishes(numDishes)
 
             // Act
             val result = dao.getDishesSortedByProtein().first()
@@ -382,13 +332,7 @@ class MenuDatabaseTest {
         runTest {
             // Arrange
             val numDishes = 7
-            repeat(numDishes) {
-                val dish = DishWithCategories(
-                    dish = generateDish(),
-                    categories = generateCategories(it)
-                )
-                dao.insertDish(dish)
-            }
+            insertDishes(numDishes)
 
             // Act
             val result = dao.getDishesSortedByProtein(ascending = false).first()
@@ -402,6 +346,22 @@ class MenuDatabaseTest {
                 .all { it })
         }
 
+    private suspend fun insertDishes(numDishes: Int = 7, numCategories: Int = 3) {
+        // Arrange
+        val dishes = List(numDishes) { generateDish() }
+        val categories = mutableListOf<CategoryEntity>()
+        val crossRefs = mutableListOf<DishCategoryCrossRef>()
+        dishes.forEach { dish ->
+            categories.addAll(generateCategories(numCategories))
+            crossRefs.addAll(categories.map { (categoryId, _) ->
+                DishCategoryCrossRef(
+                    dishId = dish.dishId,
+                    categoryId = categoryId
+                )
+            })
+        }
+        dao.insertDishes(dishes, categories, crossRefs)
+    }
 
     private fun generateDish(popularityIndex: Int? = null): DishEntity {
         val faker = faker {}
