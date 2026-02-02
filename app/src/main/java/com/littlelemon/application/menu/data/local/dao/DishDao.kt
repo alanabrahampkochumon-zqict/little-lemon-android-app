@@ -23,6 +23,9 @@ interface DishDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDishCategoryCrossRef(crossRef: DishCategoryCrossRef)
 
+    @Query("SELECT COUNT(*) FROM dishentity")
+    suspend fun getDishCount(): Int
+
     /**
      * Inserts dishes that have zero or more categories into the database.
      */

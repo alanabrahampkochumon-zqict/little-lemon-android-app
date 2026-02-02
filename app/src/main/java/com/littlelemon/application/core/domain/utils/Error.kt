@@ -6,6 +6,7 @@ sealed interface Error {
         class Unauthorized : NetworkError(401)
         class Forbidden : NetworkError(403)
         class NotFound : NetworkError(404)
+        class Timeout : NetworkError(408)
         class Unknown : NetworkError(0) // General Network Errors
     }
 

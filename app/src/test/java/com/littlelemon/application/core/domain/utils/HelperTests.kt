@@ -208,6 +208,18 @@ class HelperTests {
             // Assert
             assertTrue(error is Error.NetworkError.Unknown)
         }
+
+        @Test
+        fun httpTimeout_returnsTimeoutError() {
+            // Arrange
+            val statusCode = HttpStatusCode.RequestTimeout.value
+
+            // Act
+            val error = statusCode.toNetworkError()
+
+            // Assert
+            assertTrue(error is Error.NetworkError.Timeout)
+        }
     }
 
     @Nested

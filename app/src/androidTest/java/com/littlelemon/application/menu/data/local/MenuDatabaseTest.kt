@@ -104,6 +104,35 @@ class MenuDatabaseTest {
     }
 
     @Test
+    fun emptyDatabase_whenQueriedForDishCount_returnsZero() = runTest {
+        // Arrange & Act
+        val result = dao.getDishCount()
+
+        // Assert
+        assertEquals(0, result)
+    }
+
+
+    @Test
+    fun nonEmptyDatabase_whenQueriedForDishCount_returnsCorrectItemCount() = runTest {
+        // Arrange
+        val numDishes = 5
+        val dishes = List(numDishes) {
+            DishWithCategories(
+                dish = generateDish(),
+                categories = generateCategories(2)
+            )
+        }
+        dishes.forEach { dish -> dao.insertDish(dish) }
+
+        // Act
+        val result = dao.getDishCount()
+
+        // Assert
+        assertEquals(numDishes, result)
+    }
+
+    @Test
     fun dishesDeletedFromDBWithOnlyOneDish_whenQueried_returnsEmptyList() = runTest {
         // Arrange
         val dish = DishWithCategories(

@@ -54,6 +54,8 @@ class FakeDishDao(
         dishCategoryCrossRefs.add(crossRef)
     }
 
+    override suspend fun getDishCount(): Int = dishes.size
+
     private fun _getAllDishes(): List<DishWithCategories> {
         val returnedDishes = mutableListOf<DishWithCategories>()
         for (dish in dishes) {
@@ -71,7 +73,7 @@ class FakeDishDao(
     }
 
     override fun getDishesSortedByPopularity(): Flow<List<DishWithCategories>> = flow {
-        val dishes = _getAllDishes().sortedBy { (dish, _) -> dish.popularityIndex }
+        val dishes = _getAllDishes().sortedByDescending { (dish, _) -> dish.popularityIndex }
         emit(dishes)
     }
 
