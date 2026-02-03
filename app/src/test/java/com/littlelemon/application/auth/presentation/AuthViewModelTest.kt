@@ -3,19 +3,18 @@ package com.littlelemon.application.auth.presentation
 import com.littlelemon.application.auth.presentation.components.AuthActions
 import com.littlelemon.application.utils.MainTestDispatcherRule
 import kotlinx.coroutines.test.runTest
-import org.junit.Rule
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+
+@ExtendWith(MainTestDispatcherRule::class)
 class AuthViewModelTest {
 
 
     @Nested
     inner class StateModificationTests {
-
-        @get:Rule
-        val mainDispatcherRule = MainTestDispatcherRule()
 
         val viewModel = AuthViewModel()
 
@@ -30,5 +29,8 @@ class AuthViewModelTest {
             // Assert
             assertEquals(newText, viewModel.state.value.email)
         }
+
+//        @Test
+//        fun on
     }
 }
