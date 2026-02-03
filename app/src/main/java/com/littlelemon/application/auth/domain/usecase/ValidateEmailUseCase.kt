@@ -2,12 +2,13 @@ package com.littlelemon.application.auth.domain.usecase
 
 import com.littlelemon.application.core.domain.UseCase
 import com.littlelemon.application.core.domain.utils.ValidationError
+import com.littlelemon.application.core.domain.utils.ValidationPatterns
 import com.littlelemon.application.core.domain.utils.ValidationResult
 
 class ValidateEmailUseCase : UseCase<String, ValidationResult> {
     override suspend operator fun invoke(input: String): ValidationResult {
 
-        val regex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
+        val regex = ValidationPatterns.EMAIL_PATTERN
 
         return if (input.matches(regex)) {
             ValidationResult.Success
