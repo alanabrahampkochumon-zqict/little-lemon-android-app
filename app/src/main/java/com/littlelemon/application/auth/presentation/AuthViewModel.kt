@@ -4,6 +4,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
+import com.littlelemon.application.auth.domain.usecase.ValidateVerificationCodeUseCase
 import com.littlelemon.application.auth.presentation.components.AuthActions
 import com.littlelemon.application.core.domain.utils.DEBOUNCE_RATE_MS
 import com.littlelemon.application.core.domain.utils.ValidationPatterns
@@ -18,7 +19,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class)
 class AuthViewModel(
-    private val validateEmailUseCase: ValidateEmailUseCase
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validateOTP: ValidateVerificationCodeUseCase, //TODO: Refactor to OTP
 ) : ViewModel() {
     private val _state = MutableStateFlow(AuthState())
     val state = _state.asStateFlow()
@@ -49,7 +51,7 @@ class AuthViewModel(
     }
 
 
-    fun onAction(action: AuthActions) {
+    suspend fun onAction(action: AuthActions) {
         when (action) {
             is AuthActions.ChangeEmail -> {
                 _state.update {
@@ -70,7 +72,24 @@ class AuthViewModel(
             }
 
             is AuthActions.ChangeOTP -> {
-                _state.update { it.copy(oneTimePassword = action.otp) }
+                val validationResult = validateOTP(action.otp.joinToString(""))
+                when (validationResult) {
+                    is ValidationResult.Failure -> _state.update {
+                        it.copy(
+                            oneTimePassword = action.otp,
+                            otpError = null,
+                            enableVerifyButton = false
+                        )
+                    }
+
+                    ValidationResult.Success -> _state.update {
+                        it.copy(
+                            oneTimePassword = action.otp,
+                            otpError = null,
+                            enableVerifyButton = true
+                        )
+                    }
+                }
             }
         }
     }

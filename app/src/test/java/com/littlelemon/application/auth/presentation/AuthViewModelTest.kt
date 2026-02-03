@@ -2,6 +2,7 @@ package com.littlelemon.application.auth.presentation
 
 import app.cash.turbine.test
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
+import com.littlelemon.application.auth.domain.usecase.ValidateVerificationCodeUseCase
 import com.littlelemon.application.auth.presentation.components.AuthActions
 import com.littlelemon.application.core.domain.utils.ValidationError
 import com.littlelemon.application.core.domain.utils.ValidationResult
@@ -31,13 +32,12 @@ class AuthViewModelTest {
         private const val DEBOUNCE_DELAY_MS = 1000L
     }
 
+    private val validateEmailUseCase = mockk<ValidateEmailUseCase>(relaxed = true)
+    private val validateOTPUseCase = mockk<ValidateVerificationCodeUseCase>()
+    val viewModel = AuthViewModel(validateEmailUseCase, validateOTPUseCase)
+
     @Nested
-    @ExtendWith(MainTestDispatcherRule::class)
-    inner class StateModificationTests {
-
-        private val validateEmailUseCase = mockk<ValidateEmailUseCase>(relaxed = true)
-
-        val viewModel = AuthViewModel(validateEmailUseCase)
+    inner class EmailTests {
 
         @Test
         fun onEmailChange_toIncompleteValue_stateUpdatesEmailWithoutErrorMessage() = runTest {
@@ -80,7 +80,10 @@ class AuthViewModelTest {
                 // Arrange
                 Dispatchers.setMain(StandardTestDispatcher(testScheduler))
                 val scopedViewModel =
-                    AuthViewModel(validateEmailUseCase) // Create VM to use the StandardTestDispatcher
+                    AuthViewModel(
+                        validateEmailUseCase,
+                        validateOTPUseCase
+                    ) // Create VM to use the StandardTestDispatcher
 
                 val email = "invalid_email.com"
                 val error = ValidationError.InvalidFormat
@@ -113,7 +116,7 @@ class AuthViewModelTest {
         fun onEmailChange_afterInvalidEmailEntered_clearsErrorMessage() = runTest {
             // Arrange
             Dispatchers.setMain(StandardTestDispatcher(testScheduler))
-            val scopeViewModel = AuthViewModel(validateEmailUseCase)
+            val scopeViewModel = AuthViewModel(validateEmailUseCase, validateOTPUseCase)
 
             val email = "invalid_email.com"
             val updatedEmail = "test"
@@ -157,42 +160,70 @@ class AuthViewModelTest {
 
 
         }
+    }
 
+    @Nested
+    inner class OTPTests {
         @Test
         fun onOTPChange_toValidOTP_stateUpdatesToNewOTP() = runTest {
             // Arrange
             val newOTP = listOf(3, 1, 6, 3, 1, 6)
+            coEvery { validateOTPUseCase.invoke(newOTP.joinToString("")) } returns ValidationResult.Success
 
             // Act
             viewModel.onAction(AuthActions.ChangeOTP(otp = newOTP))
 
             // Assert
             assertEquals(newOTP, viewModel.state.value.oneTimePassword)
+            assertTrue(viewModel.state.value.enableVerifyButton)
+            assertNull(viewModel.state.value.otpError)
         }
 
+
+        // This test covers when user deletes an invalid otp as well.
         @Test
-        fun onFirstNameChange_toValidFirstName_stateUpdatesToNewFirstName() = runTest {
+        fun onOTPChange_toIncompleteOTP_verifyButtonIsDisabled() = runTest {
             // Arrange
-            val firstName = "First Name"
+            val error = ValidationError.InvalidFormat
+            val message = "invalid otp"
+            val newOTP = listOf(3, 1, 6, 3, 1)
+            coEvery { validateOTPUseCase.invoke(newOTP.joinToString("")) } returns ValidationResult.Failure(
+                error, message
+            )
 
             // Act
-            viewModel.onAction(AuthActions.ChangeFirstName(firstName = firstName))
+            viewModel.onAction(AuthActions.ChangeOTP(otp = newOTP))
 
             // Assert
-            assertEquals(firstName, viewModel.state.value.firstName)
+            assertEquals(newOTP, viewModel.state.value.oneTimePassword)
+            assertFalse(viewModel.state.value.enableVerifyButton)
+            assertNull(viewModel.state.value.otpError)
         }
+    }
 
 
-        @Test
-        fun onLastNameChange_toValidLastName_stateUpdatesToNewLastName() = runTest {
-            // Arrange
-            val lastName = "Last Name"
+    @Test
+    fun onFirstNameChange_toValidFirstName_stateUpdatesToNewFirstName() = runTest {
+        // Arrange
+        val firstName = "First Name"
 
-            // Act
-            viewModel.onAction(AuthActions.ChangeLastName(lastName = lastName))
+        // Act
+        viewModel.onAction(AuthActions.ChangeFirstName(firstName = firstName))
 
-            // Assert
-            assertEquals(lastName, viewModel.state.value.lastName)
-        }
+        // Assert
+        assertEquals(firstName, viewModel.state.value.firstName)
+    }
+
+
+    @Test
+    fun onLastNameChange_toValidLastName_stateUpdatesToNewLastName() = runTest {
+        // Arrange
+        val lastName = "Last Name"
+
+        // Act
+        viewModel.onAction(AuthActions.ChangeLastName(lastName = lastName))
+
+        // Assert
+        assertEquals(lastName, viewModel.state.value.lastName)
     }
 }

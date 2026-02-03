@@ -7,8 +7,8 @@ data class AuthState(
     val enableSendButton: Boolean = false,
     // Verify Screen
     val oneTimePassword: List<Int> = listOf(),
-    val passwordError: String? = null,
-    val enabledVerifyButton: Boolean = false,
+    val otpError: String? = null,
+    val enableVerifyButton: Boolean = false,
     // Personalization Screen
     val firstName: String = "",
     val lastName: String = "",
