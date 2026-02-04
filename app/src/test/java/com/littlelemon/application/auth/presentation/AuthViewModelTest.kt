@@ -332,7 +332,6 @@ class AuthViewModelTest {
         }
 
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onVerifyButtonPressed_sendOTPSuccess_navigationIsTriggered() = runTest {
             // Arrange
@@ -351,7 +350,6 @@ class AuthViewModelTest {
             }
         }
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onVerifyButtonPressed_sendOTPError_errorEventIsTriggered() = runTest {
             // Arrange
@@ -366,6 +364,18 @@ class AuthViewModelTest {
                 // Assert
                 assertNotNull(event)
                 assertTrue(event is AuthEvents.ShowError)
+            }
+        }
+
+        @Test
+        fun onNavigateBack_navigateBackEventIsTriggered() = runTest {
+            scopedViewModel.authEvent.test {
+                // Arrange & Act
+                scopedViewModel.onAction(AuthActions.NavigateBack)
+                val event = awaitItem()
+
+                // Assert
+                assertTrue(event is AuthEvents.NavigateBack)
             }
         }
     }

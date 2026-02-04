@@ -107,7 +107,10 @@ class AuthViewModel(
                 }
             }
 
-            AuthActions.NavigateBack -> TODO()
+            AuthActions.NavigateBack -> viewModelScope.launch {
+                _navigationChannel.send(AuthEvents.NavigateBack)
+            }
+
             AuthActions.NavigateToHome -> TODO()
             AuthActions.ResendOTP -> TODO()
             AuthActions.SendOTP -> {
