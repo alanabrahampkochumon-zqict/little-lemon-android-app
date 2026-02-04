@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 
 class VerifyVerificationCodeUseCaseTest {
     private lateinit var repository: AuthRepository
-    private lateinit var useCase: VerifyVerificationCodeUseCase
+    private lateinit var useCase: VerifyOTPUseCase
     private lateinit var user: User
 
     private companion object {
@@ -25,7 +25,7 @@ class VerifyVerificationCodeUseCaseTest {
     @BeforeEach
     fun setUp() {
         repository = mockk<AuthRepository>()
-        useCase = VerifyVerificationCodeUseCase(repository)
+        useCase = VerifyOTPUseCase(repository)
         user = User(EMAIL)
     }
 
