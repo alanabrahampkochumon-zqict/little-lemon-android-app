@@ -64,11 +64,21 @@ class AuthViewModel(
             }
 
             is AuthActions.ChangeFirstName -> {
-                _state.update { it.copy(firstName = action.firstName) }
+                _state.update {
+                    it.copy(
+                        firstName = action.firstName,
+                        enableLetsGoButton = action.firstName.isNotEmpty()
+                    )
+                }
             }
 
             is AuthActions.ChangeLastName -> {
-                _state.update { it.copy(lastName = action.lastName) }
+                _state.update {
+                    it.copy(
+                        lastName = action.lastName,
+                        enableLetsGoButton = state.value.firstName.isNotEmpty()
+                    )
+                }
             }
 
             is AuthActions.ChangeOTP -> {
