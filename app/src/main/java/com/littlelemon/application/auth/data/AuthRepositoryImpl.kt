@@ -1,5 +1,7 @@
 package com.littlelemon.application.auth.data
 
+import android.Manifest
+import androidx.annotation.RequiresPermission
 import com.littlelemon.application.auth.data.local.AuthLocalDataSource
 import com.littlelemon.application.auth.data.models.toLocalLocation
 import com.littlelemon.application.auth.data.models.toSessionToken
@@ -66,17 +68,14 @@ class AuthRepositoryImpl(
         }
     }
 
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override suspend fun getLocation(): Resource<LocalLocation> {
         return try {
             val location = localDataSource.getLocation()
-            if (location != null)
-                Resource.Success(location.toLocalLocation())
-            else
-                Resource.Failure(errorMessage = "Failed to fetch location")
-//            location ? Resource.Succes(location) : Resource.Failure(errorMessage = "Failed to fetch location")
+            Resource.Success(location.toLocalLocation())
         } catch (e: Exception) {
             //TODO
-            Resource.Failure(errorMessage = "TODO")
+            Resource.Failure(errorMessage = "Failed to fetch location")
         }
     }
 

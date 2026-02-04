@@ -1,9 +1,11 @@
 package com.littlelemon.application.auth.presentation
 
 import app.cash.turbine.test
+import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateOTPUseCase
 import com.littlelemon.application.auth.presentation.components.AuthActions
+import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.ValidationError
 import com.littlelemon.application.core.domain.utils.ValidationResult
 import com.littlelemon.application.utils.MainTestDispatcherRule
@@ -11,13 +13,18 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -34,7 +41,8 @@ class AuthViewModelTest {
 
     private val validateEmailUseCase = mockk<ValidateEmailUseCase>(relaxed = true)
     private val validateOTPUseCase = mockk<ValidateOTPUseCase>()
-    val viewModel = AuthViewModel(validateEmailUseCase, validateOTPUseCase)
+    private val sendOTPUseCase = mockk<SendOTPUseCase>()
+    private var viewModel = AuthViewModel(validateEmailUseCase, validateOTPUseCase, sendOTPUseCase)
 
     @Nested
     inner class EmailTests {
@@ -82,7 +90,8 @@ class AuthViewModelTest {
                 val scopedViewModel =
                     AuthViewModel(
                         validateEmailUseCase,
-                        validateOTPUseCase
+                        validateOTPUseCase,
+                        sendOTPUseCase
                     ) // Create VM to use the StandardTestDispatcher
 
                 val email = "invalid_email.com"
@@ -116,7 +125,8 @@ class AuthViewModelTest {
         fun onEmailChange_afterInvalidEmailEntered_clearsErrorMessage() = runTest {
             // Arrange
             Dispatchers.setMain(StandardTestDispatcher(testScheduler))
-            val scopeViewModel = AuthViewModel(validateEmailUseCase, validateOTPUseCase)
+            val scopeViewModel =
+                AuthViewModel(validateEmailUseCase, validateOTPUseCase, sendOTPUseCase)
 
             val email = "invalid_email.com"
             val updatedEmail = "test"
@@ -164,6 +174,21 @@ class AuthViewModelTest {
 
     @Nested
     inner class OTPTests {
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        @BeforeEach
+        fun setUp() {
+            Dispatchers.setMain(StandardTestDispatcher())
+            viewModel = AuthViewModel(validateEmailUseCase, validateOTPUseCase, sendOTPUseCase)
+        }
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        @AfterEach
+        fun tearDown() {
+            Dispatchers.resetMain()
+        }
+
+        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onOTPChange_toValidOTP_stateUpdatesToNewOTP() = runTest {
             // Arrange
@@ -172,6 +197,7 @@ class AuthViewModelTest {
 
             // Act
             viewModel.onAction(AuthActions.ChangeOTP(otp = newOTP))
+            runCurrent()
 
             // Assert
             assertEquals(newOTP, viewModel.state.value.oneTimePassword)
@@ -181,6 +207,7 @@ class AuthViewModelTest {
 
 
         // This test covers when user deletes an invalid otp as well.
+        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onOTPChange_toIncompleteOTP_verifyButtonIsDisabled() = runTest {
             // Arrange
@@ -193,6 +220,7 @@ class AuthViewModelTest {
 
             // Act
             viewModel.onAction(AuthActions.ChangeOTP(otp = newOTP))
+            runCurrent()
 
             // Assert
             assertEquals(newOTP, viewModel.state.value.oneTimePassword)
@@ -200,7 +228,6 @@ class AuthViewModelTest {
             assertNull(viewModel.state.value.otpError)
         }
     }
-
 
     @Nested
     inner class NameTests {
@@ -248,5 +275,96 @@ class AuthViewModelTest {
                 assertTrue(viewModel.state.value.enableLetsGoButton)
 
             }
+    }
+
+    @Nested
+    inner class NavigationTests {
+        private val otp = listOf(3, 1, 6, 3, 1, 6)
+
+        @BeforeEach
+        fun setUp() {
+            coEvery { validateOTPUseCase.invoke(otp.joinToString("")) } returns ValidationResult.Success
+        }
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        @Test
+        fun onVerifyButtonPressed_loaderShown_untilResourceReceived() = runTest {
+            val delayMs = 500L
+
+            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+            val scopedViewModel =
+                AuthViewModel(validateEmailUseCase, validateOTPUseCase, sendOTPUseCase)
+            scopedViewModel.onAction(AuthActions.ChangeOTP(otp))
+            runCurrent()
+
+            coEvery { sendOTPUseCase.invoke(otp.joinToString("")) } coAnswers {
+                delay(delayMs)
+                Resource.Success()
+            }
+
+            scopedViewModel.state.test {
+                // Initial Assertion
+                assertFalse(awaitItem().isLoading)
+
+                // Act
+                scopedViewModel.onAction(AuthActions.SendOTP)
+                runCurrent()
+
+                // State transition Assert
+                assertTrue(awaitItem().isLoading, "Should be loading during the delay")
+
+                // Advancing delay
+                advanceTimeBy(delayMs + 1)
+                runCurrent()
+
+                // Final Assert for state reset
+                assertFalse(awaitItem().isLoading)
+            }
+
+        }
+
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        @Test
+        fun onVerifyButtonPressed_sendOTPSuccess_navigationIsTriggered() = runTest {
+            // Arrange
+            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+            val scopedViewModel =
+                AuthViewModel(validateEmailUseCase, validateOTPUseCase, sendOTPUseCase)
+            scopedViewModel.onAction(AuthActions.ChangeOTP(otp))
+            coEvery { sendOTPUseCase.invoke(otp.joinToString("")) } returns Resource.Success()
+
+            scopedViewModel.authEvent.test {
+                // Act
+                scopedViewModel.onAction(AuthActions.SendOTP)
+                val event = awaitItem()
+
+                // Assert
+                assertNotNull(event)
+                assertTrue(event is AuthEvents.NavigateToOTPScreen)
+
+            }
+        }
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        @Test
+        fun onVerifyButtonPressed_sendOTPError_errorEventIsTriggered() = runTest {
+            // Arrange
+            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+            val scopedViewModel =
+                AuthViewModel(validateEmailUseCase, validateOTPUseCase, sendOTPUseCase)
+            scopedViewModel.onAction(AuthActions.ChangeOTP(otp))
+            coEvery { sendOTPUseCase.invoke(otp.joinToString("")) } returns Resource.Failure()
+
+            scopedViewModel.authEvent.test {
+                // Act
+                scopedViewModel.onAction(AuthActions.SendOTP)
+                val event = awaitItem()
+
+                // Assert
+                assertNotNull(event)
+                assertTrue(event is AuthEvents.ShowError)
+            }
+        }
     }
 }
