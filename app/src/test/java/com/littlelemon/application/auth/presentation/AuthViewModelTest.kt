@@ -202,28 +202,51 @@ class AuthViewModelTest {
     }
 
 
-    @Test
-    fun onFirstNameChange_toValidFirstName_stateUpdatesToNewFirstName() = runTest {
-        // Arrange
-        val firstName = "First Name"
+    @Nested
+    inner class NameTests {
 
-        // Act
-        viewModel.onAction(AuthActions.ChangeFirstName(firstName = firstName))
+        @Test
+        fun onFirstNameChange_toEmptyString_buttonIsDisabled() = runTest {
+            // Arrange
+            val firstName = ""
 
-        // Assert
-        assertEquals(firstName, viewModel.state.value.firstName)
-    }
+            // Act
+            viewModel.onAction(AuthActions.ChangeFirstName(firstName = firstName))
+
+            // Assert
+            assertEquals(firstName, viewModel.state.value.firstName)
+            assertFalse(viewModel.state.value.enableLetsGoButton)
+        }
+
+        @Test
+        fun onFirstNameChange_toValidFirstName_stateUpdatesToNewFirstName() = runTest {
+            // Arrange
+            val firstName = "First Name"
+
+            // Act
+            viewModel.onAction(AuthActions.ChangeFirstName(firstName = firstName))
+
+            // Assert
+            assertEquals(firstName, viewModel.state.value.firstName)
+            assertTrue(viewModel.state.value.enableLetsGoButton)
+        }
 
 
-    @Test
-    fun onLastNameChange_toValidLastName_stateUpdatesToNewLastName() = runTest {
-        // Arrange
-        val lastName = "Last Name"
+        @Test
+        fun onLastNameChangeAndValidFirstName_toValidLastName_stateUpdatesToNewLastNameWithButtonEnabled() =
+            runTest {
+                // Arrange
+                val lastName = "Last Name"
+                val firstName = "First Name"
 
-        // Act
-        viewModel.onAction(AuthActions.ChangeLastName(lastName = lastName))
+                // Act
+                viewModel.onAction(AuthActions.ChangeFirstName(firstName = firstName))
+                viewModel.onAction(AuthActions.ChangeLastName(lastName = lastName))
 
-        // Assert
-        assertEquals(lastName, viewModel.state.value.lastName)
+                // Assert
+                assertEquals(lastName, viewModel.state.value.lastName)
+                assertTrue(viewModel.state.value.enableLetsGoButton)
+
+            }
     }
 }
