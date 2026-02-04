@@ -109,7 +109,6 @@ class AuthViewModel(
 
             AuthActions.NavigateBack -> TODO()
             AuthActions.NavigateToHome -> TODO()
-            AuthActions.NavigationToChangeEmail -> TODO()
             AuthActions.ResendOTP -> TODO()
             AuthActions.SendOTP -> {
                 _state.update { it.copy(isLoading = true, enableSendButton = false) }

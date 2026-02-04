@@ -280,10 +280,21 @@ class AuthViewModelTest {
     @Nested
     inner class NavigationTests {
         private val otp = listOf(3, 1, 6, 3, 1, 6)
+        private lateinit var scopedViewModel: AuthViewModel
 
+        @OptIn(ExperimentalCoroutinesApi::class)
         @BeforeEach
         fun setUp() {
             coEvery { validateOTPUseCase.invoke(otp.joinToString("")) } returns ValidationResult.Success
+            Dispatchers.setMain(StandardTestDispatcher())
+            scopedViewModel =
+                AuthViewModel(validateEmailUseCase, validateOTPUseCase, sendOTPUseCase)
+        }
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        @AfterEach
+        fun tearDown() {
+            Dispatchers.resetMain()
         }
 
         @OptIn(ExperimentalCoroutinesApi::class)
@@ -291,9 +302,6 @@ class AuthViewModelTest {
         fun onVerifyButtonPressed_loaderShown_untilResourceReceived() = runTest {
             val delayMs = 500L
 
-            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
-            val scopedViewModel =
-                AuthViewModel(validateEmailUseCase, validateOTPUseCase, sendOTPUseCase)
             scopedViewModel.onAction(AuthActions.ChangeOTP(otp))
             runCurrent()
 
@@ -328,9 +336,6 @@ class AuthViewModelTest {
         @Test
         fun onVerifyButtonPressed_sendOTPSuccess_navigationIsTriggered() = runTest {
             // Arrange
-            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
-            val scopedViewModel =
-                AuthViewModel(validateEmailUseCase, validateOTPUseCase, sendOTPUseCase)
             scopedViewModel.onAction(AuthActions.ChangeOTP(otp))
             coEvery { sendOTPUseCase.invoke(otp.joinToString("")) } returns Resource.Success()
 
@@ -350,9 +355,6 @@ class AuthViewModelTest {
         @Test
         fun onVerifyButtonPressed_sendOTPError_errorEventIsTriggered() = runTest {
             // Arrange
-            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
-            val scopedViewModel =
-                AuthViewModel(validateEmailUseCase, validateOTPUseCase, sendOTPUseCase)
             scopedViewModel.onAction(AuthActions.ChangeOTP(otp))
             coEvery { sendOTPUseCase.invoke(otp.joinToString("")) } returns Resource.Failure()
 

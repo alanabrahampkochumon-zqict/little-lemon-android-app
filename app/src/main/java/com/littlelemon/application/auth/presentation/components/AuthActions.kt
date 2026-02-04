@@ -12,11 +12,9 @@ sealed interface AuthActions {
 
     data object NavigateToHome : AuthActions
 
-    data object NavigationToChangeEmail : AuthActions
-
     data object ResendOTP : AuthActions
 
     data object NavigateBack : AuthActions
-    
+
     //TODO Location Navigation and Triggering
 }
