@@ -2,7 +2,7 @@ package com.littlelemon.application.auth.presentation
 
 import app.cash.turbine.test
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
-import com.littlelemon.application.auth.domain.usecase.ValidateVerificationCodeUseCase
+import com.littlelemon.application.auth.domain.usecase.ValidateOTPUseCase
 import com.littlelemon.application.auth.presentation.components.AuthActions
 import com.littlelemon.application.core.domain.utils.ValidationError
 import com.littlelemon.application.core.domain.utils.ValidationResult
@@ -33,7 +33,7 @@ class AuthViewModelTest {
     }
 
     private val validateEmailUseCase = mockk<ValidateEmailUseCase>(relaxed = true)
-    private val validateOTPUseCase = mockk<ValidateVerificationCodeUseCase>()
+    private val validateOTPUseCase = mockk<ValidateOTPUseCase>()
     val viewModel = AuthViewModel(validateEmailUseCase, validateOTPUseCase)
 
     @Nested

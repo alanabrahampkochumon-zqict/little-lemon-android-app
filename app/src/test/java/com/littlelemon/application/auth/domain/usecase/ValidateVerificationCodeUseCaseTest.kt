@@ -7,11 +7,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class ValidateVerificationCodeUseCaseTest {
-    private lateinit var useCase: ValidateVerificationCodeUseCase
+    private lateinit var useCase: ValidateOTPUseCase
 
     @BeforeEach
     fun setUp() {
-        useCase = ValidateVerificationCodeUseCase()
+        useCase = ValidateOTPUseCase()
     }
 
 

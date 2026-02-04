@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Test
 class SendVerificationCodeUseCaseTest {
 
     private lateinit var repository: AuthRepository
-    private lateinit var useCase: SendVerificationCodeUseCase
+    private lateinit var useCase: SendOTPUseCase
     private lateinit var email: String
 
     @BeforeEach
     fun setUp() {
         repository = mockk<AuthRepository>()
-        useCase = SendVerificationCodeUseCase(repository)
+        useCase = SendOTPUseCase(repository)
         email = "test@email.com"
     }
 
