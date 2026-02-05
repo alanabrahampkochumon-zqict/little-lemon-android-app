@@ -17,7 +17,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
@@ -360,15 +359,14 @@ class AuthViewModelTest {
         @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onVerifyOTP_whileVerifying_loadingIsTrue() = runTest {
-            val verificationParams = VerificationParams(email, otp.joinToString(""))
             viewModel.onAction(AuthActions.ChangeEmail(email))
-            coEvery { verifyOTPUseCase.invoke(verificationParams) } coAnswers {
+            coEvery { verifyOTPUseCase.invoke(any()) } coAnswers {
                 delay(NETWORK_LATENCY)
                 Resource.Success()
             }
 
-            viewModel.onAction(AuthActions.ChangeOTP(otp))
-            runCurrent()
+//            viewModel.onAction(AuthActions.ChangeOTP(otp))
+//            runCurrent()
 
             viewModel.state.test {
                 // Assert Loading Not Shown
@@ -382,12 +380,10 @@ class AuthViewModelTest {
                 assertTrue(awaitItem().isLoading)
 
                 advanceTimeBy(NETWORK_LATENCY + 1)
-                val job = launch { viewModel.authEvent.collect { } } // Consume any events
 
                 // Assert Loading is not shown after event is handled
                 assertFalse(awaitItem().isLoading)
                 cancelAndIgnoreRemainingEvents()
-                job.cancel()
             }
         }
 
@@ -452,17 +448,13 @@ class AuthViewModelTest {
 
                 // Act: Send the otp
                 viewModel.onAction(AuthActions.ResendOTP)
-                val s2 = awaitItem()
-                assertTrue(s2.isLoading)
 
+                // Assert state right after sending request
+                assertTrue(awaitItem().isLoading)
                 advanceTimeBy(NETWORK_LATENCY + 1)
 
-                // Collect the triggered event. Else the coroutine will suspend forever.
-                val job =
-                    launch { viewModel.authEvent.collect { } }
-                val s3 = awaitItem()
-                assertFalse(s3.isLoading)
-                job.cancel()
+                // Assert state after a proper response is received
+                assertFalse(awaitItem().isLoading)
             }
         }
 

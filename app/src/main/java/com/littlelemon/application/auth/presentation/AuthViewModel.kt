@@ -120,72 +120,72 @@ class AuthViewModel(
 
             // Navigation and Related Actions
             AuthActions.ResendOTP -> viewModelScope.launch {
-                _state.update { it.copy(isLoading = true, emailError = "Hello") }
+                _state.update { it.copy(isLoading = true) }
+                var event: AuthEvents? = null
                 when (val result = resendOTP(state.value.email)) {
                     is Resource.Failure<*> -> {
-                        println("Triggered Error")
-                        _navigationChannel.send(
-                            AuthEvents.ShowError(
-                                errorMessage = result.errorMessage
-                                    ?: "Unknown error" // TODO: Refactor to use UIText
-                            )
+                        event = AuthEvents.ShowError(
+                            errorMessage = result.errorMessage
+                                ?: "Unknown error" // TODO: Refactor to use UIText
                         )
                     }
 
                     Resource.Loading -> Unit // Already handled
                     is Resource.Success<*> -> {
-                        _navigationChannel.send(
+                        event =
                             AuthEvents.ShowInfo("OTP resend successfully") // TODO: Refactor to use UIText
-                        )
                     }
                 }
                 _state.update { it.copy(isLoading = false) }
+                event?.let { authEvent ->
+                    _navigationChannel.send(authEvent)
+                }
             }
 
             AuthActions.SendOTP -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true, enableSendButton = false) }
+                var event: AuthEvents? = null
                 when (val result = sendOTP(state.value.oneTimePassword.joinToString(""))) {
                     is Resource.Failure<*> -> {
-                        _navigationChannel.send(
-                            AuthEvents.ShowError(
-                                result.errorMessage ?: "An unknown error occurred!"
-                            )
+                        event = AuthEvents.ShowError(
+                            result.errorMessage ?: "An unknown error occurred!"
                         )
                     }
 
                     Resource.Loading -> Unit // Loading already handled
                     is Resource.Success<*> -> {
-                        _navigationChannel.send(
-                            AuthEvents.NavigateToOTPScreen
-                        )
+                        event = AuthEvents.NavigateToOTPScreen
                     }
                 }
                 _state.update { it.copy(isLoading = false, enableSendButton = true) }
+                event?.let { authEvent ->
+                    _navigationChannel.send(authEvent)
+                }
             }
 
             AuthActions.VerifyOTP -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true, enableVerifyButton = false) }
+                var event: AuthEvents? = null
                 when (val result = verifyOTP(
                     VerificationParams(
                         state.value.email, state.value.oneTimePassword.joinToString("")
                     )
                 )) {
                     is Resource.Failure<*> -> {
-                        _navigationChannel.send(
-                            AuthEvents.ShowError(
-                                result.errorMessage ?: "An unknown error occurred!"
-                            )
+                        event = AuthEvents.ShowError(
+                            result.errorMessage ?: "An unknown error occurred!" //TODO: Refactor
                         )
                     }
 
                     Resource.Loading -> Unit // Loading already handled
                     is Resource.Success<*> -> {
-                        _navigationChannel.send(
-                            AuthEvents.NavigateToPersonalizationScreen
-                        )
+                        event = AuthEvents.NavigateToPersonalizationScreen
                     }
                 }
                 _state.update { it.copy(isLoading = false, enableVerifyButton = true) }
+                event?.let { authEvent ->
+                    _navigationChannel.send(authEvent)
+                }
             }
 
             AuthActions.CompletePersonalization -> TODO()
