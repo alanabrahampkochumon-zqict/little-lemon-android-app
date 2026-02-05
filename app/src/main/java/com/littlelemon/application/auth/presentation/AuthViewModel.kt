@@ -9,7 +9,6 @@ import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.VerifyOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.params.VerificationParams
-import com.littlelemon.application.auth.presentation.AuthEvents.ShowError
 import com.littlelemon.application.auth.presentation.components.AuthActions
 import com.littlelemon.application.core.domain.utils.DEBOUNCE_RATE_MS
 import com.littlelemon.application.core.domain.utils.Resource
@@ -67,6 +66,7 @@ class AuthViewModel(
 
     fun onAction(action: AuthActions) {
         when (action) {
+            // Field Update and Validation Actions
             is AuthActions.ChangeEmail -> {
                 _state.update {
                     it.copy(
@@ -118,17 +118,36 @@ class AuthViewModel(
                 _navigationChannel.send(AuthEvents.NavigateBack)
             }
 
-            AuthActions.NavigateToHome -> TODO()
+            // Navigation and Related Actions
+            AuthActions.ResendOTP -> viewModelScope.launch {
+                _state.update { it.copy(isLoading = true, emailError = "Hello") }
+                when (val result = resendOTP(state.value.email)) {
+                    is Resource.Failure<*> -> {
+                        println("Triggered Error")
+                        _navigationChannel.send(
+                            AuthEvents.ShowError(
+                                errorMessage = result.errorMessage
+                                    ?: "Unknown error" // TODO: Refactor to use UIText
+                            )
+                        )
+                    }
 
-            AuthActions.ResendOTP -> TODO()
+                    Resource.Loading -> Unit // Already handled
+                    is Resource.Success<*> -> {
+                        _navigationChannel.send(
+                            AuthEvents.ShowInfo("OTP resend successfully") // TODO: Refactor to use UIText
+                        )
+                    }
+                }
+                _state.update { it.copy(isLoading = false) }
+            }
 
             AuthActions.SendOTP -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true, enableSendButton = false) }
                 when (val result = sendOTP(state.value.oneTimePassword.joinToString(""))) {
                     is Resource.Failure<*> -> {
-                        _state.update { it.copy(isLoading = false, enableSendButton = false) }
                         _navigationChannel.send(
-                            ShowError(
+                            AuthEvents.ShowError(
                                 result.errorMessage ?: "An unknown error occurred!"
                             )
                         )
@@ -136,27 +155,24 @@ class AuthViewModel(
 
                     Resource.Loading -> Unit // Loading already handled
                     is Resource.Success<*> -> {
-                        _state.update { it.copy(isLoading = false) }
                         _navigationChannel.send(
                             AuthEvents.NavigateToOTPScreen
                         )
                     }
                 }
+                _state.update { it.copy(isLoading = false, enableSendButton = true) }
             }
 
             AuthActions.VerifyOTP -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true, enableVerifyButton = false) }
-                when (val result =
-                    verifyOTP(
-                        VerificationParams(
-                            state.value.email,
-                            state.value.oneTimePassword.joinToString("")
-                        )
-                    )) {
+                when (val result = verifyOTP(
+                    VerificationParams(
+                        state.value.email, state.value.oneTimePassword.joinToString("")
+                    )
+                )) {
                     is Resource.Failure<*> -> {
-                        _state.update { it.copy(isLoading = false, enableVerifyButton = false) }
                         _navigationChannel.send(
-                            ShowError(
+                            AuthEvents.ShowError(
                                 result.errorMessage ?: "An unknown error occurred!"
                             )
                         )
@@ -164,18 +180,19 @@ class AuthViewModel(
 
                     Resource.Loading -> Unit // Loading already handled
                     is Resource.Success<*> -> {
-                        _state.update { it.copy(isLoading = false) }
                         _navigationChannel.send(
                             AuthEvents.NavigateToPersonalizationScreen
                         )
                     }
                 }
+                _state.update { it.copy(isLoading = false, enableVerifyButton = true) }
             }
 
             AuthActions.CompletePersonalization -> TODO()
 
             AuthActions.ProceedToHome -> TODO()
 
+            // Location Request and Permission
             AuthActions.RequestLocation -> TODO()
 
             AuthActions.RequestLocationPermission -> TODO()

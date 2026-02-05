@@ -41,5 +41,10 @@
     <!--    Misc.    -->
     <string name="or">or</string>
 
+    <!-- Error Messages -->
+    <string name="generic_error_message">An unknown error occurred. Please try again!</string>
+
+    <!--  Info Messages  -->
+    <string name="otp_resend_message">OTP resend successfully!</string>
 
 </resources>

@@ -20,8 +20,6 @@ sealed interface AuthActions {
     data object ProceedToHome : AuthActions
     object NavigateBack : AuthActions
 
-    data object NavigateToHome : AuthActions
-
 
     //TODO Location Navigation and Triggering
 }

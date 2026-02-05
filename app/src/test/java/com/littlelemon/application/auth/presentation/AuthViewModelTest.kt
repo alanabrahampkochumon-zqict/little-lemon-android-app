@@ -14,11 +14,15 @@ import com.littlelemon.application.core.domain.utils.ValidationResult
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -275,7 +279,8 @@ class AuthViewModelTest {
 
         @OptIn(ExperimentalCoroutinesApi::class)
         @Test
-        fun onSendOTP_loaderShown_untilResourceReceived() = runTest {
+        fun onSendOTP_whileSending_loadingIsTrue() = runTest {
+
             viewModel.onAction(AuthActions.ChangeOTP(otp))
             runCurrent()
 
@@ -354,7 +359,7 @@ class AuthViewModelTest {
 
         @OptIn(ExperimentalCoroutinesApi::class)
         @Test
-        fun onVerifyOTP_whenVerifying_showsLoading() = runTest {
+        fun onVerifyOTP_whileVerifying_loadingIsTrue() = runTest {
             val verificationParams = VerificationParams(email, otp.joinToString(""))
             viewModel.onAction(AuthActions.ChangeEmail(email))
             coEvery { verifyOTPUseCase.invoke(verificationParams) } coAnswers {
@@ -377,11 +382,12 @@ class AuthViewModelTest {
                 assertTrue(awaitItem().isLoading)
 
                 advanceTimeBy(NETWORK_LATENCY + 1)
-                runCurrent()
+                val job = launch { viewModel.authEvent.collect { } } // Consume any events
 
                 // Assert Loading is not shown after event is handled
-                assertTrue(awaitItem().isLoading)
+                assertFalse(awaitItem().isLoading)
                 cancelAndIgnoreRemainingEvents()
+                job.cancel()
             }
         }
 
@@ -421,6 +427,78 @@ class AuthViewModelTest {
             }
         }
 
+        @OptIn(ExperimentalCoroutinesApi::class)
+        @Test
+        fun onResendOTP_whileResending_loadingIsTrue() = runTest() {
+            // Arrange
+            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+            viewModel = AuthViewModel(
+                validateEmailUseCase,
+                validateOTPUseCase,
+                sendOTPUseCase,
+                verifyOTPUseCase,
+                resendOTPUseCase
+            )
+            coEvery { resendOTPUseCase.invoke(any()) } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Success()
+            }
+//            viewModel.onAction(AuthActions.ChangeEmail(email))
+//            runCurrent()
+
+            viewModel.state.test {
+                // Assert State before request
+                assertFalse(awaitItem().isLoading)
+
+                // Act: Send the otp
+                viewModel.onAction(AuthActions.ResendOTP)
+                val s2 = awaitItem()
+                assertTrue(s2.isLoading)
+
+                advanceTimeBy(NETWORK_LATENCY + 1)
+
+                // Collect the triggered event. Else the coroutine will suspend forever.
+                val job =
+                    launch { viewModel.authEvent.collect { } }
+                val s3 = awaitItem()
+                assertFalse(s3.isLoading)
+                job.cancel()
+            }
+        }
+
+        @Test
+        fun onResendOTP_resendSuccess_showInfoEventIsTriggered() = runTest {
+            // Arrange
+            coEvery { resendOTPUseCase.invoke(email) } returns Resource.Success()
+            viewModel.onAction(AuthActions.ChangeEmail(email))
+
+            viewModel.authEvent.test {
+
+                // Act: Send the otp
+                viewModel.onAction(AuthActions.ResendOTP)
+                val triggeredEvent = awaitItem()
+
+                // Assert
+                assertTrue(triggeredEvent is AuthEvents.ShowInfo)
+            }
+        }
+
+        @Test
+        fun onResendOTP_resendFailures_showErrorEventIsTriggered() = runTest {
+            // Arrange
+            coEvery { resendOTPUseCase.invoke(email) } returns Resource.Failure()
+            viewModel.onAction(AuthActions.ChangeEmail(email))
+
+            viewModel.authEvent.test {
+
+                // Act: Send the otp
+                viewModel.onAction(AuthActions.ResendOTP)
+                val triggeredEvent = awaitItem()
+
+                // Assert
+                assertTrue(triggeredEvent is AuthEvents.ShowError)
+            }
+        }
 
     }
 }
