@@ -9,7 +9,7 @@ class VerifyOTPUseCase(private val repository: AuthRepository) :
     UseCase<VerificationParams, Resource<Unit>> {
 
     override suspend fun invoke(input: VerificationParams): Resource<Unit> =
-        repository.verifyVerificationCode(
+        repository.verifyOTP(
             emailAddress = input.emailAddress,
             verificationCode = input.verificationCode
         )

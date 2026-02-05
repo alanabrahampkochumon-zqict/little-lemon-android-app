@@ -18,7 +18,7 @@ class AuthRepositoryImpl(
     private val remoteDataSource: AuthRemoteDataSource,
     private val localDataSource: AuthLocalDataSource
 ) : AuthRepository {
-    override suspend fun sendVerificationCode(emailAddress: String): Resource<Unit> {
+    override suspend fun sendOTP(emailAddress: String): Resource<Unit> {
         return try {
             remoteDataSource.sendVerificationCode(emailAddress)
             Resource.Success()
@@ -29,7 +29,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun verifyVerificationCode(
+    override suspend fun verifyOTP(
         emailAddress: String,
         verificationCode: String
     ): Resource<Unit> {
@@ -43,7 +43,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun resendVerificationCode(emailAddress: String): Resource<Unit> {
+    override suspend fun resendOTP(emailAddress: String): Resource<Unit> {
         return try {
             remoteDataSource.resendVerificationCode(emailAddress)
             Resource.Success()

@@ -6,14 +6,14 @@ import com.littlelemon.application.core.domain.utils.Resource
 
 interface AuthRepository {
 
-    suspend fun sendVerificationCode(emailAddress: String): Resource<Unit>
+    suspend fun sendOTP(emailAddress: String): Resource<Unit>
 
-    suspend fun verifyVerificationCode(
+    suspend fun verifyOTP(
         emailAddress: String,
         verificationCode: String
     ): Resource<Unit>
 
-    suspend fun resendVerificationCode(emailAddress: String): Resource<Unit>
+    suspend fun resendOTP(emailAddress: String): Resource<Unit>
 
     suspend fun saveUserInformation(firstName: String, lastName: String = ""): Resource<Unit>
 

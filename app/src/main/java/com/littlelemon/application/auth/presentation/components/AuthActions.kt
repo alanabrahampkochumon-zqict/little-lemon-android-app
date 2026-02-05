@@ -9,12 +9,19 @@ sealed interface AuthActions {
     data object SendOTP : AuthActions
 
     data object VerifyOTP : AuthActions
+    data object ResendOTP : AuthActions
+
+    data object CompletePersonalization : AuthActions
+
+    data object RequestLocationPermission : AuthActions
+
+    data object RequestLocation : AuthActions
+
+    data object ProceedToHome : AuthActions
+    object NavigateBack : AuthActions
 
     data object NavigateToHome : AuthActions
 
-    data object ResendOTP : AuthActions
-
-    data object NavigateBack : AuthActions
 
     //TODO Location Navigation and Triggering
 }

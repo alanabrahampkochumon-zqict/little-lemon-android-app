@@ -10,46 +10,44 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class SendVerificationCodeUseCaseTest {
+class ResendOTPUseCaseTest {
 
     private lateinit var repository: AuthRepository
-    private lateinit var useCase: SendOTPUseCase
-    private lateinit var email: String
+    private lateinit var useCase: ResendOTPUseCase
 
     @BeforeEach
     fun setUp() {
         repository = mockk<AuthRepository>()
-        useCase = SendOTPUseCase(repository)
-        email = "test@email.com"
+        useCase = ResendOTPUseCase(repository)
     }
 
+    private val email = "email@test.com"
 
     @Test
-    fun givenRepositoryReturnSuccess_useCaseReturn_success() = runTest {
-        // Arrange
-        coEvery { repository.sendOTP(email) } returns Resource.Success(
-            Unit
-        )
+    fun onOTPResend_repositoryReturnsSuccess_returnsSuccess() = runTest {
+        // Given
+        coEvery { repository.resendOTP(email) } returns Resource.Success()
+
         // Act
         val result = useCase(email)
 
         // Assert
         assertTrue(result is Resource.Success)
-        assertEquals(Unit, (result as Resource.Success).data)
     }
 
     @Test
-    fun givenRepositoryReturnsFailure_useCaseReturn_failure() = runTest {
-        // Arrange
-        val message = "Unknown error"
-        coEvery { repository.sendOTP(email) } returns Resource.Failure(
-            errorMessage = message
-        )
+    fun onOTPResend_repositoryReturnsFailure_returnFailure() = runTest {
+        // Given
+        val errorMessage = "Error Message"
+        coEvery { repository.resendOTP(email) } returns Resource.Failure(errorMessage = errorMessage)
+
         // Act
         val result = useCase(email)
 
         // Assert
         assertTrue(result is Resource.Failure)
-        assertEquals(message, (result as Resource.Failure).errorMessage)
+        result as Resource.Failure
+        assertEquals(errorMessage, result.errorMessage)
     }
+
 }

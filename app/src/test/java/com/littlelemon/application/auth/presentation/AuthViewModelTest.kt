@@ -1,6 +1,7 @@
 package com.littlelemon.application.auth.presentation
 
 import app.cash.turbine.test
+import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateOTPUseCase
@@ -39,6 +40,7 @@ class AuthViewModelTest {
     private val validateOTPUseCase = mockk<ValidateOTPUseCase>()
     private val sendOTPUseCase = mockk<SendOTPUseCase>()
     private val verifyOTPUseCase = mockk<VerifyOTPUseCase>()
+    private val resendOTPUseCase = mockk<ResendOTPUseCase>()
     private lateinit var viewModel: AuthViewModel
 
     @BeforeEach
@@ -48,7 +50,8 @@ class AuthViewModelTest {
                 validateEmailUseCase,
                 validateOTPUseCase,
                 sendOTPUseCase,
-                verifyOTPUseCase
+                verifyOTPUseCase,
+                resendOTPUseCase
             )
     }
 
@@ -302,7 +305,6 @@ class AuthViewModelTest {
 
         }
 
-
         @Test
         fun onSendOTP_sendOTPSuccess_navigationIsTriggered() = runTest {
             // Arrange
@@ -418,5 +420,7 @@ class AuthViewModelTest {
                 assertTrue(event is AuthEvents.ShowError)
             }
         }
+
+
     }
 }

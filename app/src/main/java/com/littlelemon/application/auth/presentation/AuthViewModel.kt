@@ -3,11 +3,13 @@ package com.littlelemon.application.auth.presentation
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.VerifyOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.params.VerificationParams
+import com.littlelemon.application.auth.presentation.AuthEvents.ShowError
 import com.littlelemon.application.auth.presentation.components.AuthActions
 import com.littlelemon.application.core.domain.utils.DEBOUNCE_RATE_MS
 import com.littlelemon.application.core.domain.utils.Resource
@@ -28,7 +30,8 @@ class AuthViewModel(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validateOTP: ValidateOTPUseCase,
     private val sendOTP: SendOTPUseCase,
-    private val verifyOTP: VerifyOTPUseCase
+    private val verifyOTP: VerifyOTPUseCase,
+    private val resendOTP: ResendOTPUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
@@ -116,14 +119,16 @@ class AuthViewModel(
             }
 
             AuthActions.NavigateToHome -> TODO()
+
             AuthActions.ResendOTP -> TODO()
+
             AuthActions.SendOTP -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true, enableSendButton = false) }
                 when (val result = sendOTP(state.value.oneTimePassword.joinToString(""))) {
                     is Resource.Failure<*> -> {
                         _state.update { it.copy(isLoading = false, enableSendButton = false) }
                         _navigationChannel.send(
-                            AuthEvents.ShowError(
+                            ShowError(
                                 result.errorMessage ?: "An unknown error occurred!"
                             )
                         )
@@ -151,7 +156,7 @@ class AuthViewModel(
                     is Resource.Failure<*> -> {
                         _state.update { it.copy(isLoading = false, enableVerifyButton = false) }
                         _navigationChannel.send(
-                            AuthEvents.ShowError(
+                            ShowError(
                                 result.errorMessage ?: "An unknown error occurred!"
                             )
                         )
@@ -166,6 +171,14 @@ class AuthViewModel(
                     }
                 }
             }
+
+            AuthActions.CompletePersonalization -> TODO()
+
+            AuthActions.ProceedToHome -> TODO()
+
+            AuthActions.RequestLocation -> TODO()
+
+            AuthActions.RequestLocationPermission -> TODO()
         }
     }
 

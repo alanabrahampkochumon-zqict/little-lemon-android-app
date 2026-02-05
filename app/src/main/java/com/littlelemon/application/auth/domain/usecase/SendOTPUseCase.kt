@@ -9,7 +9,7 @@ class SendOTPUseCase(
 ) : UseCase<String, Resource<Unit>> {
 
     override suspend fun invoke(input: String): Resource<Unit> {
-        return repository.sendVerificationCode(input)
+        return repository.sendOTP(input)
     }
 
 }

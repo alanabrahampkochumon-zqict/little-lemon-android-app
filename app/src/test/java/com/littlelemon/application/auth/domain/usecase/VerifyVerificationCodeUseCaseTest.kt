@@ -33,7 +33,7 @@ class VerifyVerificationCodeUseCaseTest {
     @Test
     fun givenRepositoryReturnSuccess_useCaseReturn_successWithUser() = runTest {
         // Arrange
-        coEvery { repository.verifyVerificationCode(EMAIL, OTP) } returns Resource.Success()
+        coEvery { repository.verifyOTP(EMAIL, OTP) } returns Resource.Success()
         // Act
         val result = useCase(VerificationParams(EMAIL, OTP))
 
@@ -45,7 +45,7 @@ class VerifyVerificationCodeUseCaseTest {
     fun givenRepositoryReturnsFailure_useCaseReturn_failure() = runTest {
         // Arrange
         val message = "error"
-        coEvery { repository.verifyVerificationCode(EMAIL, OTP) } returns Resource.Failure(
+        coEvery { repository.verifyOTP(EMAIL, OTP) } returns Resource.Failure(
             errorMessage = message
         )
         // Act
