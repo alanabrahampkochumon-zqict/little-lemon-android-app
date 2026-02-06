@@ -592,6 +592,19 @@ class AuthViewModelTest {
 
         }
 
+        @Test
+        fun onEnterLocationManually_triggerLocationEntryPopup() = runTest {
+            viewModel.authEvent.test {
+                // Arrange & Act
+                viewModel.onAction(AuthActions.EnterLocationManually)
+                runCurrent()
+
+                // Assert that popup event is triggered
+                assertTrue(awaitItem() is AuthEvents.ShowLocationEntryPopup)
+            }
+
+        }
+
 
 //        @Test
 //        fun onSaveLocation_success_showInfo() {

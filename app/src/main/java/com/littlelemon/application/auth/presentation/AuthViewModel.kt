@@ -241,7 +241,10 @@ class AuthViewModel(
                 _state.update { it.copy(isLoading = false) }
             }
 
-            AuthActions.EnterLocationManually -> TODO()
+            AuthActions.EnterLocationManually -> viewModelScope.launch {
+                _authChannel.send(AuthEvents.ShowLocationEntryPopup)
+            }
+
             AuthActions.SaveLocation -> TODO()
         }
     }
