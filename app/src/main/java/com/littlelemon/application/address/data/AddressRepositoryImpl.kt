@@ -5,6 +5,7 @@ import androidx.annotation.RequiresPermission
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.mappers.toLocalLocation
 import com.littlelemon.application.address.domain.AddressRepository
+import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.core.domain.utils.Resource
 
@@ -17,8 +18,16 @@ class AddressRepositoryImpl(
             val location = localDataSource.getLocation()
             Resource.Success(location.toLocalLocation())
         } catch (e: Exception) {
-            //TODO
+            //TODO Save the location to db
             Resource.Failure(errorMessage = "Failed to fetch location")
         }
+    }
+
+    override suspend fun saveAddress(address: LocalAddress) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAddress(): Resource<List<LocalAddress>> {
+        TODO("Not yet implemented")
     }
 }
