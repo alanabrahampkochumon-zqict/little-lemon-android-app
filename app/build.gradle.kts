@@ -101,7 +101,7 @@ dependencies {
 
 
     testImplementation(platform(libs.junit.bom))
-    testImplementation(libs.junit)
+    testImplementation(libs.junit5)
     testImplementation(libs.io.mockk)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.kotlin.faker)
@@ -112,7 +112,7 @@ dependencies {
 
 
 
-    implementation(libs.io.ktor.mock) // TODO: Check if necessary, else remove
+    implementation(libs.io.ktor.mock)
 
 
     androidTestImplementation(libs.androidx.junit)

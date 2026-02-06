@@ -7,7 +7,7 @@ import com.littlelemon.application.core.domain.utils.Resource
 interface AddressRepository {
     suspend fun getLocation(): Resource<LocalLocation>
 
-    suspend fun saveAddress(address: LocalAddress)
+    suspend fun saveAddress(address: LocalAddress): Resource<Unit>
 
     suspend fun getAddress(): Resource<List<LocalAddress>>
 }

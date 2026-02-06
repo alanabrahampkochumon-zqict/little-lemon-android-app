@@ -23,7 +23,7 @@ class AddressRepositoryImpl(
         }
     }
 
-    override suspend fun saveAddress(address: LocalAddress) {
+    override suspend fun saveAddress(address: LocalAddress): Resource<Unit> {
         TODO("Not yet implemented")
     }
 
