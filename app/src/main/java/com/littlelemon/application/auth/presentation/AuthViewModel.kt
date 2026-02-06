@@ -3,11 +3,14 @@ package com.littlelemon.application.auth.presentation
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.littlelemon.application.auth.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
+import com.littlelemon.application.auth.domain.usecase.SaveUserInformationUseCase
 import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.VerifyOTPUseCase
+import com.littlelemon.application.auth.domain.usecase.params.UserInfoParams
 import com.littlelemon.application.auth.domain.usecase.params.VerificationParams
 import com.littlelemon.application.auth.presentation.components.AuthActions
 import com.littlelemon.application.core.domain.utils.DEBOUNCE_RATE_MS
@@ -30,7 +33,9 @@ class AuthViewModel(
     private val validateOTP: ValidateOTPUseCase,
     private val sendOTP: SendOTPUseCase,
     private val verifyOTP: VerifyOTPUseCase,
-    private val resendOTP: ResendOTPUseCase
+    private val resendOTP: ResendOTPUseCase,
+    private val saveUserInfo: SaveUserInformationUseCase,
+    private val getLocation: GetLocationUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
@@ -189,15 +194,31 @@ class AuthViewModel(
             }
 
             AuthActions.CompletePersonalization -> viewModelScope.launch {
-                _navigationChannel.send(AuthEvents.NavigateToLocationPermissionScreen)
-            }
+                _state.update { it.copy(isLoading = true) }
+                var event: AuthEvents? = null
+                when (val result =
+                    saveUserInfo(UserInfoParams(state.value.firstName, state.value.lastName))) {
+                    is Resource.Failure<*> -> {
+                        event = AuthEvents.ShowError(
+                            result.errorMessage ?: "An unknown error occurred!"
+                        ) // TODO: Replace with UIText
+                    }
 
-            AuthActions.ProceedToHome -> TODO()
+                    Resource.Loading -> Unit
+                    is Resource.Success<*> -> {
+                        event = AuthEvents.NavigateToLocationPermissionScreen
+                    }
+                }
+                _state.update { it.copy(isLoading = false) }
+                event?.let { authEvent ->
+                    _navigationChannel.send(authEvent)
+                }
+            }
 
             // Location Request and Permission
             AuthActions.RequestLocation -> TODO()
-
-            AuthActions.RequestLocationPermission -> TODO()
+            AuthActions.EnterLocationManually -> TODO()
+            AuthActions.SaveLocation -> TODO()
         }
     }
 

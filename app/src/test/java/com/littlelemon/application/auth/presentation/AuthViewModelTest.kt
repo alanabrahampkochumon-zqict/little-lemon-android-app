@@ -1,7 +1,9 @@
 package com.littlelemon.application.auth.presentation
 
 import app.cash.turbine.test
+import com.littlelemon.application.auth.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
+import com.littlelemon.application.auth.domain.usecase.SaveUserInformationUseCase
 import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateOTPUseCase
@@ -14,14 +16,11 @@ import com.littlelemon.application.core.domain.utils.ValidationResult
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -44,6 +43,8 @@ class AuthViewModelTest {
     private val sendOTPUseCase = mockk<SendOTPUseCase>()
     private val verifyOTPUseCase = mockk<VerifyOTPUseCase>()
     private val resendOTPUseCase = mockk<ResendOTPUseCase>()
+    private val getLocationUseCase = mockk<GetLocationUseCase>()
+    private val saveUserInfoUseCase = mockk<SaveUserInformationUseCase>()
     private lateinit var viewModel: AuthViewModel
 
     @BeforeEach
@@ -54,7 +55,9 @@ class AuthViewModelTest {
                 validateOTPUseCase,
                 sendOTPUseCase,
                 verifyOTPUseCase,
-                resendOTPUseCase
+                resendOTPUseCase,
+                saveUserInfoUseCase,
+                getLocationUseCase
             )
     }
 
@@ -359,14 +362,11 @@ class AuthViewModelTest {
         @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onVerifyOTP_whileVerifying_loadingIsTrue() = runTest {
-            viewModel.onAction(AuthActions.ChangeEmail(email))
+            // Arrange
             coEvery { verifyOTPUseCase.invoke(any()) } coAnswers {
                 delay(NETWORK_LATENCY)
                 Resource.Success()
             }
-
-//            viewModel.onAction(AuthActions.ChangeOTP(otp))
-//            runCurrent()
 
             viewModel.state.test {
                 // Assert Loading Not Shown
@@ -427,20 +427,8 @@ class AuthViewModelTest {
         @Test
         fun onResendOTP_whileResending_loadingIsTrue() = runTest() {
             // Arrange
-            Dispatchers.setMain(StandardTestDispatcher(testScheduler))
-            viewModel = AuthViewModel(
-                validateEmailUseCase,
-                validateOTPUseCase,
-                sendOTPUseCase,
-                verifyOTPUseCase,
-                resendOTPUseCase
-            )
-            coEvery { resendOTPUseCase.invoke(any()) } coAnswers {
-                delay(NETWORK_LATENCY)
-                Resource.Success()
-            }
-//            viewModel.onAction(AuthActions.ChangeEmail(email))
-//            runCurrent()
+            coEvery { resendOTPUseCase.invoke(any()) } returns Resource.Success()
+            runCurrent()
 
             viewModel.state.test {
                 // Assert State before request
@@ -448,6 +436,7 @@ class AuthViewModelTest {
 
                 // Act: Send the otp
                 viewModel.onAction(AuthActions.ResendOTP)
+                runCurrent()
 
                 // Assert state right after sending request
                 assertTrue(awaitItem().isLoading)
@@ -492,16 +481,98 @@ class AuthViewModelTest {
             }
         }
 
+        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
-        fun onCompletePersonalization_navigateEventIsTriggered() = runTest {
-            // Act & Arrange
-            viewModel.onAction(AuthActions.CompletePersonalization)
+        fun onCompletePersonalization_success_navigateEventIsTriggered() = runTest {
+            // Arrange
+            coEvery { saveUserInfoUseCase.invoke(any()) } returns Resource.Success()
 
             viewModel.authEvent.test {
+
+                // Act
+                viewModel.onAction(AuthActions.CompletePersonalization)
+                runCurrent()
                 // Assert that navigation event is triggered
                 assertTrue(awaitItem() is AuthEvents.NavigateToLocationPermissionScreen)
             }
         }
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        @Test
+        fun onCompletePersonalization_failure_showsError() = runTest {
+            // Arrange
+            coEvery { saveUserInfoUseCase.invoke(any()) } returns Resource.Failure()
+
+            viewModel.authEvent.test {
+                // Act
+                viewModel.onAction(AuthActions.CompletePersonalization)
+                runCurrent()
+
+                // Assert that navigation event is triggered
+                assertTrue(awaitItem() is AuthEvents.ShowError)
+            }
+        }
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        @Test
+        fun onCompletePersonalization_saving_loaderIsShown() = runTest {
+            // Arrange
+            coEvery { saveUserInfoUseCase.invoke(any()) } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Success()
+            }
+
+            viewModel.state.test {
+                // Assert I: Loader is not shown at the beginning
+                assertFalse(awaitItem().isLoading)
+                // Act
+                viewModel.onAction(AuthActions.CompletePersonalization)
+                runCurrent()
+                // Assert II: Loader is shown on request
+                assertTrue(awaitItem().isLoading)
+
+                advanceTimeBy(NETWORK_LATENCY + 1)
+
+                // Assert III: Loader dismissed on success.
+                assertFalse(awaitItem().isLoading)
+            }
+        }
+
+//        @Test
+//        fun onRequestLocation_success_showInfo() {
+//            // Arrange
+//        }
+//
+//
+//        @Test
+//        fun onRequestLocation_success_navigateToHome() {
+//        }
+//
+//        @Test
+//        fun onRequestLocation_failure_showError() {
+//        }
+//
+//        @Test
+//        fun onSaveLocation_success_showInfo() {
+//        }
+//
+//        @Test
+//        fun onSaveLocation_success_navigateToHome() {
+//        }
+//
+//        @Test
+//        fun onSaveLocation_failure_showError() {
+//        }
+//
+//        @Test
+//        fun onAuthenticated_noAddress_showAddressScreen() {
+//            TODO()
+//        }
+//
+//        @Test
+//        fun onAuthenticated_navigatesToHome() {
+//            TODO()
+//        }
 
     }
 }

@@ -7,6 +7,8 @@ sealed interface AuthEvents {
     data object NavigateBack : AuthEvents
 
     data class ShowError(val errorMessage: String) : AuthEvents
-    
+
     data class ShowInfo(val message: String) : AuthEvents
+
+    data object ShowLocationEntry : AuthEvents
 }

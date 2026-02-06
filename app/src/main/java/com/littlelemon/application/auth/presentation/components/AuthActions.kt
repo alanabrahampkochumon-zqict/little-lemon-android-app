@@ -5,21 +5,12 @@ sealed interface AuthActions {
     data class ChangeOTP(val otp: List<Int>) : AuthActions
     data class ChangeFirstName(val firstName: String) : AuthActions
     data class ChangeLastName(val lastName: String) : AuthActions
-
     data object SendOTP : AuthActions
-
     data object VerifyOTP : AuthActions
     data object ResendOTP : AuthActions
-
     data object CompletePersonalization : AuthActions
-
-    data object RequestLocationPermission : AuthActions
-
     data object RequestLocation : AuthActions
-
-    data object ProceedToHome : AuthActions
+    data object EnterLocationManually : AuthActions
+    data object SaveLocation : AuthActions // For Saving manual location
     object NavigateBack : AuthActions
-
-
-    //TODO Location Navigation and Triggering
 }
