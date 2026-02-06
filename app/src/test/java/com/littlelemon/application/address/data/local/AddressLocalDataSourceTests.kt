@@ -1,4 +1,4 @@
-package com.littlelemon.application.auth.data.local
+package com.littlelemon.application.address.data.local
 
 import android.location.Location
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 
-class AuthLocalDataSourceTest {
+class AddressLocalDataSourceTests {
 
     private companion object {
         const val LATITUDE = 1.2343
@@ -27,7 +27,7 @@ class AuthLocalDataSourceTest {
     private val locationProvider = mockk<FusedLocationProviderClient>()
     private val newLocation = mockk<Location>(relaxed = true)
     private val staleLocation = mockk<Location>(relaxed = true)
-    private val datasource = AuthLocalDataSource(locationProvider)
+    private val datasource = AddressLocalDataSource(locationProvider)
 
     @BeforeEach
     fun setUp() {

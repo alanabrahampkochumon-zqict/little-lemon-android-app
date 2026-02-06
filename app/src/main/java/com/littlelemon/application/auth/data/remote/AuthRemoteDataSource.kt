@@ -43,8 +43,4 @@ class AuthRemoteDataSource(
         return client.auth.sessionManager.loadSession()
     }
 
-    suspend fun refreshSession() {
-        client.auth.refreshCurrentSession()
-    }
-
 }

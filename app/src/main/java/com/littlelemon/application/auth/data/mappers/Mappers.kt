@@ -1,8 +1,6 @@
-package com.littlelemon.application.auth.data.models
+package com.littlelemon.application.auth.data.mappers
 
-import android.location.Location
 import com.littlelemon.application.auth.data.Constants
-import com.littlelemon.application.auth.domain.models.LocalLocation
 import com.littlelemon.application.auth.domain.models.SessionToken
 import com.littlelemon.application.auth.domain.models.User
 import io.github.jan.supabase.auth.user.UserSession
@@ -26,4 +24,3 @@ fun UserSession.toSessionToken(): SessionToken? {
     )
 }
 
-fun Location.toLocalLocation(): LocalLocation = LocalLocation(this.latitude, this.longitude)

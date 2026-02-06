@@ -38,7 +38,7 @@ class ValidateVerificationCodeUseCaseTest {
     @Test
     fun givenLettersInOTP_validatorReturns_failure() = runTest {
         // Arrange
-        val otp = "abcd"
+        val otp = "abcdef"
         // Act
         val result = useCase(otp)
         // Assert
@@ -56,9 +56,9 @@ class ValidateVerificationCodeUseCaseTest {
     }
 
     @Test
-    fun givenMoreThanFourDigitOTP_validatorReturns_failure() = runTest {
+    fun givenMoreThanSixDigitOTP_validatorReturns_failure() = runTest {
         // Arrange
-        val otp = "12345"
+        val otp = "1234567"
         // Act
         val result = useCase(otp)
         // Assert
@@ -66,9 +66,9 @@ class ValidateVerificationCodeUseCaseTest {
     }
 
     @Test
-    fun givenFourNumberOTP_validatorReturns_success() = runTest {
+    fun givenSixNumberOTP_validatorReturns_success() = runTest {
         // Arrange
-        val otp = "1234"
+        val otp = "123456"
         // Act
         val result = useCase(otp)
         // Assert

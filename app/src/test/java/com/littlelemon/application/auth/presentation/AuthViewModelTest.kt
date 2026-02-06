@@ -1,7 +1,7 @@
 package com.littlelemon.application.auth.presentation
 
 import app.cash.turbine.test
-import com.littlelemon.application.auth.domain.usecase.GetLocationUseCase
+import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.SaveUserInformationUseCase
 import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
@@ -619,7 +619,7 @@ class AuthViewModelTest {
 //        }
 //
 //        @Test
-//        fun onAuthenticated_noAddress_showAddressScreen() {
+//        fun onAuthenticated_noAddressOrLocation_showAddressScreen() {
 //            TODO()
 //        }
 //

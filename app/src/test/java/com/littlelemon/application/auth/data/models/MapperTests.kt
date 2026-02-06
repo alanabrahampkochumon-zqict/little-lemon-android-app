@@ -1,18 +1,14 @@
 package com.littlelemon.application.auth.data.models
 
-import android.location.Location
 import com.littlelemon.application.auth.data.Constants
-import com.littlelemon.application.auth.domain.models.LocalLocation
+import com.littlelemon.application.auth.data.mappers.toSessionToken
 import io.github.jan.supabase.auth.user.UserInfo
 import io.github.jan.supabase.auth.user.UserSession
-import io.mockk.every
-import io.mockk.mockk
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -89,29 +85,6 @@ class MapperTests {
             assertNull(session)
         }
 
-    }
-
-    @Nested
-    inner class ToLocalLocationTest() {
-        val LATITUDE = 1.2345
-        val LONGITUDE = 3.2354
-
-        @Test
-        fun onLocationMapped_localLocationInstanceReturned() {
-            // Arrange
-            val location = mockk<Location>()
-            every { location.latitude } returns LATITUDE
-            every { location.longitude } returns LONGITUDE
-
-            // Act
-            val localLocation = location.toLocalLocation()
-
-            // Assert
-            assertNotNull(localLocation)
-            assertTrue(localLocation is LocalLocation)
-            assertEquals(LATITUDE, localLocation.latitude)
-            assertEquals(LONGITUDE, localLocation.longitude)
-        }
     }
 
 }

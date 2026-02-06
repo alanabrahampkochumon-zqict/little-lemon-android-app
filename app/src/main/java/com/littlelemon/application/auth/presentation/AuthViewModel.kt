@@ -3,7 +3,7 @@ package com.littlelemon.application.auth.presentation
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.littlelemon.application.auth.domain.usecase.GetLocationUseCase
+import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.SaveUserInformationUseCase
 import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
@@ -142,8 +142,8 @@ class AuthViewModel(
                     }
                 }
                 _state.update { it.copy(isLoading = false) }
-                event?.let { authEvent ->
-                    _authChannel.send(authEvent)
+                event?.let { evt ->
+                    _authChannel.send(evt)
                 }
             }
 
@@ -163,8 +163,8 @@ class AuthViewModel(
                     }
                 }
                 _state.update { it.copy(isLoading = false, enableSendButton = true) }
-                event?.let { authEvent ->
-                    _authChannel.send(authEvent)
+                event?.let { evt ->
+                    _authChannel.send(evt)
                 }
             }
 
@@ -210,8 +210,8 @@ class AuthViewModel(
                     }
                 }
                 _state.update { it.copy(isLoading = false) }
-                event?.let { authEvent ->
-                    _authChannel.send(authEvent)
+                event?.let { evt ->
+                    _authChannel.send(evt)
                 }
             }
 
@@ -236,8 +236,8 @@ class AuthViewModel(
                     }
                 }
 
-                for (authEvent in events)
-                    _authChannel.send(authEvent)
+                for (evt in events)
+                    _authChannel.send(evt)
                 _state.update { it.copy(isLoading = false) }
             }
 

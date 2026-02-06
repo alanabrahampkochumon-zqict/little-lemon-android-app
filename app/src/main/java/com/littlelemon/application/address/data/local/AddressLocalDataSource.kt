@@ -1,4 +1,4 @@
-package com.littlelemon.application.auth.data.local
+package com.littlelemon.application.address.data.local
 
 import android.Manifest
 import android.location.Location
@@ -7,8 +7,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.tasks.await
 
-
-class AuthLocalDataSource(
+class AddressLocalDataSource(
     private val locationProvider: FusedLocationProviderClient
 ) {
     companion object {
