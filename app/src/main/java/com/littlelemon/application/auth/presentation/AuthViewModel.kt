@@ -41,8 +41,8 @@ class AuthViewModel(
     private val _state = MutableStateFlow(AuthState())
     val state = _state.asStateFlow()
 
-    private val _navigationChannel = Channel<AuthEvents>(Channel.BUFFERED)
-    val authEvent = _navigationChannel.receiveAsFlow()
+    private val _authChannel = Channel<AuthEvents>(Channel.BUFFERED)
+    val authEvent = _authChannel.receiveAsFlow()
 
     init {
         viewModelScope.launch {
@@ -120,7 +120,7 @@ class AuthViewModel(
             }
 
             AuthActions.NavigateBack -> viewModelScope.launch {
-                _navigationChannel.send(AuthEvents.NavigateBack)
+                _authChannel.send(AuthEvents.NavigateBack)
             }
 
             // Navigation and Related Actions
@@ -143,7 +143,7 @@ class AuthViewModel(
                 }
                 _state.update { it.copy(isLoading = false) }
                 event?.let { authEvent ->
-                    _navigationChannel.send(authEvent)
+                    _authChannel.send(authEvent)
                 }
             }
 
@@ -164,7 +164,7 @@ class AuthViewModel(
                 }
                 _state.update { it.copy(isLoading = false, enableSendButton = true) }
                 event?.let { authEvent ->
-                    _navigationChannel.send(authEvent)
+                    _authChannel.send(authEvent)
                 }
             }
 
@@ -189,7 +189,7 @@ class AuthViewModel(
                 }
                 _state.update { it.copy(isLoading = false, enableVerifyButton = true) }
                 event?.let { authEvent ->
-                    _navigationChannel.send(authEvent)
+                    _authChannel.send(authEvent)
                 }
             }
 
@@ -211,12 +211,36 @@ class AuthViewModel(
                 }
                 _state.update { it.copy(isLoading = false) }
                 event?.let { authEvent ->
-                    _navigationChannel.send(authEvent)
+                    _authChannel.send(authEvent)
                 }
             }
 
             // Location Request and Permission
-            AuthActions.RequestLocation -> TODO()
+            AuthActions.RequestLocation -> viewModelScope.launch {
+                _state.update { it.copy(isLoading = true) }
+                val events = mutableListOf<AuthEvents>()
+
+                when (val result = getLocation()) {
+                    is Resource.Failure<*> -> {
+                        events.add(
+                            AuthEvents.ShowError(
+                                result.errorMessage ?: "An unknown error occurred!"
+                            )
+                        ) // TODO: Replace with UiText
+                    }
+
+                    Resource.Loading -> Unit
+                    is Resource.Success<*> -> {
+                        events.add(AuthEvents.ShowInfo("Location granted successfully")) // TODO: replace with UiText
+                        events.add(AuthEvents.NavigateToHome)
+                    }
+                }
+
+                for (authEvent in events)
+                    _authChannel.send(authEvent)
+                _state.update { it.copy(isLoading = false) }
+            }
+
             AuthActions.EnterLocationManually -> TODO()
             AuthActions.SaveLocation -> TODO()
         }

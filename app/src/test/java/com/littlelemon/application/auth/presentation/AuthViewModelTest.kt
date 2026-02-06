@@ -268,18 +268,17 @@ class AuthViewModelTest {
             }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Nested
     inner class NavigationTests {
         private val otp = listOf(3, 1, 6, 3, 1, 6)
         private val email = "test@test.com"
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @BeforeEach
         fun setUp() {
             coEvery { validateOTPUseCase.invoke(otp.joinToString("")) } returns ValidationResult.Success
         }
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onSendOTP_whileSending_loadingIsTrue() = runTest {
 
@@ -359,7 +358,6 @@ class AuthViewModelTest {
             }
         }
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onVerifyOTP_whileVerifying_loadingIsTrue() = runTest {
             // Arrange
@@ -387,7 +385,6 @@ class AuthViewModelTest {
             }
         }
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onVerifyOTP_verificationSuccess_navigationEventIsTriggered() = runTest {
             val verificationParams = VerificationParams(email, otp.joinToString(""))
@@ -405,7 +402,6 @@ class AuthViewModelTest {
             }
         }
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onVerifyOTP_verificationFailure_showErrorEventIsTriggered() = runTest {
             val verificationParams = VerificationParams(email, otp.joinToString(""))
@@ -423,7 +419,6 @@ class AuthViewModelTest {
             }
         }
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onResendOTP_whileResending_loadingIsTrue() = runTest() {
             // Arrange
@@ -481,7 +476,6 @@ class AuthViewModelTest {
             }
         }
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onCompletePersonalization_success_navigateEventIsTriggered() = runTest {
             // Arrange
@@ -497,7 +491,6 @@ class AuthViewModelTest {
             }
         }
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onCompletePersonalization_failure_showsError() = runTest {
             // Arrange
@@ -513,7 +506,6 @@ class AuthViewModelTest {
             }
         }
 
-        @OptIn(ExperimentalCoroutinesApi::class)
         @Test
         fun onCompletePersonalization_saving_loaderIsShown() = runTest {
             // Arrange
@@ -538,20 +530,69 @@ class AuthViewModelTest {
             }
         }
 
-//        @Test
-//        fun onRequestLocation_success_showInfo() {
-//            // Arrange
-//        }
-//
-//
-//        @Test
-//        fun onRequestLocation_success_navigateToHome() {
-//        }
-//
-//        @Test
-//        fun onRequestLocation_failure_showError() {
-//        }
-//
+
+        @Test
+        fun onRequestLocation_success_showsInfoAndNavigateToHome() = runTest {
+            // Arrange
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success()
+
+            viewModel.authEvent.test {
+                // Act
+                viewModel.onAction(AuthActions.RequestLocation)
+                runCurrent()
+
+                // Assert I
+                assertTrue(awaitItem() is AuthEvents.ShowInfo)
+//                val job = launch { viewModel.authEvent.collect { } }
+                // Assert II
+                assertTrue(awaitItem() is AuthEvents.NavigateToHome)
+//                job.cancel()
+            }
+
+
+        }
+
+        @Test
+        fun onRequestLocation_failure_showError() = runTest {
+            // Arrange
+            coEvery { getLocationUseCase.invoke() } returns Resource.Failure()
+
+            viewModel.authEvent.test {
+                // Act
+                viewModel.onAction(AuthActions.RequestLocation)
+                runCurrent()
+
+                // Assert that error is shown
+                assertTrue(awaitItem() is AuthEvents.ShowError)
+            }
+        }
+
+        @Test
+        fun onRequestLocation_whileRequesting_showsLoader() = runTest {
+            coEvery { getLocationUseCase.invoke() } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Success()
+            }
+
+            viewModel.state.test {
+                // Assert that loading is false in the beginning
+                assertFalse(awaitItem().isLoading)
+
+                viewModel.onAction(AuthActions.RequestLocation)
+                runCurrent()
+
+                // Assert that loader is shown
+                assertTrue(awaitItem().isLoading)
+
+                advanceTimeBy(NETWORK_LATENCY + 1)
+
+                // Assert that loading is reset in the end
+                assertFalse(awaitItem().isLoading)
+            }
+
+        }
+
+
 //        @Test
 //        fun onSaveLocation_success_showInfo() {
 //        }
