@@ -36,7 +36,7 @@ class AuthViewModel(
     private val _state = MutableStateFlow(AuthState())
     val state = _state.asStateFlow()
 
-    private val _navigationChannel = Channel<AuthEvents>()
+    private val _navigationChannel = Channel<AuthEvents>(Channel.BUFFERED)
     val authEvent = _navigationChannel.receiveAsFlow()
 
     init {
@@ -188,7 +188,9 @@ class AuthViewModel(
                 }
             }
 
-            AuthActions.CompletePersonalization -> TODO()
+            AuthActions.CompletePersonalization -> viewModelScope.launch {
+                _navigationChannel.send(AuthEvents.NavigateToLocationPermissionScreen)
+            }
 
             AuthActions.ProceedToHome -> TODO()
 

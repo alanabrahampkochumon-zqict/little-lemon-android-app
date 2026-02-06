@@ -492,5 +492,16 @@ class AuthViewModelTest {
             }
         }
 
+        @Test
+        fun onCompletePersonalization_navigateEventIsTriggered() = runTest {
+            // Act & Arrange
+            viewModel.onAction(AuthActions.CompletePersonalization)
+
+            viewModel.authEvent.test {
+                // Assert that navigation event is triggered
+                assertTrue(awaitItem() is AuthEvents.NavigateToLocationPermissionScreen)
+            }
+        }
+
     }
 }
