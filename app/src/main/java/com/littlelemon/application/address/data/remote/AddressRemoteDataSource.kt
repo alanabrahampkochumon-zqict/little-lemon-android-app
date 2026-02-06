@@ -1,4 +1,11 @@
 package com.littlelemon.application.address.data.remote
 
-class AddressRemoteDataSource {
+import com.littlelemon.application.address.data.remote.models.AddressDTO
+
+interface AddressRemoteDataSource {
+
+    suspend fun getAddress(): List<AddressDTO>
+
+    suspend fun saveAddress(address: AddressDTO)
+    
 }

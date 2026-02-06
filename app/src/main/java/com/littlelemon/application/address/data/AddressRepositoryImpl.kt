@@ -8,6 +8,7 @@ import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
+import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import com.littlelemon.application.core.domain.utils.Resource
 
 class AddressRepositoryImpl(
@@ -19,10 +20,12 @@ class AddressRepositoryImpl(
         return try {
             val location = localDataSource.getLocation()
             Resource.Success(location.toLocalLocation())
-        } catch (e: Exception) {
-            //TODO Save the location to db
-            Resource.Failure(errorMessage = "Failed to fetch location")
-        }
+            // TODO: Do geocoding
+            // TODO: Store location as address
+        } catch (e: LocationUnavailableException) {
+            // TODO: Handle Exception thrown for saving as well
+            Resource.Failure(errorMessage = e.message)
+        } // TODO: Handle DB Exceptions
     }
 
     override suspend fun saveAddress(address: LocalAddress): Resource<Unit> {

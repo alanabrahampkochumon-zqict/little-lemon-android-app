@@ -27,7 +27,7 @@ class AddressLocalDataSourceTests {
     private val locationProvider = mockk<FusedLocationProviderClient>()
     private val newLocation = mockk<Location>(relaxed = true)
     private val staleLocation = mockk<Location>(relaxed = true)
-    private val datasource = AddressLocalDataSource(locationProvider)
+    private val datasource = AddressLocalDataSourceImpl(locationProvider)
 
     @BeforeEach
     fun setUp() {

@@ -2,6 +2,8 @@ package com.littlelemon.application.address.data
 
 import android.location.Location
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
+import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
+import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import com.littlelemon.application.core.domain.utils.Resource
 import io.mockk.coEvery
 import io.mockk.every
@@ -15,9 +17,11 @@ import org.junit.jupiter.api.assertNotNull
 class AddressRepositoryImplTest {
 
     private val localDataSource = mockk<AddressLocalDataSource>()
+    private val remoteDataSource = mockk<AddressRemoteDataSource>()
 
     private val repository = AddressRepositoryImpl(
-        localDataSource
+        localDataSource,
+        remoteDataSource
     )
 
     private companion object {
@@ -26,7 +30,7 @@ class AddressRepositoryImplTest {
     }
 
     @Test
-    fun getLocation_locationReturnedFromDatasource_returnsSuccessResource() = runTest {
+    fun onGetLocation_dataSourceSuccess_returnsResourceSuccess() = runTest {
         // Arrange
         val location = mockk<Location>()
         every { location.latitude } returns LATITUDE
@@ -45,4 +49,32 @@ class AddressRepositoryImplTest {
         assertEquals(LATITUDE, data.latitude)
         assertEquals(LONGITUDE, data.longitude)
     }
+
+    @Test
+    fun onGetLocation_dataSourceError_returnsResourceError() = runTest {
+        // Arrange
+        coEvery { localDataSource.getLocation() } throws LocationUnavailableException()
+
+        // Act
+        val result = repository.getLocation()
+
+        // Assert
+        assertTrue(result is Resource.Failure)
+    }
+
+    //TODO: Test Implementation
+    @Test
+    fun onGetAddress_remoteFailureLocalCacheNonEmpty_returnsSuccessWithLocalCache() = runTest { }
+
+    @Test
+    fun onGetAddress_remoteSuccess_returnsSuccessWithData() = runTest {}
+
+    @Test
+    fun onGetAddress_remoteSuccessEmptyAddress_returnsSuccessWithEmptyData() = runTest { }
+
+    @Test
+    fun onSaveAddress_remoteSuccess_returnsResourceSuccess() = runTest { }
+
+    @Test
+    fun onSaveAddress_remoteFailure_returnsResourceFailure() = runTest { }
 }
