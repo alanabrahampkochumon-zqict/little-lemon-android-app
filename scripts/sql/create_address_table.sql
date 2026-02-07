@@ -6,7 +6,7 @@ CREATE TABLE
         user_id UUID NOT NULL REFERENCES auth.users (id) ON DELETE CASCADE DEFAULT auth.uid (),
         label TEXT,
         address TEXT,
-        streetAddress TEXT,
+        street_address TEXT,
         city VARCHAR(50),
         state VARCHAR(50),
         pin_code VARCHAR(20),
@@ -33,3 +33,17 @@ WITH
 CREATE POLICY "User can see their own addresses" ON user_address FOR
 SELECT
     USING (auth.uid () = user_id);
+
+CREATE VIEW user_addresses_view AS
+SELECT
+  user_address.id,
+  user_address.label,
+  user_address.address,
+  user_address.street_address,
+  user_address.city,
+  user_address.pin_code,
+  -- Extract Lat/Long from the PostGIS 'location' column
+  st_y(location::geometry) as latitude,
+  st_x(location::geometry) as longitude,
+  user_address.created_at
+FROM user_address;
