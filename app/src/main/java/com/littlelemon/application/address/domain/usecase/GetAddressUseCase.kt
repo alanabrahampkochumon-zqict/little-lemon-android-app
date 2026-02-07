@@ -3,10 +3,11 @@ package com.littlelemon.application.address.domain.usecase
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.core.domain.utils.Resource
+import kotlinx.coroutines.flow.Flow
 
 class GetAddressUseCase(
     private val repository: AddressRepository
 ) {
 
-    suspend operator fun invoke(): Resource<List<LocalAddress>> = repository.getAddress()
+    operator fun invoke(): Resource<Flow<List<LocalAddress>>> = repository.getAddress()
 }

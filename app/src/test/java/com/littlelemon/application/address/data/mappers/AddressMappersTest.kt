@@ -98,4 +98,29 @@ class AddressMappersTest {
 
         // NOTE: Having both address and LatLng as null will throw an exception on initialization which is tested in the domain class layer itself.
     }
+
+    @Nested
+    inner class AddressDTOToEntityTests() {
+
+        @Test
+        fun onConversion_withNonNullFields_returnsCorrectEntity() {
+            // Arrange
+            val addressDTO = AddressGenerator.generateAddressDTO()
+
+            // Act
+            val result = addressDTO.toAddressEntity()
+
+            // Assert
+            assertEquals(addressDTO.id, result.id)
+            assertEquals(addressDTO.label, result.label)
+            assertEquals(addressDTO.address, result.address)
+            assertEquals(addressDTO.streetAddress, result.streetAddress)
+            assertEquals(addressDTO.city, result.city)
+            assertEquals(addressDTO.state, result.state)
+            assertEquals(addressDTO.pinCode, result.pinCode)
+            assertEquals(addressDTO.latitude, result.latitude)
+            assertEquals(addressDTO.longitude, result.longitude)
+            assertEquals(addressDTO.createdAt, result.createdAt)
+        }
+    }
 }

@@ -5,6 +5,8 @@ import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.utils.AddressGenerator
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -23,7 +25,7 @@ class GetAddressUseCaseTest {
         // Arrange
         val numAddress = 2
         val address = List(numAddress) { AddressGenerator.generateLocalAddress() }
-        coEvery { repository.getAddress() } returns Resource.Success(address)
+        coEvery { repository.getAddress() } returns Resource.Success(flow { emit(address) })
 
         // Act
         val result = useCase()
@@ -31,9 +33,12 @@ class GetAddressUseCaseTest {
         // Assert
         assertTrue(result is Resource.Success)
         result as Resource.Success
+
         assertNotNull(result.data)
-        assertEquals(numAddress, result.data.size)
-        assertEquals(address, result.data)
+        val data = result.data.first()
+
+        assertEquals(numAddress, data.size)
+        assertEquals(address, data)
     }
 
     @Test
