@@ -1,5 +1,7 @@
 package com.littlelemon.application.utils
 
+import com.littlelemon.application.address.data.local.models.AddressEntity
+import com.littlelemon.application.address.data.remote.models.AddressDTO
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.models.PhysicalAddress
@@ -20,6 +22,28 @@ object AddressGenerator {
             label = Uuid.random().toString(),
             address = generatePhysicalAddress(),
             location = generateLocalLocation()
+        )
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun generateAddressDTO(): AddressDTO {
+        return AddressDTO(
+            id = Uuid.random().toString()
+        )
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun generateAddressEntity(): AddressEntity {
+        return AddressEntity(
+            id = Uuid.random().toString(),
+            label = faker.name.name(),
+            address = faker.address.secondaryAddress(),
+            streetAddress = faker.address.streetAddress(),
+            city = faker.address.city(),
+            state = faker.address.state(),
+            pinCode = faker.address.postcode(),
+            latitude = Math.random() * LATITUDE_LIMIT - (LATITUDE_LIMIT / 2),
+            longitude = Math.random() * LONGITUDE_LIMIT - (LONGITUDE_LIMIT / 2)
         )
     }
 

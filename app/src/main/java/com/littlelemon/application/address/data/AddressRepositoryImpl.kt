@@ -24,8 +24,10 @@ class AddressRepositoryImpl(
             // TODO: Store location as address
         } catch (e: LocationUnavailableException) {
             // TODO: Handle Exception thrown for saving as well
+            // TODO: Handle DB Exceptions
             Resource.Failure(errorMessage = e.message)
-        } // TODO: Handle DB Exceptions
+        }// TODO: Ensure coroutines are active
+
     }
 
     override suspend fun saveAddress(address: LocalAddress): Resource<Unit> {

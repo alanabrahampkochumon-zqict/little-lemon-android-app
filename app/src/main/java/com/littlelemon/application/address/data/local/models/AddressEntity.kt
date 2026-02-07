@@ -14,6 +14,7 @@ data class AddressEntity(
     val streetAddress: String?,
     val city: String?,
     val state: String?,
-    val latitude: String?,
-    val longitude: String?
+    val pinCode: String?,
+    val latitude: Double?,
+    val longitude: Double?
 )

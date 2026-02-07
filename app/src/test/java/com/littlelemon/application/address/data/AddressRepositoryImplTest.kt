@@ -5,9 +5,11 @@ import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.utils.AddressGenerator
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -64,7 +66,21 @@ class AddressRepositoryImplTest {
 
     //TODO: Test Implementation
     @Test
-    fun onGetAddress_remoteFailureLocalCacheNonEmpty_returnsSuccessWithLocalCache() = runTest { }
+    fun onGetAddress_remoteFailureLocalCacheNonEmpty_returnsSuccessWithLocalCache() = runTest {
+        // Arrange
+        val numAddress = 3
+        val cachedAddress = List(numAddress) { AddressGenerator.generateAddressEntity() }
+        coEvery { localDataSource.getAddress() } returns flow { emit(cachedAddress) }
+        coEvery { remoteDataSource.getAddress() } throws Exception()
+
+        // Act
+        val result = repository.getAddress()
+
+        assertTrue(result is Resource.Success)
+        result as Resource.Success
+        assertNotNull(result.data)
+        assertEquals(cachedAddress.map { }, result.data.first())
+    }
 
     @Test
     fun onGetAddress_remoteSuccess_returnsSuccessWithData() = runTest {}
