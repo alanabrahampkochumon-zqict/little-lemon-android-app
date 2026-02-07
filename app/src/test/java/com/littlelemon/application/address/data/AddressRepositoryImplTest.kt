@@ -2,6 +2,7 @@ package com.littlelemon.application.address.data
 
 import android.location.Location
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
+import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import com.littlelemon.application.core.domain.utils.Resource
@@ -9,6 +10,7 @@ import com.littlelemon.application.utils.AddressGenerator
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -79,11 +81,26 @@ class AddressRepositoryImplTest {
         assertTrue(result is Resource.Success)
         result as Resource.Success
         assertNotNull(result.data)
-        assertEquals(cachedAddress.map { }, result.data.first())
+        assertEquals(cachedAddress.map { it.toLocalAddress() }, result.data.first())
     }
 
-    @Test
-    fun onGetAddress_remoteSuccess_returnsSuccessWithData() = runTest {}
+    // TODO: After DB implementation
+//    @Test
+//    fun onGetAddress_remoteSuccess_returnsSuccessWithData() = runTest {
+//        // Arrange
+//        val numAddress = 3
+//        val remoteAddress = List(numAddress) { AddressGenerator.generateAddressDTO() }
+//        coEvery { localDataSource.getAddress() } returns flow { emit(emptyList()) }
+//        coEvery { remoteDataSource.getAddress() } returns remoteAddress
+//
+//        // Act
+//        val result = repository.getAddress()
+//
+//        assertTrue(result is Resource.Success)
+//        result as Resource.Success
+//        assertNotNull(result.data)
+//        assertEquals(remoteAddress.map { it.toLocalAddress() }, result.data.first())
+//    }
 
     @Test
     fun onGetAddress_remoteSuccessEmptyAddress_returnsSuccessWithEmptyData() = runTest { }

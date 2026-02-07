@@ -10,6 +10,7 @@ import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import com.littlelemon.application.core.domain.utils.Resource
+import kotlinx.coroutines.flow.Flow
 
 class AddressRepositoryImpl(
     private val localDataSource: AddressLocalDataSource,
@@ -34,7 +35,8 @@ class AddressRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAddress(): Resource<List<LocalAddress>> {
+    override fun getAddress(): Resource<Flow<List<LocalAddress>>> {
         TODO("Not yet implemented")
     }
+
 }
