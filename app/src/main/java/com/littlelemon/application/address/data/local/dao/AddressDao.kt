@@ -14,5 +14,5 @@ interface AddressDao {
     suspend fun insertAddress(addresses: List<AddressEntity>)
 
     @Query("SELECT * FROM ADDRESSENTITY ORDER BY createdAt DESC")
-    suspend fun getAllAddress(): Flow<List<AddressEntity>>
+    fun getAllAddress(): Flow<List<AddressEntity>>
 }

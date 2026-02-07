@@ -5,6 +5,7 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 fun HttpStatusCode.toNetworkError(): NetworkError? {
@@ -30,6 +31,7 @@ fun Int.toNetworkError(): NetworkError? {
     }
 }
 
+@OptIn(ExperimentalTime::class)
 fun Long.toLocalDateTime(timezone: TimeZone = TimeZone.currentSystemDefault()): LocalDateTime {
     val instant = Instant.fromEpochMilliseconds(this)
     return instant.toLocalDateTime(timezone)

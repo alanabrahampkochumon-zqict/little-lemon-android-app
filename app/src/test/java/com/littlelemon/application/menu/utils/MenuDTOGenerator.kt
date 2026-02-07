@@ -8,12 +8,14 @@ import java.util.UUID
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class MenuDTOGenerator {
     private companion object {
         const val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
     }
 
+    @OptIn(ExperimentalTime::class)
     fun generateDishDTO(numCategories: Int = 5): DishDTO {
         val faker = faker {}
         val nutrition = NutritionInfoDTO(

@@ -11,9 +11,11 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import kotlin.time.ExperimentalTime
 
 class MapperTests {
 
+    @OptIn(ExperimentalTime::class)
     @Nested
     inner class ToSessionTokenTest() {
 

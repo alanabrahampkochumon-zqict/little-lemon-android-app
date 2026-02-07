@@ -60,6 +60,10 @@ android {
     buildFeatures {
         compose = true
     }
+
+    testFixtures {
+        enable = true
+    }
 }
 
 dependencies {
@@ -106,14 +110,24 @@ dependencies {
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.kotlin.faker)
     testImplementation(libs.turbine)
+    testImplementation(testFixtures(project(":app")))
+    androidTestImplementation(testFixtures(project(":app")))
 
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.platform)
 
 
+    testFixturesImplementation(platform(libs.supbase.bom))
+    testFixturesImplementation(platform(libs.androidx.compose.bom))
+    testFixturesImplementation(libs.androidx.ui)
+    testFixturesImplementation(libs.androidx.material3)
+    testFixturesImplementation(libs.supbase.auth)
+    testFixturesImplementation(libs.supbase.postgres)
+    testFixturesImplementation(libs.io.ktor.mock)
+    testFixturesImplementation(libs.io.ktor.client)
+    testFixturesImplementation(libs.kotlin.faker)
 
-    implementation(libs.io.ktor.mock)
-
+    testImplementation(libs.io.ktor.mock)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -126,4 +140,6 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    testFixturesCompileOnly("org.jetbrains.kotlin:kotlin-stdlib:$kotlin")
 }
