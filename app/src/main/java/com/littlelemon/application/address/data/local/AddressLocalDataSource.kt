@@ -12,5 +12,7 @@ interface AddressLocalDataSource {
 
     suspend fun saveAddress(address: AddressEntity)
 
+    suspend fun saveAddresses(addresses: List<AddressEntity>)
+
     suspend fun getAddressCount(): Long
 }

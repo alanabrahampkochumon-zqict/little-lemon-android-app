@@ -171,4 +171,12 @@ class AddressLocalDataSourceTests {
         // Assert
         assertEquals(numAddress, count)
     }
+
+    @Test
+    fun onInsertAddresses_withListOfAddresses_insertsAllTheAddresses() = runTest {
+        // Arrange
+        val numAddresses = 5
+        val addresses = List(numAddresses) { AddressGenerator.generateAddressEntity() }
+        //TODO: Create Fake Dao to test insertion
+    }
 }

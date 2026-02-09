@@ -51,5 +51,9 @@ class AddressLocalDataSourceImpl(
         return dao.insertAddress(address)
     }
 
+    override suspend fun saveAddresses(addresses: List<AddressEntity>) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getAddressCount(): Long = dao.getAddressCount()
 }

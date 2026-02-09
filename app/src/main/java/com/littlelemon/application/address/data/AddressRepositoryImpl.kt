@@ -3,6 +3,8 @@ package com.littlelemon.application.address.data
 import android.Manifest
 import androidx.annotation.RequiresPermission
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
+import com.littlelemon.application.address.data.mappers.toAddressEntity
+import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.mappers.toLocalLocation
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.address.domain.AddressRepository
@@ -14,6 +16,7 @@ import io.github.jan.supabase.postgrest.exception.PostgrestRestException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 
@@ -45,8 +48,15 @@ class AddressRepositoryImpl(
     override fun getAddress(): Flow<Resource<List<LocalAddress>>> =
         flow<Resource<List<LocalAddress>>> {
             try {
-                val offlineAddress = localDataSource.getAddress()
-                val offlineAddressCount = localDataSource.getAddressCount()
+                val offlineAddress =
+                    localDataSource.getAddress().first().map { it.toLocalAddress() }
+                emit(Resource.Loading(offlineAddress))
+
+                val remoteResponse = remoteDataSource.getAddress().map { it.toAddressEntity() }
+                TODO("")
+//                localDataSource.saveAddress(remoteResponse)
+//                val newData = localDataSource.getAddress()
+//                emitAll(newData.map { Resource.Success(it) })
             } catch (e: PostgrestRestException) {
 
             } catch (e: IllegalStateException) {
