@@ -13,6 +13,9 @@ interface AddressDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAddress(addresses: List<AddressEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAddress(address: AddressEntity)
+
     @Query("SELECT * FROM ADDRESSENTITY ORDER BY createdAt DESC")
     fun getAllAddress(): Flow<List<AddressEntity>>
 }

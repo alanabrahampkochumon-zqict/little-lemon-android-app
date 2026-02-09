@@ -60,4 +60,33 @@ class AddressDaoTests {
         assertEquals(expectedAddress.size, actualAddresses.size)
         assertTrue { actualAddresses.map { address -> address in expectedAddress }.all { it } }
     }
+
+    @Test
+    fun onAddressInsert_uniqueAddress_insertAddress() = runTest {
+        // Arrange
+        val address = AddressGenerator.generateAddressEntity()
+
+        // Act
+        dao.insertAddress(address)
+        val result = dao.getAllAddress().first()
+
+        // Assert
+        assertEquals(1, result.size)
+        assertEquals(address, result.first())
+    }
+
+    @Test
+    fun onAddressInsert_duplicateAddress_doesNotInsertAddress() = runTest {
+        // Arrange
+        val address = AddressGenerator.generateAddressEntity()
+        dao.insertAddress(address)
+        
+        // Act
+        dao.insertAddress(address)
+        val result = dao.getAllAddress().first()
+
+        // Assert
+        assertEquals(1, result.size)
+        assertEquals(address, result.first())
+    }
 }

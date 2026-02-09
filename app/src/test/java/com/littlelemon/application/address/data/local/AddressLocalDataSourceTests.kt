@@ -4,14 +4,21 @@ import android.location.Location
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Tasks
+import com.littlelemon.application.address.data.local.dao.AddressDao
+import com.littlelemon.application.utils.AddressGenerator
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertThrows
 
 class AddressLocalDataSourceTests {
 
@@ -25,9 +32,10 @@ class AddressLocalDataSourceTests {
     }
 
     private val locationProvider = mockk<FusedLocationProviderClient>()
+    private val dao = mockk<AddressDao>()
     private val newLocation = mockk<Location>(relaxed = true)
     private val staleLocation = mockk<Location>(relaxed = true)
-    private val datasource = AddressLocalDataSourceImpl(locationProvider)
+    private val datasource = AddressLocalDataSourceImpl(locationProvider, dao)
 
     @BeforeEach
     fun setUp() {
@@ -41,7 +49,7 @@ class AddressLocalDataSourceTests {
     }
 
     @Test
-    fun getLastLocation_null_getNewLocation() = runTest {
+    fun onGetLastLocation_nullLocation_getNewLocation() = runTest {
         // Arrange
         every { locationProvider.lastLocation } returns Tasks.forResult<Location?>(null)
         every {
@@ -65,7 +73,7 @@ class AddressLocalDataSourceTests {
     }
 
     @Test
-    fun getLastLocation_stale_getNewLocation() = runTest {
+    fun onGetLastLocation_staleLocation_getNewLocation() = runTest {
         // Arrange
         every { locationProvider.lastLocation } returns Tasks.forResult(staleLocation)
         every { locationProvider.getCurrentLocation(any<Int>(), null) } returns Tasks.forResult(
@@ -84,7 +92,7 @@ class AddressLocalDataSourceTests {
     }
 
     @Test
-    fun getLastLocation_fresh_getsLastLocation() = runTest {
+    fun onGetLastLocation_freshLocation_getsLastLocation() = runTest {
         // Arrange
         every { locationProvider.lastLocation } returns Tasks.forResult(newLocation)
         // Act
@@ -97,4 +105,57 @@ class AddressLocalDataSourceTests {
         assertTrue { result.time > System.currentTimeMillis() - STALE_TIME }
     }
 
+    @Test
+    fun onGetAddress_noAddress_returnsFlowOfEmptyList() = runTest {
+        // Arrange
+        coEvery { dao.getAllAddress() } returns flow { emit(emptyList()) }
+
+        // Act
+        val result = datasource.getAddress().first()
+
+        // Assert
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun onGetAddress_validAddresses_returnsFlowOfEmptyList() = runTest {
+        // Arrange
+        val numAddress = 5
+        val address = List(numAddress) { AddressGenerator.generateAddressEntity() }
+        coEvery { dao.getAllAddress() } returns flow { emit(address) }
+
+        // Act
+        val result = datasource.getAddress().first()
+
+        // Assert
+        assertEquals(address, result)
+    }
+
+    @Test
+    fun onGetAddress_exception_returnsFlowOfEmptyList() = runTest {
+        // Arrange
+        coEvery { dao.getAllAddress() } throws IllegalStateException()
+
+        // Act & Assert
+        assertThrows<IllegalStateException> { datasource.getAddress().collect {} }
+    }
+
+    @Test
+    fun onInsertAddress_validAddresses_throwsNoException() = runTest {
+        // Arrange
+        val address = AddressGenerator.generateAddressEntity()
+        coEvery { dao.insertAddress(address) } returns Unit
+
+        // Act & Assert
+        assertDoesNotThrow { datasource.saveAddress(address) }
+    }
+
+    @Test
+    fun onInsertAddress_exceptionThrown_throwsNoException() = runTest {
+        // Arrange
+        coEvery { dao.getAllAddress() } throws IllegalStateException()
+
+        // Act & Assert
+        assertThrows<IllegalStateException> { datasource.getAddress().first() }
+    }
 }
