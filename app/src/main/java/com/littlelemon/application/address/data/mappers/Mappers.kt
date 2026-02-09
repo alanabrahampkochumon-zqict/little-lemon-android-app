@@ -49,3 +49,21 @@ fun AddressDTO.toRequestDTO(): AddressRequestDTO = AddressRequestDTO(
     location = if (longitude != null && latitude != null) "POINT($longitude $latitude)" else null,
     createdAt = createdAt
 )
+
+fun AddressRequestDTO.toResponse(): AddressDTO {
+    val (longitude, latitude) = location?.removePrefix("POINT(")?.removeSuffix(")")?.split(" ")
+        ?.map { it.toDouble() }
+        ?: listOf(null, null)
+    return AddressDTO(
+        id = id,
+        label = label,
+        address = address,
+        streetAddress = streetAddress,
+        city = city,
+        state = state,
+        pinCode = pinCode,
+        latitude = latitude,
+        longitude = longitude,
+        createdAt = createdAt
+    )
+}

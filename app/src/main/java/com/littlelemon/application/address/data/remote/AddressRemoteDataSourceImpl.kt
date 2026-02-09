@@ -1,6 +1,8 @@
 package com.littlelemon.application.address.data.remote
 
+import com.littlelemon.application.address.data.mappers.toResponse
 import com.littlelemon.application.address.data.remote.models.AddressDTO
+import com.littlelemon.application.address.data.remote.models.AddressRequestDTO
 import com.littlelemon.application.core.data.remote.SupabaseTables
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.exceptions.HttpRequestException
@@ -26,15 +28,29 @@ class AddressRemoteDataSourceImpl(
         HttpRequestTimeoutException::class,
         HttpRequestException::class
     )
-    override suspend fun saveAddress(address: AddressDTO): AddressDTO {
-        TODO("Implementation")
+    override suspend fun saveAddress(address: AddressRequestDTO): AddressDTO {
+        return client.from(SupabaseTables.USER_ADDRESS).insert(address) { select() }
+            .decodeSingle<AddressRequestDTO>().toResponse()
     }
 
-    override suspend fun deleteAddress(address: AddressDTO): AddressDTO {
-        TODO("Not yet implemented")
+    @Throws(
+        PostgrestRestException::class,
+        HttpRequestTimeoutException::class,
+        HttpRequestException::class
+    )
+    override suspend fun updateAddress(address: AddressRequestDTO): AddressDTO {
+        return client.from(SupabaseTables.USER_ADDRESS).update(address) { select() }
+            .decodeSingle<AddressRequestDTO>().toResponse()
     }
 
-    override suspend fun updateAddress(address: AddressDTO): AddressDTO {
-        TODO("Not yet implemented")
+    @Throws(
+        PostgrestRestException::class,
+        HttpRequestTimeoutException::class,
+        HttpRequestException::class
+    )
+    override suspend fun deleteAddress(address: AddressRequestDTO) {
+        client.from(SupabaseTables.USER_ADDRESS).delete { filter { eq("id", address.id) } }
     }
+
+
 }

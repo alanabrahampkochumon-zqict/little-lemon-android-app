@@ -151,7 +151,7 @@ class AddressMappersTest {
         @Test
         fun onConversion_withNonNullLatLng_returnsRequestDTOWithCorrectLocation() {
             // Arrange
-            val dto = AddressGenerator.generateAddressDTO().copy()
+            val dto = AddressGenerator.generateAddressDTO()
 
             // Act
             val requestDTO = dto.toRequestDTO()
@@ -168,6 +168,56 @@ class AddressMappersTest {
 
             assertNotNull(requestDTO.location)
             assertEquals("POINT(${dto.longitude} ${dto.latitude})", requestDTO.location)
+        }
+    }
+
+    @Nested
+    inner class AddressRequestToAddressDTOTests {
+
+        @Test
+        fun onConversion_withNullLocation_returnsDTOWithNullLatLng() {
+            // Arrange
+            val dto = AddressGenerator.generateAddressDTO().toRequestDTO().copy(location = null)
+
+            // Act
+            val responseDTO = dto.toResponse()
+
+            // Assert
+            assertEquals(dto.id, responseDTO.id)
+            assertEquals(dto.label, responseDTO.label)
+            assertEquals(dto.address, responseDTO.address)
+            assertEquals(dto.streetAddress, responseDTO.streetAddress)
+            assertEquals(dto.city, responseDTO.city)
+            assertEquals(dto.state, responseDTO.state)
+            assertEquals(dto.pinCode, responseDTO.pinCode)
+            assertEquals(dto.createdAt, responseDTO.createdAt)
+
+            assertNull(responseDTO.latitude)
+            assertNull(responseDTO.longitude)
+        }
+
+        @Test
+        fun onConversion_withNonNullLocation_returnsDTOWithCorrectLocation() {
+            // Arrange
+            val genDTO = AddressGenerator.generateAddressDTO()
+            val dto = genDTO.toRequestDTO()
+            // Act
+            val responseDTO = dto.toResponse()
+
+            // Assert
+            assertEquals(dto.id, responseDTO.id)
+            assertEquals(dto.label, responseDTO.label)
+            assertEquals(dto.address, responseDTO.address)
+            assertEquals(dto.streetAddress, responseDTO.streetAddress)
+            assertEquals(dto.city, responseDTO.city)
+            assertEquals(dto.state, responseDTO.state)
+            assertEquals(dto.pinCode, responseDTO.pinCode)
+            assertEquals(dto.createdAt, responseDTO.createdAt)
+
+            assertNotNull(responseDTO.latitude)
+            assertEquals(genDTO.latitude, responseDTO.latitude)
+            assertNotNull(responseDTO.longitude)
+            assertEquals(genDTO.longitude, responseDTO.longitude)
         }
     }
 }
