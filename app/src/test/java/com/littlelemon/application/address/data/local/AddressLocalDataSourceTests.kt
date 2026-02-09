@@ -158,4 +158,17 @@ class AddressLocalDataSourceTests {
         // Act & Assert
         assertThrows<IllegalStateException> { datasource.getAddress().first() }
     }
+
+    @Test
+    fun onGetAddressCount_databaseHasAddress_returnsCorrectCount() = runTest {
+        // Arrange
+        val numAddress = 3L
+        coEvery { dao.getAddressCount() } returns numAddress
+
+        // Act
+        val count = datasource.getAddressCount()
+
+        // Assert
+        assertEquals(numAddress, count)
+    }
 }

@@ -2,6 +2,7 @@ package com.littlelemon.application.address.data
 
 import android.location.Location
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
+import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertNull
 
 class AddressRepositoryImplTest {
 
@@ -66,7 +68,6 @@ class AddressRepositoryImplTest {
         assertTrue(result is Resource.Failure)
     }
 
-    //TODO: Test Implementation
     @Test
     fun onGetAddress_remoteFailureLocalCacheNonEmpty_returnsSuccessWithLocalCache() = runTest {
         // Arrange
@@ -84,26 +85,70 @@ class AddressRepositoryImplTest {
         assertEquals(cachedAddress.map { it.toLocalAddress() }, result.data.first())
     }
 
-    // TODO: After DB implementation
-//    @Test
-//    fun onGetAddress_remoteSuccess_returnsSuccessWithData() = runTest {
-//        // Arrange
-//        val numAddress = 3
-//        val remoteAddress = List(numAddress) { AddressGenerator.generateAddressDTO() }
-//        coEvery { localDataSource.getAddress() } returns flow { emit(emptyList()) }
-//        coEvery { remoteDataSource.getAddress() } returns remoteAddress
-//
-//        // Act
-//        val result = repository.getAddress()
-//
-//        assertTrue(result is Resource.Success)
-//        result as Resource.Success
-//        assertNotNull(result.data)
-//        assertEquals(remoteAddress.map { it.toLocalAddress() }, result.data.first())
-//    }
 
     @Test
-    fun onGetAddress_remoteSuccessEmptyAddress_returnsSuccessWithEmptyData() = runTest { }
+    fun onGetAddress_remoteSuccess_returnsSuccessWithData() = runTest {
+        // Arrange
+        val numAddress = 3
+        val remoteAddress = List(numAddress) { AddressGenerator.generateAddressDTO() }
+        coEvery { localDataSource.getAddress() } returns flow { emit(emptyList()) }
+        coEvery { remoteDataSource.getAddress() } returns remoteAddress
+
+        // Act
+        val result = repository.getAddress()
+
+        assertTrue(result is Resource.Success)
+        result as Resource.Success
+        assertNotNull(result.data)
+        assertEquals(
+            remoteAddress.map { it.toAddressEntity().toLocalAddress() },
+            result.data.first()
+        )
+    }
+
+    @Test
+    fun onGetAddress_remoteSuccessEmptyAddress_returnsSuccessWithEmptyData() = runTest {
+        // Arrange
+        coEvery { localDataSource.getAddress() } returns flow { emit(emptyList()) }
+        coEvery { remoteDataSource.getAddress() } returns emptyList()
+
+        // Act
+        val result = repository.getAddress()
+
+        assertTrue(result is Resource.Success)
+        result as Resource.Success
+        assertNotNull(result.data)
+        assertTrue(result.data.first().isEmpty())
+    }
+
+    @Test
+    fun onGetAddress_remoteFailureEmptyCache_returnsSuccessWithEmptyData() = runTest {
+        // Arrange
+        coEvery { localDataSource.getAddress() } returns flow { emit(emptyList()) }
+        coEvery { remoteDataSource.getAddress() } throws Exception()
+
+        // Act
+        val result = repository.getAddress()
+
+        assertTrue(result is Resource.Success)
+        result as Resource.Success
+        assertNotNull(result.data)
+        assertTrue(result.data.first().isEmpty())
+    }
+
+    @Test
+    fun onGetAddress_remoteFailureCacheFailure_returnsSuccessWithEmptyData() = runTest {
+        // Arrange
+        coEvery { localDataSource.getAddress() } throws IllegalStateException()
+        coEvery { remoteDataSource.getAddress() } throws Exception()
+
+        // Act
+        val result = repository.getAddress()
+
+        assertTrue(result is Resource.Failure)
+        result as Resource.Failure
+        assertNull(result.data)
+    }
 
     @Test
     fun onSaveAddress_remoteSuccess_returnsResourceSuccess() = runTest { }

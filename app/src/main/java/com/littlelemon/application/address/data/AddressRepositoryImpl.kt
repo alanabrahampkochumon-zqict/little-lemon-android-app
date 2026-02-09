@@ -10,6 +10,7 @@ import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import com.littlelemon.application.core.domain.utils.Resource
+import io.github.jan.supabase.postgrest.exception.PostgrestRestException
 import kotlinx.coroutines.flow.Flow
 
 class AddressRepositoryImpl(
@@ -36,7 +37,16 @@ class AddressRepositoryImpl(
     }
 
     override fun getAddress(): Resource<Flow<List<LocalAddress>>> {
-        TODO("Not yet implemented")
+        try {
+            val offlineAddress = localDataSource.getAddress()
+
+        } catch (e: PostgrestRestException) {
+
+        } catch (e: IllegalStateException) {
+
+        } catch (e: Exception) {
+        }
+        TODO()
     }
 
 }

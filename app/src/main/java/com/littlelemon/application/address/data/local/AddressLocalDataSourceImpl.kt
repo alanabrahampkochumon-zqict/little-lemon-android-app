@@ -50,4 +50,6 @@ class AddressLocalDataSourceImpl(
     override suspend fun saveAddress(address: AddressEntity) {
         return dao.insertAddress(address)
     }
+
+    override suspend fun getAddressCount(): Long = dao.getAddressCount()
 }

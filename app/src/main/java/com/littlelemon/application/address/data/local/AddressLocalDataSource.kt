@@ -11,4 +11,6 @@ interface AddressLocalDataSource {
     fun getAddress(): Flow<List<AddressEntity>>
 
     suspend fun saveAddress(address: AddressEntity)
+
+    suspend fun getAddressCount(): Long
 }

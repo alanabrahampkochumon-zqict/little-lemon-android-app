@@ -46,7 +46,7 @@ class AddressDaoTests {
     fun onAddressInsert_withDuplicatesInDatabase_addressesAreUpserted() = runTest {
         // Arrange
         val numAddresses = 5
-        val duplicateAddress = List(1) { AddressGenerator.generateAddressEntity() }
+        val duplicateAddress = AddressGenerator.generateAddressEntity()
         dao.insertAddress(duplicateAddress)
 
         val expectedAddress =
@@ -80,7 +80,7 @@ class AddressDaoTests {
         // Arrange
         val address = AddressGenerator.generateAddressEntity()
         dao.insertAddress(address)
-        
+
         // Act
         dao.insertAddress(address)
         val result = dao.getAllAddress().first()
@@ -88,5 +88,28 @@ class AddressDaoTests {
         // Assert
         assertEquals(1, result.size)
         assertEquals(address, result.first())
+    }
+
+    @Test
+    fun onGetAddressCount_emptyDb_returnsZero() = runTest {
+        // Arrange & Act
+        val count = dao.getAddressCount()
+
+        // Assert
+        assertEquals(0L, count)
+    }
+
+    @Test
+    fun onGetAddressCount_filledDb_returnsCorrectAddressCount() = runTest {
+        // Arrange
+        val numAddresses = 5
+        val duplicateAddress = List(numAddresses) { AddressGenerator.generateAddressEntity() }
+        dao.insertAddress(duplicateAddress)
+
+        // Act
+        val count = dao.getAddressCount()
+
+        // Assert
+        assertEquals(numAddresses.toLong(), count)
     }
 }
