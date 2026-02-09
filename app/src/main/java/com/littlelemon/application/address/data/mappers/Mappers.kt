@@ -3,6 +3,7 @@ package com.littlelemon.application.address.data.mappers
 import android.location.Location
 import com.littlelemon.application.address.data.local.models.AddressEntity
 import com.littlelemon.application.address.data.remote.models.AddressDTO
+import com.littlelemon.application.address.data.remote.models.AddressRequestDTO
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.models.PhysicalAddress
@@ -35,4 +36,16 @@ fun AddressDTO.toAddressEntity(): AddressEntity = AddressEntity(
     latitude = latitude,
     longitude = longitude,
     createdAt = createdAt,
+)
+
+fun AddressDTO.toRequestDTO(): AddressRequestDTO = AddressRequestDTO(
+    id = id,
+    label = label,
+    address = address,
+    streetAddress = streetAddress,
+    city = city,
+    state = state,
+    pinCode = pinCode,
+    location = if (longitude != null && latitude != null) "POINT($longitude $latitude)" else null,
+    createdAt = createdAt
 )

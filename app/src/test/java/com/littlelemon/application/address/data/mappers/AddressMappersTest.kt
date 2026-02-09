@@ -13,28 +13,28 @@ import org.junit.jupiter.api.assertNull
 class AddressMappersTest {
     @Nested
     inner class ToLocalLocationTest() {
-        val LATITUDE = 1.2345
-        val LONGITUDE = 3.2354
+        val latitude = 1.2345
+        val longitude = 3.2354
 
         @Test
         fun onLocationMapped_localLocationInstanceReturned() {
             // Arrange
             val location = mockk<Location>()
-            every { location.latitude } returns LATITUDE
-            every { location.longitude } returns LONGITUDE
+            every { location.latitude } returns latitude
+            every { location.longitude } returns longitude
 
             // Act
             val localLocation = location.toLocalLocation()
 
             // Assert
             assertNotNull(localLocation)
-            assertEquals(LATITUDE, localLocation.latitude)
-            assertEquals(LONGITUDE, localLocation.longitude)
+            assertEquals(latitude, localLocation.latitude)
+            assertEquals(longitude, localLocation.longitude)
         }
     }
 
     @Nested
-    inner class AddressEntityToLocalAddressTest() {
+    inner class AddressEntityToLocalAddressTest {
 
         @Test
         fun onConversion_addressWithoutLatLng_returnsCorrectLocalAddress() {
@@ -100,7 +100,7 @@ class AddressMappersTest {
     }
 
     @Nested
-    inner class AddressDTOToEntityTests() {
+    inner class AddressDTOToEntityTests {
 
         @Test
         fun onConversion_withNonNullFields_returnsCorrectEntity() {
@@ -121,6 +121,53 @@ class AddressMappersTest {
             assertEquals(addressDTO.latitude, result.latitude)
             assertEquals(addressDTO.longitude, result.longitude)
             assertEquals(addressDTO.createdAt, result.createdAt)
+        }
+    }
+
+    @Nested
+    inner class AddressDTOToAddressRequestDTOTests {
+
+        @Test
+        fun onConversion_withNullLatLng_returnsRequestDTOWithNullLocation() {
+            // Arrange
+            val dto = AddressGenerator.generateAddressDTO().copy(latitude = null, longitude = null)
+
+            // Act
+            val requestDTO = dto.toRequestDTO()
+
+            // Assert
+            assertEquals(dto.id, requestDTO.id)
+            assertEquals(dto.label, requestDTO.label)
+            assertEquals(dto.address, requestDTO.address)
+            assertEquals(dto.streetAddress, requestDTO.streetAddress)
+            assertEquals(dto.city, requestDTO.city)
+            assertEquals(dto.state, requestDTO.state)
+            assertEquals(dto.pinCode, requestDTO.pinCode)
+            assertEquals(dto.createdAt, requestDTO.createdAt)
+
+            assertNull(requestDTO.location)
+        }
+
+        @Test
+        fun onConversion_withNonNullLatLng_returnsRequestDTOWithCorrectLocation() {
+            // Arrange
+            val dto = AddressGenerator.generateAddressDTO().copy()
+
+            // Act
+            val requestDTO = dto.toRequestDTO()
+
+            // Assert
+            assertEquals(dto.id, requestDTO.id)
+            assertEquals(dto.label, requestDTO.label)
+            assertEquals(dto.address, requestDTO.address)
+            assertEquals(dto.streetAddress, requestDTO.streetAddress)
+            assertEquals(dto.city, requestDTO.city)
+            assertEquals(dto.state, requestDTO.state)
+            assertEquals(dto.pinCode, requestDTO.pinCode)
+            assertEquals(dto.createdAt, requestDTO.createdAt)
+
+            assertNotNull(requestDTO.location)
+            assertEquals("POINT(${dto.longitude} ${dto.latitude})", requestDTO.location)
         }
     }
 }

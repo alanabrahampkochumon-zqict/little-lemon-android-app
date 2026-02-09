@@ -1,5 +1,6 @@
 package com.littlelemon.application.menu.data.remote
 
+import com.littlelemon.application.core.data.remote.SupabaseTables
 import com.littlelemon.application.menu.data.remote.models.DishDTO
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.exceptions.HttpRequestException
@@ -18,8 +19,8 @@ class MenuRemoteDataSourceImpl(
         HttpRequestException::class
     )
     override suspend fun fetchDishes(): List<DishDTO> {
-        return client.from("dish")
-            .select(Columns.raw("id, title, description, category(category_name), nutrition_info(calories, protein, carbs, fats)")) //
+        return client.from(SupabaseTables.DISH)
+            .select(Columns.raw("id, title, description, ${SupabaseTables.DISH_CATEGORY}(category_name), ${SupabaseTables.NUTRITION_INFO}(calories, protein, carbs, fats)")) //
             .decodeList<DishDTO>()
     }
 }
