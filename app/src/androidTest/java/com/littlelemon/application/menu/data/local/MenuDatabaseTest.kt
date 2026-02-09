@@ -21,7 +21,6 @@ import kotlin.math.roundToLong
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 @RunWith(AndroidJUnit4::class)
 class MenuDatabaseTest {
@@ -364,7 +363,7 @@ class MenuDatabaseTest {
         dao.insertDishes(dishes, categories, crossRefs)
     }
 
-    @OptIn(ExperimentalTime::class)
+
     private fun generateDish(popularityIndex: Int? = null): DishEntity {
         val faker = faker {}
         val nutritionInfo = DishEntity.NutritionInfo(

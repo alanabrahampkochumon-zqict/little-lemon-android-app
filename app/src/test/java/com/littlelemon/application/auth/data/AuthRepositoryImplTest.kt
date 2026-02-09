@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
-import kotlin.time.ExperimentalTime
 
 class AuthRepositoryImplTest {
 
@@ -31,8 +30,7 @@ class AuthRepositoryImplTest {
         const val EXPIRES_IN = 3600L
 
     }
-
-    @OptIn(ExperimentalTime::class)
+    
     private val user = UserInfo(
         aud = "",
         email = EMAIL_ADDRESS,
@@ -43,7 +41,6 @@ class AuthRepositoryImplTest {
         },
     )
 
-    @OptIn(ExperimentalTime::class)
     private val userSession = UserSession(
         accessToken = ACCESS_TOKEN,
         refreshToken = REFRESH_TOKEN,
