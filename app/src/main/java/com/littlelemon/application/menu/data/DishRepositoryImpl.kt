@@ -30,7 +30,7 @@ class DishRepositoryImpl(
         fetchFromRemote: Boolean
     ): Flow<Resource<List<Dish>>> = flow {
 
-        emit(Resource.Loading)
+        emit(Resource.Loading())
         var dishesCount = localDataSource.getDishCount()
 
         if (fetchFromRemote || dishesCount < 1) {

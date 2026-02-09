@@ -1,6 +1,7 @@
 package com.littlelemon.application.address.data
 
 import android.location.Location
+import app.cash.turbine.test
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
@@ -8,10 +9,10 @@ import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.utils.AddressGenerator
+import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,7 +20,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(StandardTestDispatcherRule::class)
 class AddressRepositoryImplTest {
 
     private val localDataSource = mockk<AddressLocalDataSource>()
@@ -77,12 +80,22 @@ class AddressRepositoryImplTest {
         coEvery { remoteDataSource.getAddress() } throws Exception()
 
         // Act
-        val result = repository.getAddress()
+        val resultFlow = repository.getAddress()
 
-        assertTrue(result is Resource.Success)
-        result as Resource.Success
-        assertNotNull(result.data)
-        assertEquals(cachedAddress.map { it.toLocalAddress() }, result.data.first())
+        // Assert
+        resultFlow.test {
+            assertTrue(awaitItem() is Resource.Loading)
+
+            val firstResult = awaitItem()
+            assertTrue(firstResult is Resource.Loading)
+            firstResult as Resource.Loading
+            assertEquals(cachedAddress.map { it.toLocalAddress() }, firstResult.data)
+
+            val secondResult = awaitItem()
+            assertTrue(secondResult is Resource.Failure)
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
 
@@ -95,30 +108,58 @@ class AddressRepositoryImplTest {
         coEvery { remoteDataSource.getAddress() } returns remoteAddress
 
         // Act
-        val result = repository.getAddress()
+        val resultFlow = repository.getAddress()
 
-        assertTrue(result is Resource.Success)
-        result as Resource.Success
-        assertNotNull(result.data)
-        assertEquals(
-            remoteAddress.map { it.toAddressEntity().toLocalAddress() },
-            result.data.first()
-        )
+        // Assert
+        resultFlow.test {
+            assertTrue(awaitItem() is Resource.Loading)
+
+            val firstResult = awaitItem()
+            assertTrue(firstResult is Resource.Loading)
+            firstResult as Resource.Loading
+            assertNotNull(firstResult.data)
+            assertTrue(firstResult.data.isEmpty())
+
+            val secondResult = awaitItem()
+            assertTrue(secondResult is Resource.Success)
+            secondResult as Resource.Success
+            assertNotNull(secondResult.data)
+            assertEquals(
+                remoteAddress.map { it.toAddressEntity().toLocalAddress() },
+                secondResult.data
+            )
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun onGetAddress_remoteSuccessEmptyAddress_returnsSuccessWithEmptyData() = runTest {
+    fun onGetAddress_remoteSuccessBothEmpty_returnsSuccessWithEmptyData() = runTest {
         // Arrange
         coEvery { localDataSource.getAddress() } returns flow { emit(emptyList()) }
         coEvery { remoteDataSource.getAddress() } returns emptyList()
 
         // Act
-        val result = repository.getAddress()
+        val resultFlow = repository.getAddress()
 
-        assertTrue(result is Resource.Success)
-        result as Resource.Success
-        assertNotNull(result.data)
-        assertTrue(result.data.first().isEmpty())
+        // Assert
+        resultFlow.test {
+            assertTrue(awaitItem() is Resource.Loading)
+
+            val firstResult = awaitItem()
+            assertTrue(firstResult is Resource.Loading)
+            firstResult as Resource.Loading
+            assertNotNull(firstResult.data)
+            assertTrue(firstResult.data.isEmpty())
+
+            val secondResult = awaitItem()
+            assertTrue(secondResult is Resource.Success)
+            secondResult as Resource.Success
+            assertNotNull(secondResult.data)
+            assertTrue(secondResult.data.isEmpty())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -128,12 +169,24 @@ class AddressRepositoryImplTest {
         coEvery { remoteDataSource.getAddress() } throws Exception()
 
         // Act
-        val result = repository.getAddress()
+        val resultFlow = repository.getAddress()
 
-        assertTrue(result is Resource.Success)
-        result as Resource.Success
-        assertNotNull(result.data)
-        assertTrue(result.data.first().isEmpty())
+        // Assert
+        resultFlow.test {
+            assertTrue(awaitItem() is Resource.Loading)
+
+            val firstResult = awaitItem()
+            assertTrue(firstResult is Resource.Loading)
+            firstResult as Resource.Loading
+            assertNotNull(firstResult.data)
+            assertTrue(firstResult.data.isEmpty())
+
+            val secondResult = awaitItem()
+            assertTrue(secondResult is Resource.Failure)
+            secondResult as Resource.Failure
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -143,11 +196,57 @@ class AddressRepositoryImplTest {
         coEvery { remoteDataSource.getAddress() } throws Exception()
 
         // Act
-        val result = repository.getAddress()
+        val resultFlow = repository.getAddress()
 
-        assertTrue(result is Resource.Failure)
-        result as Resource.Failure
-        assertNull(result.data)
+        // Assert
+        resultFlow.test {
+            assertTrue(awaitItem() is Resource.Loading)
+
+            val offlineResult = awaitItem()
+            assertTrue(offlineResult is Resource.Failure)
+            offlineResult as Resource.Failure
+            assertNull(offlineResult.data)
+
+            val remoteResult = awaitItem()
+            assertTrue(remoteResult is Resource.Failure)
+            remoteResult as Resource.Failure
+            assertNull(remoteResult.data)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun onGetAddress_remoteSuccessNonEmptyCache_returnsSuccessWithEmptyData() = runTest {
+        // Arrange
+        val numAddress = 3
+        val remoteAddress = List(numAddress) { AddressGenerator.generateAddressDTO() }
+        val localAddress = List(numAddress) { AddressGenerator.generateAddressEntity() }
+        coEvery { localDataSource.getAddress() } returns flow { emit(localAddress) }
+        coEvery { remoteDataSource.getAddress() } returns remoteAddress
+
+        // Act
+        val resultFlow = repository.getAddress()
+
+        // Assert
+        resultFlow.test {
+            assertTrue(awaitItem() is Resource.Loading)
+
+            val firstResult = awaitItem()
+            assertTrue(firstResult is Resource.Loading)
+            firstResult as Resource.Loading
+            assertEquals(localAddress.map { it.toLocalAddress() }, firstResult.data)
+
+            val secondResult = awaitItem()
+            assertTrue(secondResult is Resource.Success)
+            secondResult as Resource.Success
+            val expectedAddresses = localAddress.map { it.toLocalAddress() } + remoteAddress.map {
+                it.toAddressEntity().toLocalAddress()
+            }
+            assertEquals(expectedAddresses, secondResult.data)
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test

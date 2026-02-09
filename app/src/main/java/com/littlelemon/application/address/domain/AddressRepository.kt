@@ -10,5 +10,5 @@ interface AddressRepository {
 
     suspend fun saveAddress(address: LocalAddress): Resource<Unit>
 
-    fun getAddress(): Resource<Flow<List<LocalAddress>>>
+    fun getAddress(): Flow<Resource<List<LocalAddress>>>
 }

@@ -11,7 +11,11 @@ import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import com.littlelemon.application.core.domain.utils.Resource
 import io.github.jan.supabase.postgrest.exception.PostgrestRestException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 
 class AddressRepositoryImpl(
     private val localDataSource: AddressLocalDataSource,
@@ -28,7 +32,9 @@ class AddressRepositoryImpl(
             // TODO: Handle Exception thrown for saving as well
             // TODO: Handle DB Exceptions
             Resource.Failure(errorMessage = e.message)
-        }// TODO: Ensure coroutines are active
+        } finally {
+            currentCoroutineContext().ensureActive()
+        }
 
     }
 
@@ -36,17 +42,20 @@ class AddressRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getAddress(): Resource<Flow<List<LocalAddress>>> {
-        try {
-            val offlineAddress = localDataSource.getAddress()
+    override fun getAddress(): Flow<Resource<List<LocalAddress>>> =
+        flow<Resource<List<LocalAddress>>> {
+            try {
+                val offlineAddress = localDataSource.getAddress()
+                val offlineAddressCount = localDataSource.getAddressCount()
+            } catch (e: PostgrestRestException) {
 
-        } catch (e: PostgrestRestException) {
+            } catch (e: IllegalStateException) {
 
-        } catch (e: IllegalStateException) {
-
-        } catch (e: Exception) {
+            } catch (e: Exception) {
+            }
+            TODO()
+        }.onStart {
+            emit(Resource.Loading<List<LocalAddress>>(null))
         }
-        TODO()
-    }
 
 }

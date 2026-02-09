@@ -9,5 +9,5 @@ class GetAddressUseCase(
     private val repository: AddressRepository
 ) {
 
-    operator fun invoke(): Resource<Flow<List<LocalAddress>>> = repository.getAddress()
+    operator fun invoke(): Flow<Resource<List<LocalAddress>>> = repository.getAddress()
 }

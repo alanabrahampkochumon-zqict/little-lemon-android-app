@@ -6,7 +6,7 @@ package com.littlelemon.application.core.domain.utils
  */
 sealed interface Resource<out T> {
 
-    object Loading : Resource<Nothing>
+    data class Loading<T>(val data: T? = null) : Resource<T>
 
     data class Success<T>(val data: T? = null) : Resource<T>
 

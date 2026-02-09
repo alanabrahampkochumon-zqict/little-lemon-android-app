@@ -25,30 +25,28 @@ class GetAddressUseCaseTest {
         // Arrange
         val numAddress = 2
         val address = List(numAddress) { AddressGenerator.generateLocalAddress() }
-        coEvery { repository.getAddress() } returns Resource.Success(flow { emit(address) })
+        coEvery { repository.getAddress() } returns flow { emit(Resource.Success(address)) }
 
         // Act
-        val result = useCase()
+        val result = useCase().first()
 
         // Assert
         assertTrue(result is Resource.Success)
         result as Resource.Success
 
         assertNotNull(result.data)
-        val data = result.data.first()
-
-        assertEquals(numAddress, data.size)
-        assertEquals(address, data)
+        assertEquals(numAddress, result.data.size)
+        assertEquals(address, result.data)
     }
 
     @Test
     fun onGetAddress_repositoryFailure_returnsResourceSuccess() = runTest {
         // Arrange
         val errorMessage = "unknown error"
-        coEvery { repository.getAddress() } returns Resource.Failure(errorMessage = errorMessage)
+        coEvery { repository.getAddress() } returns flow { emit(Resource.Failure(errorMessage = errorMessage)) }
 
         // Act
-        val result = useCase()
+        val result = useCase().first()
 
         // Assert
         assertTrue(result is Resource.Failure)

@@ -135,7 +135,7 @@ class AuthViewModel(
                         )
                     }
 
-                    Resource.Loading -> Unit // Already handled
+                    is Resource.Loading<*> -> Unit // Already handled
                     is Resource.Success<*> -> {
                         event =
                             AuthEvents.ShowInfo("OTP resend successfully") // TODO: Refactor to use UIText
@@ -157,7 +157,7 @@ class AuthViewModel(
                         )
                     }
 
-                    Resource.Loading -> Unit // Loading already handled
+                    is Resource.Loading<*> -> Unit // Loading already handled
                     is Resource.Success<*> -> {
                         event = AuthEvents.NavigateToOTPScreen
                     }
@@ -182,7 +182,7 @@ class AuthViewModel(
                         )
                     }
 
-                    Resource.Loading -> Unit // Loading already handled
+                    is Resource.Loading -> Unit // Loading already handled
                     is Resource.Success<*> -> {
                         event = AuthEvents.NavigateToPersonalizationScreen
                     }
@@ -204,7 +204,7 @@ class AuthViewModel(
                         ) // TODO: Replace with UIText
                     }
 
-                    Resource.Loading -> Unit
+                    is Resource.Loading -> Unit
                     is Resource.Success<*> -> {
                         event = AuthEvents.NavigateToLocationPermissionScreen
                     }
@@ -229,7 +229,7 @@ class AuthViewModel(
                         ) // TODO: Replace with UiText
                     }
 
-                    Resource.Loading -> Unit
+                    is Resource.Loading -> Unit
                     is Resource.Success<*> -> {
                         events.add(AuthEvents.ShowInfo("Location granted successfully")) // TODO: replace with UiText
                         events.add(AuthEvents.NavigateToHome)
