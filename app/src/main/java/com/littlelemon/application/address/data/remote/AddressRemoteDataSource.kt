@@ -6,6 +6,10 @@ interface AddressRemoteDataSource {
 
     suspend fun getAddress(): List<AddressDTO>
 
-    suspend fun saveAddress(address: AddressDTO)
-    
+    suspend fun saveAddress(address: AddressDTO): AddressDTO
+
+    suspend fun deleteAddress(address: AddressDTO): AddressDTO
+
+    suspend fun updateAddress(address: AddressDTO): AddressDTO
+
 }
