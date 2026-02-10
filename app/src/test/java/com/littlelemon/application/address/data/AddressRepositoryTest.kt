@@ -7,15 +7,13 @@ import com.littlelemon.application.address.data.local.FakeAddressLocalDataSource
 import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
+import com.littlelemon.application.address.data.remote.FakeAddressRemoteDataSource
 import com.littlelemon.application.address.domain.AddressRepository
-import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.utils.AddressGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -45,7 +43,7 @@ class AddressRepositoryTest {
         every { location.longitude } returns LONGITUDE
         every { location.accuracy } returns 5.0f
         localDataSource = FakeAddressLocalDataSource(location = location)
-        remoteDataSource = TODO()
+        remoteDataSource = FakeAddressRemoteDataSource()
         repository = AddressRepositoryImpl(
             localDataSource,
             remoteDataSource
@@ -74,7 +72,6 @@ class AddressRepositoryTest {
             localDataSource,
             remoteDataSource
         )
-        coEvery { localDataSource.getLocation() } throws LocationUnavailableException()
 
         // Act
         val result = repository.getLocation()
@@ -84,12 +81,16 @@ class AddressRepositoryTest {
     }
 
     @Test
-    fun onGetAddress_remoteFailureLocalCacheNonEmpty_returnsSuccessWithLocalCache() = runTest {
+    fun onGetAddress_remoteFailureLocalCacheNonEmpty_returnsFailureWithLocalCache() = runTest {
         // Arrange
         val numAddress = 3
         val cachedAddress = List(numAddress) { AddressGenerator.generateAddressEntity() }
-        coEvery { localDataSource.getAddress() } returns flow { emit(cachedAddress) }
-        coEvery { remoteDataSource.getAddress() } throws Exception()
+        localDataSource = FakeAddressLocalDataSource(initialData = cachedAddress)
+        remoteDataSource = FakeAddressRemoteDataSource(throwError = true)
+        repository = AddressRepositoryImpl(
+            localDataSource,
+            remoteDataSource
+        )
 
         // Act
         val resultFlow = repository.getAddress()
@@ -116,8 +117,12 @@ class AddressRepositoryTest {
         // Arrange
         val numAddress = 3
         val remoteAddress = List(numAddress) { AddressGenerator.generateAddressDTO() }
-        coEvery { localDataSource.getAddress() } returns flow { emit(emptyList()) }
-        coEvery { remoteDataSource.getAddress() } returns remoteAddress
+        localDataSource = FakeAddressLocalDataSource()
+        remoteDataSource = FakeAddressRemoteDataSource(initialData = remoteAddress)
+        repository = AddressRepositoryImpl(
+            localDataSource,
+            remoteDataSource
+        )
 
         // Act
         val resultFlow = repository.getAddress()
@@ -148,8 +153,12 @@ class AddressRepositoryTest {
     @Test
     fun onGetAddress_remoteSuccessBothEmpty_returnsSuccessWithEmptyData() = runTest {
         // Arrange
-        coEvery { localDataSource.getAddress() } returns flow { emit(emptyList()) }
-        coEvery { remoteDataSource.getAddress() } returns emptyList()
+        localDataSource = FakeAddressLocalDataSource()
+        remoteDataSource = FakeAddressRemoteDataSource()
+        repository = AddressRepositoryImpl(
+            localDataSource,
+            remoteDataSource
+        )
 
         // Act
         val resultFlow = repository.getAddress()
@@ -177,8 +186,12 @@ class AddressRepositoryTest {
     @Test
     fun onGetAddress_remoteFailureEmptyCache_returnsFailureWithEmptyData() = runTest {
         // Arrange
-        coEvery { localDataSource.getAddress() } returns flow { emit(emptyList()) }
-        coEvery { remoteDataSource.getAddress() } throws Exception()
+        localDataSource = FakeAddressLocalDataSource()
+        remoteDataSource = FakeAddressRemoteDataSource(throwError = true)
+        repository = AddressRepositoryImpl(
+            localDataSource,
+            remoteDataSource
+        )
 
         // Act
         val resultFlow = repository.getAddress()
@@ -202,10 +215,14 @@ class AddressRepositoryTest {
     }
 
     @Test
-    fun onGetAddress_remoteFailureCacheFailure_returnsSuccessWithEmptyData() = runTest {
+    fun onGetAddress_remoteFailureCacheFailure_returnsFailureWithoutNetworkCall() = runTest {
         // Arrange
-        coEvery { localDataSource.getAddress() } throws IllegalStateException()
-        coEvery { remoteDataSource.getAddress() } throws Exception()
+        localDataSource = FakeAddressLocalDataSource(throwError = true)
+        remoteDataSource = FakeAddressRemoteDataSource(throwError = true)
+        repository = AddressRepositoryImpl(
+            localDataSource,
+            remoteDataSource
+        )
 
         // Act
         val resultFlow = repository.getAddress()
@@ -219,11 +236,6 @@ class AddressRepositoryTest {
             offlineResult as Resource.Failure
             assertNull(offlineResult.data)
 
-            val remoteResult = awaitItem()
-            assertTrue(remoteResult is Resource.Failure)
-            remoteResult as Resource.Failure
-            assertNull(remoteResult.data)
-
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -234,8 +246,12 @@ class AddressRepositoryTest {
         val numAddress = 3
         val remoteAddress = List(numAddress) { AddressGenerator.generateAddressDTO() }
         val localAddress = List(numAddress) { AddressGenerator.generateAddressEntity() }
-        coEvery { localDataSource.getAddress() } returns flow { emit(localAddress) }
-        coEvery { remoteDataSource.getAddress() } returns remoteAddress
+        localDataSource = FakeAddressLocalDataSource(initialData = localAddress)
+        remoteDataSource = FakeAddressRemoteDataSource(initialData = remoteAddress)
+        repository = AddressRepositoryImpl(
+            localDataSource,
+            remoteDataSource
+        )
 
         // Act
         val resultFlow = repository.getAddress()

@@ -52,7 +52,7 @@ class AddressRepositoryImpl(
     }
 
     override fun getAddress(): Flow<Resource<List<LocalAddress>>> =
-        flow<Resource<List<LocalAddress>>> {
+        flow {
             var offlineData: List<LocalAddress>? = null
             try {
                 offlineData =

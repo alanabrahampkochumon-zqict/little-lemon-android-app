@@ -3,21 +3,16 @@ package com.littlelemon.application.address.data.remote
 import com.littlelemon.application.address.data.mappers.toResponse
 import com.littlelemon.application.address.data.remote.models.AddressDTO
 import com.littlelemon.application.address.data.remote.models.AddressRequestDTO
-import com.littlelemon.application.utils.AddressGenerator
 
 class FakeAddressRemoteDataSource(
-    initialDataCount: Int? = null,
+    initialData: List<AddressDTO> = emptyList(),
     private val throwError: Boolean = false,
 ) : AddressRemoteDataSource {
 
     private val _address = mutableListOf<AddressDTO>()
 
     init {
-        initialDataCount?.let { count ->
-            repeat(count) {
-                _address.add(AddressGenerator.generateAddressDTO())
-            }
-        }
+        _address.addAll(initialData)
     }
 
     override suspend fun getAddress(): List<AddressDTO> {

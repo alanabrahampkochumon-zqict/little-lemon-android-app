@@ -2,12 +2,12 @@ package com.littlelemon.application.address.data.local
 
 import android.location.Location
 import com.littlelemon.application.address.data.local.models.AddressEntity
-import com.littlelemon.application.utils.AddressGenerator
+import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeAddressLocalDataSource(
-    initialDataCount: Int? = null,
+    initialData: List<AddressEntity> = emptyList(),
     private val throwError: Boolean = false,
     private val location: Location? = null
 ) : AddressLocalDataSource {
@@ -15,16 +15,12 @@ class FakeAddressLocalDataSource(
     private val _address = mutableListOf<AddressEntity>()
 
     init {
-        initialDataCount?.let { count ->
-            repeat(count) {
-                _address.add(AddressGenerator.generateAddressEntity())
-            }
-        }
+        _address.addAll(initialData)
     }
 
     override suspend fun getLocation(): Location {
-        if (throwError) throw IllegalArgumentException()
-        return location ?: throw IllegalArgumentException()
+        if (throwError) throw LocationUnavailableException()
+        return location ?: throw LocationUnavailableException()
     }
 
     override fun getAddress(): Flow<List<AddressEntity>> = flow {
