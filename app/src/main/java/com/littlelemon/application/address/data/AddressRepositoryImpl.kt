@@ -11,12 +11,8 @@ import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
-import com.littlelemon.application.core.domain.utils.Error
+import com.littlelemon.application.core.domain.mappers.mapToDomainError
 import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.core.domain.utils.toNetworkError
-import io.github.jan.supabase.exceptions.HttpRequestException
-import io.github.jan.supabase.postgrest.exception.PostgrestRestException
-import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
@@ -41,8 +37,12 @@ class AddressRepositoryImpl(
             // TODO: Handle Exception thrown for saving as well
             // TODO: Handle DB Exceptions
             Resource.Failure(errorMessage = e.message)
-        } finally {
+        } catch (e: Exception) {
             currentCoroutineContext().ensureActive()
+            Resource.Failure(
+                errorMessage = e.message,
+                error = e.mapToDomainError()
+            )
         }
 
     }
@@ -66,48 +66,15 @@ class AddressRepositoryImpl(
                 emitAll(
                     flow = newData
                 )
-
-            } catch (e: PostgrestRestException) {
-                emit(
-                    Resource.Failure(
-                        data = offlineData,
-                        errorMessage = e.message,
-                        error = e.code?.toInt()?.toNetworkError()
-                    )
-                )
-            } catch (e: HttpRequestTimeoutException) {
-                emit(
-                    Resource.Failure(
-                        data = offlineData,
-                        errorMessage = e.message,
-                        error = Error.NetworkError.Timeout()
-                    )
-                )
-            } catch (e: HttpRequestException) {
-                emit(
-                    Resource.Failure(
-                        data = offlineData,
-                        errorMessage = e.message,
-                        error = Error.NetworkError.Unknown()
-                    )
-                )
-            } catch (e: IllegalStateException) {
-                emit(
-                    Resource.Failure(
-                        data = offlineData,
-                        errorMessage = e.message,
-                        error = Error.Database
-                    )
-                )
             } catch (e: Exception) {
+                currentCoroutineContext().ensureActive()
                 emit(
                     Resource.Failure(
                         data = offlineData,
                         errorMessage = e.message,
-                        error = Error.Unknown
+                        error = e.mapToDomainError()
                     )
                 )
-                currentCoroutineContext().ensureActive()
             }
         }.onStart {
             emit(Resource.Loading<List<LocalAddress>>(null))
