@@ -46,5 +46,6 @@
 
     <!--  Info Messages  -->
     <string name="otp_resend_message">OTP resend successfully!</string>
+    <string name="location_granted_message">Location granted successfully!</string>
 
 </resources>

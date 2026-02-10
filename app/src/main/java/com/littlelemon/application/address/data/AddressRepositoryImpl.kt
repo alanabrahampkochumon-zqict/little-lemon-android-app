@@ -35,8 +35,6 @@ class AddressRepositoryImpl(
             // TODO: Do geocoding
             // TODO: Store location as address
         } catch (e: LocationUnavailableException) {
-            // TODO: Handle Exception thrown for saving as well
-            // TODO: Handle DB Exceptions
             Resource.Failure(errorMessage = e.message)
         } catch (e: Exception) {
             currentCoroutineContext().ensureActive()

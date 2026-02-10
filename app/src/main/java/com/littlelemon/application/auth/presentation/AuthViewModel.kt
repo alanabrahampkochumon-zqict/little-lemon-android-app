@@ -3,6 +3,7 @@ package com.littlelemon.application.auth.presentation
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.littlelemon.application.R
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.SaveUserInformationUseCase
@@ -17,6 +18,7 @@ import com.littlelemon.application.core.domain.utils.DEBOUNCE_RATE_MS
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.ValidationPatterns
 import com.littlelemon.application.core.domain.utils.ValidationResult
+import com.littlelemon.application.core.presentation.designsystem.UiText
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -130,15 +132,17 @@ class AuthViewModel(
                 when (val result = resendOTP(state.value.email)) {
                     is Resource.Failure<*> -> {
                         event = AuthEvents.ShowError(
-                            errorMessage = result.errorMessage
-                                ?: "Unknown error" // TODO: Refactor to use UIText
+                            errorMessage = if (result.errorMessage != null) UiText.DynamicString(
+                                result.errorMessage
+                            )
+                            else UiText.StringResource(R.string.generic_error_message)
                         )
                     }
 
                     is Resource.Loading<*> -> Unit // Already handled
                     is Resource.Success<*> -> {
                         event =
-                            AuthEvents.ShowInfo("OTP resend successfully") // TODO: Refactor to use UIText
+                            AuthEvents.ShowInfo(UiText.StringResource(R.string.otp_resend_message))
                     }
                 }
                 _state.update { it.copy(isLoading = false) }
@@ -153,7 +157,10 @@ class AuthViewModel(
                 when (val result = sendOTP(state.value.oneTimePassword.joinToString(""))) {
                     is Resource.Failure<*> -> {
                         event = AuthEvents.ShowError(
-                            result.errorMessage ?: "An unknown error occurred!"
+                            if (result.errorMessage != null) UiText.DynamicString(
+                                result.errorMessage
+                            )
+                            else UiText.StringResource(R.string.generic_error_message)
                         )
                     }
 
@@ -178,7 +185,10 @@ class AuthViewModel(
                 )) {
                     is Resource.Failure<*> -> {
                         event = AuthEvents.ShowError(
-                            result.errorMessage ?: "An unknown error occurred!" //TODO: Refactor
+                            if (result.errorMessage != null) UiText.DynamicString(
+                                result.errorMessage
+                            )
+                            else UiText.StringResource(R.string.generic_error_message)
                         )
                     }
 
@@ -200,8 +210,11 @@ class AuthViewModel(
                     saveUserInfo(UserInfoParams(state.value.firstName, state.value.lastName))) {
                     is Resource.Failure<*> -> {
                         event = AuthEvents.ShowError(
-                            result.errorMessage ?: "An unknown error occurred!"
-                        ) // TODO: Replace with UIText
+                            if (result.errorMessage != null) UiText.DynamicString(
+                                result.errorMessage
+                            )
+                            else UiText.StringResource(R.string.generic_error_message)
+                        )
                     }
 
                     is Resource.Loading -> Unit
@@ -224,14 +237,17 @@ class AuthViewModel(
                     is Resource.Failure<*> -> {
                         events.add(
                             AuthEvents.ShowError(
-                                result.errorMessage ?: "An unknown error occurred!"
+                                if (result.errorMessage != null) UiText.DynamicString(
+                                    result.errorMessage
+                                )
+                                else UiText.StringResource(R.string.generic_error_message)
                             )
-                        ) // TODO: Replace with UiText
+                        )
                     }
 
                     is Resource.Loading -> Unit
                     is Resource.Success<*> -> {
-                        events.add(AuthEvents.ShowInfo("Location granted successfully")) // TODO: replace with UiText
+                        events.add(AuthEvents.ShowInfo(UiText.StringResource(R.string.location_granted_message)))
                         events.add(AuthEvents.NavigateToHome)
                     }
                 }

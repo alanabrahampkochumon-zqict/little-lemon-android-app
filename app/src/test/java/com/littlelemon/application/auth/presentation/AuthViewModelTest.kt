@@ -329,6 +329,7 @@ class AuthViewModelTest {
             }
         }
 
+        // TODO: Rewrite tests for failure with UiText
         @Test
         fun onSendOTP_sendOTPError_errorEventIsTriggered() = runTest {
             // Arrange
