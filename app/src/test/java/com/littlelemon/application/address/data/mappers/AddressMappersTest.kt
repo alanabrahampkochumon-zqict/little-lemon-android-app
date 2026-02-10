@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNull
+import org.junit.jupiter.api.assertThrows
 
 class AddressMappersTest {
     @Nested
@@ -175,6 +176,15 @@ class AddressMappersTest {
     inner class AddressRequestToAddressDTOTests {
 
         @Test
+        fun onConversion_withNullId_throwsIllegalArgumentException() {
+            // Arrange
+            val dto = AddressGenerator.generateAddressDTO().toRequestDTO().copy(id = null)
+
+            // Act
+            assertThrows<IllegalArgumentException> { dto.toResponse() }
+        }
+
+        @Test
         fun onConversion_withNullLocation_returnsDTOWithNullLatLng() {
             // Arrange
             val dto = AddressGenerator.generateAddressDTO().toRequestDTO().copy(location = null)
@@ -218,6 +228,54 @@ class AddressMappersTest {
             assertEquals(genDTO.latitude, responseDTO.latitude)
             assertNotNull(responseDTO.longitude)
             assertEquals(genDTO.longitude, responseDTO.longitude)
+        }
+    }
+
+    @Nested
+    inner class LocalAddressToAddressRequestDTOTests {
+
+        @Test
+        fun onConversion_withNullLocation_returnsDTOWithNullLatLng() {
+            // Arrange
+            val localAddress =
+                AddressGenerator.generateLocalAddress().copy(location = null)
+
+            // Act
+            val responseDTO = localAddress.toRequestDTO()
+
+            // Assert
+            assertEquals(localAddress.id, responseDTO.id)
+            assertEquals(localAddress.label, responseDTO.label)
+            assertEquals(localAddress.address?.address, responseDTO.address)
+            assertEquals(localAddress.address?.streetAddress, responseDTO.streetAddress)
+            assertEquals(localAddress.address?.city, responseDTO.city)
+            assertEquals(localAddress.address?.state, responseDTO.state)
+            assertEquals(localAddress.address?.pinCode, responseDTO.pinCode)
+            assertNull(responseDTO.location)
+        }
+
+        @Test
+        fun onConversion_withNonNullLocation_returnsDTOWithCorrectLocation() {
+            // Arrange
+            val localAddress =
+                AddressGenerator.generateLocalAddress()
+
+            // Act
+            val responseDTO = localAddress.toRequestDTO()
+
+            // Assert
+            assertEquals(localAddress.id, responseDTO.id)
+            assertEquals(localAddress.label, responseDTO.label)
+            assertEquals(localAddress.address?.address, responseDTO.address)
+            assertEquals(localAddress.address?.streetAddress, responseDTO.streetAddress)
+            assertEquals(localAddress.address?.city, responseDTO.city)
+            assertEquals(localAddress.address?.state, responseDTO.state)
+            assertEquals(localAddress.address?.pinCode, responseDTO.pinCode)
+            assertNotNull(responseDTO.location)
+            assertEquals(
+                "POINT(${localAddress.location?.longitude} ${localAddress.location?.latitude})",
+                responseDTO.location
+            )
         }
     }
 }

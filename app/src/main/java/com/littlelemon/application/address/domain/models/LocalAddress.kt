@@ -1,6 +1,7 @@
 package com.littlelemon.application.address.domain.models
 
 data class LocalAddress(
+    val id: String? = null,
     val label: String? = null,
     val address: PhysicalAddress? = null,
     val location: LocalLocation? = null

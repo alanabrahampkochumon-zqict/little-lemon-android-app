@@ -20,6 +20,7 @@ object AddressGenerator {
     @OptIn(ExperimentalUuidApi::class)
     fun generateLocalAddress(): LocalAddress {
         return LocalAddress(
+            id = Uuid.random().toString(),
             label = Uuid.random().toString(),
             address = generatePhysicalAddress(),
             location = generateLocalLocation()

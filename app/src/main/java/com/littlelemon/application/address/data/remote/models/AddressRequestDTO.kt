@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AddressRequestDTO(
-    val id: String,
+    val id: String?,
     val label: String?,
     val address: String?,
     @SerialName("street_address")

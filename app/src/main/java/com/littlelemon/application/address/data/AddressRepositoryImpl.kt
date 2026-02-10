@@ -47,8 +47,18 @@ class AddressRepositoryImpl(
 
     }
 
+    //TODO: Add Service to retry saving to network in case of network error.
     override suspend fun saveAddress(address: LocalAddress): Resource<Unit> {
-        TODO("Not yet implemented")
+        return try {
+//            val remoteData = remoteDataSource.saveAddress(address)
+            TODO()
+        } catch (e: Exception) {
+            currentCoroutineContext().ensureActive()
+            Resource.Failure(
+                errorMessage = e.message,
+                error = e.mapToDomainError()
+            )
+        }
     }
 
     override fun getAddress(): Flow<Resource<List<LocalAddress>>> =

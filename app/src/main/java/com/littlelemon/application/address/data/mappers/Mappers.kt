@@ -11,6 +11,7 @@ import com.littlelemon.application.address.domain.models.PhysicalAddress
 fun Location.toLocalLocation(): LocalLocation = LocalLocation(this.latitude, this.longitude)
 
 fun AddressEntity.toLocalAddress(): LocalAddress = LocalAddress(
+    id = id,
     label = label,
     address = if (address != null && city != null && pinCode != null) PhysicalAddress(
         address = address,
@@ -55,7 +56,7 @@ fun AddressRequestDTO.toResponse(): AddressDTO {
         ?.map { it.toDouble() }
         ?: listOf(null, null)
     return AddressDTO(
-        id = id,
+        id = id ?: throw IllegalArgumentException(),
         label = label,
         address = address,
         streetAddress = streetAddress,
@@ -67,3 +68,15 @@ fun AddressRequestDTO.toResponse(): AddressDTO {
         createdAt = createdAt
     )
 }
+
+fun LocalAddress.toRequestDTO(): AddressRequestDTO = AddressRequestDTO(
+    id = id,
+    label = label,
+    address = address?.address,
+    streetAddress = address?.streetAddress,
+    city = address?.city,
+    state = address?.state,
+    pinCode = address?.pinCode,
+    location = if (location?.longitude != null) "POINT(${location.longitude} ${location.latitude})" else null,
+    createdAt = System.currentTimeMillis()
+)

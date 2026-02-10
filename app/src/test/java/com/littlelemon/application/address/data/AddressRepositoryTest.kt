@@ -14,6 +14,7 @@ import com.littlelemon.application.utils.AddressGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -278,8 +279,34 @@ class AddressRepositoryTest {
     }
 
     @Test
-    fun onSaveAddress_remoteSuccess_returnsResourceSuccess() = runTest { }
+    fun onSaveAddress_remoteSuccess_returnsResourceSuccessAndPersistsInCache() = runTest {
+        // Arrange
+        val address = AddressGenerator.generateLocalAddress()
+
+        // Act
+        val resource = repository.saveAddress(address)
+        val data = localDataSource.getAddress().first()
+
+        // Assert
+        assertTrue(resource is Resource.Success)
+        assertEquals(address, data.first().toLocalAddress())
+    }
 
     @Test
-    fun onSaveAddress_remoteFailure_returnsResourceFailure() = runTest { }
+    fun onSaveAddress_remoteFailure_returnsResourceFailureAndDoesNotSaveToCache() = runTest {
+        // Arrange
+        val address = AddressGenerator.generateLocalAddress()
+        remoteDataSource = FakeAddressRemoteDataSource(throwError = true)
+        repository = AddressRepositoryImpl(
+            localDataSource,
+            remoteDataSource
+        )
+
+        // Act
+        val resource = repository.saveAddress(address)
+
+        // Assert
+        assertTrue(resource is Resource.Failure)
+        assertTrue(localDataSource.getAddress().first().isEmpty())
+    }
 }
