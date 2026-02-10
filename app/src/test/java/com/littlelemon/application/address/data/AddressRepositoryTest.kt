@@ -3,9 +3,11 @@ package com.littlelemon.application.address.data
 import android.location.Location
 import app.cash.turbine.test
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
+import com.littlelemon.application.address.data.local.FakeAddressLocalDataSource
 import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
+import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.utils.AddressGenerator
@@ -17,37 +19,42 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(StandardTestDispatcherRule::class)
-class AddressRepositoryImplTest {
+class AddressRepositoryTest {
 
-    private val localDataSource = mockk<AddressLocalDataSource>()
-    private val remoteDataSource = mockk<AddressRemoteDataSource>()
+    private lateinit var localDataSource: AddressLocalDataSource
+    private lateinit var remoteDataSource: AddressRemoteDataSource
 
-    private val repository = AddressRepositoryImpl(
-        localDataSource,
-        remoteDataSource
-    )
+    private lateinit var repository: AddressRepository
 
     private companion object {
         const val LATITUDE = 1.2345
         const val LONGITUDE = 3.2354
     }
 
-    @Test
-    fun onGetLocation_dataSourceSuccess_returnsResourceSuccess() = runTest {
-        // Arrange
+    @BeforeEach
+    fun setUp() {
         val location = mockk<Location>()
         every { location.latitude } returns LATITUDE
         every { location.longitude } returns LONGITUDE
         every { location.accuracy } returns 5.0f
+        localDataSource = FakeAddressLocalDataSource(location = location)
+        remoteDataSource = TODO()
+        repository = AddressRepositoryImpl(
+            localDataSource,
+            remoteDataSource
+        )
+    }
 
-        coEvery { localDataSource.getLocation() } returns location
-
+    @Test
+    fun onGetLocation_dataSourceSuccess_returnsResourceSuccess() = runTest {
+        // Arrange
         // Act
         val result = repository.getLocation()
 
@@ -62,6 +69,11 @@ class AddressRepositoryImplTest {
     @Test
     fun onGetLocation_dataSourceError_returnsResourceError() = runTest {
         // Arrange
+        localDataSource = FakeAddressLocalDataSource(throwError = true)
+        repository = AddressRepositoryImpl(
+            localDataSource,
+            remoteDataSource
+        )
         coEvery { localDataSource.getLocation() } throws LocationUnavailableException()
 
         // Act
@@ -163,7 +175,7 @@ class AddressRepositoryImplTest {
     }
 
     @Test
-    fun onGetAddress_remoteFailureEmptyCache_returnsSuccessWithEmptyData() = runTest {
+    fun onGetAddress_remoteFailureEmptyCache_returnsFailureWithEmptyData() = runTest {
         // Arrange
         coEvery { localDataSource.getAddress() } returns flow { emit(emptyList()) }
         coEvery { remoteDataSource.getAddress() } throws Exception()

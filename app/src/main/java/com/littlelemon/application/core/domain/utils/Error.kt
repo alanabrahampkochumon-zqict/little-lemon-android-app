@@ -12,6 +12,10 @@ sealed interface Error {
 
     data object PermissionDenied : Error
 
+    data object Database : Error
+
+    data object Unknown : Error
+
     sealed interface SessionError : Error {
         data object InvalidSession : SessionError
         data object SessionTokenNotFound : SessionError
