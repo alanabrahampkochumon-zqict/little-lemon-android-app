@@ -6,9 +6,11 @@ import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.local.FakeAddressLocalDataSource
 import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
+import com.littlelemon.application.address.data.mappers.toRequestDTO
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.address.data.remote.FakeAddressRemoteDataSource
 import com.littlelemon.application.address.domain.AddressRepository
+import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.utils.AddressGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
@@ -279,18 +281,38 @@ class AddressRepositoryTest {
     }
 
     @Test
-    fun onSaveAddress_remoteSuccess_returnsResourceSuccessAndPersistsInCache() = runTest {
-        // Arrange
-        val address = AddressGenerator.generateLocalAddress()
+    fun onSaveAddress_newAddressAndRemoteSuccess_returnsResourceSuccessAndPersistsInCache() =
+        runTest {
+            // Arrange
+            val address = AddressGenerator.generateLocalAddress().copy(id = null)
 
-        // Act
-        val resource = repository.saveAddress(address)
-        val data = localDataSource.getAddress().first()
+            // Act
+            val resource = repository.saveAddress(address)
+            val genId = remoteDataSource.getAddress().first().id
+            val data = localDataSource.getAddress().first()
 
-        // Assert
-        assertTrue(resource is Resource.Success)
-        assertEquals(address, data.first().toLocalAddress())
-    }
+            // Assert
+            assertTrue(resource is Resource.Success)
+            assertEquals(address.copy(id = genId), data.first().toLocalAddress())
+        }
+
+    @Test
+    fun onSaveAddress_existingAddressAndRemoteSuccess_returnsResourceSuccessAndPersistsInCache() =
+        runTest {
+            // Arrange
+            val address = AddressGenerator.generateLocalAddress()
+            remoteDataSource.saveAddress(address.toRequestDTO())
+            val updatedAddress =
+                address.copy(label = "updated label", location = LocalLocation(1.23455, 3.5123412))
+
+            // Act
+            val resource = repository.saveAddress(updatedAddress)
+            val data = localDataSource.getAddress().first()
+
+            // Assert
+            assertTrue(resource is Resource.Success)
+            assertEquals(updatedAddress, data.first().toLocalAddress())
+        }
 
     @Test
     fun onSaveAddress_remoteFailure_returnsResourceFailureAndDoesNotSaveToCache() = runTest {

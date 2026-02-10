@@ -30,7 +30,8 @@ class FakeAddressLocalDataSource(
 
     override suspend fun saveAddress(address: AddressEntity) {
         if (throwError) throw IllegalArgumentException()
-        _address.removeIf { inAddress -> inAddress.id == address.id }
+        println("HELPER: ${address}")
+        _address.remove(address)
         _address.add(address)
     }
 

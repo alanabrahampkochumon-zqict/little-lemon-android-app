@@ -6,6 +6,7 @@ import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.mappers.toLocalLocation
+import com.littlelemon.application.address.data.mappers.toRequestDTO
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.models.LocalAddress
@@ -50,8 +51,14 @@ class AddressRepositoryImpl(
     //TODO: Add Service to retry saving to network in case of network error.
     override suspend fun saveAddress(address: LocalAddress): Resource<Unit> {
         return try {
-//            val remoteData = remoteDataSource.saveAddress(address)
-            TODO()
+            if (address.id == null) { // Creation
+                val remoteData = remoteDataSource.saveAddress(address.toRequestDTO())
+                localDataSource.saveAddress(remoteData.toAddressEntity())
+            } else { // Update
+                val remoteData = remoteDataSource.updateAddress(address.toRequestDTO())
+                localDataSource.saveAddress(remoteData.toAddressEntity())
+            }
+            Resource.Success()
         } catch (e: Exception) {
             currentCoroutineContext().ensureActive()
             Resource.Failure(
