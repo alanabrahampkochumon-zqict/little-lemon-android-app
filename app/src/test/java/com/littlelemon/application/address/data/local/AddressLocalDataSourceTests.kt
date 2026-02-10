@@ -5,12 +5,11 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Tasks
 import com.littlelemon.application.address.data.local.dao.AddressDao
+import com.littlelemon.application.address.data.local.dao.FakeAddressDao
 import com.littlelemon.application.utils.AddressGenerator
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -32,10 +31,10 @@ class AddressLocalDataSourceTests {
     }
 
     private val locationProvider = mockk<FusedLocationProviderClient>()
-    private val dao = mockk<AddressDao>()
+    private lateinit var dao: AddressDao
     private val newLocation = mockk<Location>(relaxed = true)
     private val staleLocation = mockk<Location>(relaxed = true)
-    private val datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+    private lateinit var datasource: AddressLocalDataSource
 
     @BeforeEach
     fun setUp() {
@@ -46,6 +45,9 @@ class AddressLocalDataSourceTests {
         every { staleLocation.latitude } returns LATITUDE
         every { staleLocation.longitude } returns LONGITUDE
         every { staleLocation.time } returns System.currentTimeMillis() - STALE_TIME
+
+        dao = FakeAddressDao()
+        datasource = AddressLocalDataSourceImpl(locationProvider, dao)
     }
 
     @Test
@@ -108,7 +110,8 @@ class AddressLocalDataSourceTests {
     @Test
     fun onGetAddress_noAddress_returnsFlowOfEmptyList() = runTest {
         // Arrange
-        coEvery { dao.getAllAddress() } returns flow { emit(emptyList()) }
+        dao = FakeAddressDao()
+        datasource = AddressLocalDataSourceImpl(locationProvider, dao)
 
         // Act
         val result = datasource.getAddress().first()
@@ -122,7 +125,9 @@ class AddressLocalDataSourceTests {
         // Arrange
         val numAddress = 5
         val address = List(numAddress) { AddressGenerator.generateAddressEntity() }
-        coEvery { dao.getAllAddress() } returns flow { emit(address) }
+        dao = FakeAddressDao()
+        dao.insertAddress(address)
+        datasource = AddressLocalDataSourceImpl(locationProvider, dao)
 
         // Act
         val result = datasource.getAddress().first()
@@ -134,42 +139,51 @@ class AddressLocalDataSourceTests {
     @Test
     fun onGetAddress_exception_returnsFlowOfEmptyList() = runTest {
         // Arrange
-        coEvery { dao.getAllAddress() } throws IllegalStateException()
+        dao = FakeAddressDao(throwError = true)
+        datasource = AddressLocalDataSourceImpl(locationProvider, dao)
 
         // Act & Assert
-        assertThrows<IllegalStateException> { datasource.getAddress().collect {} }
+        assertThrows<IllegalArgumentException> { datasource.getAddress().collect {} }
     }
 
     @Test
     fun onInsertAddress_validAddresses_throwsNoException() = runTest {
         // Arrange
+        dao = FakeAddressDao()
+        datasource = AddressLocalDataSourceImpl(locationProvider, dao)
         val address = AddressGenerator.generateAddressEntity()
-        coEvery { dao.insertAddress(address) } returns Unit
 
         // Act & Assert
         assertDoesNotThrow { datasource.saveAddress(address) }
+        val queriedAddress = datasource.getAddress().first()
+        assertEquals(1, queriedAddress.size)
+        assertEquals(address, queriedAddress.first())
     }
 
     @Test
     fun onInsertAddress_exceptionThrown_throwsNoException() = runTest {
         // Arrange
-        coEvery { dao.getAllAddress() } throws IllegalStateException()
+        dao = FakeAddressDao(throwError = true)
+        datasource = AddressLocalDataSourceImpl(locationProvider, dao)
 
         // Act & Assert
-        assertThrows<IllegalStateException> { datasource.getAddress().first() }
+        assertThrows<IllegalArgumentException> { datasource.getAddress().first() }
     }
 
     @Test
     fun onGetAddressCount_databaseHasAddress_returnsCorrectCount() = runTest {
         // Arrange
-        val numAddress = 3L
-        coEvery { dao.getAddressCount() } returns numAddress
+        val numAddress = 3
+        val addresses = List(numAddress) { AddressGenerator.generateAddressEntity() }
+        dao = FakeAddressDao()
+        dao.insertAddress(addresses)
+        datasource = AddressLocalDataSourceImpl(locationProvider, dao)
 
         // Act
         val count = datasource.getAddressCount()
 
         // Assert
-        assertEquals(numAddress, count)
+        assertEquals(numAddress.toLong(), count)
     }
 
     @Test
@@ -177,6 +191,14 @@ class AddressLocalDataSourceTests {
         // Arrange
         val numAddresses = 5
         val addresses = List(numAddresses) { AddressGenerator.generateAddressEntity() }
-        //TODO: Create Fake Dao to test insertion
+        dao = FakeAddressDao()
+        datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+
+        // Act
+        datasource.saveAddresses(addresses)
+        val queriedAddress = datasource.getAddress().first()
+
+        // Assert
+        assertEquals(addresses, queriedAddress)
     }
 }

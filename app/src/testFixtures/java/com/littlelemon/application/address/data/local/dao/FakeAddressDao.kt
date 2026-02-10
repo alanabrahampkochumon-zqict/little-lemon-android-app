@@ -5,18 +5,14 @@ import com.littlelemon.application.utils.AddressGenerator
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FakeAddressDao(populate: Boolean = false, private val throwError: Boolean = false) :
+class FakeAddressDao(entriesCount: Int? = null, private val throwError: Boolean = false) :
     AddressDao {
 
     private val addressList = mutableListOf<AddressEntity>()
 
-    companion object {
-        const val NUM_ADDRESSES = 20
-    }
-
     init {
-        if (populate) {
-            repeat(NUM_ADDRESSES) {
+        if (entriesCount != null) {
+            repeat(entriesCount) {
                 addressList.add(AddressGenerator.generateAddressEntity())
             }
         }
