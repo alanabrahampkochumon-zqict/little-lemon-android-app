@@ -303,7 +303,7 @@ class AuthViewModelTest {
                 runCurrent()
 
                 // State transition Assert
-                assertTrue(awaitItem().isLoading, "Should be loading during the delay")
+                assertTrue(awaitItem().isLoading)
 
                 // Advancing delay
                 advanceTimeBy(NETWORK_LATENCY + 1)
@@ -328,7 +328,7 @@ class AuthViewModelTest {
 
                 // Assert
                 assertNotNull(event)
-                assertTrue(event is AuthEvents.NavigateToOTPScreen)
+                assertIs<AuthEvents.NavigateToOTPScreen>(event)
 
             }
         }
@@ -405,7 +405,7 @@ class AuthViewModelTest {
                 val event = awaitItem()
 
                 // Assert
-                assertTrue(event is AuthEvents.NavigateToPersonalizationScreen)
+                assertIs<AuthEvents.NavigateToPersonalizationScreen>(event)
             }
         }
 
@@ -465,7 +465,7 @@ class AuthViewModelTest {
                 val triggeredEvent = awaitItem()
 
                 // Assert
-                assertTrue(triggeredEvent is AuthEvents.ShowInfo)
+                assertIs<AuthEvents.ShowInfo>(triggeredEvent)
             }
         }
 
@@ -498,7 +498,7 @@ class AuthViewModelTest {
                 viewModel.onAction(AuthActions.CompletePersonalization)
                 runCurrent()
                 // Assert that navigation event is triggered
-                assertTrue(awaitItem() is AuthEvents.NavigateToLocationPermissionScreen)
+                assertIs<AuthEvents.NavigateToLocationPermissionScreen>(awaitItem())
             }
         }
 
@@ -555,10 +555,10 @@ class AuthViewModelTest {
                 runCurrent()
 
                 // Assert I
-                assertTrue(awaitItem() is AuthEvents.ShowInfo)
+                assertIs<AuthEvents.ShowInfo>(awaitItem())
 //                val job = launch { viewModel.authEvent.collect { } }
                 // Assert II
-                assertTrue(awaitItem() is AuthEvents.NavigateToHome)
+                assertIs<AuthEvents.NavigateToHome>(awaitItem())
 //                job.cancel()
             }
 
@@ -615,7 +615,7 @@ class AuthViewModelTest {
                 runCurrent()
 
                 // Assert that popup event is triggered
-                assertTrue(awaitItem() is AuthEvents.ShowLocationEntryPopup)
+                assertIs<AuthEvents.ShowLocationEntryPopup>(awaitItem())
             }
 
         }
