@@ -1,21 +1,17 @@
 package com.littlelemon.application.auth.presentation
 
 import app.cash.turbine.test
-import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
-import com.littlelemon.application.auth.domain.usecase.SaveLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.SaveUserInformationUseCase
 import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.VerifyOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.params.VerificationParams
-import com.littlelemon.application.auth.presentation.components.AuthActions
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.ValidationError
 import com.littlelemon.application.core.domain.utils.ValidationResult
 import com.littlelemon.application.core.presentation.UiText
-import com.littlelemon.application.utils.AddressGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -49,9 +45,7 @@ class AuthViewModelTest {
     private val sendOTPUseCase = mockk<SendOTPUseCase>()
     private val verifyOTPUseCase = mockk<VerifyOTPUseCase>()
     private val resendOTPUseCase = mockk<ResendOTPUseCase>()
-    private val getLocationUseCase = mockk<GetLocationUseCase>()
     private val saveUserInfoUseCase = mockk<SaveUserInformationUseCase>()
-    private val saveLocationUseCase = mockk<SaveLocationUseCase>()
     private lateinit var viewModel: AuthViewModel
 
     @BeforeEach
@@ -64,8 +58,6 @@ class AuthViewModelTest {
                 verifyOTPUseCase,
                 resendOTPUseCase,
                 saveUserInfoUseCase,
-                getLocationUseCase,
-                saveLocationUseCase
             )
     }
 
@@ -293,7 +285,7 @@ class AuthViewModelTest {
             viewModel.onAction(AuthActions.ChangeOTP(otp))
             runCurrent()
 
-            coEvery { sendOTPUseCase.invoke(otp.joinToString("")) } coAnswers {
+            coEvery { sendOTPUseCase.invoke(any()) } coAnswers {
                 delay(NETWORK_LATENCY)
                 Resource.Success()
             }
@@ -323,7 +315,7 @@ class AuthViewModelTest {
         fun onSendOTP_sendOTPSuccess_navigationIsTriggered() = runTest {
             // Arrange
             viewModel.onAction(AuthActions.ChangeOTP(otp))
-            coEvery { sendOTPUseCase.invoke(otp.joinToString("")) } returns Resource.Success()
+            coEvery { sendOTPUseCase.invoke(any()) } returns Resource.Success()
 
             viewModel.authEvent.test {
                 // Act
@@ -341,7 +333,7 @@ class AuthViewModelTest {
         fun onSendOTP_sendOTPError_errorEventIsTriggered() = runTest {
             // Arrange
             viewModel.onAction(AuthActions.ChangeOTP(otp))
-            coEvery { sendOTPUseCase.invoke(otp.joinToString("")) } returns Resource.Failure(
+            coEvery { sendOTPUseCase.invoke(any()) } returns Resource.Failure(
                 errorMessage = ERROR_MESSAGE
             )
 
@@ -434,7 +426,7 @@ class AuthViewModelTest {
         }
 
         @Test
-        fun onResendOTP_whileResending_loadingIsTrue() = runTest() {
+        fun onResendOTP_whileResending_loadingIsTrue() = runTest {
             // Arrange
             coEvery { resendOTPUseCase.invoke(any()) } returns Resource.Success()
             runCurrent()
@@ -492,7 +484,7 @@ class AuthViewModelTest {
         }
 
         @Test
-        fun onCompletePersonalization_success_navigateEventIsTriggered() = runTest {
+        fun onCompletePersonalization_success_authCompleteEventIsTriggered() = runTest {
             // Arrange
             coEvery { saveUserInfoUseCase.invoke(any()) } returns Resource.Success()
 
@@ -502,7 +494,7 @@ class AuthViewModelTest {
                 viewModel.onAction(AuthActions.CompletePersonalization)
                 runCurrent()
                 // Assert that navigation event is triggered
-                assertIs<AuthEvents.NavigateToLocationPermissionScreen>(awaitItem())
+                assertIs<AuthEvents.AuthComplete>(awaitItem())
             }
         }
 
@@ -546,124 +538,6 @@ class AuthViewModelTest {
                 assertFalse(awaitItem().isLoading)
             }
         }
-
-
-        @Test
-        fun onRequestLocation_success_showsInfoAndNavigateToHome() = runTest {
-            // Arrange
-            coEvery { getLocationUseCase.invoke() } returns Resource.Success()
-
-            viewModel.authEvent.test {
-                // Act
-                viewModel.onAction(AuthActions.RequestLocation)
-                runCurrent()
-
-                // Assert I
-                assertIs<AuthEvents.ShowInfo>(awaitItem())
-//                val job = launch { viewModel.authEvent.collect { } }
-                // Assert II
-                assertIs<AuthEvents.NavigateToHome>(awaitItem())
-//                job.cancel()
-            }
-
-
-        }
-
-        @Test
-        fun onRequestLocation_failure_showError() = runTest {
-            // Arrange
-            coEvery { getLocationUseCase.invoke() } returns Resource.Failure(errorMessage = ERROR_MESSAGE)
-
-            viewModel.authEvent.test {
-                // Act
-                viewModel.onAction(AuthActions.RequestLocation)
-                runCurrent()
-
-                // Assert that error is shown
-                val event = awaitItem()
-                assertIs<AuthEvents.ShowError>(event)
-                assertEquals(EXPECTED_ERROR, event.errorMessage)
-            }
-        }
-
-        @Test
-        fun onRequestLocation_whileRequesting_showsLoader() = runTest {
-            coEvery { getLocationUseCase.invoke() } coAnswers {
-                delay(NETWORK_LATENCY)
-                Resource.Success()
-            }
-
-            viewModel.state.test {
-                // Assert that loading is false in the beginning
-                assertFalse(awaitItem().isLoading)
-
-                viewModel.onAction(AuthActions.RequestLocation)
-                runCurrent()
-
-                // Assert that loader is shown
-                assertTrue(awaitItem().isLoading)
-
-                advanceTimeBy(NETWORK_LATENCY + 1)
-
-                // Assert that loading is reset in the end
-                assertFalse(awaitItem().isLoading)
-            }
-
-        }
-
-        @Test
-        fun onEnterLocationManually_triggerLocationEntryPopup() = runTest {
-            viewModel.authEvent.test {
-                // Arrange & Act
-                viewModel.onAction(AuthActions.EnterLocationManually)
-                runCurrent()
-
-                // Assert that popup event is triggered
-                assertIs<AuthEvents.ShowLocationEntryPopup>(awaitItem())
-            }
-
-        }
-
-
-        @Test
-        fun onSaveLocation_success_showInfo() {
-            // Arrange
-            val (_, label, address, location) = AddressGenerator.generateLocalAddress()
-//            coEvery { loc }
-            // Act
-            viewModel.onAction(
-                AuthActions.SaveAddress(
-                    label = label,
-                    address = address?.address!!,
-                    streetAddress = address.streetAddress,
-                    city = address.city,
-                    pinCode = address.pinCode,
-                    state = address.state,
-                    latitude = location?.latitude,
-                    longitude = location?.longitude
-                )
-            )
-
-            // Assert
-        }
-
-//        @Test
-//        fun onSaveLocation_success_navigateToHome() {
-//        }
-//
-//        @Test
-//        fun onSaveLocation_failure_showError() {
-//        }
-//
-//        @Test
-//        fun onAuthenticated_noAddressOrLocation_showAddressScreen() {
-//            TODO()
-//        }
-//
-//        @Test
-//        fun onAuthenticated_navigatesToHome() {
-//            TODO()
-//        }
 
     }
 }

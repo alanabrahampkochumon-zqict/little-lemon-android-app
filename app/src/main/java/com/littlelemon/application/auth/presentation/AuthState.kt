@@ -17,5 +17,5 @@ data class AuthState(
     val enableLetsGoButton: Boolean = false,
 
     // General
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
 )

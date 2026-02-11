@@ -1,4 +1,4 @@
-package com.littlelemon.application.auth.presentation.components
+package com.littlelemon.application.auth.presentation
 
 sealed interface AuthActions {
     data class ChangeEmail(val email: String) : AuthActions
@@ -9,18 +9,5 @@ sealed interface AuthActions {
     data object VerifyOTP : AuthActions
     data object ResendOTP : AuthActions
     data object CompletePersonalization : AuthActions
-    data object RequestLocation : AuthActions
-    data object EnterLocationManually : AuthActions
-    data class SaveAddress(
-        val label: String?,
-        val address: String,
-        val streetAddress: String,
-        val city: String,
-        val state: String,
-        val pinCode: String,
-        val latitude: Double? = null,
-        val longitude: Double? = null
-    ) : AuthActions // For Saving manual location
-
     object NavigateBack : AuthActions
 }

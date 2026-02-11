@@ -1,0 +1,76 @@
+package com.littlelemon.application.address.presentation
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.littlelemon.application.R
+import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
+import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
+import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
+import com.littlelemon.application.address.domain.usecase.SaveLocationUseCase
+import com.littlelemon.application.address.presentation.AddressEvents.ShowError
+import com.littlelemon.application.address.presentation.AddressEvents.ShowInfo
+import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.core.presentation.UiText.DynamicString
+import com.littlelemon.application.core.presentation.UiText.StringResource
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+class AddressViewModel(
+    private val getLocation: GetLocationUseCase,
+    private val saveLocation: SaveLocationUseCase,
+    private val getAddress: GetAddressUseCase,
+    private val saveAddress: SaveAddressUseCase
+) : ViewModel() {
+
+    private val _state = MutableStateFlow(AddressState())
+    val state = _state.asStateFlow()
+
+    private val _addressChannel = Channel<AddressEvents>(Channel.BUFFERED)
+    val addressEvents = _addressChannel.receiveAsFlow()
+
+
+    fun onAction(action: AddressActions) {
+        // Location Request and Permission
+        when (action) {
+            AddressActions.RequestLocation -> viewModelScope.launch {
+                _state.update { it.copy(isLoading = true) }
+                val events = mutableListOf<AddressEvents>()
+
+                when (val result = getLocation()) {
+                    is Resource.Failure<*> -> {
+                        events.add(
+                            ShowError(
+                                if (result.errorMessage != null) DynamicString(
+                                    result.errorMessage
+                                )
+                                else StringResource(R.string.generic_error_message)
+                            )
+                        )
+                    }
+
+                    is Resource.Loading -> Unit
+                    is Resource.Success<*> -> {
+                        events.add(ShowInfo(StringResource(R.string.location_granted_message)))
+                        events.add(AddressEvents.AddressSaved)
+                    }
+                }
+
+                for (evt in events)
+                    _addressChannel.send(evt)
+                _state.update { it.copy(isLoading = false) }
+            }
+
+            AddressActions.EnterLocationManually -> viewModelScope.launch {
+                _addressChannel.send(AddressEvents.ShowLocationEntryPopup)
+            }
+
+            is AddressActions.SaveAddress -> TODO()
+            AddressActions.AddressSaved -> TODO()
+        }
+    }
+
+}

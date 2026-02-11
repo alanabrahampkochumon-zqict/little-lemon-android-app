@@ -4,9 +4,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.R
-import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
-import com.littlelemon.application.auth.domain.usecase.SaveLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.SaveUserInformationUseCase
 import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
@@ -14,7 +12,6 @@ import com.littlelemon.application.auth.domain.usecase.ValidateOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.VerifyOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.params.UserInfoParams
 import com.littlelemon.application.auth.domain.usecase.params.VerificationParams
-import com.littlelemon.application.auth.presentation.components.AuthActions
 import com.littlelemon.application.core.domain.utils.DEBOUNCE_RATE_MS
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.ValidationPatterns
@@ -38,8 +35,6 @@ class AuthViewModel(
     private val verifyOTP: VerifyOTPUseCase,
     private val resendOTP: ResendOTPUseCase,
     private val saveUserInfo: SaveUserInformationUseCase,
-    private val getLocation: GetLocationUseCase,
-    private val saveLocation: SaveLocationUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
@@ -52,7 +47,10 @@ class AuthViewModel(
         viewModelScope.launch {
             snapshotFlow { _state.value.email }.debounce { DEBOUNCE_RATE_MS }
                 .collectLatest { email ->
-                    if (email.isEmpty()) return@collectLatest
+                    if (email.isEmpty()) {
+                        _state.update { it.copy(emailError = null) }
+                        return@collectLatest
+                    }
 
                     val validationResult = validateEmailUseCase(email)
 
@@ -156,7 +154,7 @@ class AuthViewModel(
             AuthActions.SendOTP -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true, enableSendButton = false) }
                 var event: AuthEvents? = null
-                when (val result = sendOTP(state.value.oneTimePassword.joinToString(""))) {
+                when (val result = sendOTP(state.value.email)) {
                     is Resource.Failure<*> -> {
                         event = AuthEvents.ShowError(
                             if (result.errorMessage != null) UiText.DynamicString(
@@ -221,7 +219,7 @@ class AuthViewModel(
 
                     is Resource.Loading -> Unit
                     is Resource.Success<*> -> {
-                        event = AuthEvents.NavigateToLocationPermissionScreen
+                        event = AuthEvents.AuthComplete
                     }
                 }
                 _state.update { it.copy(isLoading = false) }
@@ -229,41 +227,6 @@ class AuthViewModel(
                     _authChannel.send(evt)
                 }
             }
-
-            // Location Request and Permission
-            AuthActions.RequestLocation -> viewModelScope.launch {
-                _state.update { it.copy(isLoading = true) }
-                val events = mutableListOf<AuthEvents>()
-
-                when (val result = getLocation()) {
-                    is Resource.Failure<*> -> {
-                        events.add(
-                            AuthEvents.ShowError(
-                                if (result.errorMessage != null) UiText.DynamicString(
-                                    result.errorMessage
-                                )
-                                else UiText.StringResource(R.string.generic_error_message)
-                            )
-                        )
-                    }
-
-                    is Resource.Loading -> Unit
-                    is Resource.Success<*> -> {
-                        events.add(AuthEvents.ShowInfo(UiText.StringResource(R.string.location_granted_message)))
-                        events.add(AuthEvents.NavigateToHome)
-                    }
-                }
-
-                for (evt in events)
-                    _authChannel.send(evt)
-                _state.update { it.copy(isLoading = false) }
-            }
-
-            AuthActions.EnterLocationManually -> viewModelScope.launch {
-                _authChannel.send(AuthEvents.ShowLocationEntryPopup)
-            }
-
-            is AuthActions.SaveAddress -> TODO()
         }
     }
 

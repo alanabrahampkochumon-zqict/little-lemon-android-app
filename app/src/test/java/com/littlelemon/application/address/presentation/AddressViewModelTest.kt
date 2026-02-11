@@ -1,0 +1,177 @@
+package com.littlelemon.application.address.presentation
+
+import app.cash.turbine.test
+import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
+import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
+import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
+import com.littlelemon.application.address.domain.usecase.SaveLocationUseCase
+import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.core.presentation.UiText
+import com.littlelemon.application.utils.StandardTestDispatcherRule
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.test.assertIs
+
+@OptIn(ExperimentalCoroutinesApi::class)
+@ExtendWith(StandardTestDispatcherRule::class)
+class AddressViewModelTest {
+
+    companion object {
+        //        private const val DEBOUNCE_DELAY_MS = 1000L
+        private const val NETWORK_LATENCY = 500L
+        private const val ERROR_MESSAGE = "Something went wrong!"
+        private val EXPECTED_ERROR = UiText.DynamicString(ERROR_MESSAGE)
+    }
+
+    private lateinit var getLocationUseCase: GetLocationUseCase
+    private lateinit var saveLocationUseCase: SaveLocationUseCase
+    private lateinit var getAddressUseCase: GetAddressUseCase
+    private lateinit var saveAddressUseCase: SaveAddressUseCase
+
+    private lateinit var viewModel: AddressViewModel
+
+    @BeforeEach
+    fun setUp() {
+        getLocationUseCase = mockk()
+        saveAddressUseCase = mockk()
+        saveLocationUseCase = mockk()
+        getAddressUseCase = mockk()
+
+        viewModel = AddressViewModel(
+            getLocationUseCase,
+            saveLocationUseCase,
+            getAddressUseCase,
+            saveAddressUseCase
+        )
+    }
+
+
+    @Test
+    fun onRequestLocation_success_showsInfoAndTriggersAddressSavedEvent() = runTest {
+        // Arrange
+        coEvery { getLocationUseCase.invoke() } returns Resource.Success()
+
+        viewModel.addressEvents.test {
+            // Act
+            viewModel.onAction(AddressActions.RequestLocation)
+            runCurrent()
+
+            // Assert I
+            assertIs<AddressEvents.ShowInfo>(awaitItem())
+//                val job = launch { viewModel.addressEvent.collect { } }
+            // Assert II
+            assertIs<AddressEvents.AddressSaved>(awaitItem())
+//                job.cancel()
+        }
+
+
+    }
+
+    @Test
+    fun onRequestLocation_failure_showError() = runTest {
+        // Arrange
+        coEvery { getLocationUseCase.invoke() } returns Resource.Failure(errorMessage = ERROR_MESSAGE)
+
+        viewModel.addressEvents.test {
+            // Act
+            viewModel.onAction(AddressActions.RequestLocation)
+            runCurrent()
+
+            // Assert that error is shown
+            val event = awaitItem()
+            assertIs<AddressEvents.ShowError>(event)
+            assertEquals(EXPECTED_ERROR, event.errorMessage)
+        }
+    }
+
+
+    @Test
+    fun onRequestLocation_whileRequesting_showsLoader() = runTest {
+        coEvery { getLocationUseCase.invoke() } coAnswers {
+            delay(NETWORK_LATENCY)
+            Resource.Success()
+        }
+
+        viewModel.state.test {
+            // Assert that loading is false in the beginning
+            assertFalse(awaitItem().isLoading)
+
+            viewModel.onAction(AddressActions.RequestLocation)
+            runCurrent()
+
+            // Assert that loader is shown
+            assertTrue(awaitItem().isLoading)
+
+            advanceTimeBy(NETWORK_LATENCY + 1)
+
+            // Assert that loading is reset in the end
+            assertFalse(awaitItem().isLoading)
+        }
+
+    }
+
+    @Test
+    fun onEnterLocationManually_triggerLocationEntryPopup() = runTest {
+        viewModel.addressEvents.test {
+            // Arrange & Act
+            viewModel.onAction(AddressActions.EnterLocationManually)
+            runCurrent()
+
+            // Assert that popup event is triggered
+            assertIs<AddressEvents.ShowLocationEntryPopup>(awaitItem())
+        }
+
+    }
+
+
+//    @Test
+//    fun onSaveLocation_success_showInfo() {
+//        // Arrange
+//        val (_, label, address, location) = AddressGenerator.generateLocalAddress()
+////            coEvery { loc }
+//        // Act
+//        viewModel.onAction(
+//            AddressActions.SaveAddress(
+//                label = label,
+//                address = address?.address!!,
+//                streetAddress = address.streetAddress,
+//                city = address.city,
+//                pinCode = address.pinCode,
+//                state = address.state,
+//                latitude = location?.latitude,
+//                longitude = location?.longitude
+//            )
+//        )
+//
+//        // Assert
+//    }
+
+//        @Test
+//        fun onSaveLocation_success_navigateToHome() {
+//        }
+//
+//        @Test
+//        fun onSaveLocation_failure_showError() {
+//        }
+//
+//        @Test
+//        fun onAuthenticated_noAddressOrLocation_showAddressScreen() {
+//            TODO()
+//        }
+//
+//        @Test
+//        fun onAuthenticated_navigatesToHome() {
+//            TODO()
+//        }
+}
