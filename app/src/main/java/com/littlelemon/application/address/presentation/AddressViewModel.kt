@@ -36,6 +36,43 @@ class AddressViewModel(
     fun onAction(action: AddressActions) {
         // Location Request and Permission
         when (action) {
+            // State Updates
+            is AddressActions.ChangeAddress -> _state.update {
+                it.copy(
+                    address = action.address,
+                    addressError = null
+                )
+            }
+
+            is AddressActions.ChangeCity -> _state.update {
+                it.copy(
+                    city = action.city,
+                    cityError = null
+                )
+            }
+
+            is AddressActions.ChangeLabel -> _state.update { it.copy(label = action.label) }
+            is AddressActions.ChangePinCode -> _state.update {
+                it.copy(
+                    pinCode = action.pinCode,
+                    pinCodeError = null
+                )
+            }
+
+            is AddressActions.ChangeState -> _state.update {
+                it.copy(
+                    state = action.state,
+                    stateError = null
+                )
+            }
+
+            is AddressActions.ChangeStreetAddress -> _state.update {
+                it.copy(
+                    streetAddress = action.streetAddress,
+                    streetAddressError = null
+                )
+            }
+            // Actions
             AddressActions.RequestLocation -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true) }
                 val events = mutableListOf<AddressEvents>()
@@ -68,8 +105,8 @@ class AddressViewModel(
                 _addressChannel.send(AddressEvents.ShowLocationEntryPopup)
             }
 
-            is AddressActions.SaveAddress -> TODO()
             AddressActions.AddressSaved -> TODO()
+            is AddressActions.SaveAddress -> TODO()
         }
     }
 

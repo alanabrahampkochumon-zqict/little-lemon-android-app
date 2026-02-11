@@ -7,6 +7,7 @@ import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
 import com.littlelemon.application.address.domain.usecase.SaveLocationUseCase
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
+import com.littlelemon.application.utils.AddressGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -19,7 +20,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNull
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertIs
 
@@ -54,6 +57,111 @@ class AddressViewModelTest {
             getAddressUseCase,
             saveAddressUseCase
         )
+    }
+
+    @Nested
+    inner class StateChangeTests {
+
+        @Test
+        fun onLabelChange_toValidLabel_updatesTheState() = runTest {
+            // Arrange
+            val label = "new label"
+
+            // Act
+            viewModel.onAction(AddressActions.ChangeLabel(label))
+
+            // Assert
+            viewModel.state.test {
+                val state = awaitItem()
+                assertEquals(label, state.label)
+            }
+        }
+
+        @Test
+        fun onAddressChange_toValidAddress_updatesTheStateAndResetsAnyError() = runTest {
+            // Arrange
+            val address = "new address"
+
+            // Act
+            viewModel.onAction(AddressActions.ChangeAddress(address))
+
+            // Assert
+            viewModel.state.test {
+                val state = awaitItem()
+                assertEquals(address, state.address)
+                assertNull(state.addressError)
+            }
+        }
+
+        @Test
+        fun onCityChange_toValidCity_updatesTheStateAndResetsAnyError() = runTest {
+            // Arrange
+            val city = "city"
+
+            // Act
+            viewModel.onAction(AddressActions.ChangeCity(city))
+
+            // Assert
+            viewModel.state.test {
+                val state = awaitItem()
+                assertEquals(city, state.city)
+                assertNull(state.cityError)
+            }
+        }
+
+        @Test
+        fun onStreetAddressChange_toValidStreetAddress_updatesTheStateAndResetsAnyError() =
+            runTest {
+                // Arrange
+                val streetAddress = "street address"
+
+                // Act
+                viewModel.onAction(AddressActions.ChangeStreetAddress(streetAddress))
+
+                // Assert
+                viewModel.state.test {
+                    val state = awaitItem()
+                    assertEquals(streetAddress, state.streetAddress)
+                    assertNull(state.streetAddressError)
+                }
+            }
+
+        @Test
+        fun onStateChange_toValidState_updatesTheStateAndResetsAnyError() = runTest {
+            // Arrange
+            val stateName = "state"
+
+            // Act
+            viewModel.onAction(AddressActions.ChangeState(stateName))
+
+            // Assert
+            viewModel.state.test {
+                val state = awaitItem()
+                assertEquals(stateName, state.state)
+                assertNull(state.stateError)
+            }
+        }
+
+        @Test
+        fun onPinCodeChange_toValidPinCode_updatesTheStateAndResetsAnyError() = runTest {
+            // Arrange
+            val pinCode = "pinCode"
+
+            // Act
+            viewModel.onAction(AddressActions.ChangePinCode(pinCode))
+
+            // Assert
+            viewModel.state.test {
+                val state = awaitItem()
+                assertEquals(pinCode, state.pinCode)
+                assertNull(state.pinCodeError)
+            }
+        }
+
+        @Test
+        fun onGetLocation_success_updatesTheState() = runTest {
+            TODO()
+        }
     }
 
 
@@ -135,27 +243,27 @@ class AddressViewModelTest {
     }
 
 
-//    @Test
-//    fun onSaveLocation_success_showInfo() {
-//        // Arrange
-//        val (_, label, address, location) = AddressGenerator.generateLocalAddress()
-////            coEvery { loc }
-//        // Act
-//        viewModel.onAction(
-//            AddressActions.SaveAddress(
-//                label = label,
-//                address = address?.address!!,
-//                streetAddress = address.streetAddress,
-//                city = address.city,
-//                pinCode = address.pinCode,
-//                state = address.state,
-//                latitude = location?.latitude,
-//                longitude = location?.longitude
-//            )
-//        )
-//
-//        // Assert
-//    }
+    @Test
+    fun onSaveLocation_success_showInfo() {
+        // Arrange
+        val (_, label, address, location) = AddressGenerator.generateLocalAddress()
+//            coEvery { loc }
+        // Act
+        viewModel.onAction(
+            AddressActions.SaveAddress(
+                label = label,
+                address = address?.address!!,
+                streetAddress = address.streetAddress,
+                city = address.city,
+                pinCode = address.pinCode,
+                state = address.state,
+                latitude = location?.latitude,
+                longitude = location?.longitude
+            )
+        )
+
+        // Assert
+    }
 
 //        @Test
 //        fun onSaveLocation_success_navigateToHome() {

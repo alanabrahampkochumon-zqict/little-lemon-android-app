@@ -308,8 +308,9 @@ class AuthViewModelTest {
                 // Final Assert for state reset
                 assertFalse(awaitItem().isLoading)
             }
-
         }
+
+        // TODO: Change the mocks to use email instead of any() by resolving flakiness caused by snapshotFlow
 
         @Test
         fun onSendOTP_sendOTPSuccess_navigationIsTriggered() = runTest {
