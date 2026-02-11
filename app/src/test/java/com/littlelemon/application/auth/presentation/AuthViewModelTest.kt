@@ -3,6 +3,7 @@ package com.littlelemon.application.auth.presentation
 import app.cash.turbine.test
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
+import com.littlelemon.application.auth.domain.usecase.SaveLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.SaveUserInformationUseCase
 import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
@@ -14,6 +15,7 @@ import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.ValidationError
 import com.littlelemon.application.core.domain.utils.ValidationResult
 import com.littlelemon.application.core.presentation.UiText
+import com.littlelemon.application.utils.AddressGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -49,6 +51,7 @@ class AuthViewModelTest {
     private val resendOTPUseCase = mockk<ResendOTPUseCase>()
     private val getLocationUseCase = mockk<GetLocationUseCase>()
     private val saveUserInfoUseCase = mockk<SaveUserInformationUseCase>()
+    private val saveLocationUseCase = mockk<SaveLocationUseCase>()
     private lateinit var viewModel: AuthViewModel
 
     @BeforeEach
@@ -61,7 +64,8 @@ class AuthViewModelTest {
                 verifyOTPUseCase,
                 resendOTPUseCase,
                 saveUserInfoUseCase,
-                getLocationUseCase
+                getLocationUseCase,
+                saveLocationUseCase
             )
     }
 
@@ -621,10 +625,28 @@ class AuthViewModelTest {
         }
 
 
-//        @Test
-//        fun onSaveLocation_success_showInfo() {
-//        }
-//
+        @Test
+        fun onSaveLocation_success_showInfo() {
+            // Arrange
+            val (_, label, address, location) = AddressGenerator.generateLocalAddress()
+//            coEvery { loc }
+            // Act
+            viewModel.onAction(
+                AuthActions.SaveAddress(
+                    label = label,
+                    address = address?.address!!,
+                    streetAddress = address.streetAddress,
+                    city = address.city,
+                    pinCode = address.pinCode,
+                    state = address.state,
+                    latitude = location?.latitude,
+                    longitude = location?.longitude
+                )
+            )
+
+            // Assert
+        }
+
 //        @Test
 //        fun onSaveLocation_success_navigateToHome() {
 //        }

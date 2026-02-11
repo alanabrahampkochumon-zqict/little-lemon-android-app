@@ -11,6 +11,16 @@ sealed interface AuthActions {
     data object CompletePersonalization : AuthActions
     data object RequestLocation : AuthActions
     data object EnterLocationManually : AuthActions
-    data object SaveLocation : AuthActions // For Saving manual location
+    data class SaveAddress(
+        val label: String?,
+        val address: String,
+        val streetAddress: String,
+        val city: String,
+        val state: String,
+        val pinCode: String,
+        val latitude: Double? = null,
+        val longitude: Double? = null
+    ) : AuthActions // For Saving manual location
+
     object NavigateBack : AuthActions
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.R
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.ResendOTPUseCase
+import com.littlelemon.application.auth.domain.usecase.SaveLocationUseCase
 import com.littlelemon.application.auth.domain.usecase.SaveUserInformationUseCase
 import com.littlelemon.application.auth.domain.usecase.SendOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
@@ -38,6 +39,7 @@ class AuthViewModel(
     private val resendOTP: ResendOTPUseCase,
     private val saveUserInfo: SaveUserInformationUseCase,
     private val getLocation: GetLocationUseCase,
+    private val saveLocation: SaveLocationUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
@@ -261,7 +263,7 @@ class AuthViewModel(
                 _authChannel.send(AuthEvents.ShowLocationEntryPopup)
             }
 
-            AuthActions.SaveLocation -> TODO()
+            is AuthActions.SaveAddress -> TODO()
         }
     }
 
