@@ -167,7 +167,7 @@ class AddressViewModelTest {
             viewModel.state.test {
                 skipItems(1)
                 // Act
-                viewModel.onAction(AddressActions.RequestLocation)
+                viewModel.onAction(AddressActions.GetLocation)
                 runCurrent()
                 println(awaitItem()) // Skip the loading state
 
@@ -189,7 +189,7 @@ class AddressViewModelTest {
 
             viewModel.addressEvents.test {
                 // Act
-                viewModel.onAction(AddressActions.RequestLocation)
+                viewModel.onAction(AddressActions.GetLocation)
                 runCurrent()
 
                 // Assert I
@@ -210,7 +210,7 @@ class AddressViewModelTest {
 
             viewModel.addressEvents.test {
                 // Act
-                viewModel.onAction(AddressActions.RequestLocation)
+                viewModel.onAction(AddressActions.GetLocation)
                 runCurrent()
 
                 // Assert that error is shown
@@ -232,7 +232,7 @@ class AddressViewModelTest {
                 // Assert that loading is false in the beginning
                 assertFalse(awaitItem().isLoading)
 
-                viewModel.onAction(AddressActions.RequestLocation)
+                viewModel.onAction(AddressActions.GetLocation)
                 runCurrent()
 
                 // Assert that loader is shown
@@ -258,37 +258,70 @@ class AddressViewModelTest {
             }
 
         }
+    }
 
+    @Nested
+    inner class SaveLocationTests {
 
         @Test
-        fun onSaveLocation_success_showInfo() {
+        fun onSaveAddress_success_showInfoAndTriggersAddressSavedEvent() = runTest {
             // Arrange
-            val (_, label, address, location) = AddressGenerator.generateLocalAddress()
-//            coEvery { loc }
-            // Act
-            viewModel.onAction(
-                AddressActions.SaveAddress(
-                    label = label,
-                    address = address?.address!!,
-                    streetAddress = address.streetAddress,
-                    city = address.city,
-                    pinCode = address.pinCode,
-                    state = address.state,
-                    latitude = location?.latitude,
-                    longitude = location?.longitude
-                )
-            )
+            coEvery { saveAddressUseCase.invoke(any()) } returns Resource.Success()
 
-            // Assert
+            viewModel.addressEvents.test {
+                // Act
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Assert I
+                val firstEvent = awaitItem()
+                assertIs<AddressEvents.ShowInfo>(firstEvent)
+
+                // Assert II
+                val secondEvent = awaitItem()
+                assertIs<AddressEvents.AddressSaved>(secondEvent)
+                cancelAndConsumeRemainingEvents()
+            }
         }
 
-//        @Test
-//        fun onSaveLocation_success_navigateToHome() {
-//        }
-//
-//        @Test
-//        fun onSaveLocation_failure_showError() {
-//        }
+        @Test
+        fun onSaveAddress_failure_showError() = runTest {
+            // Arrange
+            coEvery { saveAddressUseCase.invoke(any()) } returns Resource.Failure(errorMessage = ERROR_MESSAGE)
 
+            viewModel.addressEvents.test {
+                // Act
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Assert I
+                val event = awaitItem()
+                assertIs<AddressEvents.ShowError>(event)
+                assertEquals(EXPECTED_ERROR, event.errorMessage)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+        @Test
+        fun onSaveAddress_whileSaving_showsLoader() = runTest {
+            // Arrange
+            coEvery { saveAddressUseCase.invoke(any()) } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Success()
+            }
+
+            viewModel.state.test {
+                assertFalse(awaitItem().isLoading) // Initial Loading State
+
+                // Act
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Assert I
+                val loadingState = awaitItem()
+                assertTrue(loadingState.isLoading)
+
+                // Assert II
+                val postLoadingState = awaitItem()
+                assertFalse(postLoadingState.isLoading)
+            }
+        }
     }
 }

@@ -3,10 +3,12 @@ package com.littlelemon.application.address.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.R
+import com.littlelemon.application.address.domain.models.LocalAddress
+import com.littlelemon.application.address.domain.models.LocalLocation
+import com.littlelemon.application.address.domain.models.PhysicalAddress
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
-import com.littlelemon.application.address.domain.usecase.SaveLocationUseCase
 import com.littlelemon.application.address.presentation.AddressEvents.ShowError
 import com.littlelemon.application.address.presentation.AddressEvents.ShowInfo
 import com.littlelemon.application.core.domain.utils.Resource
@@ -21,7 +23,6 @@ import kotlinx.coroutines.launch
 
 class AddressViewModel(
     private val getLocation: GetLocationUseCase,
-    private val saveLocation: SaveLocationUseCase,
     private val getAddress: GetAddressUseCase,
     private val saveAddress: SaveAddressUseCase
 ) : ViewModel() {
@@ -74,7 +75,7 @@ class AddressViewModel(
             }
 
             // Actions
-            AddressActions.RequestLocation -> viewModelScope.launch {
+            AddressActions.GetLocation -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true) }
                 val events = mutableListOf<AddressEvents>()
 
@@ -100,9 +101,7 @@ class AddressViewModel(
                                 )
                             }
                         }
-                        println(state.value.latitude)
-                        println(state.value.longitude)
-                        events.add(ShowInfo(StringResource(R.string.location_granted_message)))
+                        events.add(ShowInfo(StringResource(R.string.location_granted_success_message)))
                         events.add(AddressEvents.AddressSaved)
                     }
                 }
@@ -116,8 +115,48 @@ class AddressViewModel(
                 _addressChannel.send(AddressEvents.ShowLocationEntryPopup)
             }
 
-            AddressActions.AddressSaved -> TODO()
-            is AddressActions.SaveAddress -> TODO()
+            is AddressActions.SaveAddress -> viewModelScope.launch {
+                _state.update { it.copy(isLoading = true) }
+                val address = LocalAddress(
+                    label = state.value.label,
+                    address = PhysicalAddress(
+                        address = state.value.address,
+                        streetAddress = state.value.streetAddress,
+                        city = state.value.city,
+                        state = state.value.state,
+                        pinCode = state.value.pinCode
+                    ),
+                    location = if (state.value.latitude != null && state.value.longitude != null) LocalLocation(
+                        latitude = state.value.latitude!!,
+                        longitude = state.value.longitude!!
+                    ) else null
+                )
+                val events = mutableListOf<AddressEvents>()
+                when (val result = saveAddress(address)) {
+                    is Resource.Failure -> {
+                        events.add(
+                            AddressEvents.ShowError(
+                                if (result.errorMessage != null) DynamicString(
+                                    result.errorMessage
+                                ) else StringResource(R.string.generic_error_message)
+                            )
+                        )
+                    }
+
+                    is Resource.Loading -> Unit // Already Handled
+                    is Resource.Success -> {
+                        events.add(
+                            ShowInfo(StringResource(R.string.location_saved_success_message))
+                        )
+                        events.add(AddressEvents.AddressSaved)
+                    }
+                }
+                _state.update { it.copy(isLoading = false) }
+                for (evt in events) {
+                    println("Emitting: ${evt}")
+                    _addressChannel.send(evt)
+                }
+            }
         }
     }
 
