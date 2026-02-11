@@ -540,5 +540,15 @@ class AuthViewModelTest {
             }
         }
 
+        //
+//        @Test
+//        fun onAuthenticated_noAddressOrLocation_showAddressScreen() {
+//            TODO()
+//        }
+//
+//        @Test
+//        fun onAuthenticated_triggersAuthComplete() {
+//            TODO()
+//        }
     }
 }

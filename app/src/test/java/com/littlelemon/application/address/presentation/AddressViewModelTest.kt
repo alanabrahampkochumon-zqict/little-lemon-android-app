@@ -160,110 +160,127 @@ class AddressViewModelTest {
 
         @Test
         fun onGetLocation_success_updatesTheState() = runTest {
-            TODO()
+            // Arrange
+            val location = AddressGenerator.generateLocalLocation()
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success(data = location)
+
+            viewModel.state.test {
+                skipItems(1)
+                // Act
+                viewModel.onAction(AddressActions.RequestLocation)
+                runCurrent()
+                println(awaitItem()) // Skip the loading state
+
+                // Assert
+                val state = awaitItem()
+                println(state)
+                assertEquals(location.longitude, state.longitude)
+                assertEquals(location.latitude, state.latitude)
+
+                cancelAndIgnoreRemainingEvents()
+            }
         }
-    }
 
 
-    @Test
-    fun onRequestLocation_success_showsInfoAndTriggersAddressSavedEvent() = runTest {
-        // Arrange
-        coEvery { getLocationUseCase.invoke() } returns Resource.Success()
+        @Test
+        fun onRequestLocation_success_showsInfoAndTriggersAddressSavedEvent() = runTest {
+            // Arrange
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success()
 
-        viewModel.addressEvents.test {
-            // Act
-            viewModel.onAction(AddressActions.RequestLocation)
-            runCurrent()
+            viewModel.addressEvents.test {
+                // Act
+                viewModel.onAction(AddressActions.RequestLocation)
+                runCurrent()
 
-            // Assert I
-            assertIs<AddressEvents.ShowInfo>(awaitItem())
+                // Assert I
+                assertIs<AddressEvents.ShowInfo>(awaitItem())
 //                val job = launch { viewModel.addressEvent.collect { } }
-            // Assert II
-            assertIs<AddressEvents.AddressSaved>(awaitItem())
+                // Assert II
+                assertIs<AddressEvents.AddressSaved>(awaitItem())
 //                job.cancel()
+            }
+
+
+        }
+
+        @Test
+        fun onRequestLocation_failure_showError() = runTest {
+            // Arrange
+            coEvery { getLocationUseCase.invoke() } returns Resource.Failure(errorMessage = ERROR_MESSAGE)
+
+            viewModel.addressEvents.test {
+                // Act
+                viewModel.onAction(AddressActions.RequestLocation)
+                runCurrent()
+
+                // Assert that error is shown
+                val event = awaitItem()
+                assertIs<AddressEvents.ShowError>(event)
+                assertEquals(EXPECTED_ERROR, event.errorMessage)
+            }
         }
 
 
-    }
+        @Test
+        fun onRequestLocation_whileRequesting_showsLoader() = runTest {
+            coEvery { getLocationUseCase.invoke() } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Success()
+            }
 
-    @Test
-    fun onRequestLocation_failure_showError() = runTest {
-        // Arrange
-        coEvery { getLocationUseCase.invoke() } returns Resource.Failure(errorMessage = ERROR_MESSAGE)
+            viewModel.state.test {
+                // Assert that loading is false in the beginning
+                assertFalse(awaitItem().isLoading)
 
-        viewModel.addressEvents.test {
-            // Act
-            viewModel.onAction(AddressActions.RequestLocation)
-            runCurrent()
+                viewModel.onAction(AddressActions.RequestLocation)
+                runCurrent()
 
-            // Assert that error is shown
-            val event = awaitItem()
-            assertIs<AddressEvents.ShowError>(event)
-            assertEquals(EXPECTED_ERROR, event.errorMessage)
-        }
-    }
+                // Assert that loader is shown
+                assertTrue(awaitItem().isLoading)
 
+                advanceTimeBy(NETWORK_LATENCY + 1)
 
-    @Test
-    fun onRequestLocation_whileRequesting_showsLoader() = runTest {
-        coEvery { getLocationUseCase.invoke() } coAnswers {
-            delay(NETWORK_LATENCY)
-            Resource.Success()
+                // Assert that loading is reset in the end
+                assertFalse(awaitItem().isLoading)
+            }
+
         }
 
-        viewModel.state.test {
-            // Assert that loading is false in the beginning
-            assertFalse(awaitItem().isLoading)
+        @Test
+        fun onEnterLocationManually_triggerLocationEntryPopup() = runTest {
+            viewModel.addressEvents.test {
+                // Arrange & Act
+                viewModel.onAction(AddressActions.EnterLocationManually)
+                runCurrent()
 
-            viewModel.onAction(AddressActions.RequestLocation)
-            runCurrent()
+                // Assert that popup event is triggered
+                assertIs<AddressEvents.ShowLocationEntryPopup>(awaitItem())
+            }
 
-            // Assert that loader is shown
-            assertTrue(awaitItem().isLoading)
-
-            advanceTimeBy(NETWORK_LATENCY + 1)
-
-            // Assert that loading is reset in the end
-            assertFalse(awaitItem().isLoading)
         }
 
-    }
 
-    @Test
-    fun onEnterLocationManually_triggerLocationEntryPopup() = runTest {
-        viewModel.addressEvents.test {
-            // Arrange & Act
-            viewModel.onAction(AddressActions.EnterLocationManually)
-            runCurrent()
-
-            // Assert that popup event is triggered
-            assertIs<AddressEvents.ShowLocationEntryPopup>(awaitItem())
-        }
-
-    }
-
-
-    @Test
-    fun onSaveLocation_success_showInfo() {
-        // Arrange
-        val (_, label, address, location) = AddressGenerator.generateLocalAddress()
+        @Test
+        fun onSaveLocation_success_showInfo() {
+            // Arrange
+            val (_, label, address, location) = AddressGenerator.generateLocalAddress()
 //            coEvery { loc }
-        // Act
-        viewModel.onAction(
-            AddressActions.SaveAddress(
-                label = label,
-                address = address?.address!!,
-                streetAddress = address.streetAddress,
-                city = address.city,
-                pinCode = address.pinCode,
-                state = address.state,
-                latitude = location?.latitude,
-                longitude = location?.longitude
+            // Act
+            viewModel.onAction(
+                AddressActions.SaveAddress(
+                    label = label,
+                    address = address?.address!!,
+                    streetAddress = address.streetAddress,
+                    city = address.city,
+                    pinCode = address.pinCode,
+                    state = address.state,
+                    latitude = location?.latitude,
+                    longitude = location?.longitude
+                )
             )
-        )
 
-        // Assert
-    }
+            // Assert
+        }
 
 //        @Test
 //        fun onSaveLocation_success_navigateToHome() {
@@ -272,14 +289,6 @@ class AddressViewModelTest {
 //        @Test
 //        fun onSaveLocation_failure_showError() {
 //        }
-//
-//        @Test
-//        fun onAuthenticated_noAddressOrLocation_showAddressScreen() {
-//            TODO()
-//        }
-//
-//        @Test
-//        fun onAuthenticated_navigatesToHome() {
-//            TODO()
-//        }
+
+    }
 }

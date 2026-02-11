@@ -72,13 +72,14 @@ class AddressViewModel(
                     streetAddressError = null
                 )
             }
+
             // Actions
             AddressActions.RequestLocation -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true) }
                 val events = mutableListOf<AddressEvents>()
 
                 when (val result = getLocation()) {
-                    is Resource.Failure<*> -> {
+                    is Resource.Failure -> {
                         events.add(
                             ShowError(
                                 if (result.errorMessage != null) DynamicString(
@@ -90,7 +91,17 @@ class AddressViewModel(
                     }
 
                     is Resource.Loading -> Unit
-                    is Resource.Success<*> -> {
+                    is Resource.Success -> {
+                        result.data?.let { data ->
+                            _state.update {
+                                it.copy(
+                                    latitude = data.latitude,
+                                    longitude = data.longitude
+                                )
+                            }
+                        }
+                        println(state.value.latitude)
+                        println(state.value.longitude)
                         events.add(ShowInfo(StringResource(R.string.location_granted_message)))
                         events.add(AddressEvents.AddressSaved)
                     }
