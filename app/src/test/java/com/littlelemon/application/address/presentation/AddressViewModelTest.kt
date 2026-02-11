@@ -4,7 +4,6 @@ import app.cash.turbine.test
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
-import com.littlelemon.application.address.domain.usecase.SaveLocationUseCase
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.utils.AddressGenerator
@@ -38,7 +37,6 @@ class AddressViewModelTest {
     }
 
     private lateinit var getLocationUseCase: GetLocationUseCase
-    private lateinit var saveLocationUseCase: SaveLocationUseCase
     private lateinit var getAddressUseCase: GetAddressUseCase
     private lateinit var saveAddressUseCase: SaveAddressUseCase
 
@@ -48,12 +46,10 @@ class AddressViewModelTest {
     fun setUp() {
         getLocationUseCase = mockk()
         saveAddressUseCase = mockk()
-        saveLocationUseCase = mockk()
         getAddressUseCase = mockk()
 
         viewModel = AddressViewModel(
             getLocationUseCase,
-            saveLocationUseCase,
             getAddressUseCase,
             saveAddressUseCase
         )
