@@ -13,6 +13,7 @@ import com.littlelemon.application.auth.presentation.components.AuthActions
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.ValidationError
 import com.littlelemon.application.core.domain.utils.ValidationResult
+import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -30,12 +31,15 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.test.assertIs
 
 @ExtendWith(StandardTestDispatcherRule::class)
 class AuthViewModelTest {
     companion object {
         private const val DEBOUNCE_DELAY_MS = 1000L
         private const val NETWORK_LATENCY = 500L
+        private const val ERROR_MESSAGE = "Something went wrong!"
+        private val EXPECTED_ERROR = UiText.DynamicString(ERROR_MESSAGE)
     }
 
     private val validateEmailUseCase = mockk<ValidateEmailUseCase>(relaxed = true)
@@ -329,12 +333,13 @@ class AuthViewModelTest {
             }
         }
 
-        // TODO: Rewrite tests for failure with UiText
         @Test
         fun onSendOTP_sendOTPError_errorEventIsTriggered() = runTest {
             // Arrange
             viewModel.onAction(AuthActions.ChangeOTP(otp))
-            coEvery { sendOTPUseCase.invoke(otp.joinToString("")) } returns Resource.Failure()
+            coEvery { sendOTPUseCase.invoke(otp.joinToString("")) } returns Resource.Failure(
+                errorMessage = ERROR_MESSAGE
+            )
 
             viewModel.authEvent.test {
                 // Act
@@ -343,7 +348,8 @@ class AuthViewModelTest {
 
                 // Assert
                 assertNotNull(event)
-                assertTrue(event is AuthEvents.ShowError)
+                assertIs<AuthEvents.ShowError>(event)
+                assertEquals(EXPECTED_ERROR, event.errorMessage)
             }
         }
 
@@ -355,7 +361,7 @@ class AuthViewModelTest {
                 val event = awaitItem()
 
                 // Assert
-                assertTrue(event is AuthEvents.NavigateBack)
+                assertIs<AuthEvents.NavigateBack>(event)
             }
         }
 
@@ -408,7 +414,9 @@ class AuthViewModelTest {
             val verificationParams = VerificationParams(email, otp.joinToString(""))
             viewModel.onAction(AuthActions.ChangeEmail(email))
             viewModel.onAction(AuthActions.ChangeOTP(otp))
-            coEvery { verifyOTPUseCase.invoke(verificationParams) } returns Resource.Failure()
+            coEvery { verifyOTPUseCase.invoke(verificationParams) } returns Resource.Failure(
+                errorMessage = ERROR_MESSAGE
+            )
 
             viewModel.authEvent.test {
                 // Act
@@ -416,7 +424,8 @@ class AuthViewModelTest {
                 val event = awaitItem()
 
                 // Assert
-                assertTrue(event is AuthEvents.ShowError)
+                assertIs<AuthEvents.ShowError>(event)
+                assertEquals(EXPECTED_ERROR, event.errorMessage)
             }
         }
 
@@ -463,7 +472,7 @@ class AuthViewModelTest {
         @Test
         fun onResendOTP_resendFailures_showErrorEventIsTriggered() = runTest {
             // Arrange
-            coEvery { resendOTPUseCase.invoke(email) } returns Resource.Failure()
+            coEvery { resendOTPUseCase.invoke(email) } returns Resource.Failure(errorMessage = ERROR_MESSAGE)
             viewModel.onAction(AuthActions.ChangeEmail(email))
 
             viewModel.authEvent.test {
@@ -473,7 +482,8 @@ class AuthViewModelTest {
                 val triggeredEvent = awaitItem()
 
                 // Assert
-                assertTrue(triggeredEvent is AuthEvents.ShowError)
+                assertIs<AuthEvents.ShowError>(triggeredEvent)
+                assertEquals(EXPECTED_ERROR, triggeredEvent.errorMessage)
             }
         }
 
@@ -495,7 +505,7 @@ class AuthViewModelTest {
         @Test
         fun onCompletePersonalization_failure_showsError() = runTest {
             // Arrange
-            coEvery { saveUserInfoUseCase.invoke(any()) } returns Resource.Failure()
+            coEvery { saveUserInfoUseCase.invoke(any()) } returns Resource.Failure(errorMessage = ERROR_MESSAGE)
 
             viewModel.authEvent.test {
                 // Act
@@ -503,7 +513,9 @@ class AuthViewModelTest {
                 runCurrent()
 
                 // Assert that navigation event is triggered
-                assertTrue(awaitItem() is AuthEvents.ShowError)
+                val event = awaitItem()
+                assertIs<AuthEvents.ShowError>(event)
+                assertEquals(EXPECTED_ERROR, event.errorMessage)
             }
         }
 
@@ -556,7 +568,7 @@ class AuthViewModelTest {
         @Test
         fun onRequestLocation_failure_showError() = runTest {
             // Arrange
-            coEvery { getLocationUseCase.invoke() } returns Resource.Failure()
+            coEvery { getLocationUseCase.invoke() } returns Resource.Failure(errorMessage = ERROR_MESSAGE)
 
             viewModel.authEvent.test {
                 // Act
@@ -564,7 +576,9 @@ class AuthViewModelTest {
                 runCurrent()
 
                 // Assert that error is shown
-                assertTrue(awaitItem() is AuthEvents.ShowError)
+                val event = awaitItem()
+                assertIs<AuthEvents.ShowError>(event)
+                assertEquals(EXPECTED_ERROR, event.errorMessage)
             }
         }
 

@@ -103,7 +103,7 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk)
 
-
+    testImplementation(kotlin("test"))
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit5)
     testImplementation(libs.io.mockk)

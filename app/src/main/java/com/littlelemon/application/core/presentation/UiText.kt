@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.presentation.designsystem
+package com.littlelemon.application.core.presentation
 
 import android.content.Context
 import androidx.annotation.StringRes

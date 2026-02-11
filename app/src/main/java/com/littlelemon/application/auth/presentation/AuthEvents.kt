@@ -1,6 +1,6 @@
 package com.littlelemon.application.auth.presentation
 
-import com.littlelemon.application.core.presentation.designsystem.UiText
+import com.littlelemon.application.core.presentation.UiText
 
 sealed interface AuthEvents {
     data object NavigateToOTPScreen : AuthEvents

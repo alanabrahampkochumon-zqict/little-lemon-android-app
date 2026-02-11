@@ -18,7 +18,7 @@ import com.littlelemon.application.core.domain.utils.DEBOUNCE_RATE_MS
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.ValidationPatterns
 import com.littlelemon.application.core.domain.utils.ValidationResult
-import com.littlelemon.application.core.presentation.designsystem.UiText
+import com.littlelemon.application.core.presentation.UiText
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
