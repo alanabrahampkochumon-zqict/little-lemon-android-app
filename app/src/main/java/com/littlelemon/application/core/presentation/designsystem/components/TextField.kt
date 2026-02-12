@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +37,8 @@ fun TextInputField(
     @DrawableRes iconLeft: Int? = null,
     @DrawableRes iconRight: Int? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     onValueChange: (String) -> Unit = {},
 ) {
 
@@ -46,14 +50,14 @@ fun TextInputField(
         unfocusedPlaceholderColor = MaterialTheme.colors.contentPlaceholder,
 
         focusedContainerColor = MaterialTheme.colors.primary,
-        unfocusedContainerColor = MaterialTheme.colors.primary,
+        unfocusedContainerColor = MaterialTheme.colors.secondary,
         disabledContainerColor = MaterialTheme.colors.disabled,
 
         focusedBorderColor = MaterialTheme.colors.outlineAccent,
         unfocusedBorderColor = MaterialTheme.colors.outlinePrimary,
         errorBorderColor = MaterialTheme.colors.outlineError,
 
-        cursorColor = MaterialTheme.colors.contentAccent
+        cursorColor = MaterialTheme.colors.contentAccentSecondary
     )
     Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacingXS)) {
 
@@ -61,9 +65,12 @@ fun TextInputField(
             value = value,
             onValueChange = onValueChange,
             placeholder = {
-                Text(text = placeholder, style = MaterialTheme.typeStyle.labelMedium)
+                Text(text = placeholder, style = MaterialTheme.typeStyle.labelLarge)
             },
-            modifier = Modifier.minimumInteractiveComponentSize().fillMaxWidth().then(modifier),
+            modifier = Modifier
+                .minimumInteractiveComponentSize()
+                .fillMaxWidth()
+                .then(modifier),
             colors = colors,
             enabled = enabled,
             leadingIcon = iconLeft?.let { icon ->
@@ -74,8 +81,11 @@ fun TextInputField(
             },
             singleLine = true,
             keyboardOptions = keyboardOptions,
-            shape = MaterialTheme.shapes.small,
+            keyboardActions = keyboardActions,
+            visualTransformation = visualTransformation,
+            shape = MaterialTheme.shapes.medium,
             isError = errorMessage != null,
+            textStyle = MaterialTheme.typeStyle.labelLarge
         )
         errorMessage?.let { message ->
             Text(
