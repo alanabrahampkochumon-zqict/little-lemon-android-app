@@ -18,6 +18,7 @@ val customColors = LittleLemonColors()
 val customTypography = LittleLemonTypography()
 val customDimension = Dimens()
 val customElevation = ShadowElevation()
+val customShadow = Shadows()
 private val LightColorScheme = lightColorScheme(
     primary = customColors.action,
     onPrimary = customColors.contentHighlight,
@@ -72,7 +73,8 @@ fun LittleLemonTheme(
         LocalLittleLemonColors provides customColors,
         LocalCustomTypography provides customTypography,
         LocalDimensions provides customDimension,
-        LocalShadowElevation provides customElevation
+        LocalShadowElevation provides customElevation,
+        LocalShadows provides customShadow,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
@@ -99,3 +101,7 @@ val MaterialTheme.dimens: Dimens
 val MaterialTheme.shadowElevation: ShadowElevation
     @Composable
     get() = LocalShadowElevation.current
+
+val MaterialTheme.shadows: Shadows
+    @Composable
+    get() = LocalShadows.current
