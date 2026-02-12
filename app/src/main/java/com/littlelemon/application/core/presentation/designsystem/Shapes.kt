@@ -9,3 +9,8 @@ val Shapes = Shapes(
     medium = RoundedCornerShape(16.dp),
     large = RoundedCornerShape(24.dp)
 )
+val Shapes.xLarge: RoundedCornerShape
+    get() = RoundedCornerShape(40.dp)
+
+val Shapes.None: RoundedCornerShape
+    get() = RoundedCornerShape(0.dp)

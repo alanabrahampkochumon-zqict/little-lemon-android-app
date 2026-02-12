@@ -16,17 +16,17 @@
 
 
     <!--    Headings    -->
-    <string name="head_login">Sign up / Login</string>
-    <string name="head_personalize">Let\'s get to know you</string>
+    <string name="heading_login">What\'s your email?</string>
+    <string name="heading_personalize">Let\'s get to know you</string>
 
     <!--    Navigation Headings    -->
     <string name="nav_verify_email">Verify Email Address</string>
     <string name="nav_personal_information">Personal Information</string>
 
     <!--    Labels    -->
-    <string name="lab_email_address">Email Address</string>
-    <string name="lab_first_name">First Name</string>
-    <string name="lab_last_name">Last Name</string>
+    <string name="label_email_address">Email Address</string>
+    <string name="label_first_name">First Name</string>
+    <string name="label_last_name">Last Name</string>
 
     <!--    Placeholder    -->
     <string name="placeholder_email_address">someone@example.com</string>
@@ -34,6 +34,7 @@
     <string name="placeholder_last_name">E.g: Doe</string>
 
     <!--    Body Text    -->
+    <string name="body_email_description">We\’ll send a verification code to get you in.</string>
     <string name="body_verification_code_send">Enter the 4-digit OTP sent to</string>
     <string name="body_no_otp_received">Didn\'t receive the code?</string>
 

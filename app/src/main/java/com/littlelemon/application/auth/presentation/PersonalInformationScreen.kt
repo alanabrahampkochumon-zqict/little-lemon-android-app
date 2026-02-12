@@ -99,20 +99,20 @@ fun PersonalInformationScreen() {/*FIXME: Change to VM */
             ) {
 
                 Text(
-                    text = stringResource(R.string.head_personalize),
+                    text = stringResource(R.string.heading_personalize),
                     style = MaterialTheme.typeStyle.headlineLarge,
                     color = MaterialTheme.colors.contentHighlight
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacingXL))
                 NameInputField(
                     modifier = Modifier.fillMaxWidth(),
-                    label = stringResource(R.string.lab_first_name),
+                    label = stringResource(R.string.label_first_name),
                     placeholder = stringResource(R.string.placeholder_first_name),
                     value = firstName,
                     onValueChange = { firstNameChange(it) }) // FIXME: Replace
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacingXL))
                 NameInputField(
-                    label = stringResource(R.string.lab_last_name),
+                    label = stringResource(R.string.label_last_name),
                     placeholder = stringResource(R.string.placeholder_last_name),
                     value = firstName,
                     onValueChange = { firstNameChange(it) }) // FIXME: Replace
