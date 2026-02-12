@@ -133,13 +133,6 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
             Box(modifier = Modifier.weight(1f))
             Column(
                 Modifier
-                    .background(
-                        MaterialTheme.colors.primary,
-                        shape = MaterialTheme.shapes.xLarge.copy(
-                            bottomStart = CornerSize(0.dp),
-                            bottomEnd = CornerSize(0.dp)
-                        )
-                    )
                     .dropShadow(
                         shape = RoundedCornerShape(20.dp),
                         shadow = MaterialTheme.shadows.shadowUpperMD.firstShadow.toComposeShadow()
@@ -148,7 +141,15 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                         shape = RoundedCornerShape(20.dp),
                         shadow = MaterialTheme.shadows.shadowUpperMD.secondShadow?.toComposeShadow()
                             ?: Shadow(radius = 0.dp)
-                    ) // FIXME: Drop shadow causing screen to be less white
+                    )
+                    .background(
+                        MaterialTheme.colors.primary,
+                        shape = MaterialTheme.shapes.xLarge.copy(
+                            bottomStart = CornerSize(0.dp),
+                            bottomEnd = CornerSize(0.dp)
+                        )
+                    )
+                    // FIXME: Drop shadow causing screen to be less white
                     .height(640.dp)
                     .fillMaxHeight()
                     .padding(
