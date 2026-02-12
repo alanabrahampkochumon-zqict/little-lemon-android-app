@@ -14,39 +14,40 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+val customColors = LittleLemonColors()
+val customTypography = LittleLemonTypography()
+val customDimension = Dimens()
+val customElevation = ShadowElevation()
 private val LightColorScheme = lightColorScheme(
-    primary = Primary700,
-    onPrimary = Neutral900,
+    primary = customColors.action,
+    onPrimary = customColors.contentHighlight,
 
-    secondary = Secondary700,
-    onSecondary = NeutralWhite,
+    secondary = customColors.highlight,
+    onSecondary = customColors.contentInverse,
 
-    background = NeutralWhite,
-    onBackground = Neutral900,
+    background = customColors.primary,
+    onBackground = customColors.contentPrimary,
 
-    surface = NeutralWhite,
-    onSurface = Neutral900,
+    surface = customColors.secondary,
+    onSurface = customColors.contentSecondary,
 
-    surfaceVariant = NeutralWhite,
-    onSurfaceVariant = Neutral800,
+    surfaceVariant = customColors.tertiary,
+    onSurfaceVariant = customColors.contentTertiary,
 
-    outline = Neutral300,
+    outline = customColors.outlineSecondary,
 
-    error = Error700,
-    onError = NeutralWhite,
+    error = customColors.error,
+    onError = customColors.contentInverse,
 )
 
 @Composable
 fun LittleLemonTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val customColors = LittleLemonColors()
-    val customTypography = LittleLemonTypography()
-    val customDimension = Dimens()
-    val customElevation = ShadowElevation()
+
 
     //FIXME: May need to update this code
     // Forcing status bar color
@@ -64,7 +65,6 @@ fun LittleLemonTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
 

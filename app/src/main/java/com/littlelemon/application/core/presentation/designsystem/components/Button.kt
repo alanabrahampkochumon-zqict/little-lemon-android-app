@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.material3.Button as M3Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +28,8 @@ import com.littlelemon.application.core.presentation.designsystem.typeStyle
 enum class ButtonVariant {
     PRIMARY,
     SECONDARY,
-    GHOST
+    GHOST,
+    GHOST_HIGHLIGHT,
 }
 
 @Composable
@@ -44,15 +45,15 @@ fun Button(
     val colors = when (variant) {
         ButtonVariant.PRIMARY -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colors.action,
-            contentColor = MaterialTheme.colors.contentPrimary,
-            disabledContainerColor = MaterialTheme.colors.actionLight,
+            contentColor = MaterialTheme.colors.contentHighlight,
+            disabledContainerColor = MaterialTheme.colors.disabled,
             disabledContentColor = MaterialTheme.colors.contentDisabled,
         )
 
         ButtonVariant.SECONDARY -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colors.primary,
             contentColor = MaterialTheme.colors.contentPrimary,
-            disabledContainerColor = MaterialTheme.colors.disabled,
+            disabledContainerColor = MaterialTheme.colors.transparent,
             disabledContentColor = MaterialTheme.colors.contentDisabled
         )
 
@@ -62,15 +63,22 @@ fun Button(
             disabledContainerColor = MaterialTheme.colors.transparent,
             disabledContentColor = MaterialTheme.colors.disabled
         )
+
+        ButtonVariant.GHOST_HIGHLIGHT -> ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colors.transparent,
+            contentColor = MaterialTheme.colors.contentAccentSecondary,
+            disabledContainerColor = MaterialTheme.colors.transparent,
+            disabledContentColor = MaterialTheme.colors.contentDisabled
+        )
     }
 
     val border: BorderStroke? = if (variant == ButtonVariant.SECONDARY) {
-        BorderStroke(1.dp, MaterialTheme.colors.outlinePrimary)
+        BorderStroke(1.dp, MaterialTheme.colors.outlineSecondary)
     } else {
         null
     }
 
-    Button(
+    M3Button(
         onClick = onClick,
         modifier = Modifier
             .defaultMinSize(minHeight = 48.dp)
@@ -108,27 +116,27 @@ private fun ButtonPreview() {
         Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
                 onClick = {},
-                label = "Hello",
+                label = "Button Label",
                 iconRight = R.drawable.ic_checkcircle,
                 iconLeft = R.drawable.ic_x
             )
             Button(
                 variant = ButtonVariant.SECONDARY,
                 onClick = {},
-                label = "Hello",
+                label = "Button Label",
                 iconRight = R.drawable.ic_checkcircle,
                 iconLeft = R.drawable.ic_x
             )
             Button(
                 variant = ButtonVariant.GHOST,
                 onClick = {},
-                label = "Hello",
+                label = "Button Label",
                 iconRight = R.drawable.ic_checkcircle,
                 iconLeft = R.drawable.ic_x
             )
             Button(
                 onClick = {},
-                label = "Hello",
+                label = "Button Label",
                 enabled = false,
                 iconRight = R.drawable.ic_checkcircle,
                 iconLeft = R.drawable.ic_x
@@ -136,7 +144,7 @@ private fun ButtonPreview() {
             Button(
                 variant = ButtonVariant.SECONDARY,
                 onClick = {},
-                label = "Hello",
+                label = "Button Label",
                 enabled = false,
                 iconRight = R.drawable.ic_checkcircle,
                 iconLeft = R.drawable.ic_x
@@ -144,7 +152,23 @@ private fun ButtonPreview() {
             Button(
                 variant = ButtonVariant.GHOST,
                 onClick = {},
-                label = "Hello",
+                label = "Button Label",
+                enabled = false,
+                iconRight = R.drawable.ic_checkcircle,
+                iconLeft = R.drawable.ic_x
+            )
+            Button(
+                variant = ButtonVariant.GHOST_HIGHLIGHT,
+                onClick = {},
+                label = "Button Label",
+                enabled = true,
+                iconRight = R.drawable.ic_checkcircle,
+                iconLeft = R.drawable.ic_x
+            )
+            Button(
+                variant = ButtonVariant.GHOST_HIGHLIGHT,
+                onClick = {},
+                label = "Button Label",
                 enabled = false,
                 iconRight = R.drawable.ic_checkcircle,
                 iconLeft = R.drawable.ic_x

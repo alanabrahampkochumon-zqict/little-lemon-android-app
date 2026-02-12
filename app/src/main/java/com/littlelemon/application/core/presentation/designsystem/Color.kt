@@ -272,6 +272,7 @@ data class LittleLemonColors(
 
     val contentPlaceholder: Color = AliasColors.Neutral500,
     val contentDisabled: Color = AliasColors.Neutral400,
+    val contentInverse: Color = AliasColors.NeutralWhite,
 
     val contentAccent: Color = AliasColors.Primary400,
     val contentAccentSecondary: Color = AliasColors.Secondary500,
