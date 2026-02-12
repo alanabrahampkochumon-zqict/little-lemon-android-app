@@ -33,17 +33,17 @@ private val Typography = Typography(
         letterSpacing = (-0.43).sp
     ),
     displayMedium = TextStyle(
-        fontFamily = KarlaFontFamily,
+        fontFamily = MarkaziTextFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 32.sp,
-        lineHeight = 32.sp,
+        lineHeight = 24.sp,
         letterSpacing = (-0.21).sp
     ),
     displaySmall = TextStyle(
-        fontFamily = KarlaFontFamily,
+        fontFamily = MarkaziTextFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 28.sp,
-        lineHeight = 28.sp,
+        lineHeight = 20.sp,
         letterSpacing = (-0.21).sp
     ),
 
@@ -77,26 +77,26 @@ private val Typography = Typography(
         letterSpacing = (-0.21).sp
     ),
 
-    // Label Font
+    // Label Font -> Ignored Label XL from DS
     labelLarge = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 20.sp,
-        lineHeight = 20.sp,
+        fontSize = 18.sp,
+        lineHeight = 18.sp,
         letterSpacing = 0.sp
     ),
     labelMedium = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 18.sp,
-        lineHeight = 18.sp, // Different from DS, where 18/20 is used, but following labels have 100% line height rule
+        fontSize = 16.sp,
+        lineHeight = 16.sp, // Different from DS, where 18/20 is used, but following labels have 100% line height rule
         letterSpacing = 0.sp
     ),
     labelSmall = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
-        lineHeight = 16.sp,
+        fontSize = 14.sp,
+        lineHeight = 14.sp,
         letterSpacing = 0.sp
     ),
 
