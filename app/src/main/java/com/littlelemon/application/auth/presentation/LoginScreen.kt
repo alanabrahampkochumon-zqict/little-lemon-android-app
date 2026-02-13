@@ -16,11 +16,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -99,6 +99,11 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
         ).add(WindowInsets.displayCutout)
     }
 
+    val cardShape = MaterialTheme.shapes.xLarge.copy(
+        bottomStart = CornerSize(0.dp),
+        bottomEnd = CornerSize(0.dp)
+    )
+
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -134,28 +139,25 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
             Modifier
                 .padding(innerPadding)
         ) {
-            Box(modifier = Modifier.weight(0.2f)) // Padding Top
+            Box(modifier = Modifier.weight(0.1f)) // Padding Top
             Column(
                 Modifier
                     .dropShadow(
-                        shape = RoundedCornerShape(20.dp),
-                        shadow = MaterialTheme.shadows.shadowUpperMD.firstShadow.toComposeShadow()
+                        shape = cardShape,
+                        shadow = MaterialTheme.shadows.upperXL.firstShadow.toComposeShadow()
                     )
                     .dropShadow(
-                        shape = RoundedCornerShape(20.dp),
-                        shadow = MaterialTheme.shadows.shadowUpperMD.secondShadow?.toComposeShadow()
+                        shape = cardShape,
+                        shadow = MaterialTheme.shadows.upperXL.secondShadow?.toComposeShadow()
                             ?: Shadow(radius = 0.dp)
                     )
                     .background(
                         MaterialTheme.colors.primary,
-                        shape = MaterialTheme.shapes.xLarge.copy(
-                            bottomStart = CornerSize(0.dp),
-                            bottomEnd = CornerSize(0.dp)
-                        )
+                        shape = cardShape
                     )
-                    // FIXME: Drop shadow causing screen to be less white
-                    .weight(0.8f)
+                    .weight(0.9f)
                     .fillMaxHeight()
+                    .heightIn(max = 640.dp)
                     .padding(
                         paddingValues = PaddingValues(
                             top = MaterialTheme.dimens.size2XL,
@@ -176,12 +178,14 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                 Text(
                     stringResource(R.string.heading_login),
                     style = MaterialTheme.typeStyle.displaySmall,
-                    color = MaterialTheme.colors.contentPrimary
+                    color = MaterialTheme.colors.contentPrimary,
                 )
-                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+                Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
 
                 Column(
-                    Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(
+                    Modifier
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(
                         MaterialTheme.dimens.sizeSM
                     )
                 ) {
