@@ -59,7 +59,7 @@ fun TextInputField(
 
         cursorColor = MaterialTheme.colors.contentAccentSecondary
     )
-    Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.spacingXS)) {
+    Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
 
         OutlinedTextField(
             value = value,

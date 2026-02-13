@@ -84,10 +84,10 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(
-                    start = MaterialTheme.dimens.spacingXL,
-                    end = MaterialTheme.dimens.spacingXL,
-                    top = MaterialTheme.dimens.spacing3XL,
-                    bottom = MaterialTheme.dimens.spacingXL
+                    start = MaterialTheme.dimens.sizeXL,
+                    end = MaterialTheme.dimens.sizeXL,
+                    top = MaterialTheme.dimens.size3XL,
+                    bottom = MaterialTheme.dimens.sizeXL
                 )
                 .imePadding()
                 .fillMaxSize(),
@@ -103,15 +103,15 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                         .fillMaxWidth()
                         .weight(1f)
                         .verticalScroll(rememberScrollState())
-                        .padding(horizontal = MaterialTheme.dimens.spacingXL)
+                        .padding(horizontal = MaterialTheme.dimens.sizeXL)
                 ) {
                     Title(emailAddress = emailAddress)
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing2XL))
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(
-                            MaterialTheme.dimens.spacing2XL
+                            MaterialTheme.dimens.size2XL
                         )
                     ) {
                         OTPFields()
@@ -124,7 +124,7 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing4XL))
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.size4XL))
                     ResendSection(onResend = {/* TODO */ })
                 }
             } else {
@@ -137,9 +137,9 @@ fun VerificationScreen(modifier: Modifier = Modifier) {
                         .weight(1f)
                 ) {
                     Title(emailAddress = emailAddress)
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing2XL))
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
                     OTPFields()
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacing4XL))
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.size4XL))
                     ResendSection(onResend = {/* TODO */ })
                 }
                 Button(
@@ -217,7 +217,7 @@ private fun ResendSection(onResend: () -> Unit) {
             style = MaterialTheme.typeStyle.labelMedium,
             color = MaterialTheme.colors.contentTertiary
         )
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacingMD))
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
         Button(
             label = stringResource(R.string.act_resend_otp),
             onClick = onResend,
@@ -248,7 +248,7 @@ fun OrSeparator(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .background(MaterialTheme.colors.primary)
-                .padding(horizontal = MaterialTheme.dimens.spacingSM)
+                .padding(horizontal = MaterialTheme.dimens.sizeSM)
         ) {
             Text(
                 text = stringResource(R.string.or),

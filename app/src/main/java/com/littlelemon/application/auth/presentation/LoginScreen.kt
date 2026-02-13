@@ -154,10 +154,10 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                     .fillMaxHeight()
                     .padding(
                         paddingValues = PaddingValues(
-                            top = MaterialTheme.dimens.spacing3XL,
-                            bottom = MaterialTheme.dimens.spacing4XL,
-                            start = MaterialTheme.dimens.spacing2XL,
-                            end = MaterialTheme.dimens.spacing2XL
+                            top = MaterialTheme.dimens.size3XL,
+                            bottom = MaterialTheme.dimens.size4XL,
+                            start = MaterialTheme.dimens.size2XL,
+                            end = MaterialTheme.dimens.size2XL
                         )
                     ),
             ) {
@@ -168,17 +168,17 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                     painter = painterResource(R.drawable.logo_full),
                     contentDescription = null
                 )
-                Spacer(Modifier.height(MaterialTheme.dimens.spacing2XL))
+                Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
                 Text(
                     stringResource(R.string.heading_login),
                     style = MaterialTheme.typeStyle.headlineLarge,
                     color = MaterialTheme.colors.contentSecondary
                 )
-                Spacer(Modifier.height(MaterialTheme.dimens.spacingLG))
+                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
 
                 Column(
                     Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.spacingSM
+                        MaterialTheme.dimens.sizeSM
                     )
                 ) {
                     TextInputField(

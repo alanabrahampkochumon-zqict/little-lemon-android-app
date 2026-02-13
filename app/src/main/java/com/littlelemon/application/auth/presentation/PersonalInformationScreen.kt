@@ -90,10 +90,10 @@ fun PersonalInformationScreen() {/*FIXME: Change to VM */
                     .fillMaxHeight()
                     .verticalScroll(rememberScrollState())
                     .padding(
-                        top = MaterialTheme.dimens.spacing2XL,
-                        start = MaterialTheme.dimens.spacingXL,
-                        end = MaterialTheme.dimens.spacingXL,
-                        bottom = MaterialTheme.dimens.spacingXL,
+                        top = MaterialTheme.dimens.size2XL,
+                        start = MaterialTheme.dimens.sizeXL,
+                        end = MaterialTheme.dimens.sizeXL,
+                        bottom = MaterialTheme.dimens.sizeXL,
                     ),
                 horizontalAlignment = alignment
             ) {
@@ -103,14 +103,14 @@ fun PersonalInformationScreen() {/*FIXME: Change to VM */
                     style = MaterialTheme.typeStyle.headlineLarge,
                     color = MaterialTheme.colors.contentHighlight
                 )
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacingXL))
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXL))
                 NameInputField(
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(R.string.label_first_name),
                     placeholder = stringResource(R.string.placeholder_first_name),
                     value = firstName,
                     onValueChange = { firstNameChange(it) }) // FIXME: Replace
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacingXL))
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXL))
                 NameInputField(
                     label = stringResource(R.string.label_last_name),
                     placeholder = stringResource(R.string.placeholder_last_name),
@@ -118,7 +118,7 @@ fun PersonalInformationScreen() {/*FIXME: Change to VM */
                     onValueChange = { firstNameChange(it) }) // FIXME: Replace
                 Spacer(
                     modifier = Modifier
-                        .height(MaterialTheme.dimens.spacing2XL)
+                        .height(MaterialTheme.dimens.size2XL)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
@@ -147,7 +147,7 @@ fun NameInputField(
             style = MaterialTheme.typeStyle.labelMedium,
             color = MaterialTheme.colors.contentPrimary
         )
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.spacingMD))
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
         TextInputField(
             placeholder = placeholder,
             value = value,

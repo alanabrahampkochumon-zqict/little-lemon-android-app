@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button as M3Button
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,12 +24,18 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import androidx.compose.material3.Button as M3Button
 
 enum class ButtonVariant {
     PRIMARY,
     SECONDARY,
     GHOST,
     GHOST_HIGHLIGHT,
+}
+
+enum class ButtonSize {
+    Medium,
+    Large
 }
 
 @Composable
@@ -39,17 +45,21 @@ fun Button(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     @DrawableRes iconLeft: Int? = null,
+    iconLeftDescription: String? = null,
     @DrawableRes iconRight: Int? = null,
-    variant: ButtonVariant = ButtonVariant.PRIMARY
+    iconRightDescription: String? = null,
+    variant: ButtonVariant = ButtonVariant.PRIMARY,
+    size: ButtonSize = ButtonSize.Medium
 ) {
     val colors = when (variant) {
         ButtonVariant.PRIMARY -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colors.action,
-            contentColor = MaterialTheme.colors.contentHighlight,
+            contentColor = MaterialTheme.colors.contentOnAction,
             disabledContainerColor = MaterialTheme.colors.disabled,
             disabledContentColor = MaterialTheme.colors.contentDisabled,
         )
 
+        // TODO: Update Variants as necessary
         ButtonVariant.SECONDARY -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colors.primary,
             contentColor = MaterialTheme.colors.contentPrimary,
@@ -72,6 +82,21 @@ fun Button(
         )
     }
 
+    val textStyle = when (size) {
+        ButtonSize.Medium -> MaterialTheme.typeStyle.labelMedium
+        ButtonSize.Large -> MaterialTheme.typeStyle.labelLarge
+    }
+
+    val spacingBetween = when (size) {
+        ButtonSize.Medium -> MaterialTheme.dimens.sizeMD
+        ButtonSize.Large -> MaterialTheme.dimens.sizeLG
+    }
+
+    val iconSize = when (size) {
+        ButtonSize.Medium -> MaterialTheme.dimens.sizeMD
+        ButtonSize.Large -> MaterialTheme.dimens.sizeLG
+    }
+
     val border: BorderStroke? = if (variant == ButtonVariant.SECONDARY) {
         BorderStroke(1.dp, MaterialTheme.colors.outlineSecondary)
     } else {
@@ -85,25 +110,30 @@ fun Button(
             .fillMaxWidth()
             .then(modifier),
         colors = colors,
-        shape = MaterialTheme.shapes.medium,
+        shape = MaterialTheme.shapes.small,
         border = border,
         enabled = enabled
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(
-                MaterialTheme.dimens.spacingMD
-            )
+            horizontalArrangement = Arrangement.spacedBy(spacingBetween)
         ) {
             iconLeft?.let { icon ->
-                Icon(painter = painterResource(icon), contentDescription = null)
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = iconLeftDescription,
+                    modifier = Modifier.size(iconSize)
+                )
             }
             Text(
                 text = label,
-                style = MaterialTheme.typeStyle.labelMedium,
+                style = textStyle
             )
             iconRight?.let { icon ->
-                Icon(painter = painterResource(icon), contentDescription = null)
+                Icon(
+                    painter = painterResource(icon), contentDescription = iconRightDescription,
+                    modifier = Modifier.size(iconSize)
+                )
             }
         }
     }
