@@ -1,25 +1,26 @@
 package com.littlelemon.application.core.presentation.designsystem.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
@@ -45,6 +46,8 @@ fun TextInputField(
     onValueChange: (String) -> Unit = {},
 ) {
 
+    val interactionSource = remember { MutableInteractionSource() }
+
     val colors = OutlinedTextFieldDefaults.colors(
         focusedTextColor = MaterialTheme.colors.contentPrimary,
         unfocusedTextColor = MaterialTheme.colors.contentPrimary,
@@ -67,54 +70,120 @@ fun TextInputField(
 
     Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
 
-        OutlinedTextField(
+        BasicTextField(
             value = value,
             onValueChange = onValueChange,
-            placeholder = {
-                Text(text = placeholder, style = MaterialTheme.typeStyle.labelMedium)
-            },
             modifier = Modifier
                 .minimumInteractiveComponentSize()
                 .fillMaxWidth()
                 .then(modifier),
-            colors = colors,
             enabled = enabled,
-            leadingIcon = iconLeft?.let { icon ->
-                {
-                    Icon(
-                        painter = painterResource(icon),
-                        contentDescription = iconLeftDescription,
-                        modifier = Modifier.size(iconSize)
-                    )
-                }
-            },
-            trailingIcon = iconRight?.let { icon ->
-                {
-                    Icon(
-                        painter = painterResource(icon),
-                        contentDescription = iconRightDescription,
-                        modifier = Modifier.size(iconSize)
-                    )
-                }
-            },
             singleLine = true,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            visualTransformation = visualTransformation,
-            shape = MaterialTheme.shapes.small,
-            isError = errorMessage != null,
             textStyle = MaterialTheme.typeStyle.labelMedium,
-
-        )
-        errorMessage?.let { message ->
-            Text(
-                text = message,
-                style = MaterialTheme.typeStyle.bodySmall,
-                color = MaterialTheme.colors.contentError,
-                textAlign = TextAlign.End,
-                modifier = Modifier.align(Alignment.End)
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions,
+            interactionSource = interactionSource,
+            visualTransformation = visualTransformation
+        ) { innerTextField ->
+            OutlinedTextFieldDefaults.DecorationBox(
+                value = value,
+                placeholder = {
+                    Text(text = placeholder, style = MaterialTheme.typeStyle.labelMedium)
+                },
+                colors = colors,
+                enabled = enabled,
+                leadingIcon = iconLeft?.let { icon ->
+                    {
+                        Icon(
+                            painter = painterResource(icon),
+                            contentDescription = iconLeftDescription,
+                            modifier = Modifier.size(iconSize)
+                        )
+                    }
+                },
+                trailingIcon = iconRight?.let { icon ->
+                    {
+                        Icon(
+                            painter = painterResource(icon),
+                            contentDescription = iconRightDescription,
+                            modifier = Modifier.size(iconSize)
+                        )
+                    }
+                },
+                singleLine = true,
+                visualTransformation = visualTransformation,
+                isError = errorMessage != null,
+                container = {
+                    OutlinedTextFieldDefaults.Container(
+                        enabled,
+                        errorMessage != null,
+                        interactionSource,
+                        focusedBorderThickness = MaterialTheme.dimens.size2XS,
+                        colors = colors,
+                        shape = MaterialTheme.shapes.small
+                    )
+                },
+                contentPadding = PaddingValues(
+                    horizontal = MaterialTheme.dimens.sizeXL,
+                    vertical = MaterialTheme.dimens.sizeLG
+                ),
+                innerTextField = innerTextField,
+                interactionSource = interactionSource,
+                label = null,
+                prefix = null,
+                suffix = null,
+                supportingText = null
             )
         }
+
+//        OutlinedTextField(
+//            value = value,
+//            onValueChange = onValueChange,
+//            placeholder = {
+//                Text(text = placeholder, style = MaterialTheme.typeStyle.labelMedium)
+//            },
+//            modifier = Modifier
+//                .minimumInteractiveComponentSize()
+//                .fillMaxWidth()
+//                .then(modifier),
+//            colors = colors,
+//            enabled = enabled,
+//            leadingIcon = iconLeft?.let { icon ->
+//                {
+//                    Icon(
+//                        painter = painterResource(icon),
+//                        contentDescription = iconLeftDescription,
+//                        modifier = Modifier.size(iconSize)
+//                    )
+//                }
+//            },
+//            trailingIcon = iconRight?.let { icon ->
+//                {
+//                    Icon(
+//                        painter = painterResource(icon),
+//                        contentDescription = iconRightDescription,
+//                        modifier = Modifier.size(iconSize)
+//                    )
+//                }
+//            },
+//            singleLine = true,
+//            keyboardOptions = keyboardOptions,
+//            keyboardActions = keyboardActions,
+//            visualTransformation = visualTransformation,
+//            shape = MaterialTheme.shapes.small,
+//            isError = errorMessage != null,
+//            textStyle = MaterialTheme.typeStyle.labelMedium,
+//
+//            )
+//        errorMessage?.let { message ->
+//            Text(
+//                text = message,
+//                style = MaterialTheme.typeStyle.bodySmall,
+//                color = MaterialTheme.colors.contentError,
+//                textAlign = TextAlign.End,
+//                modifier = Modifier.align(Alignment.End)
+//            )
+//        }
     }
 }
 
