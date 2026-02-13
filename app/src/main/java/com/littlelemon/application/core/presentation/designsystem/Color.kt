@@ -225,6 +225,7 @@ private object AliasColors {
 data class LittleLemonColors(
     // Surface Colors
     val primary: Color = AliasColors.NeutralWhite,
+    val primaryDark: Color = AliasColors.Tertiary700,
     val secondary: Color = AliasColors.Neutral50,
     val tertiary: Color = AliasColors.Neutral100,
 
@@ -257,7 +258,7 @@ data class LittleLemonColors(
     val outlineDisabled: Color = AliasColors.Neutral50,
 
     val outlineHighlight: Color = AliasColors.Secondary400,
-    val outlineActive: Color = AliasColors.Neutral500,
+    val outlineActive: Color = AliasColors.Tertiary700,
 
     val outlineAccent: Color = AliasColors.Primary400,
     val outlineWarning: Color = AliasColors.Warning500,
@@ -275,6 +276,7 @@ data class LittleLemonColors(
     val contentInverse: Color = AliasColors.NeutralWhite,
 
     val contentAccent: Color = AliasColors.Primary400,
+    val onAction: Color = AliasColors.Tertiary700,
     val contentAccentSecondary: Color = AliasColors.Secondary500,
     val contentHighlight: Color = AliasColors.Tertiary700,
 
