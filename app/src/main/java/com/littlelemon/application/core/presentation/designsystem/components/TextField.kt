@@ -71,7 +71,7 @@ fun TextInputField(
             value = value,
             onValueChange = onValueChange,
             placeholder = {
-                Text(text = placeholder, style = MaterialTheme.typeStyle.labelLarge)
+                Text(text = placeholder, style = MaterialTheme.typeStyle.labelMedium)
             },
             modifier = Modifier
                 .minimumInteractiveComponentSize()
@@ -104,6 +104,7 @@ fun TextInputField(
             shape = MaterialTheme.shapes.small,
             isError = errorMessage != null,
             textStyle = MaterialTheme.typeStyle.labelMedium,
+
         )
         errorMessage?.let { message ->
             Text(

@@ -43,8 +43,8 @@ private val Typography = Typography(
     displaySmall = TextStyle(
         fontFamily = MarkaziTextFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 28.sp,
-        lineHeight = 20.sp,
+        fontSize = 32.sp,
+        lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
 

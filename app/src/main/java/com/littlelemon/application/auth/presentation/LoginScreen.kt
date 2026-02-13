@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
@@ -55,7 +56,6 @@ import com.littlelemon.application.core.presentation.utils.toComposeShadow
 
 @Composable
 fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
-
 
     val backgroundGradient = Brush.linearGradient(
         colors = listOf(
@@ -100,7 +100,11 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
     }
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                Color.Black
+            ),
         containerColor = MaterialTheme.colors.primary,
         contentWindowInsets = WindowInsets.systemBars.only(
             WindowInsetsSides.Top
@@ -112,16 +116,16 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .background(backgroundGradient)
+                .background(MaterialTheme.colors.primaryDark)
         ) {
 
             Image(
                 painter = painterResource(R.drawable.doodles),
                 contentDescription = stringResource(R.string.desc_logo),
-                Modifier.fillMaxWidth(),
+                Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.contentInverse),
-                alpha = 0.64f
+                alpha = 0.48f
             )
         }
 
@@ -130,7 +134,7 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
             Modifier
                 .padding(innerPadding)
         ) {
-            Box(modifier = Modifier.weight(1f))
+            Box(modifier = Modifier.weight(0.2f)) // Padding Top
             Column(
                 Modifier
                     .dropShadow(
@@ -150,14 +154,14 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                         )
                     )
                     // FIXME: Drop shadow causing screen to be less white
-                    .height(640.dp)
+                    .weight(0.8f)
                     .fillMaxHeight()
                     .padding(
                         paddingValues = PaddingValues(
-                            top = MaterialTheme.dimens.size3XL,
-                            bottom = MaterialTheme.dimens.size4XL,
+                            top = MaterialTheme.dimens.size2XL,
+                            end = MaterialTheme.dimens.size2XL,
                             start = MaterialTheme.dimens.size2XL,
-                            end = MaterialTheme.dimens.size2XL
+                            bottom = MaterialTheme.dimens.size4XL,
                         )
                     ),
             ) {
@@ -168,11 +172,11 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                     painter = painterResource(R.drawable.logo_full),
                     contentDescription = null
                 )
-                Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
+                Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
                 Text(
                     stringResource(R.string.heading_login),
-                    style = MaterialTheme.typeStyle.headlineLarge,
-                    color = MaterialTheme.colors.contentSecondary
+                    style = MaterialTheme.typeStyle.displaySmall,
+                    color = MaterialTheme.colors.contentPrimary
                 )
                 Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
 
