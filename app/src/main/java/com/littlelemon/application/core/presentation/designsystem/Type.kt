@@ -12,7 +12,8 @@ import com.littlelemon.application.R
 
 // Font Families
 val MarkaziTextFamily = FontFamily(
-    Font(R.font.markazitext_regular, FontWeight.Normal)
+    Font(R.font.markazitext_regular, FontWeight.Normal),
+    Font(R.font.markazi_text_semibold, FontWeight.Bold)
 )
 
 val KarlaFontFamily = FontFamily(
@@ -26,111 +27,106 @@ private val Typography = Typography(
 
     // Display Font
     displayLarge = TextStyle(
-        fontFamily = KarlaFontFamily,
+        fontFamily = MarkaziTextFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 40.sp,
-        lineHeight = 40.sp,
-        letterSpacing = (-0.43).sp
+        lineHeight = 36.sp,
+        letterSpacing = (-0.21).sp
     ),
     displayMedium = TextStyle(
         fontFamily = MarkaziTextFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 32.sp,
-        lineHeight = 24.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 36.sp,
+        lineHeight = 32.sp,
         letterSpacing = (-0.21).sp
     ),
     displaySmall = TextStyle(
         fontFamily = MarkaziTextFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
         lineHeight = 20.sp,
-        letterSpacing = (-0.21).sp
+        letterSpacing = 0.sp
     ),
 
     // Heading Font
     headlineLarge = TextStyle(
-        fontFamily = MarkaziTextFamily,
+        fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 40.sp,
-        lineHeight = 32.sp,
-        letterSpacing = 0.sp
+        fontSize = 28.sp,
+        lineHeight = 36.sp,
+        letterSpacing = (-1.4).sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = MarkaziTextFamily,
+        fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 32.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+        letterSpacing = (-0.96).sp
     ),
     headlineSmall = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
-        lineHeight = 24.sp,
-        letterSpacing = (-0.21).sp
-    ),
-    titleLarge = TextStyle(
-        fontFamily = KarlaFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 18.sp,
-        lineHeight = 20.sp,
-        letterSpacing = (-0.21).sp
+        lineHeight = 28.sp,
+        letterSpacing = (-0.60).sp
     ),
 
-    // Label Font -> Ignored Label XL from DS
     labelLarge = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp,
-        lineHeight = 18.sp,
-        letterSpacing = 0.sp
+        lineHeight = 24.sp,
+        letterSpacing = (-0.54).sp
     ),
     labelMedium = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
-        lineHeight = 16.sp, // Different from DS, where 18/20 is used, but following labels have 100% line height rule
-        letterSpacing = 0.sp
+        lineHeight = 20.sp, // Different from DS, where 18/20 is used, but following labels have 100% line height rule
+        letterSpacing = (-0.16).sp
     ),
     labelSmall = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
-        lineHeight = 14.sp,
-        letterSpacing = 0.sp
+        lineHeight = 18.sp,
+        letterSpacing = (-0.14).sp
     ),
 
     // Paragraph Font -> 4 font styles, bodyLarge is the default
-    titleMedium = TextStyle(
+    bodyLarge = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
-    bodyLarge = TextStyle(
+    bodyMedium = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.sp
     ),
-    bodyMedium = TextStyle(
+    bodySmall = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp
     ),
-    bodySmall = TextStyle(
+
+    )
+
+val Typography.bodyXSmall: TextStyle
+    get() = TextStyle(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.sp
-    ),
-
     )
+
 
 // Custom Type System
 @Immutable
