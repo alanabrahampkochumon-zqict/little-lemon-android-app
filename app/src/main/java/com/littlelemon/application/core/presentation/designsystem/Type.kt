@@ -82,7 +82,7 @@ private val Typography = Typography(
         fontFamily = KarlaFontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
-        lineHeight = 20.sp, // Different from DS, where 18/20 is used, but following labels have 100% line height rule
+        lineHeight = 20.sp,
         letterSpacing = (-0.16).sp
     ),
     labelSmall = TextStyle(

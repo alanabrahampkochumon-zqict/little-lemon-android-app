@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -35,7 +36,9 @@ fun TextInputField(
     enabled: Boolean = true,
     errorMessage: String? = null,
     @DrawableRes iconLeft: Int? = null,
+    iconLeftDescription: String? = null,
     @DrawableRes iconRight: Int? = null,
+    iconRightDescription: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -53,12 +56,15 @@ fun TextInputField(
         unfocusedContainerColor = MaterialTheme.colors.secondary,
         disabledContainerColor = MaterialTheme.colors.disabled,
 
-        focusedBorderColor = MaterialTheme.colors.outlineAccent,
-        unfocusedBorderColor = MaterialTheme.colors.outlinePrimary,
+        focusedBorderColor = MaterialTheme.colors.outlineActive,
+        unfocusedBorderColor = MaterialTheme.colors.transparent,
         errorBorderColor = MaterialTheme.colors.outlineError,
 
         cursorColor = MaterialTheme.colors.contentAccentSecondary
     )
+
+    val iconSize = 20.dp
+
     Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
 
         OutlinedTextField(
@@ -74,23 +80,35 @@ fun TextInputField(
             colors = colors,
             enabled = enabled,
             leadingIcon = iconLeft?.let { icon ->
-                { Icon(painter = painterResource(icon), contentDescription = null) }
+                {
+                    Icon(
+                        painter = painterResource(icon),
+                        contentDescription = iconLeftDescription,
+                        modifier = Modifier.size(iconSize)
+                    )
+                }
             },
             trailingIcon = iconRight?.let { icon ->
-                { Icon(painter = painterResource(icon), contentDescription = null) }
+                {
+                    Icon(
+                        painter = painterResource(icon),
+                        contentDescription = iconRightDescription,
+                        modifier = Modifier.size(iconSize)
+                    )
+                }
             },
             singleLine = true,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             visualTransformation = visualTransformation,
-            shape = MaterialTheme.shapes.medium,
+            shape = MaterialTheme.shapes.small,
             isError = errorMessage != null,
-            textStyle = MaterialTheme.typeStyle.labelLarge
+            textStyle = MaterialTheme.typeStyle.labelMedium,
         )
         errorMessage?.let { message ->
             Text(
                 text = message,
-                style = MaterialTheme.typeStyle.bodyXSmall,
+                style = MaterialTheme.typeStyle.bodySmall,
                 color = MaterialTheme.colors.contentError,
                 textAlign = TextAlign.End,
                 modifier = Modifier.align(Alignment.End)
