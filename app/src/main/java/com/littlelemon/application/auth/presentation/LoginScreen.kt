@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.verticalScroll
@@ -31,14 +30,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
@@ -63,6 +57,16 @@ import com.littlelemon.application.core.presentation.utils.toComposeShadow
 @Composable
 fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
 
+    LoginScreenRoot(AuthState(), modifier = modifier)
+}
+
+@Composable
+fun LoginScreenRoot(
+    authState: AuthState,
+    onEmailChange: (String) -> Unit = {},
+    onSendOTP: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
 
@@ -70,44 +74,24 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
     val screenDensityRatio = context.resources.displayMetrics.density
     val screenHeight = configuration.screenHeightDp.dp
 
-    val floatingHeight = 700.dp
-    val floatingWidth = 600.dp // Compact Width
+    val floating =
+        screenHeight > AuthScreenConfig.CARD_FLOATING_HEIGHT && screenWidth > AuthScreenConfig.CARD_FLOATING_WIDTH
 
-    val floating = screenHeight > floatingHeight && screenWidth > floatingWidth
-
-    val maxHeight = if (floating) 640.dp else Dp(0.85f * screenHeight.value)
+    val maxHeight =
+        if (floating) AuthScreenConfig.MAX_CARD_HEIGHT else Dp(AuthScreenConfig.CARD_HEIGHT_MULTIPLIER * screenHeight.value)
 
     val screenOrientation = configuration.orientation
     val isLandscape = screenOrientation == Configuration.ORIENTATION_LANDSCAPE
 
     val isScrollable = isLandscape && !floating
 
-    var emailAddress by remember {
-        mutableStateOf("")
-    }
-    var errorMessage by remember {
-        mutableStateOf<String?>(null)
-    }
-
     val scrollState = rememberScrollState()
-
-    var enabled by remember {
-        mutableStateOf(false)
-    }
-
-    // Used to adjust the spacing cause by font rendering of Markazi text.
-    val fontOffset = 6.dp
-
-    fun sendOTP() {} // TODO: Replace with VM action
-    // Handle Orientation
-    val orientation = configuration.orientation
 
     val cardShape = MaterialTheme.shapes.xLarge.copy(
         bottomStart = if (floating) MaterialTheme.shapes.large.bottomStart else CornerSize(0.dp),
         bottomEnd = if (floating) MaterialTheme.shapes.large.bottomEnd else CornerSize(0.dp)
     )
 
-    val scrollState2 = rememberScrollState()
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
@@ -187,13 +171,13 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                     painter = painterResource(R.drawable.logo_full),
                     contentDescription = null
                 )
-                Spacer(Modifier.height(MaterialTheme.dimens.size3XL - fontOffset))
+                Spacer(Modifier.height(MaterialTheme.dimens.size3XL - AuthScreenConfig.FONT_OFFSET))
                 Text(
                     stringResource(R.string.heading_login),
                     style = MaterialTheme.typeStyle.displaySmall,
                     color = MaterialTheme.colors.contentPrimary,
                 )
-                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG - fontOffset))
+                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG - AuthScreenConfig.FONT_OFFSET))
 
                 Column(
                     Modifier
@@ -204,7 +188,9 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                 ) {
                     TextInputField(
                         stringResource(R.string.placeholder_email_address),
-                        value = emailAddress
+                        value = authState.email,
+                        errorMessage = authState.emailError,
+                        onValueChange = onEmailChange
                     )
                     Text(
                         stringResource(R.string.body_email_description),
@@ -219,9 +205,9 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                 }
                 Button(
                     stringResource(R.string.act_send_otp),
-                    ::sendOTP,
+                    onSendOTP,
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = enabled
+                    enabled = authState.enableSendButton && !authState.isLoading
                 )
             }
 
