@@ -1,6 +1,5 @@
 package com.littlelemon.application.auth.presentation
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,8 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.shadow.Shadow
@@ -57,15 +54,6 @@ import com.littlelemon.application.core.presentation.utils.toComposeShadow
 @Composable
 fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
 
-    val backgroundGradient = Brush.linearGradient(
-        colors = listOf(
-            MaterialTheme.colors.actionHover,
-            MaterialTheme.colors.action,
-        ),
-        start = Offset.Zero,
-        end = Offset.Infinite
-    )
-
     var emailAddress by remember {
         mutableStateOf("")
     }
@@ -73,31 +61,18 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
         mutableStateOf<String?>(null)
     }
 
-    fun sendOTP() {} // TODO: Replace with VM action
+    var enabled by remember {
+        mutableStateOf<Boolean>(false)
+    }
 
-    // Forcing status bar content to be dark
-//    val view = LocalView.current
-//    if (!view.isInEditMode) {
-//        SideEffect {
-//            val window = (view.context as Activity).window
-//            // Force Icons to be BLACK (True) because the image is Light
-//            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
-//        }
-//    }
+    // Used to adjust the spacing cause by font rendering of Markazi text.
+    val fontOffset = 6.dp
+
+    fun sendOTP() {} // TODO: Replace with VM action
 
     // Handle Orientation
     val configuration = LocalConfiguration.current
     val orientation = configuration.orientation
-
-    val windowInsets = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-        WindowInsets.systemBars.only(
-            WindowInsetsSides.Bottom
-        )
-    } else {
-        WindowInsets.systemBars.only(
-            WindowInsetsSides.Bottom
-        ).add(WindowInsets.displayCutout)
-    }
 
     val cardShape = MaterialTheme.shapes.xLarge.copy(
         bottomStart = CornerSize(0.dp),
@@ -121,7 +96,7 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .background(MaterialTheme.colors.primaryDark)
+                .background(MaterialTheme.colors.secondary)
         ) {
 
             Image(
@@ -129,7 +104,7 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                 contentDescription = stringResource(R.string.desc_logo),
                 Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.contentInverse),
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.contentHighlight),
                 alpha = 0.48f
             )
         }
@@ -174,13 +149,13 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                     painter = painterResource(R.drawable.logo_full),
                     contentDescription = null
                 )
-                Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+                Spacer(Modifier.height(MaterialTheme.dimens.size3XL - fontOffset))
                 Text(
                     stringResource(R.string.heading_login),
                     style = MaterialTheme.typeStyle.displaySmall,
                     color = MaterialTheme.colors.contentPrimary,
                 )
-                Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG - fontOffset))
 
                 Column(
                     Modifier
@@ -195,7 +170,7 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                     )
                     Text(
                         stringResource(R.string.body_email_description),
-                        style = MaterialTheme.typeStyle.bodySmall,
+                        style = MaterialTheme.typeStyle.bodyXSmall,
                         color = MaterialTheme.colors.contentTertiary
                     )
                 }
@@ -203,7 +178,8 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                 Button(
                     stringResource(R.string.act_send_otp),
                     ::sendOTP,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = enabled
                 )
             }
 
