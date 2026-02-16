@@ -1,5 +1,6 @@
 package com.littlelemon.application.auth.presentation
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +20,11 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,7 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
@@ -58,7 +62,23 @@ import com.littlelemon.application.core.presentation.utils.toComposeShadow
 fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
 
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+
+    val screenWidth = configuration.screenWidthDp.dp
     val screenDensityRatio = context.resources.displayMetrics.density
+    val screenHeight = configuration.screenHeightDp.dp
+
+    val floatingHeight = 700.dp
+    val floatingWidth = 600.dp // Compact Width
+
+    val floating = screenHeight > floatingHeight && screenWidth > floatingWidth
+
+    val maxHeight = if (floating) 640.dp else Dp(0.85f * screenHeight.value)
+
+    val screenOrientation = configuration.orientation
+    val isLandscape = screenOrientation == Configuration.ORIENTATION_LANDSCAPE
+
+    val isScrollable = isLandscape && !floating
 
     var emailAddress by remember {
         mutableStateOf("")
@@ -67,8 +87,10 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
         mutableStateOf<String?>(null)
     }
 
+    val scrollState = rememberScrollState()
+
     var enabled by remember {
-        mutableStateOf<Boolean>(false)
+        mutableStateOf(false)
     }
 
     // Used to adjust the spacing cause by font rendering of Markazi text.
@@ -76,21 +98,16 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
 
     fun sendOTP() {} // TODO: Replace with VM action
     // Handle Orientation
-    val configuration = LocalConfiguration.current
     val orientation = configuration.orientation
 
     val cardShape = MaterialTheme.shapes.xLarge.copy(
-        bottomStart = CornerSize(0.dp),
-        bottomEnd = CornerSize(0.dp)
+        bottomStart = if (floating) MaterialTheme.shapes.large.bottomStart else CornerSize(0.dp),
+        bottomEnd = if (floating) MaterialTheme.shapes.large.bottomEnd else CornerSize(0.dp)
     )
 
     Scaffold(
         modifier = modifier
-            .fillMaxSize()
-            .background(
-                Color.Black
-            ),
-        containerColor = MaterialTheme.colors.primary,
+            .fillMaxSize(),
         contentWindowInsets = WindowInsets.systemBars.only(
             WindowInsetsSides.Top
         ).add(WindowInsets.displayCutout)
@@ -108,30 +125,23 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                 painter = painterResource(R.drawable.doodles),
                 contentDescription = stringResource(R.string.desc_logo),
                 Modifier.fillMaxSize(),
-                contentScale = ContentScale.FillHeight,
+                contentScale = ContentScale.Crop,
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.contentHighlight),
                 alpha = 0.24f
             )
         }
-        val shadow = MaterialTheme.shadows.upperXL.firstShadow.toComposeShadow(screenDensityRatio)
+
         // Content
         Column(
             Modifier
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = if (floating) Arrangement.Center else Arrangement.Bottom
         ) {
-            Box(modifier = Modifier.weight(0.1f)) // Padding Top
             Column(
                 Modifier
-//                    .dropShadow(
-//                        shape = cardShape,
-//                        shadow = Shadow(
-//                            radius = shadow.radius,
-//                            spread = shadow.spread,
-//                            color = shadow.color,
-//                            offset = shadow.offset,
-//                            alpha = 0.1f
-//                        )
-//                    )
+                    .widthIn(max = 480.dp)
                     .dropShadow(
                         shape = cardShape,
                         shadow = MaterialTheme.shadows.upperXL.firstShadow.toComposeShadow(
@@ -149,16 +159,21 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                         MaterialTheme.colors.primary,
                         shape = cardShape
                     )
-                    .weight(0.9f)
-                    .fillMaxHeight()
-                    .heightIn(max = 640.dp)
                     .padding(
                         paddingValues = PaddingValues(
                             top = MaterialTheme.dimens.size2XL,
                             end = MaterialTheme.dimens.size2XL,
                             start = MaterialTheme.dimens.size2XL,
-                            bottom = MaterialTheme.dimens.size4XL,
+                            bottom = if (floating) MaterialTheme.dimens.size2XL else MaterialTheme.dimens.size4XL,
                         )
+                    )
+                    .then(
+                        if (isScrollable) Modifier
+                            .verticalScroll(scrollState)
+                            .wrapContentHeight()
+                        else Modifier
+                            .heightIn(max = maxHeight)
+                            .fillMaxHeight()
                     ),
             ) {
                 Image(
@@ -193,7 +208,11 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                         color = MaterialTheme.colors.contentTertiary
                     )
                 }
-                Spacer(Modifier.weight(1f))
+                if (isScrollable) {
+                    Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+                } else {
+                    Spacer(Modifier.weight(1f))
+                }
                 Button(
                     stringResource(R.string.act_send_otp),
                     ::sendOTP,
