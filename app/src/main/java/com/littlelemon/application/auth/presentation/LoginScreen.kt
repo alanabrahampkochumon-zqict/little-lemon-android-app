@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -105,12 +107,13 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
         bottomEnd = if (floating) MaterialTheme.shapes.large.bottomEnd else CornerSize(0.dp)
     )
 
+    val scrollState2 = rememberScrollState()
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
         contentWindowInsets = WindowInsets.systemBars.only(
             WindowInsetsSides.Top
-        ).add(WindowInsets.displayCutout)
+        ).add(WindowInsets.displayCutout).add(WindowInsets.ime)
     ) { innerPadding ->
 
         // Background
@@ -169,8 +172,9 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                     )
                     .then(
                         if (isScrollable) Modifier
+                            .fillMaxHeight()
                             .verticalScroll(scrollState)
-                            .wrapContentHeight()
+                            .imePadding()
                         else Modifier
                             .heightIn(max = maxHeight)
                             .fillMaxHeight()
