@@ -1,6 +1,7 @@
 package com.littlelemon.application.auth.presentation
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
@@ -43,6 +45,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
@@ -55,9 +58,25 @@ import com.littlelemon.application.core.presentation.designsystem.xLarge
 import com.littlelemon.application.core.presentation.utils.toComposeShadow
 
 @Composable
-fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
+fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
-    LoginScreenRoot(AuthState(), modifier = modifier)
+    fun onEmailChange(email: String) {
+        viewModel.onAction(AuthActions.ChangeEmail(email))
+    }
+
+    fun onSendOTP() {
+        Toast.makeText(context, "Sending otp...", Toast.LENGTH_LONG).show()
+//        viewModel.onAction((AuthActions.SendOTP))
+    }
+
+    LoginScreenRoot(
+        authState = state,
+        onEmailChange = ::onEmailChange,
+        onSendOTP = ::onSendOTP,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -219,6 +238,6 @@ fun LoginScreenRoot(
 @Composable
 private fun LoginScreenPreview() {
     LittleLemonTheme {
-        LoginScreen({})
+        LoginScreenRoot(AuthState())
     }
 }
