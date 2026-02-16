@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
@@ -111,7 +113,7 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                 alpha = 0.24f
             )
         }
-
+        val shadow = MaterialTheme.shadows.upperXL.firstShadow.toComposeShadow(screenDensityRatio)
         // Content
         Column(
             Modifier
@@ -120,6 +122,16 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
             Box(modifier = Modifier.weight(0.1f)) // Padding Top
             Column(
                 Modifier
+//                    .dropShadow(
+//                        shape = cardShape,
+//                        shadow = Shadow(
+//                            radius = shadow.radius,
+//                            spread = shadow.spread,
+//                            color = shadow.color,
+//                            offset = shadow.offset,
+//                            alpha = 0.1f
+//                        )
+//                    )
                     .dropShadow(
                         shape = cardShape,
                         shadow = MaterialTheme.shadows.upperXL.firstShadow.toComposeShadow(
