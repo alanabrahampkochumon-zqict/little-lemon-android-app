@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,6 +55,9 @@ import com.littlelemon.application.core.presentation.utils.toComposeShadow
 @Composable
 fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
 
+    val context = LocalContext.current
+    val screenDensityRatio = context.resources.displayMetrics.density
+
     var emailAddress by remember {
         mutableStateOf("")
     }
@@ -69,7 +73,6 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
     val fontOffset = 6.dp
 
     fun sendOTP() {} // TODO: Replace with VM action
-
     // Handle Orientation
     val configuration = LocalConfiguration.current
     val orientation = configuration.orientation
@@ -103,27 +106,31 @@ fun LoginScreen(onSendOtp: () -> Unit, modifier: Modifier = Modifier) {
                 painter = painterResource(R.drawable.doodles),
                 contentDescription = stringResource(R.string.desc_logo),
                 Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillHeight,
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.contentHighlight),
-                alpha = 0.48f
+                alpha = 0.24f
             )
         }
 
         // Content
         Column(
             Modifier
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
             Box(modifier = Modifier.weight(0.1f)) // Padding Top
             Column(
                 Modifier
                     .dropShadow(
                         shape = cardShape,
-                        shadow = MaterialTheme.shadows.upperXL.firstShadow.toComposeShadow()
+                        shadow = MaterialTheme.shadows.upperXL.firstShadow.toComposeShadow(
+                            screenDensityRatio
+                        )
                     )
                     .dropShadow(
                         shape = cardShape,
-                        shadow = MaterialTheme.shadows.upperXL.secondShadow?.toComposeShadow()
+                        shadow = MaterialTheme.shadows.upperXL.secondShadow?.toComposeShadow(
+                            screenDensityRatio
+                        )
                             ?: Shadow(radius = 0.dp)
                     )
                     .background(

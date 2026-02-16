@@ -1,15 +1,15 @@
 package com.littlelemon.application.core.presentation.designsystem
 
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
 
 data class ShadowSpec(
-    val radius: Dp,
-    val offset: DpOffset,
+    val radius: Float,
+    val offsetX: Float,
+    val offsetY: Float,
     val color: Int,
-    val spread: Dp = 0.dp // FIXME: Add Blendmode
+    val spread: Float = 0f,
+    val alpha: Float = 1.0f,
+    // FIXME: Add Blendmode
 )
 
 data class CustomShadow(
@@ -18,15 +18,14 @@ data class CustomShadow(
 )
 
 data class Shadows(
-    // TODO: Change this to add px to dp helper
     val shadowUpperMD: CustomShadow = CustomShadow(
-        ShadowSpec(radius = 8.dp, offset = DpOffset(x = 0.dp, y = (-2).dp), color = 0x0B000000),
-        ShadowSpec(radius = 40.dp, offset = DpOffset(x = 0.dp, y = (-4).dp), color = 0x04000000)
+        ShadowSpec(radius = 8f, offsetX = 0f, offsetY = -2f, color = 0x000000, alpha = 0.12f),
+        ShadowSpec(radius = 40f, offsetX = 0f, offsetY = -4f, color = 0x000000, alpha = 0.04f)
     ),
 
     val upperXL: CustomShadow = CustomShadow(
-        ShadowSpec(radius = (48f).dp, offset = DpOffset(x = 0.dp, y = (-8).dp), color = 0x04000000),
-        ShadowSpec(radius = (24f).dp, offset = DpOffset(x = 0.dp, y = (-12).dp), color = 0x08000000)
+        ShadowSpec(radius = 48f, offsetX = 0f, offsetY = -8f, color = 0x000000, alpha = 0.04f),
+        ShadowSpec(radius = 24f, offsetX = 0f, offsetY = -12f, color = 0x000000, alpha = 0.08f)
     )
 )
 
