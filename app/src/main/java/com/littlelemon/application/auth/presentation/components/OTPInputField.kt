@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.text.TextRange
@@ -34,7 +36,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
+import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import com.littlelemon.application.core.presentation.designsystem.xSmall
 
 @Composable
 fun OTPInputField(
@@ -63,19 +67,20 @@ fun OTPInputField(
         mutableStateOf(false)
     }
 
-
     val borderColor = if (errorMessage != null) {
         MaterialTheme.colors.outlineError
-    } else if (!enabled) {
-        MaterialTheme.colors.outlineDisabled
     } else if (isFocused) {
-        MaterialTheme.colors.outlineAccent
+        MaterialTheme.colors.outlineActive
+    } else if (number == null) {
+        MaterialTheme.colors.secondary
     } else {
-        MaterialTheme.colors.outlinePrimary
+        MaterialTheme.colors.transparent
     }
 
     val backgroundColor = if (!enabled) {
         MaterialTheme.colors.disabled
+    } else if (!isFocused) {
+        MaterialTheme.colors.secondary
     } else {
         MaterialTheme.colors.primary
     }
@@ -89,8 +94,8 @@ fun OTPInputField(
     Box(
         modifier = modifier
             .size(56.dp)
-            .background(backgroundColor, shape = MaterialTheme.shapes.small)
-            .border(width = 1.dp, color = borderColor, shape = MaterialTheme.shapes.small),
+            .background(backgroundColor, shape = MaterialTheme.shapes.xSmall)
+            .border(width = 2.dp, color = borderColor, shape = MaterialTheme.shapes.xSmall),
         contentAlignment = Alignment.Center,
 
         ) {
@@ -98,11 +103,11 @@ fun OTPInputField(
             value = text,
             onValueChange = { newText ->
                 val newNumber = newText.text
-                if (newNumber.isEmpty() && newNumber.isDigitsOnly()) {
+                if (newNumber.isEmpty() || newNumber.isDigitsOnly()) {
                     onNumberChanged(newNumber.toIntOrNull())
                 }
             },
-            cursorBrush = SolidColor(MaterialTheme.colors.contentAccent),
+//            cursorBrush = SolidColor(MaterialTheme.colors.contentHighlight),
             textStyle = MaterialTheme.typeStyle.displayLarge.copy(
                 textAlign = TextAlign.Center,
                 color = textColor
@@ -133,7 +138,10 @@ fun OTPInputField(
 @Composable
 private fun OTPInputFieldPreview() {
     LittleLemonTheme {
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(8.dp)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(8.dp)
+        ) {
             OTPInputField(
                 number = 2,
                 focusRequester = remember { FocusRequester() },
@@ -156,6 +164,20 @@ private fun OTPInputFieldPreview() {
                 onNumberChanged = {},
                 onKeyboardBack = {},
                 enabled = false
+            )
+            OTPInputField(
+                number = 2,
+                focusRequester = remember { FocusRequester() },
+                onFocusChanged = {},
+                onNumberChanged = {},
+                onKeyboardBack = {},
+            )
+            OTPInputField(
+                number = null,
+                focusRequester = remember { FocusRequester() },
+                onFocusChanged = {},
+                onNumberChanged = {},
+                onKeyboardBack = {},
             )
         }
     }

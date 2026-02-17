@@ -14,3 +14,6 @@ val Shapes.xLarge: RoundedCornerShape
 
 val Shapes.None: RoundedCornerShape
     get() = RoundedCornerShape(0.dp)
+
+val Shapes.xSmall: RoundedCornerShape
+    get() = RoundedCornerShape(8.dp)
