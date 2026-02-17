@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -51,8 +51,8 @@ fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
 
-    val screenWidth = configuration.screenWidthDp.dp
     val screenDensityRatio = context.resources.displayMetrics.density
+    val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
 
     val isFloating =
@@ -83,99 +83,92 @@ fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
         ).add(WindowInsets.displayCutout).add(WindowInsets.ime)
     ) { innerPadding ->
         // Background
-        DoodleBackground()
+        DoodleBackground(modifier = Modifier)
 
-        LoginScreenRoot(
-            authState = state,
-            innerPadding = innerPadding,
-            screenDensityRatio = screenDensityRatio,
+        CardLayout(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
             isFloating = isFloating,
             isScrollable = isScrollable,
             maxHeight = maxHeight,
-            onEmailChange = ::onEmailChange,
-            onSendOTP = ::onSendOTP,
-            modifier = modifier
-        )
+            screenDensityRatio = screenDensityRatio
+        ) {
+            LoginContent(
+                authState = state,
+                isScrollable = isScrollable,
+                onEmailChange = ::onEmailChange,
+                onSendOTP = ::onSendOTP,
+                modifier = Modifier
+            )
+        }
     }
 }
 
 @Composable
-fun LoginScreenRoot(
+fun ColumnScope.LoginContent(
     authState: AuthState,
-    screenDensityRatio: Float = 2f,
-    maxHeight: Dp = 700.dp,
-    isFloating: Boolean = false,
-    isScrollable: Boolean = false,
-    innerPadding: PaddingValues = PaddingValues(),
     modifier: Modifier = Modifier,
+    isScrollable: Boolean = false,
     onEmailChange: (String) -> Unit = {},
     onSendOTP: () -> Unit = {},
 ) {
 
-    CardLayout(
+    Image(
         modifier = modifier
-            .padding(innerPadding)
-            .fillMaxSize(),
-        isFloating = isFloating,
-        isScrollable = isScrollable,
-        maxHeight = maxHeight,
-        screenDensityRatio = screenDensityRatio
-    ) {
-        Image(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .height(48.dp),
-            painter = painterResource(R.drawable.logo_full),
-            contentDescription = null
-        )
-        Spacer(Modifier.height(MaterialTheme.dimens.size3XL - AuthScreenConfig.FONT_OFFSET))
-        Text(
-            stringResource(R.string.heading_login),
-            style = MaterialTheme.typeStyle.displaySmall,
-            color = MaterialTheme.colors.contentPrimary,
-        )
-        Spacer(Modifier.height(MaterialTheme.dimens.sizeLG - AuthScreenConfig.FONT_OFFSET))
+            .align(Alignment.CenterHorizontally)
+            .height(48.dp),
+        painter = painterResource(R.drawable.logo_full),
+        contentDescription = null
+    )
+    Spacer(Modifier.height(MaterialTheme.dimens.size3XL - AuthScreenConfig.FONT_OFFSET))
+    Text(
+        stringResource(R.string.heading_login),
+        style = MaterialTheme.typeStyle.displaySmall,
+        color = MaterialTheme.colors.contentPrimary,
+    )
+    Spacer(Modifier.height(MaterialTheme.dimens.sizeLG - AuthScreenConfig.FONT_OFFSET))
 
-        Column(
-            Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(
-                MaterialTheme.dimens.sizeSM
-            )
-        ) {
-            TextInputField(
-                stringResource(R.string.placeholder_email_address),
-                value = authState.email,
-                errorMessage = authState.emailError,
-                onValueChange = onEmailChange,
-                modifier = Modifier.testTag(stringResource(R.string.test_tag_email_field))
-            )
-            Text(
-                stringResource(R.string.body_email_description),
-                style = MaterialTheme.typeStyle.bodySmall,
-                color = MaterialTheme.colors.contentTertiary
-            )
-        }
-        if (isScrollable) {
-            Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
-        } else {
-            Spacer(Modifier.weight(1f))
-        }
-        Button(
-            stringResource(R.string.act_send_otp),
-            onSendOTP,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = authState.enableSendButton && !authState.isLoading
+    Column(
+        Modifier
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(
+            MaterialTheme.dimens.sizeSM
+        )
+    ) {
+        TextInputField(
+            stringResource(R.string.placeholder_email_address),
+            value = authState.email,
+            errorMessage = authState.emailError,
+            onValueChange = onEmailChange,
+            modifier = Modifier.testTag(stringResource(R.string.test_tag_email_field))
+        )
+        Text(
+            stringResource(R.string.body_email_description),
+            style = MaterialTheme.typeStyle.bodySmall,
+            color = MaterialTheme.colors.contentTertiary
         )
     }
-
+    if (isScrollable) {
+        Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+    } else {
+        Spacer(Modifier.weight(1f))
+    }
+    Button(
+        stringResource(R.string.act_send_otp),
+        onSendOTP,
+        modifier = Modifier.fillMaxWidth(),
+        enabled = authState.enableSendButton && !authState.isLoading
+    )
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun LoginScreenPreview() {
     LittleLemonTheme {
-        LoginScreenRoot(AuthState())
+        Column {
+            LoginContent(AuthState())
+        }
     }
 }

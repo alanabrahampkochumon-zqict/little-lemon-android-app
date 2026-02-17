@@ -1,10 +1,12 @@
 package com.littlelemon.application.auth.presentation
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -32,6 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,9 +46,67 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.components.Button
 import com.littlelemon.application.core.presentation.designsystem.components.ButtonVariant
+import com.littlelemon.application.core.presentation.designsystem.components.TextInputField
 import com.littlelemon.application.core.presentation.designsystem.components.TopNavigationBar
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+
+@Composable
+fun ColumnScope.VerificationContent(
+    authState: AuthState,
+    modifier: Modifier = Modifier,
+    isScrollable: Boolean = false,
+    onEmailChange: (String) -> Unit = {},
+    onSendOTP: () -> Unit = {},
+) {
+
+    Image(
+        modifier = modifier
+            .align(Alignment.CenterHorizontally)
+            .height(48.dp),
+        painter = painterResource(R.drawable.logo_full),
+        contentDescription = null
+    )
+    Spacer(Modifier.height(MaterialTheme.dimens.size3XL - AuthScreenConfig.FONT_OFFSET))
+    Text(
+        stringResource(R.string.heading_login),
+        style = MaterialTheme.typeStyle.displaySmall,
+        color = MaterialTheme.colors.contentPrimary,
+    )
+    Spacer(Modifier.height(MaterialTheme.dimens.sizeLG - AuthScreenConfig.FONT_OFFSET))
+
+    Column(
+        Modifier
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(
+            MaterialTheme.dimens.sizeSM
+        )
+    ) {
+        TextInputField(
+            stringResource(R.string.placeholder_email_address),
+            value = authState.email,
+            errorMessage = authState.emailError,
+            onValueChange = onEmailChange,
+            modifier = Modifier.testTag(stringResource(R.string.test_tag_email_field))
+        )
+        Text(
+            stringResource(R.string.body_email_description),
+            style = MaterialTheme.typeStyle.bodySmall,
+            color = MaterialTheme.colors.contentTertiary
+        )
+    }
+    if (isScrollable) {
+        Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+    } else {
+        Spacer(Modifier.weight(1f))
+    }
+    Button(
+        stringResource(R.string.act_send_otp),
+        onSendOTP,
+        modifier = Modifier.fillMaxWidth(),
+        enabled = authState.enableSendButton && !authState.isLoading
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

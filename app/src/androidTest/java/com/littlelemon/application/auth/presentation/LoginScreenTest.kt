@@ -30,7 +30,7 @@ class LoginScreenTest {
         val state = AuthState()
 
         composeTestRule.setContent {
-            LoginScreenRoot(state)
+            LoginContent(state)
         }
 
         // Then: Email Placeholder is shown and  `Send OTP` Button is shown
@@ -44,7 +44,7 @@ class LoginScreenTest {
         val state = AuthState(email = validEmail, enableSendButton = true)
 
         composeTestRule.setContent {
-            LoginScreenRoot(state)
+            LoginContent(state)
         }
 
         // Then: Send OTP button is enabled, email is displayed and placeholder is hidden
@@ -59,7 +59,7 @@ class LoginScreenTest {
         val state = AuthState(email = invalidEmail, emailError = emailError)
 
         composeTestRule.setContent {
-            LoginScreenRoot(state)
+            LoginContent(state)
         }
 
         // Then: Send OTP button is enabled, email is displayed and placeholder is hidden
