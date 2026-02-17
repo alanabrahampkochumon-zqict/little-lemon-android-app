@@ -1,5 +1,6 @@
 package com.littlelemon.application.auth.di
 
+import com.littlelemon.application.BuildConfig
 import com.littlelemon.application.auth.data.AuthRepositoryImpl
 import com.littlelemon.application.auth.data.remote.AuthRemoteDataSource
 import com.littlelemon.application.auth.domain.AuthRepository
@@ -30,8 +31,11 @@ val authModule = module {
     single<AuthRemoteDataSource> { AuthRemoteDataSource(get()) }
 
     single<SupabaseClient> {
-        createSupabaseClient(supabaseKey = "", supabaseUrl = "") {
-            defaultSerializer = KotlinXSerializer(Json { })
+        createSupabaseClient(
+            supabaseKey = BuildConfig.SUPABASE_KEY,
+            supabaseUrl = BuildConfig.SUPABASE_URL
+        ) {
+            defaultSerializer = KotlinXSerializer(Json { ignoreUnknownKeys = true })
         }
     }
 
