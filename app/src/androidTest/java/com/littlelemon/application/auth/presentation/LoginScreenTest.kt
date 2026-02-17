@@ -1,6 +1,7 @@
 package com.littlelemon.application.auth.presentation
 
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotDisplayed
@@ -30,7 +31,9 @@ class LoginScreenTest {
         val state = AuthState()
 
         composeTestRule.setContent {
-            LoginContent(state)
+            Column {
+                LoginContent(state)
+            }
         }
 
         // Then: Email Placeholder is shown and  `Send OTP` Button is shown
@@ -44,7 +47,9 @@ class LoginScreenTest {
         val state = AuthState(email = validEmail, enableSendButton = true)
 
         composeTestRule.setContent {
-            LoginContent(state)
+            Column {
+                LoginContent(state)
+            }
         }
 
         // Then: Send OTP button is enabled, email is displayed and placeholder is hidden
@@ -59,7 +64,9 @@ class LoginScreenTest {
         val state = AuthState(email = invalidEmail, emailError = emailError)
 
         composeTestRule.setContent {
-            LoginContent(state)
+            Column {
+                LoginContent(state)
+            }
         }
 
         // Then: Send OTP button is enabled, email is displayed and placeholder is hidden

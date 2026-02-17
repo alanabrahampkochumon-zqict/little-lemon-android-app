@@ -135,7 +135,7 @@ class AddressViewModel(
                 when (val result = saveAddress(address)) {
                     is Resource.Failure -> {
                         events.add(
-                            AddressEvents.ShowError(
+                            ShowError(
                                 if (result.errorMessage != null) DynamicString(
                                     result.errorMessage
                                 ) else StringResource(R.string.generic_error_message)

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -44,6 +45,7 @@ fun TopNavigationBar(
 
     TopAppBar(
         modifier = modifier,
+        windowInsets = WindowInsets(0.dp),
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colors.transparent,
             titleContentColor = MaterialTheme.colors.contentPrimary,
@@ -55,8 +57,8 @@ fun TopNavigationBar(
                 Box(
                     modifier = Modifier
                         .minimumInteractiveComponentSize()
-                        .fillMaxHeight()
-                        .clickable { onNavigate() }, contentAlignment = Alignment.Center
+                        .clickable { onNavigate() },
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(icon),

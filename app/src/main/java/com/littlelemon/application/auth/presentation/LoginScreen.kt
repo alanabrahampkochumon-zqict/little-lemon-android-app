@@ -3,7 +3,10 @@ package com.littlelemon.application.auth.presentation
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
@@ -21,8 +24,12 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -43,6 +50,12 @@ import com.littlelemon.application.core.presentation.designsystem.components.But
 import com.littlelemon.application.core.presentation.designsystem.components.TextInputField
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+
+enum class Step {
+    Login,
+    Verify,
+    Personalize
+}
 
 @Composable
 fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
@@ -74,7 +87,8 @@ fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
         Toast.makeText(context, "Sending otp...", Toast.LENGTH_LONG).show()
 //        viewModel.onAction((AuthActions.SendOTP))
     }
-
+    // FIXME: Remove Temporary Route
+    var route by remember { mutableStateOf(Step.Verify) }
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
@@ -94,19 +108,63 @@ fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
             maxHeight = maxHeight,
             screenDensityRatio = screenDensityRatio
         ) {
-            LoginContent(
-                authState = state,
-                isScrollable = isScrollable,
-                onEmailChange = ::onEmailChange,
-                onSendOTP = ::onSendOTP,
-                modifier = Modifier
-            )
+            when (route) {
+                Step.Login -> LoginContent(
+                    authState = state,
+                    isScrollable = isScrollable,
+                    onEmailChange = ::onEmailChange,
+                    onSendOTP = ::onSendOTP,
+                    modifier = Modifier.padding(
+                        top = MaterialTheme.dimens.sizeMD,
+                        start = MaterialTheme.dimens.sizeXL,
+                        end = MaterialTheme.dimens.sizeXL
+                    )
+                )
+
+                Step.Verify -> VerificationContent(
+                    authState = state,
+                    modifier = Modifier,
+                    isScrollable = isScrollable,
+                    onChangeEmail = {
+                        Toast.makeText(context, "Changing email", Toast.LENGTH_LONG).show()
+                    },
+                    onVerifyEmail = {
+                        Toast.makeText(context, "Verifying Email", Toast.LENGTH_LONG).show()
+                    })
+
+                Step.Personalize -> TODO()
+            }
+
+        }
+
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .background(MaterialTheme.colors.action.copy(alpha = 0.5f))
+        ) {
+            Column {
+                Text(
+                    "Login",
+                    modifier = Modifier
+                        .minimumInteractiveComponentSize()
+                        .clickable { route = Step.Login })
+                Text(
+                    "Verify",
+                    modifier = Modifier
+                        .minimumInteractiveComponentSize()
+                        .clickable { route = Step.Verify })
+                Text(
+                    "Personalize",
+                    modifier = Modifier
+                        .minimumInteractiveComponentSize()
+                        .clickable { route = Step.Personalize })
+            }
         }
     }
 }
 
 @Composable
-fun ColumnScope.LoginContent(
+fun LoginContent(
     authState: AuthState,
     modifier: Modifier = Modifier,
     isScrollable: Boolean = false,
@@ -114,52 +172,54 @@ fun ColumnScope.LoginContent(
     onSendOTP: () -> Unit = {},
 ) {
 
-    Image(
-        modifier = modifier
-            .align(Alignment.CenterHorizontally)
-            .height(48.dp),
-        painter = painterResource(R.drawable.logo_full),
-        contentDescription = null
-    )
-    Spacer(Modifier.height(MaterialTheme.dimens.size3XL - AuthScreenConfig.FONT_OFFSET))
-    Text(
-        stringResource(R.string.heading_login),
-        style = MaterialTheme.typeStyle.displaySmall,
-        color = MaterialTheme.colors.contentPrimary,
-    )
-    Spacer(Modifier.height(MaterialTheme.dimens.sizeLG - AuthScreenConfig.FONT_OFFSET))
-
-    Column(
-        Modifier
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(
-            MaterialTheme.dimens.sizeSM
+    Column(modifier = modifier) {
+        Image(
+            modifier = modifier
+                .align(Alignment.CenterHorizontally)
+                .height(48.dp),
+            painter = painterResource(R.drawable.logo_full),
+            contentDescription = null
         )
-    ) {
-        TextInputField(
-            stringResource(R.string.placeholder_email_address),
-            value = authState.email,
-            errorMessage = authState.emailError,
-            onValueChange = onEmailChange,
-            modifier = Modifier.testTag(stringResource(R.string.test_tag_email_field))
-        )
+        Spacer(Modifier.height(MaterialTheme.dimens.size3XL - AuthScreenConfig.FONT_OFFSET))
         Text(
-            stringResource(R.string.body_email_description),
-            style = MaterialTheme.typeStyle.bodySmall,
-            color = MaterialTheme.colors.contentTertiary
+            stringResource(R.string.heading_login),
+            style = MaterialTheme.typeStyle.displaySmall,
+            color = MaterialTheme.colors.contentPrimary,
+        )
+        Spacer(Modifier.height(MaterialTheme.dimens.sizeLG - AuthScreenConfig.FONT_OFFSET))
+
+        Column(
+            Modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(
+                MaterialTheme.dimens.sizeSM
+            )
+        ) {
+            TextInputField(
+                stringResource(R.string.placeholder_email_address),
+                value = authState.email,
+                errorMessage = authState.emailError,
+                onValueChange = onEmailChange,
+                modifier = Modifier.testTag(stringResource(R.string.test_tag_email_field))
+            )
+            Text(
+                stringResource(R.string.body_email_description),
+                style = MaterialTheme.typeStyle.bodySmall,
+                color = MaterialTheme.colors.contentTertiary
+            )
+        }
+        if (isScrollable) {
+            Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+        } else {
+            Spacer(Modifier.weight(1f))
+        }
+        Button(
+            stringResource(R.string.act_send_otp),
+            onSendOTP,
+            modifier = Modifier.fillMaxWidth(),
+            enabled = authState.enableSendButton && !authState.isLoading
         )
     }
-    if (isScrollable) {
-        Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
-    } else {
-        Spacer(Modifier.weight(1f))
-    }
-    Button(
-        stringResource(R.string.act_send_otp),
-        onSendOTP,
-        modifier = Modifier.fillMaxWidth(),
-        enabled = authState.enableSendButton && !authState.isLoading
-    )
 }
 
 

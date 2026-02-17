@@ -7,7 +7,6 @@ import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.LoginScreen
 import com.littlelemon.application.auth.presentation.PersonalInformationScreen
-import com.littlelemon.application.auth.presentation.VerificationScreen
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -27,7 +26,7 @@ fun NavigationRoot() {
 
                 is Route.Verification -> {
                     NavEntry(key) {
-                        VerificationScreen()
+                        /* TODO() */
                     }
                 }
 

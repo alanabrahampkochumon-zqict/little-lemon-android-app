@@ -3,7 +3,6 @@ package com.littlelemon.application.auth.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.heightIn
@@ -34,7 +33,7 @@ fun CardLayout(
     isScrollable: Boolean = false,
     maxHeight: Dp = 700.dp,
     screenDensityRatio: Float = 2.0f,
-    content: @Composable ColumnScope.() -> Unit = {}
+    content: @Composable () -> Unit = {}
 ) {
 
     val scrollState = rememberScrollState()
@@ -70,9 +69,9 @@ fun CardLayout(
                 )
                 .padding(
                     paddingValues = PaddingValues(
-                        top = MaterialTheme.dimens.size2XL,
-                        end = MaterialTheme.dimens.size2XL,
-                        start = MaterialTheme.dimens.size2XL,
+                        top = MaterialTheme.dimens.sizeXL,
+                        start = MaterialTheme.dimens.sizeMD,
+                        end = MaterialTheme.dimens.sizeMD,
                         bottom = if (isFloating) MaterialTheme.dimens.size2XL else MaterialTheme.dimens.size4XL,
                     )
                 )
