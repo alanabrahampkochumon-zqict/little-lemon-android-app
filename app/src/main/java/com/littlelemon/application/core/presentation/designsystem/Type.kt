@@ -135,19 +135,18 @@ data class LittleLemonTypography(
     val displayMedium: TextStyle = Typography.displayMedium,
     val displaySmall: TextStyle = Typography.displaySmall,
 
-    val headlineXLarge: TextStyle = Typography.headlineLarge,
-    val headlineLarge: TextStyle = Typography.headlineMedium,
-    val headlineMedium: TextStyle = Typography.headlineSmall,
-    val headlineSmall: TextStyle = Typography.titleLarge,
+    val headlineLarge: TextStyle = Typography.headlineLarge,
+    val headlineMedium: TextStyle = Typography.headlineMedium,
+    val headlineSmall: TextStyle = Typography.headlineSmall,
 
     val labelLarge: TextStyle = Typography.labelLarge,
     val labelMedium: TextStyle = Typography.labelMedium,
     val labelSmall: TextStyle = Typography.labelSmall,
 
-    val bodyLarge: TextStyle = Typography.titleMedium,
-    val bodyMedium: TextStyle = Typography.bodyLarge,
-    val bodySmall: TextStyle = Typography.bodyMedium,
-    val bodyXSmall: TextStyle = Typography.bodySmall,
+    val bodyLarge: TextStyle = Typography.bodyLarge,
+    val bodyMedium: TextStyle = Typography.bodyMedium,
+    val bodySmall: TextStyle = Typography.bodySmall,
+    val bodyXSmall: TextStyle = Typography.bodyXSmall,
 )
 
 val LocalCustomTypography = staticCompositionLocalOf { LittleLemonTypography() }

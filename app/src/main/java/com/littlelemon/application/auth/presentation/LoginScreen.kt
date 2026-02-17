@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -82,9 +83,9 @@ fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
 @Composable
 fun LoginScreenRoot(
     authState: AuthState,
+    modifier: Modifier = Modifier,
     onEmailChange: (String) -> Unit = {},
     onSendOTP: () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
@@ -209,11 +210,12 @@ fun LoginScreenRoot(
                         stringResource(R.string.placeholder_email_address),
                         value = authState.email,
                         errorMessage = authState.emailError,
-                        onValueChange = onEmailChange
+                        onValueChange = onEmailChange,
+                        modifier = Modifier.testTag(stringResource(R.string.test_tag_email_field))
                     )
                     Text(
                         stringResource(R.string.body_email_description),
-                        style = MaterialTheme.typeStyle.bodyXSmall,
+                        style = MaterialTheme.typeStyle.bodySmall,
                         color = MaterialTheme.colors.contentTertiary
                     )
                 }

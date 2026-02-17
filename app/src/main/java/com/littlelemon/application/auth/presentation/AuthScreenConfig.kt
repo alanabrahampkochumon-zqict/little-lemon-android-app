@@ -8,5 +8,5 @@ object AuthScreenConfig {
     val MAX_CARD_WIDTH = 640.dp
     val MAX_CARD_HEIGHT = 640.dp
     val FONT_OFFSET = 6.dp    // Used to adjust the spacing cause by font rendering of Markazi text.
-    val CARD_HEIGHT_MULTIPLIER = 0.85f
+    const val CARD_HEIGHT_MULTIPLIER = 0.85f
 }

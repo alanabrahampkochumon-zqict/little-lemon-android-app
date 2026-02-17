@@ -50,4 +50,7 @@
     <string name="location_granted_success_message">Location granted successfully!</string>
     <string name="location_saved_success_message">Location granted successfully!</string>
 
+    <!--  Test Tags -->
+    <string name="test_tag_email_field">Email Address Field</string>
+
 </resources>

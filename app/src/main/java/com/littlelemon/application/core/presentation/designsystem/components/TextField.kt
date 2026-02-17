@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
@@ -114,15 +115,18 @@ fun TextInputField(
                 visualTransformation = visualTransformation,
                 isError = errorMessage != null,
                 container = {
-                    OutlinedTextFieldDefaults.Container(
-                        enabled,
-                        errorMessage != null,
-                        interactionSource,
-                        focusedBorderThickness = MaterialTheme.dimens.size2XS,
-                        colors = colors,
-                        shape = MaterialTheme.shapes.small
-                    )
-                },
+                        OutlinedTextFieldDefaults.Container(
+                            enabled,
+                            errorMessage != null,
+                            interactionSource,
+                            focusedBorderThickness = MaterialTheme.dimens.size2XS,
+                            colors = colors,
+                            shape = MaterialTheme.shapes.small,
+                            modifier = Modifier.fillMaxWidth(),
+                            )
+
+                    }
+                ,
                 contentPadding = PaddingValues(
                     horizontal = MaterialTheme.dimens.sizeXL,
                     vertical = MaterialTheme.dimens.sizeLG
@@ -132,58 +136,19 @@ fun TextInputField(
                 label = null,
                 prefix = null,
                 suffix = null,
-                supportingText = null
+                supportingText = null,
+            )
+        }
+        errorMessage?.let { message ->
+            Text(
+                text = message,
+                style = MaterialTheme.typeStyle.bodySmall,
+                color = MaterialTheme.colors.contentError,
+                textAlign = TextAlign.End,
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
-//        OutlinedTextField(
-//            value = value,
-//            onValueChange = onValueChange,
-//            placeholder = {
-//                Text(text = placeholder, style = MaterialTheme.typeStyle.labelMedium)
-//            },
-//            modifier = Modifier
-//                .minimumInteractiveComponentSize()
-//                .fillMaxWidth()
-//                .then(modifier),
-//            colors = colors,
-//            enabled = enabled,
-//            leadingIcon = iconLeft?.let { icon ->
-//                {
-//                    Icon(
-//                        painter = painterResource(icon),
-//                        contentDescription = iconLeftDescription,
-//                        modifier = Modifier.size(iconSize)
-//                    )
-//                }
-//            },
-//            trailingIcon = iconRight?.let { icon ->
-//                {
-//                    Icon(
-//                        painter = painterResource(icon),
-//                        contentDescription = iconRightDescription,
-//                        modifier = Modifier.size(iconSize)
-//                    )
-//                }
-//            },
-//            singleLine = true,
-//            keyboardOptions = keyboardOptions,
-//            keyboardActions = keyboardActions,
-//            visualTransformation = visualTransformation,
-//            shape = MaterialTheme.shapes.small,
-//            isError = errorMessage != null,
-//            textStyle = MaterialTheme.typeStyle.labelMedium,
-//
-//            )
-//        errorMessage?.let { message ->
-//            Text(
-//                text = message,
-//                style = MaterialTheme.typeStyle.bodySmall,
-//                color = MaterialTheme.colors.contentError,
-//                textAlign = TextAlign.End,
-//                modifier = Modifier.align(Alignment.End)
-//            )
-//        }
     }
 }
 
