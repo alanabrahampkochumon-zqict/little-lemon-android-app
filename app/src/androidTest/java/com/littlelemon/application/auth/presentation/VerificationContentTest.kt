@@ -58,7 +58,6 @@ class VerificationContentTest {
             otpFields[index].assertTextEquals("$index")
         }
     }
-    
 
     @Test
     fun verificationContent_incompleteOTP_verifyButtonIsDisabled() {

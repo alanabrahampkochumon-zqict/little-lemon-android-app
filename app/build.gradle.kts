@@ -119,8 +119,10 @@ dependencies {
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     testImplementation(libs.kotlin.faker)
     testImplementation(libs.turbine)
+    testImplementation(libs.io.ktor.mock)
+    testImplementation(libs.roboelectric)
+    testImplementation(libs.junit.vintage.engine)
     testImplementation(testFixtures(project(":app")))
-    androidTestImplementation(testFixtures(project(":app")))
 
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.platform)
@@ -136,8 +138,8 @@ dependencies {
     testFixturesImplementation(libs.io.ktor.client)
     testFixturesImplementation(libs.kotlin.faker)
 
-    testImplementation(libs.io.ktor.mock)
 
+    androidTestImplementation(testFixtures(project(":app")))
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -145,10 +147,17 @@ dependencies {
     androidTestImplementation(libs.kotlinx.coroutines.play.services)
     androidTestImplementation(libs.kotlin.faker)
     androidTestImplementation(kotlin("test"))
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
 
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
     testFixturesCompileOnly("org.jetbrains.kotlin:kotlin-stdlib:$kotlin")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
