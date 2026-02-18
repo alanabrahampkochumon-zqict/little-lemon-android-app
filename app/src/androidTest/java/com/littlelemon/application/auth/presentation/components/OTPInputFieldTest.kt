@@ -52,7 +52,7 @@ class OTPInputFieldTest {
 
     @Test
     fun otpInput_whenNotEmptyAndDigitEntered_replacesExistingNumber() {
-        // Given an empty otp field
+        // Given an non-empty otp field
         var capturedNumber: Int? = 5
 
         composeTestRule.setContent {
@@ -70,14 +70,14 @@ class OTPInputFieldTest {
         composeTestRule.onNodeWithTag(otpFieldTag).performClick()
         composeTestRule.onNode(hasSetTextAction()).performTextInput("7")
 
-        // Assert that the callback received is 7
+        // Assert that the field is updated(callback called)
         assertEquals(7, capturedNumber)
     }
 
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun otpInput_whenFilledAndBackspacePressed_deletesExistingNumber() {
-        // Given an empty otp field
+        // Given an non-empty otp field
         var capturedNumber: Int? = 5
 
         composeTestRule.setContent {
@@ -96,7 +96,7 @@ class OTPInputFieldTest {
         composeTestRule.onNode(hasSetTextAction())
             .performKeyInput { pressKey(Key.Backspace) }
 
-        // Assert that the callback received is 7
+        // Assert that the captured field is non-empty
         assertNull(capturedNumber)
     }
 
@@ -121,7 +121,7 @@ class OTPInputFieldTest {
         composeTestRule.onNodeWithTag(otpFieldTag).performClick()
         composeTestRule.onNodeWithTag(otpFieldTag).performKeyInput { pressKey(Key.Backspace) }
 
-        // Assert that the callback received is 7
+        // Assert onKeyboardBack is called
         assertTrue { onKeyboardBack }
     }
 
@@ -142,11 +142,11 @@ class OTPInputFieldTest {
             )
         }
 
-        // When clicked and a backspace is entered
+        // When clicked and a non-digit is entered
         composeTestRule.onNodeWithTag(otpFieldTag).performClick()
         composeTestRule.onNode(hasSetTextAction()).performTextInput("a")
 
-        // Assert that the callback received is 7
+        // Assert that the field is not updated(null)
         assertNull(capturedNumber)
     }
 }

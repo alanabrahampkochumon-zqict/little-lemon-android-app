@@ -73,7 +73,7 @@ fun VerificationContent(
             Spacer(Modifier.weight(1f))
         }
         Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.size2XL)) {
-            Button(stringResource(R.string.act_verify), onClick = onVerifyEmail)
+            Button(stringResource(R.string.act_verify), onClick = onVerifyEmail, enabled = authState.enableVerifyButton)
         }
     }
 }
