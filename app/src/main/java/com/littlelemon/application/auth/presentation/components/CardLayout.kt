@@ -70,8 +70,6 @@ fun CardLayout(
                 .padding(
                     paddingValues = PaddingValues(
                         top = MaterialTheme.dimens.sizeXL,
-                        start = MaterialTheme.dimens.sizeMD,
-                        end = MaterialTheme.dimens.sizeMD,
                         bottom = if (isFloating) MaterialTheme.dimens.size2XL else MaterialTheme.dimens.size4XL,
                     )
                 )

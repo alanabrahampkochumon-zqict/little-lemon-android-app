@@ -93,7 +93,7 @@ fun OTPInputField(
 
     Box(
         modifier = modifier
-            .size(56.dp)
+            .size(52.dp)
             .background(backgroundColor, shape = MaterialTheme.shapes.xSmall)
             .border(width = 2.dp, color = borderColor, shape = MaterialTheme.shapes.xSmall),
         contentAlignment = Alignment.Center,

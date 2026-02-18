@@ -51,8 +51,8 @@ fun VerificationContent(
         Spacer(Modifier.height(MaterialTheme.dimens.sizeXL))
         Column(
             modifier = Modifier.padding(
-                start = MaterialTheme.dimens.sizeXL,
-                end = MaterialTheme.dimens.sizeXL,
+                start = MaterialTheme.dimens.size2XL,
+                end = MaterialTheme.dimens.size2XL,
                 bottom = MaterialTheme.dimens.sizeXL
             ),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXL)
@@ -62,14 +62,14 @@ fun VerificationContent(
             OTPFields()
         }
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-            ResendTimer()
+            ResendTimer(onChangeEmail = onChangeEmail)
         }
         if(isScrollable) {
             Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
         } else {
             Spacer(Modifier.weight(1f))
         }
-        Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)) {
+        Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.size2XL)) {
         Button(stringResource(R.string.act_verify), onClick = onVerifyEmail)
         }
     }
@@ -83,7 +83,7 @@ fun EmailSubsection(emailAddress: String, modifier: Modifier = Modifier, onClick
             style = MaterialTheme.typeStyle.bodyMedium,
             color = MaterialTheme.colors.contentSecondary
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM), verticalAlignment = Alignment.CenterVertically) {
             Text(
                 emailAddress,
                 style = MaterialTheme.typeStyle.labelMedium,

@@ -60,7 +60,7 @@ fun ResendTimer(
                     ),
                     strokeWidth = MaterialTheme.dimens.sizeXS,
                     strokeCap = StrokeCap.Round,
-                    trackColor = MaterialTheme.colors.action,
+                    trackColor = MaterialTheme.colors.secondary,
                     color = MaterialTheme.colors.contentHighlight
                 )
                 Text(
@@ -74,7 +74,7 @@ fun ResendTimer(
         Box(
             modifier = Modifier
                 .background(
-                    MaterialTheme.colors.action,
+                    MaterialTheme.colors.secondary,
                     shape = MaterialTheme.shapes.xLarge.copy(
                         topEnd = CornerSize(0.dp),
                         bottomEnd = CornerSize(0.dp)

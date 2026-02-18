@@ -30,7 +30,7 @@ fun DoodleBackground(modifier: Modifier = Modifier) {
             Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
             colorFilter = ColorFilter.tint(MaterialTheme.colors.contentHighlight),
-            alpha = 0.24f
+            alpha = 0.15f
         )
     }
 }
