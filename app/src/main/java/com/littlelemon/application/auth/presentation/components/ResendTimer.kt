@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,20 +75,21 @@ fun ResendTimer(
     } else {
         Box(
             modifier = Modifier
+                .minimumInteractiveComponentSize()
+                .clip(shape = MaterialTheme.shapes.xLarge.copy(
+                    topEnd = CornerSize(0.dp),
+                    bottomEnd = CornerSize(0.dp)
+                ))
                 .background(
                     MaterialTheme.colors.secondary,
-                    shape = MaterialTheme.shapes.xLarge.copy(
-                        topEnd = CornerSize(0.dp),
-                        bottomEnd = CornerSize(0.dp)
-                    )
                 )
+                .clickable { onChangeEmail() }
                 .padding(
                     top = MaterialTheme.dimens.sizeLG,
                     bottom = MaterialTheme.dimens.sizeLG,
                     start = MaterialTheme.dimens.size2XL,
                     end = MaterialTheme.dimens.size3XL
                 )
-                .clickable { onChangeEmail() }
 
         ) {
             Text(

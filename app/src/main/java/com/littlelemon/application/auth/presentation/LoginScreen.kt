@@ -1,6 +1,7 @@
 package com.littlelemon.application.auth.presentation
 
 import android.content.res.Configuration
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -126,6 +127,9 @@ fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
                     authState = state,
                     modifier = Modifier,
                     isScrollable = isScrollable,
+                    onOTPChange = { newOTP ->
+                        viewModel.onAction(AuthActions.ChangeOTP(newOTP))
+                    },
                     onChangeEmail = {
                         Toast.makeText(context, "Changing email", Toast.LENGTH_LONG).show()
                     },

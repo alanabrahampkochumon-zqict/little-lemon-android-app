@@ -7,7 +7,7 @@ data class AuthState(
     val enableSendButton: Boolean = false,
 
     // Verify Screen
-    val oneTimePassword: List<Int> = listOf(),
+    val oneTimePassword: List<Int?> = List(6) { null },
     val otpError: String? = null,
     val enableVerifyButton: Boolean = false,
 

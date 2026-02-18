@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,6 +39,7 @@ fun VerificationContent(
     authState: AuthState,
     modifier: Modifier = Modifier,
     isScrollable: Boolean = false,
+    onOTPChange: (List<Int?>) -> Unit = {},
     onVerifyEmail: () -> Unit = {},
     onChangeEmail: () -> Unit = {}
 ) {
@@ -50,40 +52,47 @@ fun VerificationContent(
         )
         Spacer(Modifier.height(MaterialTheme.dimens.sizeXL))
         Column(
-            modifier = Modifier.padding(
-                start = MaterialTheme.dimens.size2XL,
-                end = MaterialTheme.dimens.size2XL,
-                bottom = MaterialTheme.dimens.sizeXL
-            ),
+            modifier = Modifier
+                .padding(
+                    start = MaterialTheme.dimens.size2XL,
+                    end = MaterialTheme.dimens.size2XL,
+                    bottom = MaterialTheme.dimens.sizeXL
+                )
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXL)
         ) {
-            //    EmailSubsection(emailAddress = authState.email ?: "test@gmail.com")
-            EmailSubsection(emailAddress = "test@gmail.com") // TODO: Replace with VM
-            OTPFields()
+            EmailSubsection(emailAddress = authState.email)
+            OTPFields(otp = authState.oneTimePassword, onOTPChange = onOTPChange)
         }
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
             ResendTimer(onChangeEmail = onChangeEmail)
         }
-        if(isScrollable) {
+        if (isScrollable) {
             Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
         } else {
             Spacer(Modifier.weight(1f))
         }
         Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.size2XL)) {
-        Button(stringResource(R.string.act_verify), onClick = onVerifyEmail)
+            Button(stringResource(R.string.act_verify), onClick = onVerifyEmail)
         }
     }
 }
 
 @Composable
 fun EmailSubsection(emailAddress: String, modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
-    Column(modifier = modifier.clickable { onClick() }) {
+    Column(
+        modifier = modifier
+            .minimumInteractiveComponentSize()
+            .clickable { onClick() }) {
         Text(
             stringResource(R.string.body_verification_code),
             style = MaterialTheme.typeStyle.bodyMedium,
             color = MaterialTheme.colors.contentSecondary
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 emailAddress,
                 style = MaterialTheme.typeStyle.labelMedium,
@@ -100,21 +109,44 @@ fun EmailSubsection(emailAddress: String, modifier: Modifier = Modifier, onClick
 
 
 @Composable
-private fun OTPFields(errorMessage: String? = null) {
-    Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
+private fun OTPFields(
+    otp: List<Int?>,
+    onOTPChange: (List<Int?>) -> Unit,
+    errorMessage: String? = null
+) {
 
+    val otpSize = 6
+
+    val focusRequesters = remember {
+        List(otpSize) { FocusRequester() }
+    }
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
         ) {
-            repeat(6) {
+            repeat(otpSize) { index ->
                 OTPInputField(
-                    number = 2,
-                    focusRequester = remember { FocusRequester() },
-                    onFocusChanged = {},
-                    onNumberChanged = {},
-                    onKeyboardBack = {},
+                    number = otp[index],
+                    focusRequester = focusRequesters[index],
+                    onFocusChanged = { },
+                    onNumberChanged = { newNumber ->
+                        val newOtp = otp.toMutableList()
+                        newOtp[index] = newNumber
+                        onOTPChange(newOtp)
+
+                        if (index < otpSize - 1 && newNumber != null) {
+                            focusRequesters[index + 1].requestFocus()
+                        }
+                    },
+                    onKeyboardBack = {
+                        if (index > 0) {
+                            focusRequesters[index - 1].requestFocus()
+                        }
+                    },
                 )
             }
         }
@@ -135,6 +167,13 @@ private fun OTPFields(errorMessage: String? = null) {
 @Composable
 private fun VerificationScreenPreview() {
     LittleLemonTheme {
-        VerificationContent(AuthState(email = "test@littelemon.com"))
+        var otp: List<Int?> = listOf(3, 1, 6, 3, 1, 6)
+        VerificationContent(
+            AuthState(
+                email = "test@littelemon.com",
+                oneTimePassword = otp
+            ),
+            onOTPChange = { otp = it }
+        )
     }
 }

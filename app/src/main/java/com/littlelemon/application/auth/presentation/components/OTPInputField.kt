@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,8 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,10 +30,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.core.presentation.designsystem.xSmall
 
@@ -52,10 +47,10 @@ fun OTPInputField(
     errorMessage: String? = null,
 ) {
 
-    var text by remember {
+    var text by remember(number) {
         mutableStateOf(
             TextFieldValue(
-                text = number?.toString().orEmpty(),
+                text = number?.toString() ?: "",
                 selection = TextRange(
                     index = if (number != null) 1 else 0
                 )
@@ -102,19 +97,18 @@ fun OTPInputField(
         BasicTextField(
             value = text,
             onValueChange = { newText ->
-                val newNumber = newText.text
-                if (newNumber.isEmpty() || newNumber.isDigitsOnly()) {
-                    onNumberChanged(newNumber.toIntOrNull())
+                val newNumber = newText.text.lastOrNull()
+                if (newNumber == null || newNumber.isDigit()) {
+                    onNumberChanged(newNumber?.digitToIntOrNull())
                 }
             },
-//            cursorBrush = SolidColor(MaterialTheme.colors.contentHighlight),
             textStyle = MaterialTheme.typeStyle.displayLarge.copy(
                 textAlign = TextAlign.Center,
                 color = textColor
             ),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier
-                .width(IntrinsicSize.Min)
+                .matchParentSize()
                 .focusRequester(focusRequester)
                 .onFocusChanged { state ->
                     isFocused = state.isFocused
@@ -128,7 +122,9 @@ fun OTPInputField(
                     false
                 },
             decorationBox = { innerBox ->
-                innerBox()
+                Box(contentAlignment = Alignment.Center){
+                    innerBox()
+                }
             }
         )
     }
