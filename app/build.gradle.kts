@@ -123,6 +123,8 @@ dependencies {
     testImplementation(libs.roboelectric)
     testImplementation(libs.junit.vintage.engine)
     testImplementation(testFixtures(project(":app")))
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.ui.test.junit4)
 
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.platform)

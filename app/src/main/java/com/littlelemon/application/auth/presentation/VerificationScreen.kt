@@ -65,7 +65,7 @@ fun VerificationContent(
             OTPFields(otp = authState.oneTimePassword, onOTPChange = onOTPChange)
         }
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-            ResendTimer(onChangeEmail = onChangeEmail)
+            ResendTimer(onResendCode = onChangeEmail)
         }
         if (isScrollable) {
             Spacer(Modifier.height(MaterialTheme.dimens.size3XL))

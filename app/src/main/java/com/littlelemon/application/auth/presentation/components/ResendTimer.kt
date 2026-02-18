@@ -37,7 +37,7 @@ fun ResendTimer(
     modifier: Modifier = Modifier,
     initialTime: Int = 60,
     totalTime: Int = 60,
-    onChangeEmail: () -> Unit = {}
+    onResendCode: () -> Unit = {}
 ) {
 
     var timeLeft by rememberSaveable {
@@ -83,7 +83,7 @@ fun ResendTimer(
                 .background(
                     MaterialTheme.colors.secondary,
                 )
-                .clickable { onChangeEmail() }
+                .clickable { onResendCode() }
                 .padding(
                     top = MaterialTheme.dimens.sizeLG,
                     bottom = MaterialTheme.dimens.sizeLG,
