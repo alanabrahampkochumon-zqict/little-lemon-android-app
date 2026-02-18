@@ -43,7 +43,7 @@ import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PersonalInformationScreen() {/*FIXME: Change to VM */
+fun PersonalInformationContent(authState: AuthState) {
     var firstName by remember {
         mutableStateOf("")
     }
@@ -160,8 +160,8 @@ fun NameInputField(
 
 @Preview
 @Composable
-private fun PersonalInformationScreenPreview() {
+private fun PersonalInformationContentPreview() {
     LittleLemonTheme {
-        PersonalInformationScreen()
+        PersonalInformationContent(AuthState())
     }
 }

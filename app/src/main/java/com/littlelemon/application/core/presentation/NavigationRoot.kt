@@ -6,7 +6,6 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.LoginScreen
-import com.littlelemon.application.auth.presentation.PersonalInformationScreen
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -32,7 +31,7 @@ fun NavigationRoot() {
 
                 is Route.Personalization -> {
                     NavEntry(key) {
-                        PersonalInformationScreen()
+                        /*  TODO */
                     }
                 }
 
