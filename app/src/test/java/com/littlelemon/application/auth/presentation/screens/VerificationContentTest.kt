@@ -1,6 +1,5 @@
-package com.littlelemon.application.auth.presentation
+package com.littlelemon.application.auth.presentation.screens
 
-import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -8,19 +7,34 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
+import androidx.test.filters.MediumTest
 import com.littlelemon.application.R
-import com.littlelemon.application.auth.presentation.screens.VerificationContent
+import com.littlelemon.application.auth.presentation.AuthState
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
+import kotlin.test.assertTrue
 
+@MediumTest
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [36])
 class VerificationContentTest {
 
     @get:Rule
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+    val composeTestRule = createComposeRule()
+
+    private val application = RuntimeEnvironment.getApplication()
+
+    private val verifyButtonText by lazy { application.getString(R.string.act_verify) }
 
     private val verifyButtonMatcher by lazy {
-        hasText(composeTestRule.activity.getString(R.string.act_verify)) and hasClickAction()
+        hasText(verifyButtonText) and hasClickAction()
     }
     private val otpInputMatcher by lazy { hasSetTextAction() }
 
@@ -87,5 +101,45 @@ class VerificationContentTest {
 
         // Then verify button is enabled
         composeTestRule.onNode(verifyButtonMatcher).assertIsEnabled()
+    }
+
+    @Test
+    fun verificationContent_onOTPChange_otpChangeCallbackIsTriggered() {
+        // Given OTP Screen with empty fields
+        var callbackTriggered = false
+
+        // NOTE otp is received in the fashion of [1, null, null..], [null, 2, ...], etc
+
+        composeTestRule.setContent {
+            VerificationContent(
+                AuthState(),
+                onOTPChange = { callbackTriggered = true })
+        }
+
+        // When an otp is entered
+        val otpFields = composeTestRule.onAllNodes(otpInputMatcher)
+        repeat(6) {
+            otpFields[it].performTextInput(it.toString())
+        }
+
+        // Then the otp change callback is triggered
+        assertTrue(callbackTriggered)
+    }
+
+    @Test
+    fun verificationContent_onVerify_verifyCallbackIsTriggered() {
+        // Given OTP Screen with verify button enabled
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            VerificationContent(
+                AuthState(enableVerifyButton = true),
+                onVerifyOTP = { callbackTriggered = true })
+        }
+
+        // When verify button is pressed
+        composeTestRule.onNode(verifyButtonMatcher).performClick()
+
+        // Then callback is triggered
+        assertTrue(callbackTriggered)
     }
 }

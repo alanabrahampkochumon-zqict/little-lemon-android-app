@@ -23,7 +23,7 @@ import kotlin.test.assertTrue
 @MediumTest
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [36])
-class LoginScreenTest {
+class LoginContentTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()

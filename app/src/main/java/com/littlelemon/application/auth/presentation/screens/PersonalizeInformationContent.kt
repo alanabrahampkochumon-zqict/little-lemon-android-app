@@ -69,7 +69,7 @@ fun PersonalInformationContent(
             Spacer(Modifier.weight(1f))
         }
 
-        Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.size2XL)) {
+        Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)) {
             Button(
                 stringResource(R.string.act_go),
                 onClick = onComplete,
