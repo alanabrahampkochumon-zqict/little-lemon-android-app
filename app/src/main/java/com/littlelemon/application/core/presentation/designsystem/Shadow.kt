@@ -21,6 +21,10 @@ data class Shadows(
     val upperXL: CustomShadow = CustomShadow(
         ShadowSpec(radius = 48f, offsetX = 0f, offsetY = -8f, color = 0xff000000, alpha = 0.04f),
         ShadowSpec(radius = 24f, offsetX = 0f, offsetY = -12f, color = 0xff000000, alpha = 0.08f)
+    ),
+    val dropXL: CustomShadow = CustomShadow(
+        ShadowSpec(radius = 40f, offsetX = 0f, offsetY = 8f, color = 0xff000000, alpha = 0.08f),
+        ShadowSpec(radius = 20f, offsetX = 0f, offsetY = 12f, color = 0xff000000, alpha = 0.12f),
     )
 )
 
