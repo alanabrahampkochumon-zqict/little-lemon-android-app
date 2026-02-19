@@ -13,11 +13,15 @@ import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.pressKey
 import org.junit.Rule
-import kotlin.test.Test
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+
+@RunWith(RobolectricTestRunner::class)
 class OTPInputFieldTest {
 
 
@@ -38,7 +42,7 @@ class OTPInputFieldTest {
                 onNumberChanged = { capturedNumber = it },
                 onFocusChanged = {},
                 onKeyboardBack = {},
-                modifier = Modifier.testTag(otpFieldTag)
+                modifier = Modifier.Companion.testTag(otpFieldTag)
             )
         }
 
@@ -62,7 +66,7 @@ class OTPInputFieldTest {
                 onNumberChanged = { capturedNumber = it },
                 onFocusChanged = {},
                 onKeyboardBack = {},
-                modifier = Modifier.testTag(otpFieldTag)
+                modifier = Modifier.Companion.testTag(otpFieldTag)
             )
         }
 
@@ -87,14 +91,14 @@ class OTPInputFieldTest {
                 onNumberChanged = { capturedNumber = it },
                 onFocusChanged = {},
                 onKeyboardBack = {},
-                modifier = Modifier.testTag(otpFieldTag)
+                modifier = Modifier.Companion.testTag(otpFieldTag)
             )
         }
 
         // When clicked and a backspace is entered
         composeTestRule.onNodeWithTag(otpFieldTag).performClick()
         composeTestRule.onNode(hasSetTextAction())
-            .performKeyInput { pressKey(Key.Backspace) }
+            .performKeyInput { pressKey(Key.Companion.Backspace) }
 
         // Assert that the captured field is non-empty
         assertNull(capturedNumber)
@@ -113,13 +117,14 @@ class OTPInputFieldTest {
                 onNumberChanged = { },
                 onFocusChanged = {},
                 onKeyboardBack = { onKeyboardBack = true },
-                modifier = Modifier.testTag(otpFieldTag)
+                modifier = Modifier.Companion.testTag(otpFieldTag)
             )
         }
 
         // When clicked and a backspace is entered
         composeTestRule.onNodeWithTag(otpFieldTag).performClick()
-        composeTestRule.onNodeWithTag(otpFieldTag).performKeyInput { pressKey(Key.Backspace) }
+        composeTestRule.onNodeWithTag(otpFieldTag)
+            .performKeyInput { pressKey(Key.Companion.Backspace) }
 
         // Assert onKeyboardBack is called
         assertTrue { onKeyboardBack }
@@ -138,7 +143,7 @@ class OTPInputFieldTest {
                 onNumberChanged = { capturedNumber = it },
                 onFocusChanged = {},
                 onKeyboardBack = {},
-                modifier = Modifier.testTag(otpFieldTag)
+                modifier = Modifier.Companion.testTag(otpFieldTag)
             )
         }
 
