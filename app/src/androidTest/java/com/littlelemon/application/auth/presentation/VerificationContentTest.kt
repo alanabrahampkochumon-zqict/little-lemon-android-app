@@ -10,6 +10,7 @@ import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.littlelemon.application.R
+import com.littlelemon.application.auth.presentation.screens.VerificationContent
 import org.junit.Rule
 import org.junit.Test
 

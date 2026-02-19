@@ -1,4 +1,4 @@
-package com.littlelemon.application.auth.presentation
+package com.littlelemon.application.auth.presentation.screens
 
 import android.content.res.Configuration
 import android.widget.Toast
@@ -30,8 +30,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.littlelemon.application.auth.presentation.components.CardLayout
-import com.littlelemon.application.auth.presentation.components.DoodleBackground
+import com.littlelemon.application.auth.presentation.AuthActions
+import com.littlelemon.application.auth.presentation.AuthViewModel
+import com.littlelemon.application.core.presentation.components.CardLayout
+import com.littlelemon.application.core.presentation.components.DoodleBackground
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 
@@ -64,13 +66,24 @@ fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
 
     val isScrollable = isLandscape && !isFloating
 
-    fun onEmailChange(email: String) {
+
+    /**
+     * Email Screen Actions
+     */
+    fun onUpdateEmail(email: String) {
         viewModel.onAction(AuthActions.ChangeEmail(email))
     }
 
     fun onSendOTP() {
         Toast.makeText(context, "Sending otp...", Toast.LENGTH_LONG).show()
 //        viewModel.onAction((AuthActions.SendOTP))
+    }
+
+    /**
+     * OTP Screen Actions
+     */
+    fun onUpdateOTP(otp: List<Int?>) {
+        viewModel.onAction(AuthActions.ChangeOTP(otp))
     }
 
     fun onNavigateBack() {
@@ -80,6 +93,31 @@ fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
     fun onResendOTP() {
         Toast.makeText(context, "Resending otp...", Toast.LENGTH_LONG).show()
 //        viewModel.onAction(AuthActions.ResendOTP)
+    }
+
+    // Not updating the email. Action triggered when users taps on `change email` action.
+    // Which should bring the user to the email screen.
+    fun onChangeEmail() {
+        viewModel.onAction(AuthActions.NavigateBack)
+    }
+
+    fun onVerifyOTP() {
+        viewModel.onAction(AuthActions.VerifyOTP)
+    }
+
+    /**
+     * Personalize Screen Actions
+     */
+    fun onUpdateFirstName(firstName: String) {
+        viewModel.onAction(AuthActions.ChangeFirstName(firstName))
+    }
+
+    fun onUpdateLastName(lastName: String) {
+        viewModel.onAction(AuthActions.ChangeLastName(lastName))
+    }
+
+    fun onCompletePersonalization() {
+        // TODO: Navigate
     }
 
     // FIXME: Remove Temporary Route
@@ -108,7 +146,7 @@ fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
                 Step.Login -> LoginContent(
                     authState = state,
                     isScrollable = isScrollable,
-                    onEmailChange = ::onEmailChange,
+                    onEmailChange = ::onUpdateEmail,
                     onSendOTP = ::onSendOTP,
                     modifier = Modifier.padding(
                         top = MaterialTheme.dimens.sizeMD,
@@ -121,17 +159,23 @@ fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
                     authState = state,
                     modifier = Modifier,
                     isScrollable = isScrollable,
-                    onOTPChange = { newOTP ->
-                        viewModel.onAction(AuthActions.ChangeOTP(newOTP))
-                    },
-                    onChangeEmail = {
-                        Toast.makeText(context, "Changing email", Toast.LENGTH_LONG).show()
-                    },
-                    onVerifyEmail = {
-                        Toast.makeText(context, "Verifying Email", Toast.LENGTH_LONG).show()
-                    })
+                    onOTPChange = ::onUpdateOTP,
+                    onChangeEmail = ::onChangeEmail,
+                    onVerifyOTP = ::onVerifyOTP
+                )
 
-                Step.Personalize -> TODO()
+                Step.Personalize -> PersonalInformationContent(
+                    state,
+                    isScrollable = isScrollable,
+                    onFirstNameChange = ::onUpdateFirstName,
+                    onLastNameChange = ::onUpdateLastName,
+                    onComplete = ::onCompletePersonalization,
+                    modifier = Modifier.padding(
+                        top = MaterialTheme.dimens.sizeMD,
+                        start = MaterialTheme.dimens.sizeXL,
+                        end = MaterialTheme.dimens.sizeXL
+                    )
+                )
             }
 
         }

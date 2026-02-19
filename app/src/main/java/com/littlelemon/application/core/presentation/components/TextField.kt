@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.presentation.designsystem.components
+package com.littlelemon.application.core.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -115,18 +115,17 @@ fun TextInputField(
                 visualTransformation = visualTransformation,
                 isError = errorMessage != null,
                 container = {
-                        OutlinedTextFieldDefaults.Container(
-                            enabled,
-                            errorMessage != null,
-                            interactionSource,
-                            focusedBorderThickness = MaterialTheme.dimens.size2XS,
-                            colors = colors,
-                            shape = MaterialTheme.shapes.small,
-                            modifier = Modifier.fillMaxWidth(),
-                            )
+                    OutlinedTextFieldDefaults.Container(
+                        enabled,
+                        errorMessage != null,
+                        interactionSource,
+                        focusedBorderThickness = MaterialTheme.dimens.size2XS,
+                        colors = colors,
+                        shape = MaterialTheme.shapes.small,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
 
-                    }
-                ,
+                },
                 contentPadding = PaddingValues(
                     horizontal = MaterialTheme.dimens.sizeXL,
                     vertical = MaterialTheme.dimens.sizeLG

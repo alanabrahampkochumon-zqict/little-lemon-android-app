@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.littlelemon.application.auth.presentation.AuthScreen
 import com.littlelemon.application.auth.presentation.AuthViewModel
+import com.littlelemon.application.auth.presentation.screens.AuthScreen
 import org.koin.androidx.compose.koinViewModel
 
 

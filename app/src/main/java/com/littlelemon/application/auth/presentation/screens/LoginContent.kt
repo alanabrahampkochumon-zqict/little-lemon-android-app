@@ -1,4 +1,4 @@
-package com.littlelemon.application.auth.presentation
+package com.littlelemon.application.auth.presentation.screens
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -19,10 +19,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.components.Button
-import com.littlelemon.application.core.presentation.designsystem.components.TextInputField
+import com.littlelemon.application.core.presentation.components.Button
+import com.littlelemon.application.core.presentation.components.TextInputField
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 

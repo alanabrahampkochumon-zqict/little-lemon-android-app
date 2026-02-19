@@ -21,7 +21,7 @@
 
     <!--    Navigation Headings    -->
     <string name="nav_verify_email">Verify Email Address</string>
-    <string name="nav_personal_information">Personal Information</string>
+    <string name="nav_personal_information">Personalization</string>
 
     <!--    Labels    -->
     <string name="label_email_address">Email Address</string>
@@ -30,13 +30,14 @@
 
     <!--    Placeholder    -->
     <string name="placeholder_email_address">someone@example.com</string>
-    <string name="placeholder_first_name">E.g: Jane</string>
-    <string name="placeholder_last_name">E.g: Doe</string>
+    <string name="placeholder_first_name">Jane</string>
+    <string name="placeholder_last_name">Doe</string>
 
     <!--    Body Text    -->
     <string name="body_email_description">We\’ll send a verification code to get you in.</string>
     <string name="body_verification_code">Enter the 6-digit OTP sent to</string>
     <string name="body_no_otp_received">Didn\'t receive the code?</string>
+    <string name="body_personalization">What should we called you?</string>
 
 
     <!--    Misc.    -->

@@ -1,4 +1,4 @@
-package com.littlelemon.application.auth.presentation.components
+package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

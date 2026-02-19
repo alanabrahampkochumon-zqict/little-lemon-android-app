@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.presentation.designsystem.components
+package com.littlelemon.application.core.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke

@@ -1,4 +1,4 @@
-package com.littlelemon.application.auth.presentation
+package com.littlelemon.application.auth.presentation.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,12 +24,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.auth.presentation.components.OTPInputField
 import com.littlelemon.application.auth.presentation.components.ResendTimer
+import com.littlelemon.application.core.presentation.components.Button
+import com.littlelemon.application.core.presentation.components.TopNavigationBar
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.components.Button
-import com.littlelemon.application.core.presentation.designsystem.components.TopNavigationBar
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
@@ -40,7 +41,7 @@ fun VerificationContent(
     modifier: Modifier = Modifier,
     isScrollable: Boolean = false,
     onOTPChange: (List<Int?>) -> Unit = {},
-    onVerifyEmail: () -> Unit = {},
+    onVerifyOTP: () -> Unit = {},
     onChangeEmail: () -> Unit = {},
     onOTPResend: () -> Unit = {}
 ) {
@@ -76,7 +77,7 @@ fun VerificationContent(
         Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.size2XL)) {
             Button(
                 stringResource(R.string.act_verify),
-                onClick = onVerifyEmail,
+                onClick = onVerifyOTP,
                 enabled = authState.enableVerifyButton
             )
         }

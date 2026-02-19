@@ -9,6 +9,7 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import com.littlelemon.application.R
+import com.littlelemon.application.auth.presentation.screens.LoginContent
 import org.junit.Rule
 import org.junit.Test
 
