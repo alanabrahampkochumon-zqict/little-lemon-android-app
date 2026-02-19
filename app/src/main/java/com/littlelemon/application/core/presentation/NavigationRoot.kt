@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.littlelemon.application.auth.presentation.AuthScreen
 import com.littlelemon.application.auth.presentation.AuthViewModel
-import com.littlelemon.application.auth.presentation.LoginScreen
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -19,7 +19,7 @@ fun NavigationRoot() {
 
                 is Route.Login -> {
                     NavEntry(key) {
-                        LoginScreen(koinViewModel<AuthViewModel>())
+                        AuthScreen(koinViewModel<AuthViewModel>())
                     }
                 }
 

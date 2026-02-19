@@ -83,7 +83,6 @@ fun PersonalInformationContent(authState: AuthState) {
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-//            val height = this.maxHeight
             Column(
                 modifier = Modifier
                     .widthIn(max = maxWidth)
@@ -160,7 +159,7 @@ fun NameInputField(
 
 @Preview
 @Composable
-private fun PersonalInformationContentPreview() {
+private fun PersonalizeInformationContentPreview() {
     LittleLemonTheme {
         PersonalInformationContent(AuthState())
     }

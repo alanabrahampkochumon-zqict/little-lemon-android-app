@@ -32,6 +32,7 @@ fun CardLayout(
     isFloating: Boolean = false,
     isScrollable: Boolean = false,
     maxHeight: Dp = 700.dp,
+    maxWidth: Dp = 700.dp,
     screenDensityRatio: Float = 2.0f,
     content: @Composable () -> Unit = {}
 ) {
@@ -49,7 +50,7 @@ fun CardLayout(
     ) {
         Column(
             Modifier
-                .widthIn(max = 480.dp)
+                .widthIn(max = maxWidth)
                 .dropShadow(
                     shape = cardShape,
                     shadow = MaterialTheme.shadows.upperXL.firstShadow.toComposeShadow(

@@ -2,22 +2,15 @@ package com.littlelemon.application.auth.presentation
 
 import android.content.res.Configuration
 import android.widget.Toast
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -31,27 +24,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.components.CardLayout
 import com.littlelemon.application.auth.presentation.components.DoodleBackground
-import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.components.Button
-import com.littlelemon.application.core.presentation.designsystem.components.TextInputField
 import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
+
 
 enum class Step {
     Login,
@@ -60,15 +43,13 @@ enum class Step {
 }
 
 @Composable
-fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
+fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
 
     val screenDensityRatio = context.resources.displayMetrics.density
-//    val screenWidth = configuration.screenWidthDp.dp
-//    val screenHeight = configuration.screenHeightDp.dp
 
     val (screenWidth, screenHeight) = LocalWindowInfo.current.containerDpSize
 
@@ -91,6 +72,16 @@ fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
         Toast.makeText(context, "Sending otp...", Toast.LENGTH_LONG).show()
 //        viewModel.onAction((AuthActions.SendOTP))
     }
+
+    fun onNavigateBack() {
+        viewModel.onAction(AuthActions.NavigateBack)
+    }
+
+    fun onResendOTP() {
+        Toast.makeText(context, "Resending otp...", Toast.LENGTH_LONG).show()
+//        viewModel.onAction(AuthActions.ResendOTP)
+    }
+
     // FIXME: Remove Temporary Route
     var route by remember { mutableStateOf(Step.Verify) }
     Scaffold(
@@ -110,6 +101,7 @@ fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
             isFloating = isFloating,
             isScrollable = isScrollable,
             maxHeight = maxHeight,
+            maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
             screenDensityRatio = screenDensityRatio
         ) {
             when (route) {
@@ -166,80 +158,6 @@ fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
                         .minimumInteractiveComponentSize()
                         .clickable { route = Step.Personalize })
             }
-        }
-    }
-}
-
-@Composable
-fun LoginContent(
-    authState: AuthState,
-    modifier: Modifier = Modifier,
-    isScrollable: Boolean = false,
-    onEmailChange: (String) -> Unit = {},
-    onSendOTP: () -> Unit = {},
-) {
-
-    Column(
-        modifier = modifier
-            .animateContentSize()
-            .padding(horizontal = MaterialTheme.dimens.sizeMD)
-    ) {
-        Image(
-            modifier = modifier
-                .align(Alignment.CenterHorizontally)
-                .height(48.dp),
-            painter = painterResource(R.drawable.logo_full),
-            contentDescription = null
-        )
-        Spacer(Modifier.height(MaterialTheme.dimens.size3XL - AuthScreenConfig.FONT_OFFSET))
-        Text(
-            stringResource(R.string.heading_login),
-            style = MaterialTheme.typeStyle.displaySmall,
-            color = MaterialTheme.colors.contentPrimary,
-        )
-        Spacer(Modifier.height(MaterialTheme.dimens.sizeLG - AuthScreenConfig.FONT_OFFSET))
-
-        Column(
-            Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(
-                MaterialTheme.dimens.sizeSM
-            )
-        ) {
-            TextInputField(
-                stringResource(R.string.placeholder_email_address),
-                value = authState.email,
-                errorMessage = authState.emailError,
-                onValueChange = onEmailChange,
-                modifier = Modifier.testTag(stringResource(R.string.test_tag_email_field))
-            )
-            Text(
-                stringResource(R.string.body_email_description),
-                style = MaterialTheme.typeStyle.bodySmall,
-                color = MaterialTheme.colors.contentTertiary
-            )
-        }
-        if (isScrollable) {
-            Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
-        } else {
-            Spacer(Modifier.weight(1f))
-        }
-        Button(
-            stringResource(R.string.act_send_otp),
-            onSendOTP,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = authState.enableSendButton && !authState.isLoading
-        )
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-private fun LoginScreenPreview() {
-    LittleLemonTheme {
-        Column {
-            LoginContent(AuthState())
         }
     }
 }

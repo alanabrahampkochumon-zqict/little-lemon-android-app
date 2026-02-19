@@ -41,7 +41,8 @@ fun VerificationContent(
     isScrollable: Boolean = false,
     onOTPChange: (List<Int?>) -> Unit = {},
     onVerifyEmail: () -> Unit = {},
-    onChangeEmail: () -> Unit = {}
+    onChangeEmail: () -> Unit = {},
+    onOTPResend: () -> Unit = {}
 ) {
     Column(modifier = modifier) {
         TopNavigationBar(
@@ -61,11 +62,11 @@ fun VerificationContent(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXL)
         ) {
-            EmailSubsection(emailAddress = authState.email)
+            EmailSubsection(emailAddress = authState.email, onClick = onChangeEmail)
             OTPFields(otp = authState.oneTimePassword, onOTPChange = onOTPChange)
         }
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-            ResendTimer(onResendCode = onChangeEmail)
+            ResendTimer(onResendCode = onOTPResend)
         }
         if (isScrollable) {
             Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
@@ -73,13 +74,21 @@ fun VerificationContent(
             Spacer(Modifier.weight(1f))
         }
         Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.size2XL)) {
-            Button(stringResource(R.string.act_verify), onClick = onVerifyEmail, enabled = authState.enableVerifyButton)
+            Button(
+                stringResource(R.string.act_verify),
+                onClick = onVerifyEmail,
+                enabled = authState.enableVerifyButton
+            )
         }
     }
 }
 
 @Composable
-fun EmailSubsection(emailAddress: String, modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
+fun EmailSubsection(
+    emailAddress: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
     Column(
         modifier = modifier
             .minimumInteractiveComponentSize()
