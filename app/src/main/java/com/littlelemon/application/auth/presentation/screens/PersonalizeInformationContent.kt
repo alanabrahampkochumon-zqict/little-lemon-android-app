@@ -71,14 +71,12 @@ fun PersonalInformationContent(
 
         Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.size2XL)) {
             Button(
-                stringResource(R.string.act_verify),
+                stringResource(R.string.act_go),
                 onClick = onComplete,
                 enabled = authState.enableLetsGoButton
             )
         }
     }
-
-
 }
 
 @Composable
