@@ -102,6 +102,8 @@ private object PrimitivesColors {
     val Peach100 = Color(0xFFFBE5D9)
     val Peach50 = Color(0xFFFDF4EF)
 
+    val BlackA24 = Color(0x18000000)
+
     val Transparent = Color(0x00FFFFFF)
 }
 
@@ -217,6 +219,8 @@ private object AliasColors {
     val NeutralBlack = PrimitivesColors.Black
     val NeutralWhite = PrimitivesColors.White
 
+    val DarkOverlay24 = PrimitivesColors.BlackA24
+
     val Transparent = PrimitivesColors.Transparent
 }
 
@@ -288,7 +292,10 @@ data class LittleLemonColors(
     val contentInformation: Color = AliasColors.Information700,
 
     // Transparent
-    val transparent: Color = AliasColors.Transparent
+    val transparent: Color = AliasColors.Transparent,
+
+    // Overlays
+    val darkOverlay24: Color = AliasColors.DarkOverlay24
 )
 
 val LocalLittleLemonColors = staticCompositionLocalOf { LittleLemonColors() }
