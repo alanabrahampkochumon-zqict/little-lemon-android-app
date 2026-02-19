@@ -14,9 +14,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             LittleLemonTheme {
                 NavigationRoot()
-//                LoginScreen()
-
-//                VerificationScreen()
             }
         }
     }

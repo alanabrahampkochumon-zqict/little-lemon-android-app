@@ -6,10 +6,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -88,7 +86,7 @@ fun OTPInputField(
 
     Box(
         modifier = modifier
-            .size(52.dp)
+            .size(44.dp)
             .background(backgroundColor, shape = MaterialTheme.shapes.xSmall)
             .border(width = 2.dp, color = borderColor, shape = MaterialTheme.shapes.xSmall),
         contentAlignment = Alignment.Center,
@@ -102,7 +100,7 @@ fun OTPInputField(
                     onNumberChanged(newNumber?.digitToIntOrNull())
                 }
             },
-            textStyle = MaterialTheme.typeStyle.displayLarge.copy(
+            textStyle = MaterialTheme.typeStyle.displaySmall.copy(
                 textAlign = TextAlign.Center,
                 color = textColor
             ),
@@ -122,7 +120,7 @@ fun OTPInputField(
                     false
                 },
             decorationBox = { innerBox ->
-                Box(contentAlignment = Alignment.Center){
+                Box(contentAlignment = Alignment.Center) {
                     innerBox()
                 }
             }

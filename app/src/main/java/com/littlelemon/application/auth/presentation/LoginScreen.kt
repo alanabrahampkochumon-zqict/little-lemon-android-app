@@ -1,7 +1,6 @@
 package com.littlelemon.application.auth.presentation
 
 import android.content.res.Configuration
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -36,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -67,8 +67,10 @@ fun LoginScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
     val configuration = LocalConfiguration.current
 
     val screenDensityRatio = context.resources.displayMetrics.density
-    val screenWidth = configuration.screenWidthDp.dp
-    val screenHeight = configuration.screenHeightDp.dp
+//    val screenWidth = configuration.screenWidthDp.dp
+//    val screenHeight = configuration.screenHeightDp.dp
+
+    val (screenWidth, screenHeight) = LocalWindowInfo.current.containerDpSize
 
     val isFloating =
         screenHeight > AuthScreenConfig.CARD_FLOATING_HEIGHT && screenWidth > AuthScreenConfig.CARD_FLOATING_WIDTH
