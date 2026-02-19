@@ -1,26 +1,37 @@
-package com.littlelemon.application.auth.presentation
+package com.littlelemon.application.auth.presentation.screens
 
-import androidx.activity.ComponentActivity
-import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
+import androidx.test.filters.MediumTest
 import com.littlelemon.application.R
-import com.littlelemon.application.auth.presentation.screens.LoginContent
+import com.littlelemon.application.auth.presentation.AuthState
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
+@MediumTest
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [36])
 class LoginScreenTest {
 
     @get:Rule
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+    val composeTestRule = createComposeRule()
 
-    val buttonText by lazy { composeTestRule.activity.getString(R.string.act_send_otp) }
-    val emailPlaceholder by lazy { composeTestRule.activity.getString(R.string.placeholder_email_address) }
-//    val emailFieldTag = composeTestRule.activity.getString(R.string.test_tag_email_field)
+    private val application = RuntimeEnvironment.getApplication()
+
+    val buttonText by lazy { application.getString(R.string.act_send_otp) }
+    val emailPlaceholder by lazy { application.getString(R.string.placeholder_email_address) }
 
     val emailError = "Invalid email address"
     val validEmail = "test@littlemon.com"
@@ -32,9 +43,7 @@ class LoginScreenTest {
         val state = AuthState()
 
         composeTestRule.setContent {
-            Column {
-                LoginContent(state)
-            }
+            LoginContent(state)
         }
 
         // Then: Email Placeholder is shown and  `Send OTP` Button is shown
@@ -48,9 +57,7 @@ class LoginScreenTest {
         val state = AuthState(email = validEmail, enableSendButton = true)
 
         composeTestRule.setContent {
-            Column {
-                LoginContent(state)
-            }
+            LoginContent(state)
         }
 
         // Then: Send OTP button is enabled, email is displayed and placeholder is hidden
@@ -65,9 +72,7 @@ class LoginScreenTest {
         val state = AuthState(email = invalidEmail, emailError = emailError)
 
         composeTestRule.setContent {
-            Column {
-                LoginContent(state)
-            }
+            LoginContent(state)
         }
 
         // Then: Send OTP button is enabled, email is displayed and placeholder is hidden
@@ -75,6 +80,40 @@ class LoginScreenTest {
         composeTestRule.onNodeWithText(invalidEmail).assertIsDisplayed()
         composeTestRule.onNodeWithText(buttonText).assertIsNotEnabled()
         composeTestRule.onNodeWithText(emailError).assertIsDisplayed()
+    }
 
+    @Test
+    fun loginScreen_onEmailChange_emailChangeCallbackIsTriggered() {
+
+        var newEmail = ""
+
+        // Given login screen
+        composeTestRule.setContent {
+            LoginContent(AuthState(), onEmailChange = { newEmail = it })
+        }
+
+        // When a valid email is input into text field
+        composeTestRule.onNodeWithText(emailPlaceholder).performTextInput(validEmail)
+
+        // Then email change callback is triggered
+        assertEquals(validEmail, newEmail)
+    }
+
+    @Test
+    fun loginScreen_onSendOTPButtonPress_callbackIsTriggered() {
+        var callbackTriggered = false
+
+        // Given login screen with send otp button enabled
+        composeTestRule.setContent {
+            LoginContent(
+                AuthState(enableSendButton = true),
+                onSendOTP = { callbackTriggered = true })
+        }
+
+        // When send OTP button is pressed
+        composeTestRule.onNodeWithText(buttonText).performClick()
+
+        // Then sendOTP callback is triggered
+        assertTrue { callbackTriggered }
     }
 }

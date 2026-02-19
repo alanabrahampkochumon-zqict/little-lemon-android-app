@@ -7,6 +7,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.test.filters.MediumTest
 import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.AuthState
 import org.junit.Rule
@@ -18,7 +19,7 @@ import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-
+@MediumTest
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [36])
 class PersonalInformationContentTest {
@@ -28,9 +29,9 @@ class PersonalInformationContentTest {
 
     private val application = RuntimeEnvironment.getApplication()
 
-    val letGoButtonText = application.getString(R.string.act_go)
-    val firstNamePlaceholder = application.getString(R.string.placeholder_first_name)
-    val lastNamePlaceholder = application.getString(R.string.placeholder_last_name)
+    val letGoButtonText by lazy { application.getString(R.string.act_go) }
+    val firstNamePlaceholder by lazy { application.getString(R.string.placeholder_first_name) }
+    val lastNamePlaceholder by lazy { application.getString(R.string.placeholder_last_name) }
 
 
     val firstName = "Robert"
