@@ -42,6 +42,20 @@ class ResendTimerTest {
     }
 
     @Test
+    fun resendTimer_timerRunning_timeAdvances() {
+        // Given a timer with valid time(>0)
+        composeTestRule.setContent {
+            ResendTimer(initialTime = 59)
+        }
+
+        // When the time advances by 10 seconds
+        composeTestRule.mainClock.advanceTimeBy(10_000)
+
+        // Then the resend timer shows 51 second
+        composeTestRule.onNodeWithText("50").assertIsDisplayed()
+    }
+
+    @Test
     fun resendTimer_timerExpired_resendButtonIsShown() {
         // Given a timer with invalid time(0)
         var buttonClicked = false
