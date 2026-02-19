@@ -34,6 +34,7 @@ import com.littlelemon.application.auth.presentation.AuthActions
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.core.presentation.components.CardLayout
 import com.littlelemon.application.core.presentation.components.DoodleBackground
+import com.littlelemon.application.core.presentation.components.Loader
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 
@@ -130,54 +131,55 @@ fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
         ).add(WindowInsets.displayCutout).add(WindowInsets.ime)
     ) { innerPadding ->
         // Background
-        DoodleBackground(modifier = Modifier)
+        Loader(showLoader = state.isLoading) {
+            DoodleBackground(modifier = Modifier)
 
-        CardLayout(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            isFloating = isFloating,
-            isScrollable = isScrollable,
-            maxHeight = maxHeight,
-            maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
-            screenDensityRatio = screenDensityRatio
-        ) {
-            when (route) {
-                Step.Login -> LoginContent(
-                    authState = state,
-                    isScrollable = isScrollable,
-                    onEmailChange = ::onUpdateEmail,
-                    onSendOTP = ::onSendOTP,
-                    modifier = Modifier.padding(
-                        top = MaterialTheme.dimens.sizeMD,
-                        start = MaterialTheme.dimens.sizeXL,
-                        end = MaterialTheme.dimens.sizeXL
+            CardLayout(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                isFloating = isFloating,
+                isScrollable = isScrollable,
+                maxHeight = maxHeight,
+                maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
+                screenDensityRatio = screenDensityRatio
+            ) {
+                when (route) {
+                    Step.Login -> LoginContent(
+                        authState = state,
+                        isScrollable = isScrollable,
+                        onEmailChange = ::onUpdateEmail,
+                        onSendOTP = ::onSendOTP,
+                        modifier = Modifier.padding(
+                            top = MaterialTheme.dimens.sizeMD,
+                            start = MaterialTheme.dimens.sizeXL,
+                            end = MaterialTheme.dimens.sizeXL
+                        )
                     )
-                )
 
-                Step.Verify -> VerificationContent(
-                    authState = state,
-                    modifier = Modifier,
-                    isScrollable = isScrollable,
-                    onOTPChange = ::onUpdateOTP,
-                    onChangeEmail = ::onChangeEmail,
-                    onVerifyOTP = ::onVerifyOTP
-                )
-
-                Step.Personalize -> PersonalInformationContent(
-                    state,
-                    isScrollable = isScrollable,
-                    onFirstNameChange = ::onUpdateFirstName,
-                    onLastNameChange = ::onUpdateLastName,
-                    onComplete = ::onCompletePersonalization,
-                    modifier = Modifier.padding(
-                        top = MaterialTheme.dimens.sizeMD,
-                        start = MaterialTheme.dimens.sizeXL,
-                        end = MaterialTheme.dimens.sizeXL
+                    Step.Verify -> VerificationContent(
+                        authState = state,
+                        modifier = Modifier,
+                        isScrollable = isScrollable,
+                        onOTPChange = ::onUpdateOTP,
+                        onChangeEmail = ::onChangeEmail,
+                        onVerifyOTP = ::onVerifyOTP
                     )
-                )
+
+                    Step.Personalize -> PersonalInformationContent(
+                        state,
+                        isScrollable = isScrollable,
+                        onFirstNameChange = ::onUpdateFirstName,
+                        onLastNameChange = ::onUpdateLastName,
+                        onComplete = ::onCompletePersonalization,
+                        modifier = Modifier.padding(
+                            top = MaterialTheme.dimens.sizeMD,
+                            start = MaterialTheme.dimens.sizeXL,
+                            end = MaterialTheme.dimens.sizeXL
+                        )
+                    )
+                }
             }
-
         }
 
         Box(
