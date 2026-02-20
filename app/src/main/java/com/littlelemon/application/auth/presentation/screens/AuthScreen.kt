@@ -1,10 +1,6 @@
 package com.littlelemon.application.auth.presentation.screens
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
@@ -16,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +29,6 @@ import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.core.presentation.components.CardLayout
 import com.littlelemon.application.core.presentation.components.DoodleBackground
 import com.littlelemon.application.core.presentation.components.Loader
-import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 
 
@@ -48,7 +41,7 @@ enum class Step {
 @Composable
 fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    
+
     AuthScreenRoot(
         state = state,
         modifier = modifier,
@@ -158,30 +151,6 @@ fun AuthScreenRoot(
                         )
                     )
                 }
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .background(MaterialTheme.colors.action.copy(alpha = 0.5f))
-        ) {
-            Row {
-                Text(
-                    "Login",
-                    modifier = Modifier
-                        .minimumInteractiveComponentSize()
-                        .clickable { route = Step.Login })
-                Text(
-                    "Verify",
-                    modifier = Modifier
-                        .minimumInteractiveComponentSize()
-                        .clickable { route = Step.Verify })
-                Text(
-                    "Personalize",
-                    modifier = Modifier
-                        .minimumInteractiveComponentSize()
-                        .clickable { route = Step.Personalize })
             }
         }
     }
