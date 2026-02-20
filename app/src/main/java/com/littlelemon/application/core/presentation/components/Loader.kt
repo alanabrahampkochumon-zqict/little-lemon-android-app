@@ -18,8 +18,13 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
@@ -43,6 +48,8 @@ fun Loader(
                     .background(MaterialTheme.colors.darkOverlay24)
                     .blur(MaterialTheme.dimens.sizeMD)
                     .fillMaxSize()
+                    .disableTouch()
+                    .testTag(stringResource(R.string.test_tag_loader))
             ) {
                 screenContent()
             }
@@ -83,6 +90,17 @@ fun Loader(
     }
 }
 
+/**
+ * Disables touches from propagating down to children by consuming all the events.
+ */
+private fun Modifier.disableTouch(): Modifier = this.pointerInput(Unit) {
+    awaitPointerEventScope {
+        while (true) {
+            val event = awaitPointerEvent(PointerEventPass.Initial)
+            event.changes.forEach { it.consume() }
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

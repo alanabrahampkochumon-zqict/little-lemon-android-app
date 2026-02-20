@@ -55,6 +55,6 @@
     <string name="generic_loading_message">Loading…</string>
 
     <!--  Test Tags -->
-    <string name="test_tag_email_field">Email Address Field</string>
+    <string name="test_tag_loader">LoaderTestTag</string>
 
 </resources>

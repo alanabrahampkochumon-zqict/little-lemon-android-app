@@ -68,7 +68,6 @@ fun LoginContent(
                 value = authState.email,
                 errorMessage = authState.emailError,
                 onValueChange = onEmailChange,
-                modifier = Modifier.testTag(stringResource(R.string.test_tag_email_field))
             )
             Text(
                 stringResource(R.string.body_email_description),
