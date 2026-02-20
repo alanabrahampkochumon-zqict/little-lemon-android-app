@@ -3,6 +3,7 @@ package com.littlelemon.application.auth.presentation.screens
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.test.filters.MediumTest
 import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.AuthState
 import org.junit.Rule
@@ -11,7 +12,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
-
+@MediumTest
 @RunWith(RobolectricTestRunner::class)
 class AuthScreenTest {
 
