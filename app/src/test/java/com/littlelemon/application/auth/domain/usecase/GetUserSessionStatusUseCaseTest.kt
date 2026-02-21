@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
-class GetUserSessionUseCaseTest {
+class GetUserSessionStatusUseCaseTest {
     private lateinit var repository: AuthRepository
     private lateinit var useCase: GetUserSessionStatusUseCase
 
