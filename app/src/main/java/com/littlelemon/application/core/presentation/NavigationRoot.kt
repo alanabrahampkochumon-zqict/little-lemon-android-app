@@ -1,21 +1,22 @@
 package com.littlelemon.application.core.presentation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.screens.AuthScreen
-import com.littlelemon.application.core.domain.SessionManager
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 
 
 @Composable
-fun NavigationRoot() {
-    val sessionManager = koinInject<SessionManager>()
-//    val sessionStatus = sessionManager.getCurrentSessionStatus()
-    val backStack = rememberNavBackStack(Route.Login)
+fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
+
+    val sessionStatus = rootViewModel.sessionStatus.collectAsStateWithLifecycle()
+    val backStack = rememberNavBackStack()
+    Log.d("Session Status", sessionStatus.value.toString())
     NavDisplay(
         backStack = backStack,
         entryProvider = { key ->

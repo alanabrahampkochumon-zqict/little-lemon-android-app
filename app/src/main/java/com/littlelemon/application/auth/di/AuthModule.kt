@@ -45,6 +45,7 @@ val authModule = module {
             supabaseUrl = BuildConfig.SUPABASE_URL
         ) {
             defaultSerializer = KotlinXSerializer(Json { ignoreUnknownKeys = true })
+            install()
         }
     }
 }

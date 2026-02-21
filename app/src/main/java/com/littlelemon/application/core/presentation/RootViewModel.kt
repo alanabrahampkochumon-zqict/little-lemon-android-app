@@ -7,7 +7,7 @@ import com.littlelemon.application.core.domain.model.SessionStatus
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
-class RootViewModel(private val sessionManager: SessionManager) : ViewModel() {
+class RootViewModel(sessionManager: SessionManager) : ViewModel() {
 
     val sessionStatus = sessionManager.getCurrentSessionStatus().stateIn(
         viewModelScope,
