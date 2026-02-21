@@ -1,14 +1,15 @@
 package com.littlelemon.application.auth.domain
 
-import com.littlelemon.application.auth.domain.usecase.GetUserSessionUseCase
+import com.littlelemon.application.auth.domain.usecase.GetUserSessionStatusUseCase
 import com.littlelemon.application.core.domain.SessionManager
 import com.littlelemon.application.core.domain.model.SessionStatus
 import kotlinx.coroutines.flow.Flow
 
-class SessionManagerImpl(private val getUserSessionUseCase: GetUserSessionUseCase) :
+class SessionManagerImpl(private val getUserSessionUseCase: GetUserSessionStatusUseCase) :
     SessionManager {
     override suspend fun getCurrentSessionStatus(): Flow<SessionStatus> {
         TODO()
+
 //        val userSessionResult = getUserSessionUseCase()
 //        if (userSessionResult is Resource.Success) {
 //            if (userSessionResult.data == null)
