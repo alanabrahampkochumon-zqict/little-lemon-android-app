@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 
 class SessionManagerImpl(private val getUserSessionUseCase: GetUserSessionStatusUseCase) :
     SessionManager {
-    override suspend fun getCurrentSessionStatus(): Flow<SessionStatus> {
+    override fun getCurrentSessionStatus(): Flow<SessionStatus> {
         return getUserSessionUseCase().map { userSessionStatus ->
             if (userSessionStatus is Resource.Success) {
                 when (val sessionStatus = userSessionStatus.data) {
