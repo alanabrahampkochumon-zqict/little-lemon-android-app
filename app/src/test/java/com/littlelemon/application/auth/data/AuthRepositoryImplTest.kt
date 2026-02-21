@@ -1,21 +1,31 @@
 package com.littlelemon.application.auth.data
 
+import app.cash.turbine.test
 import com.littlelemon.application.auth.data.remote.AuthRemoteDataSource
+import com.littlelemon.application.auth.domain.models.UserSessionStatus
 import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.utils.StandardTestDispatcherRule
+import io.github.jan.supabase.auth.status.RefreshFailureCause
+import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserInfo
 import io.github.jan.supabase.auth.user.UserSession
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
+import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.test.assertIs
 
+@ExtendWith(StandardTestDispatcherRule::class)
 class AuthRepositoryImplTest {
 
     private companion object {
@@ -30,7 +40,7 @@ class AuthRepositoryImplTest {
         const val EXPIRES_IN = 3600L
 
     }
-    
+
     private val user = UserInfo(
         aud = "",
         email = EMAIL_ADDRESS,
@@ -254,5 +264,114 @@ class AuthRepositoryImplTest {
         assertTrue(result is Resource.Failure)
         result as Resource.Failure
         assertEquals(expectedError, result.errorMessage)
+    }
+
+    @Nested
+    inner class GetUserSessionStatusTest {
+
+
+        @Test
+        fun getUserSessionStatus_remoteUserStatusIsInitializing_returnsSuccessWithStatusInitializing() =
+            runTest {
+                // Given remoteDatasource emits session status of initializing
+                coEvery { remoteDataSource.getSessionStatus() } returns flow { emit(SessionStatus.Initializing) }
+
+                // When user status is called
+                repository.getUserSessionStatus().test {
+                    // Then, the collected value is Initializing wrapped with resource success
+                    val result = awaitItem()
+                    assertIs<Resource.Success<UserSessionStatus>>(result)
+                    assertTrue { result.data is UserSessionStatus.Initializing }
+
+                    cancelAndConsumeRemainingEvents()
+                }
+            }
+
+
+        @Test
+        fun getUserSessionStatus_remoteUserStatusIsAuthenticated_returnsSuccessWithStatusAuthenticated() =
+            runTest {
+                // Given remoteDatasource emits session status of authenticated
+                val userSession = mockk<UserSession>(relaxed = true)
+                coEvery { remoteDataSource.getSessionStatus() } returns flow {
+                    emit(
+                        SessionStatus.Authenticated(
+                            userSession
+                        )
+                    )
+                }
+
+                // When user status is called
+                repository.getUserSessionStatus().test {
+                    // Then, the collected value is Authenticated wrapped with resource success
+                    val result = awaitItem()
+                    assertIs<Resource.Success<UserSessionStatus>>(result)
+                    assertTrue { result.data is UserSessionStatus.Authenticated }
+
+                    cancelAndConsumeRemainingEvents()
+                }
+            }
+
+
+        @Test
+        fun getUserSessionStatus_remoteUserStatusIsNotAuthenticated_returnsSuccessWithStatusUnauthenticated() =
+            runTest {
+                // Given remoteDatasource emits session status of not authenticated
+                coEvery { remoteDataSource.getSessionStatus() } returns flow {
+                    emit(SessionStatus.NotAuthenticated())
+                }
+
+                // When user status is called
+                repository.getUserSessionStatus().test {
+                    // Then, the collected value is Unauthenticated wrapped with resource success
+                    val result = awaitItem()
+                    assertIs<Resource.Success<UserSessionStatus>>(result)
+                    assertTrue { result.data is UserSessionStatus.Unauthenticated }
+
+                    cancelAndConsumeRemainingEvents()
+                }
+            }
+
+
+        @Test
+        fun getUserSessionStatus_remoteUserStatusIsRefreshFailure_returnsSuccessWithStatusUnauthenticated() =
+            runTest {
+                // Given remoteDatasource emits session status of refresh failure
+                coEvery { remoteDataSource.getSessionStatus() } returns flow {
+                    emit(SessionStatus.RefreshFailure(RefreshFailureCause.NetworkError(Exception())))
+                }
+
+                // When user status is called
+                repository.getUserSessionStatus().test {
+                    // Then, the collected value is Unauthenticated wrapped with resource success
+                    val result = awaitItem()
+                    assertIs<Resource.Success<UserSessionStatus>>(result)
+                    assertTrue { result.data is UserSessionStatus.Unauthenticated }
+
+                    cancelAndConsumeRemainingEvents()
+                }
+            }
+
+
+        @Test
+        fun getUserSessionStatus_remoteFailure_returnsFailure() =
+            runTest {
+
+                // Given remoteDatasource emits session status of refresh failure
+                coEvery { remoteDataSource.getSessionStatus() } returns flow {
+                    throw RuntimeException()
+                }
+
+                // When user status is called
+                repository.getUserSessionStatus().test {
+                    // Then, the collected value is resource failure
+                    val result = awaitItem()
+                    assertIs<Resource.Failure<UserSessionStatus>>(result)
+
+                    cancelAndConsumeRemainingEvents()
+                }
+
+            }
+
     }
 }
