@@ -15,7 +15,7 @@ import org.koin.androidx.compose.koinViewModel
 fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
 
     val sessionStatus = rootViewModel.sessionStatus.collectAsStateWithLifecycle()
-    val backStack = rememberNavBackStack()
+    val backStack = rememberNavBackStack(Route.Login)
     Log.d("Session Status", sessionStatus.value.toString())
     NavDisplay(
         backStack = backStack,
