@@ -88,7 +88,12 @@ class AuthRepositoryImpl(
         return remoteDataSource.getSessionStatus()
             .map { sessionStatus ->
                 return@map when (sessionStatus) {
-                    is SessionStatus.Authenticated -> Resource.Success(UserSessionStatus.Authenticated)
+                    is SessionStatus.Authenticated -> Resource.Success(
+                        UserSessionStatus.Authenticated(
+                            sessionStatus.session.toSessionToken()
+                        )
+                    )
+
                     SessionStatus.Initializing -> Resource.Success(UserSessionStatus.Initializing)
                     is SessionStatus.NotAuthenticated -> Resource.Success(UserSessionStatus.Unauthenticated)
                     is SessionStatus.RefreshFailure -> Resource.Success(UserSessionStatus.Unauthenticated)

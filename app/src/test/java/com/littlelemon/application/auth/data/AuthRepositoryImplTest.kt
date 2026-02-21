@@ -1,6 +1,7 @@
 package com.littlelemon.application.auth.data
 
 import app.cash.turbine.test
+import com.littlelemon.application.auth.data.mappers.toSessionToken
 import com.littlelemon.application.auth.data.remote.AuthRemoteDataSource
 import com.littlelemon.application.auth.domain.models.UserSessionStatus
 import com.littlelemon.application.core.domain.utils.Resource
@@ -292,7 +293,15 @@ class AuthRepositoryImplTest {
         fun getUserSessionStatus_remoteUserStatusIsAuthenticated_returnsSuccessWithStatusAuthenticated() =
             runTest {
                 // Given remoteDatasource emits session status of authenticated
-                val userSession = mockk<UserSession>(relaxed = true)
+                val userSession = UserSession(
+                    "access_token",
+                    "refresh_token",
+                    null,
+                    null,
+                    60000L,
+                    "refresh",
+                    null
+                )
                 coEvery { remoteDataSource.getSessionStatus() } returns flow {
                     emit(
                         SessionStatus.Authenticated(
@@ -306,8 +315,9 @@ class AuthRepositoryImplTest {
                     // Then, the collected value is Authenticated wrapped with resource success
                     val result = awaitItem()
                     assertIs<Resource.Success<UserSessionStatus>>(result)
-                    assertTrue { result.data is UserSessionStatus.Authenticated }
-
+                    assertIs<UserSessionStatus.Authenticated>(result.data)
+                    // And it contains the passed in session
+                    assertEquals(userSession.toSessionToken(), result.data.userSession)
                     cancelAndConsumeRemainingEvents()
                 }
             }

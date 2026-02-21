@@ -6,7 +6,7 @@ package com.littlelemon.application.auth.domain.models
  */
 sealed interface UserSessionStatus {
 
-    data object Authenticated : UserSessionStatus
+    data class Authenticated(val userSession: SessionToken?) : UserSessionStatus
     data object Unauthenticated : UserSessionStatus
     data object Initializing : UserSessionStatus
 
