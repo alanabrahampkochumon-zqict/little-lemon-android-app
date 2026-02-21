@@ -27,7 +27,7 @@ class SessionManagerImplTest {
     }
 
     @Test
-    fun onGetCurrentSessionStatus_useCaseFailure_returnsUnauthenticated() = runTest {
+    fun getCurrentSessionStatus_useCaseFailure_returnsUnauthenticated() = runTest {
         // Given use case returns failure
         val errorMessage = "user doesn't exist"
         coEvery { getSessionUseCase.invoke() } returns flow { emit(Resource.Failure(errorMessage = errorMessage)) }
@@ -37,11 +37,10 @@ class SessionManagerImplTest {
             assertIs<SessionStatus.Unauthenticated>(awaitItem())
             cancelAndConsumeRemainingEvents()
         }
-//        assertTrue(sessionManager.getCurrentSessionStatus() is SessionStatus.Unauthenticated)
     }
 
     @Test
-    fun onGetCurrentSessionStatus_useCaseSuccessWithNullData_returnsUnauthenticated() =
+    fun getCurrentSessionStatus_useCaseSuccessWithNullData_returnsUnauthenticated() =
         runTest {
             // Given use case returns success but with null data
             coEvery { getSessionUseCase.invoke() } returns flow { emit(Resource.Success(null)) }
@@ -52,11 +51,10 @@ class SessionManagerImplTest {
 
                 cancelAndConsumeRemainingEvents()
             }
-//            assertTrue(sessionManager.getCurrentSessionStatus() is SessionStatus.Unauthenticated)
         }
 
     @Test
-    fun onGetCurrentSessionStatus_useCaseSuccessButWithoutUserFirstName_returnsPartiallyAuthenticated() =
+    fun getCurrentSessionStatus_useCaseSuccessButWithoutUserFirstName_returnsPartiallyAuthenticated() =
         runTest {
             // Given use case returns success but with partial user info
             val session = UserSessionGenerator.generateUserSession(false)
@@ -74,11 +72,31 @@ class SessionManagerImplTest {
 
                 cancelAndConsumeRemainingEvents()
             }
-//            assertTrue(sessionManager.getCurrentSessionStatus() is SessionStatus.PartiallyAuthenticated)
         }
 
     @Test
-    fun onGetCurrentSessionStatus_useCaseSuccessWithFullDetails_returnsFullyAuthenticated() =
+    fun getCurrentSessionStatus_useCaseSuccessWithSessionInitializing_returnsSessionLoading() =
+        runTest {
+            // Given use case returns success user session initializing
+            val session = UserSessionGenerator.generateUserSession(false)
+            coEvery { getSessionUseCase.invoke() } returns flow {
+                emit(
+                    Resource.Success(
+                        UserSessionStatus.Initializing
+                    )
+                )
+            }
+
+            // Then, then the session status returned is SessionLoading
+            sessionManager.getCurrentSessionStatus().test {
+                assertIs<SessionStatus.SessionLoading>(awaitItem())
+
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun getCurrentSessionStatus_useCaseSuccessWithFullDetails_returnsFullyAuthenticated() =
         runTest {
             // Given use case returns success but with partial user info
             val session = UserSessionGenerator.generateUserSession(true)
@@ -95,7 +113,6 @@ class SessionManagerImplTest {
                 assertIs<SessionStatus.FullyAuthenticated>(awaitItem())
                 cancelAndConsumeRemainingEvents()
             }
-//            assertTrue(sessionManager.getCurrentSessionStatus() is SessionStatus.FullyAuthenticated)
         }
 
 }

@@ -9,4 +9,7 @@ sealed interface SessionStatus {
 
     // User session does not exist
     data object Unauthenticated : SessionStatus
+
+    // When the session is being fetch from database
+    data object SessionLoading : SessionStatus
 }
