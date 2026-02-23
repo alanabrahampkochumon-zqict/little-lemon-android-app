@@ -4,5 +4,5 @@ import com.littlelemon.application.address.domain.AddressRepository
 
 class GetAddressCountUseCase(private val repository: AddressRepository) {
 
-    suspend operator fun invoke(): Int = TODO("Implementation")
+    suspend operator fun invoke(): Long = repository.getAddressCount()
 }
