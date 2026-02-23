@@ -46,7 +46,9 @@ import com.littlelemon.application.core.presentation.designsystem.typeStyle
 fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
     EnableLocationScreenRoot(
         modifier = modifier,
-        onEnableLocationClick = {},
+        onEnableLocationClick = {
+            TODO("Implementation")
+        },
         onManualLocationClick = {
             viewModel.onAction(AddressActions.EnterLocationManually)
         }

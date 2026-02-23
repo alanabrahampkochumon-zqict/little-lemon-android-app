@@ -1,7 +1,6 @@
 package com.littlelemon.application.core.presentation.components
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,7 +24,9 @@ import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
+import com.littlelemon.application.core.presentation.designsystem.shadows
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import com.littlelemon.application.core.presentation.utils.toComposeShadow
 import androidx.compose.material3.Button as M3Button
 
 enum class ButtonVariant {
@@ -51,6 +54,9 @@ fun Button(
     variant: ButtonVariant = ButtonVariant.PRIMARY,
     size: ButtonSize = ButtonSize.Medium
 ) {
+
+    val screenDensityRatio = LocalDensity.current.density
+
     val colors = when (variant) {
         ButtonVariant.PRIMARY -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colors.action,
@@ -97,21 +103,25 @@ fun Button(
         ButtonSize.Large -> MaterialTheme.dimens.sizeLG
     }
 
-    val border: BorderStroke? = if (variant == ButtonVariant.SECONDARY) {
-        BorderStroke(1.dp, MaterialTheme.colors.outlineSecondary)
-    } else {
-        null
-    }
+//    val border: BorderStroke? = if (variant == ButtonVariant.SECONDARY) {
+//        BorderStroke(1.dp, MaterialTheme.colors.outlineSecondary)
+//    } else {
+//        null
+//    }
 
     M3Button(
         onClick = onClick,
         modifier = Modifier
             .defaultMinSize(minHeight = 48.dp)
             .fillMaxWidth()
-            .then(modifier),
+            .then(
+                if (variant == ButtonVariant.SECONDARY && enabled) modifier.dropShadow(
+                    MaterialTheme.shapes.small,
+                    MaterialTheme.shadows.dropSM.firstShadow.toComposeShadow(screenDensityRatio)
+                ) else modifier
+            ),
         colors = colors,
         shape = MaterialTheme.shapes.small,
-        border = border,
         enabled = enabled
     ) {
         Row(

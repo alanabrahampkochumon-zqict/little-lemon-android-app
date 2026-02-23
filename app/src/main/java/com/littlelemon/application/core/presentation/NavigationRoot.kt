@@ -10,6 +10,7 @@ import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.address.presentation.screens.EnableLocationScreen
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.screens.AuthScreen
+import com.littlelemon.application.home.presentation.HomeScreen
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -33,7 +34,7 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
 
                 is Route.Home -> {
                     NavEntry(key) {
-                        /* TODO() */
+                        HomeScreen()
                     }
                 }
 
