@@ -10,11 +10,13 @@ import com.littlelemon.application.address.data.local.AddressLocalDataSourceImpl
 import com.littlelemon.application.address.data.local.dao.AddressDao
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSourceImpl
+import com.littlelemon.application.address.domain.AddressManagerImpl
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
 import com.littlelemon.application.address.presentation.AddressViewModel
+import com.littlelemon.application.core.domain.AddressManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -23,6 +25,8 @@ val addressModule = module {
     viewModel<AddressViewModel> {
         AddressViewModel(get(), get(), get())
     }
+
+    single<AddressManager> { AddressManagerImpl(get()) }
 
     single<GetLocationUseCase> { GetLocationUseCase(get()) }
     single<GetAddressUseCase> { GetAddressUseCase(get()) }
