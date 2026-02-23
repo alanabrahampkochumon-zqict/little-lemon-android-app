@@ -2,6 +2,7 @@ package com.littlelemon.application.core.presentation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -10,6 +11,7 @@ import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.address.presentation.screens.EnableLocationScreen
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.screens.AuthScreen
+import com.littlelemon.application.core.domain.model.SessionStatus
 import com.littlelemon.application.home.presentation.HomeScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -17,10 +19,21 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
 
-    val sessionStatus = rootViewModel.sessionStatus.collectAsStateWithLifecycle()
-    val backStack = rememberNavBackStack(Route.LocationPermission)
-//    val backStack = rememberNavBackStack(Route.LocationPermission, Route.Login)
-    Log.d("Session Status", sessionStatus.value.toString())
+    val sessionStatus by rootViewModel.sessionStatus.collectAsStateWithLifecycle()
+    val backStack = rememberNavBackStack(Route.Login)
+    when (sessionStatus) {
+        SessionStatus.FullyAuthenticated -> {
+            backStack.remove(Route.Login)
+            backStack.add(Route.Home)
+        }
+
+        SessionStatus.PartiallyAuthenticated -> TODO("Show personalization subgraph")
+        SessionStatus.SessionLoading -> SplashScreen()
+        SessionStatus.Unauthenticated -> Unit // Nothing needs to be done as the backstack already contains login
+    }
+
+    //TODO: Remove Log
+    Log.d("Session Status", sessionStatus.toString())
     NavDisplay(
         backStack = backStack,
         entryProvider = { key ->

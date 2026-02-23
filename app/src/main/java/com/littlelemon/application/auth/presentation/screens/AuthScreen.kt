@@ -76,7 +76,7 @@ fun AuthScreenRoot(
 ) {
 
     // FIXME: Remove Temporary Route
-    var route by remember { mutableStateOf(Step.Verify) }
+    var route by remember { mutableStateOf(Step.Login) }
 
     val screenDensityRatio = LocalDensity.current.density
     val (screenWidth, screenHeight) = LocalWindowInfo.current.containerDpSize
