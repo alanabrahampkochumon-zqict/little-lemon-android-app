@@ -11,4 +11,6 @@ interface AddressRepository {
     suspend fun saveAddress(address: LocalAddress): Resource<Unit>
 
     fun getAddress(): Flow<Resource<List<LocalAddress>>>
+
+    suspend fun getAddressCount(): Long
 }

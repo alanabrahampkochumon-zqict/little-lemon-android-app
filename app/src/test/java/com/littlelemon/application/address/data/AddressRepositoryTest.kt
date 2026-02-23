@@ -331,4 +331,43 @@ class AddressRepositoryTest {
         assertTrue(resource is Resource.Failure)
         assertTrue(localDataSource.getAddress().first().isEmpty())
     }
+
+    @Test
+    fun getAddressCount_localDatasourceReturnsZero_returnsZero() = runTest {
+        // Given local data source contains zero addresses
+
+        // When getAddressCount is called
+        val addressCount = repository.getAddressCount()
+
+        // Then, 0 is returned
+        assertEquals(0, addressCount)
+    }
+
+    @Test
+    fun getAddressCount_localDataSourceReturnsNonZero_returnsNonZero() = runTest {
+        // Given local data source contains five addresses
+        val expectedAddressCount = 5
+        val addresses = List(expectedAddressCount) { AddressGenerator.generateAddressEntity() }
+        localDataSource = FakeAddressLocalDataSource(addresses)
+        repository = AddressRepositoryImpl(localDataSource, remoteDataSource)
+
+        // When getAddressCount is called
+        val addressCount = repository.getAddressCount()
+
+        // Then, five is returned
+        assertEquals(expectedAddressCount.toLong(), addressCount)
+    }
+
+    @Test
+    fun getAddressCount_localDataSourceError_returnsNegativeOne() = runTest {
+        // Given local data source error
+        localDataSource = FakeAddressLocalDataSource(throwError = true)
+        repository = AddressRepositoryImpl(localDataSource, remoteDataSource)
+
+        // When getAddressCount is called
+        val addressCount = repository.getAddressCount()
+
+        // Then, -1 is returned
+        assertEquals(-1, addressCount)
+    }
 }

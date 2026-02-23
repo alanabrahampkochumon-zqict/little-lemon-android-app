@@ -66,6 +66,8 @@ class AddressRepositoryImpl(
         }
     }
 
+    // TODO: Edge case fix, use deletes address from one device and logs into their another device
+    // TODO: Try to refresh form supabase
     override fun getAddress(): Flow<Resource<List<LocalAddress>>> =
         flow {
             var offlineData: List<LocalAddress>? = null
@@ -94,5 +96,14 @@ class AddressRepositoryImpl(
         }.onStart {
             emit(Resource.Loading<List<LocalAddress>>(null))
         }
+
+    override suspend fun getAddressCount(): Long {
+        try {
+            return localDataSource.getAddressCount()
+        } catch (e: Exception) {
+            currentCoroutineContext().ensureActive()
+            return -1
+        }
+    }
 
 }

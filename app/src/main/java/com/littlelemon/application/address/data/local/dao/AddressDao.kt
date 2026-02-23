@@ -21,4 +21,5 @@ interface AddressDao {
 
     @Query("SELECT * FROM ADDRESSENTITY ORDER BY createdAt DESC")
     fun getAllAddress(): Flow<List<AddressEntity>>
+
 }
