@@ -7,19 +7,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -39,26 +42,35 @@ import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @Composable
 fun EnableLocationScreen(modifier: Modifier = Modifier) {
+    val scrollState = rememberScrollState()
+
+    LaunchedEffect(Unit) {
+        scrollState.scrollTo(scrollState.maxValue)
+    }
+
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
         contentWindowInsets = WindowInsets.systemBars.only(
-            WindowInsetsSides.Top
-        ).add(WindowInsets.displayCutout).add(WindowInsets.ime)
+            WindowInsetsSides.Bottom
+        ).add(WindowInsets.ime)
     ) { innerPadding ->
         DoodleBackground(alpha = 0.1f)
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = MaterialTheme.dimens.sizeXL),
+                .padding(horizontal = MaterialTheme.dimens.sizeXL)
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
                 painterResource(R.drawable.enable_location_service),
                 contentDescription = null,
-                modifier.widthIn(max = 450.dp)
+                Modifier
+                    .widthIn(max = 450.dp)
+                    .offset(y = MaterialTheme.dimens.size2XL) // Offset applied to negate image's y height due to shadow
             )
             Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
                 Text(
@@ -77,7 +89,10 @@ fun EnableLocationScreen(modifier: Modifier = Modifier) {
 
             Spacer(Modifier.height(MaterialTheme.dimens.size4XL))
 
-            Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG), modifier = Modifier.widthIn(max = 480.dp)) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG),
+                modifier = Modifier.widthIn(max = 480.dp)
+            ) {
                 Button(
                     label = stringResource(R.string.act_enable_location),
                     onClick = {}, // TODO:
