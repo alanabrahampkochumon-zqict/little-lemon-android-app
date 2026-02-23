@@ -17,7 +17,7 @@ import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.colors
 
 @Composable
-fun DoodleBackground(modifier: Modifier = Modifier) {
+fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -30,7 +30,7 @@ fun DoodleBackground(modifier: Modifier = Modifier) {
             Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop,
             colorFilter = ColorFilter.tint(MaterialTheme.colors.contentHighlight),
-            alpha = 0.15f
+            alpha = alpha
         )
     }
 }
