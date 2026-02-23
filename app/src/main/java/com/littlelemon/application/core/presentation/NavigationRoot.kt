@@ -31,15 +31,9 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
                     }
                 }
 
-                is Route.Verification -> {
+                is Route.Home -> {
                     NavEntry(key) {
                         /* TODO() */
-                    }
-                }
-
-                is Route.Personalization -> {
-                    NavEntry(key) {
-                        /*  TODO */
                     }
                 }
 
