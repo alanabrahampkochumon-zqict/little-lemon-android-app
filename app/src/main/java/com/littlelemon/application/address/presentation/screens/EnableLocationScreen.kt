@@ -42,6 +42,11 @@ import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @Composable
 fun EnableLocationScreen(modifier: Modifier = Modifier) {
+    EnableLocationScreenRoot(modifier = modifier)
+}
+
+@Composable
+fun EnableLocationScreenRoot(modifier: Modifier = Modifier, onEnableLocationClick: () -> Unit = {}, onManualLocationClick:() -> Unit = {}) {
     val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
@@ -95,14 +100,14 @@ fun EnableLocationScreen(modifier: Modifier = Modifier) {
             ) {
                 Button(
                     label = stringResource(R.string.act_enable_location),
-                    onClick = {}, // TODO:
+                    onClick = onEnableLocationClick,
                     modifier = Modifier.fillMaxWidth(),
                     variant = ButtonVariant.PRIMARY,
                     size = ButtonSize.Medium
                 )
                 Button(
                     label = stringResource(R.string.act_enter_location_manually),
-                    onClick = {}, // TODO:
+                    onClick = onManualLocationClick,
                     modifier = Modifier.fillMaxWidth(),
                     variant = ButtonVariant.SECONDARY,
                     size = ButtonSize.Medium
@@ -116,8 +121,8 @@ fun EnableLocationScreen(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-private fun EnableLocationScreenPreview() {
+private fun EnableLocationScreenRootPreview() {
     LittleLemonTheme {
-        EnableLocationScreen()
+        EnableLocationScreenRoot()
     }
 }
