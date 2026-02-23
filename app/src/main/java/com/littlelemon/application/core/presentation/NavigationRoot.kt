@@ -6,6 +6,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.littlelemon.application.address.presentation.screens.EnableLocationScreen
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.screens.AuthScreen
 import org.koin.androidx.compose.koinViewModel
@@ -15,7 +16,8 @@ import org.koin.androidx.compose.koinViewModel
 fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
 
     val sessionStatus = rootViewModel.sessionStatus.collectAsStateWithLifecycle()
-    val backStack = rememberNavBackStack(Route.Login)
+    val backStack = rememberNavBackStack(Route.LocationPermission)
+//    val backStack = rememberNavBackStack(Route.LocationPermission, Route.Login)
     Log.d("Session Status", sessionStatus.value.toString())
     NavDisplay(
         backStack = backStack,
@@ -42,7 +44,7 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
 
                 is Route.LocationPermission -> {
                     NavEntry(key) {
-                        /* TODO() */
+                        EnableLocationScreen()
                     }
                 }
 

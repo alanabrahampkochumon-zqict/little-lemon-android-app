@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,7 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonSize
@@ -52,23 +55,29 @@ fun EnableLocationScreen(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(painterResource(R.drawable.enable_location_service), contentDescription = null)
+            Image(
+                painterResource(R.drawable.enable_location_service),
+                contentDescription = null,
+                modifier.widthIn(max = 450.dp)
+            )
             Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
                 Text(
                     stringResource(R.string.heading_location),
-                    style = MaterialTheme.typeStyle.displayLarge,
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typeStyle.displayLarge.copy(textAlign = TextAlign.Center),
                     color = MaterialTheme.colors.contentPrimary
                 )
                 Text(
                     stringResource(R.string.body_location),
-                    style = MaterialTheme.typeStyle.bodyMedium,
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typeStyle.bodyMedium.copy(textAlign = TextAlign.Center),
                     color = MaterialTheme.colors.contentSecondary
                 )
             }
 
             Spacer(Modifier.height(MaterialTheme.dimens.size4XL))
 
-            Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG)) {
+            Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG), modifier = Modifier.widthIn(max = 480.dp)) {
                 Button(
                     label = stringResource(R.string.act_enable_location),
                     onClick = {}, // TODO:
