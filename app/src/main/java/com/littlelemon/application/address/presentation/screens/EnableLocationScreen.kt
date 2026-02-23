@@ -31,6 +31,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.address.presentation.AddressActions
+import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonSize
 import com.littlelemon.application.core.presentation.components.ButtonVariant
@@ -41,8 +43,14 @@ import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @Composable
-fun EnableLocationScreen(modifier: Modifier = Modifier) {
-    EnableLocationScreenRoot(modifier = modifier)
+fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
+    EnableLocationScreenRoot(
+        modifier = modifier,
+        onEnableLocationClick = {},
+        onManualLocationClick = {
+            viewModel.onAction(AddressActions.EnterLocationManually)
+        }
+    )
 }
 
 @Composable

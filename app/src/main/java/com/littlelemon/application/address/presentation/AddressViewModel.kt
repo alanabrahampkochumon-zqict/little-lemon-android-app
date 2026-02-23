@@ -153,7 +153,6 @@ class AddressViewModel(
                 }
                 _state.update { it.copy(isLoading = false) }
                 for (evt in events) {
-                    println("Emitting: ${evt}")
                     _addressChannel.send(evt)
                 }
             }
