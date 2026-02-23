@@ -1,6 +1,7 @@
 package com.littlelemon.application
 
 import android.app.Application
+import com.littlelemon.application.address.di.addressModule
 import com.littlelemon.application.auth.di.authModule
 import com.littlelemon.application.core.di.coreModule
 import org.koin.android.ext.koin.androidContext
@@ -17,6 +18,7 @@ class LittleLemonApplication : Application() {
             androidContext(this@LittleLemonApplication)
             modules(authModule)
             modules(coreModule)
+            modules(addressModule)
         }
     }
 }
