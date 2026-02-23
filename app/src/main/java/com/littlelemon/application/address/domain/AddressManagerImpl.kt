@@ -1,9 +1,10 @@
 package com.littlelemon.application.address.domain
 
+import com.littlelemon.application.address.domain.usecase.GetAddressCountUseCase
 import com.littlelemon.application.core.domain.AddressManager
 
-class AddressManagerImpl : AddressManager {
+class AddressManagerImpl(private val getAddressCount: GetAddressCountUseCase) : AddressManager {
     override suspend fun userHasAddress(): Boolean {
-        TODO("Not yet implemented")
+        return getAddressCount() > 0
     }
 }
