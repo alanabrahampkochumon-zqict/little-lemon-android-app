@@ -137,7 +137,13 @@ fun AuthScreenRoot(
     onUpdateLastName: (String) -> Unit = {},
     onCompletePersonalization: () -> Unit = {}
 ) {
-
+    val loaderContent: @Composable () -> Unit = {
+        when (backStack.lastOrNull()) {
+        is LoginRoute -> EmailVerifyLoaderContent(state.email)
+        is VerificationRoute -> OTPVerificationLoaderContent()
+        else -> {}
+    }
+    }
 
     val screenDensityRatio = LocalDensity.current.density
     val (screenWidth, screenHeight) = LocalWindowInfo.current.containerDpSize
@@ -154,8 +160,6 @@ fun AuthScreenRoot(
 
     val isScrollable = isLandscape && !isFloating
 
-    var LoaderContent: @Composable () -> Unit = {}
-
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
@@ -164,7 +168,7 @@ fun AuthScreenRoot(
         ).add(WindowInsets.displayCutout).add(WindowInsets.ime)
     ) { innerPadding ->
 
-        Loader(showLoader = state.isLoading, loaderContent = LoaderContent) {
+        Loader(showLoader = state.isLoading, loaderContent = loaderContent) {
 
             DoodleBackground()
 
@@ -198,7 +202,6 @@ fun AuthScreenRoot(
                                     end = MaterialTheme.dimens.sizeXL
                                 )
                             )
-                            LoaderContent = { EmailVerifyLoaderContent(state.email) }
                         }
                         entry<VerificationRoute> {
                             VerificationContent(
@@ -210,7 +213,6 @@ fun AuthScreenRoot(
                                 onChangeEmail = onChangeEmail,
                                 onVerifyOTP = onVerifyOTP
                             )
-                            LoaderContent = { OTPVerificationLoaderContent() }
                         }
                         entry<PersonalizationRoute> {
                             PersonalInformationContent(
@@ -292,7 +294,7 @@ private fun AuthScreenRootLoginPreview() {
 @Composable
 private fun AuthScreenRootVerificationPreview() {
     LittleLemonTheme {
-        AuthScreenRoot(AuthState(), rememberNavBackStack(VerificationRoute))
+        AuthScreenRoot(AuthState(email = "test@gmail.com"), rememberNavBackStack(VerificationRoute))
     }
 }
 
