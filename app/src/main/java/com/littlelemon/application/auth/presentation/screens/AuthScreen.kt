@@ -1,6 +1,7 @@
 package com.littlelemon.application.auth.presentation.screens
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
@@ -63,6 +64,7 @@ fun AuthScreen(
 
     val backStack =
         rememberNavBackStack(if (isPartiallyAuthenticated) PersonalizationRoute else LoginRoute)
+    Log.d("Session", isPartiallyAuthenticated.toString())
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(viewModel.authEvent, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
