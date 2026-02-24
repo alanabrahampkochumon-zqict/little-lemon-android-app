@@ -16,7 +16,7 @@ class SessionManagerImpl(private val getUserSessionUseCase: GetUserSessionStatus
             if (userSessionStatus is Resource.Success) {
                 when (val sessionStatus = userSessionStatus.data) {
                     is UserSessionStatus.Authenticated -> {
-                        if (sessionStatus.userSession?.user?.firstName != null)
+                        if (!sessionStatus.userSession?.user?.firstName.isNullOrBlank())
                             return@map SessionStatus.FullyAuthenticated
                         return@map SessionStatus.PartiallyAuthenticated
                     }

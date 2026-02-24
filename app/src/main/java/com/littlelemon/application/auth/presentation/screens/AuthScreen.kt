@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -20,14 +21,19 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.auth.presentation.AuthActions
-import com.littlelemon.application.auth.presentation.AuthRoute
+import com.littlelemon.application.auth.presentation.AuthEvents
 import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.LoginRoute
@@ -47,13 +53,41 @@ enum class Step {
 }
 
 @Composable
-fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier, startRoute: AuthRoute = LoginRoute) {
+fun AuthScreen(
+    viewModel: AuthViewModel,
+    modifier: Modifier = Modifier,
+    isPartiallyAuthenticated: Boolean = false,
+    onAuthComplete: () -> Unit = {}
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val backStack =
+        rememberNavBackStack(if (isPartiallyAuthenticated) PersonalizationRoute else LoginRoute)
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(viewModel.authEvent, lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewModel.authEvent.collect { event ->
+                when (event) {
+                    AuthEvents.AuthComplete -> onAuthComplete()
+                    AuthEvents.NavigateBack -> backStack.removeLastOrNull()
+                    AuthEvents.NavigateToOTPScreen -> backStack.add(VerificationRoute)
+                    AuthEvents.NavigateToPersonalizationScreen -> {
+                        backStack.removeAll(listOf(LoginRoute, VerificationRoute))
+                        backStack.add(PersonalizationRoute)
+                    }
+
+                    is AuthEvents.ShowError -> TODO()
+                    is AuthEvents.ShowInfo -> TODO()
+                }
+            }
+        }
+
+    }
 
     AuthScreenRoot(
         state = state,
         modifier = modifier,
-        route = startRoute,
+        backStack = backStack,
         onUpdateEmail = { viewModel.onAction(AuthActions.ChangeEmail(it)) },
         onSendOTP = { viewModel.onAction(AuthActions.SendOTP) },
         onUpdateOTP = { viewModel.onAction(AuthActions.ChangeOTP(it)) },
@@ -66,14 +100,13 @@ fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier, startRou
         onCompletePersonalization = { viewModel.onAction(AuthActions.CompletePersonalization) }
     )
 
-
 }
 
 @Composable
 fun AuthScreenRoot(
     state: AuthState,
+    backStack: NavBackStack<NavKey>,
     modifier: Modifier = Modifier,
-    route: AuthRoute? = null, // TODO: Change
     onUpdateEmail: (String) -> Unit = {},
     onSendOTP: () -> Unit = {},
     onUpdateOTP: (List<Int?>) -> Unit = {},
@@ -84,7 +117,6 @@ fun AuthScreenRoot(
     onCompletePersonalization: () -> Unit = {}
 ) {
 
-    val backStack = rememberNavBackStack(route ?: LoginRoute)
 
     val screenDensityRatio = LocalDensity.current.density
     val (screenWidth, screenHeight) = LocalWindowInfo.current.containerDpSize
@@ -179,7 +211,7 @@ fun AuthScreenRoot(
 @Composable
 private fun AuthScreenRootLoginPreview() {
     LittleLemonTheme {
-        AuthScreenRoot(AuthState())
+        AuthScreenRoot(AuthState(), rememberNavBackStack(LoginRoute))
     }
 }
 
@@ -187,7 +219,7 @@ private fun AuthScreenRootLoginPreview() {
 @Composable
 private fun AuthScreenRootVerificationPreview() {
     LittleLemonTheme {
-        AuthScreenRoot(AuthState(), route = VerificationRoute)
+        AuthScreenRoot(AuthState(), rememberNavBackStack(VerificationRoute))
     }
 }
 
@@ -195,6 +227,6 @@ private fun AuthScreenRootVerificationPreview() {
 @Composable
 private fun AuthScreenRootPersonalizationPreview() {
     LittleLemonTheme {
-        AuthScreenRoot(AuthState(), route = PersonalizationRoute)
+        AuthScreenRoot(AuthState(), rememberNavBackStack(PersonalizationRoute))
     }
 }

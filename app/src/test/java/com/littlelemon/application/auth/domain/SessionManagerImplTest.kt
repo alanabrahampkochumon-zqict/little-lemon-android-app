@@ -1,6 +1,7 @@
 package com.littlelemon.application.auth.domain
 
 import app.cash.turbine.test
+import com.littlelemon.application.auth.domain.models.User
 import com.littlelemon.application.auth.domain.models.UserSessionGenerator
 import com.littlelemon.application.auth.domain.models.UserSessionStatus
 import com.littlelemon.application.auth.domain.usecase.GetUserSessionStatusUseCase
@@ -58,6 +59,28 @@ class SessionManagerImplTest {
         runTest {
             // Given use case returns success but with partial user info
             val session = UserSessionGenerator.generateUserSession(false)
+            coEvery { getSessionUseCase.invoke() } returns flow {
+                emit(
+                    Resource.Success(
+                        UserSessionStatus.Authenticated(session)
+                    )
+                )
+            }
+
+            // Then, then the session status returned is PartiallyAuthenticated
+            sessionManager.getCurrentSessionStatus().test {
+                assertIs<SessionStatus.PartiallyAuthenticated>(awaitItem())
+
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+    @Test
+    fun getCurrentSessionStatus_useCaseSuccessWithEmptyFirstName_returnsPartiallyAuthenticated() =
+        runTest {
+            // Given use case returns success but with partial user info
+            val session = UserSessionGenerator.generateUserSession(false)
+                .copy(user = User(firstName = "", email = ""))
             coEvery { getSessionUseCase.invoke() } returns flow {
                 emit(
                     Resource.Success(

@@ -3,9 +3,11 @@ package com.littlelemon.application.auth.presentation.screens
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.test.filters.MediumTest
 import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.AuthState
+import com.littlelemon.application.auth.presentation.LoginRoute
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,7 +29,7 @@ class AuthScreenTest {
     fun authScreen_onLoading_loaderIsShown() {
         // Given a state with isLoading set to true
         composeTestRule.setContent {
-            AuthScreenRoot(AuthState(isLoading = true))
+            AuthScreenRoot(AuthState(isLoading = true), rememberNavBackStack(LoginRoute))
         }
 
         // Then, loader is shown
