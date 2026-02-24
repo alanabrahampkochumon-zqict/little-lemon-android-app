@@ -66,4 +66,8 @@
     <string name="test_tag_loader">LoaderTestTag</string>
     <string name="test_tag_navigation_action_left">LeftNavigationActionTestTag</string>
 
+    <!--  Loader content  -->
+    <string name="loader_sending_verification_code">Sending a verification code to</string>
+    <string name="loader_verifying_code">Verifying your code…</string>
+
 </resources>

@@ -37,7 +37,7 @@ fun Loader(
     modifier: Modifier = Modifier,
     screenDensityRatio: Float = 2f,
     showLoader: Boolean = false,
-    loaderContent: @Composable ColumnScope.() -> Unit = {},
+    loaderContent: @Composable () -> Unit = {},
     screenContent: @Composable () -> Unit = {}
 ) {
 

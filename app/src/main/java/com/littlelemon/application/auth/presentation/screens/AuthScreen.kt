@@ -1,8 +1,8 @@
 package com.littlelemon.application.auth.presentation.screens
 
 import android.content.res.Configuration
-import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
@@ -14,14 +14,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.Lifecycle
@@ -35,6 +38,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.AuthActions
 import com.littlelemon.application.auth.presentation.AuthEvents
 import com.littlelemon.application.auth.presentation.AuthState
@@ -46,8 +50,9 @@ import com.littlelemon.application.core.presentation.components.CardLayout
 import com.littlelemon.application.core.presentation.components.DoodleBackground
 import com.littlelemon.application.core.presentation.components.Loader
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
+import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
-import io.github.jan.supabase.auth.Auth
+import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 
 enum class Step {
@@ -83,9 +88,11 @@ fun AuthScreen(
                     }
 
                     is AuthEvents.ShowError -> {
-                        Toast.makeText(context, event.errorMessage.toString(), Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, event.errorMessage.toString(), Toast.LENGTH_LONG)
+                            .show()
                         // TODO: Replace with snackbar
                     }
+
                     is AuthEvents.ShowInfo -> {
                         Toast.makeText(context, event.message.toString(), Toast.LENGTH_LONG).show()
                         // TODO: Replace with snackbar
@@ -106,7 +113,7 @@ fun AuthScreen(
         // Not updating the email. Action triggered when users taps on `change email` action.
         // Which should bring the user to the email screen.
         onChangeEmail = { viewModel.onAction(AuthActions.NavigateBack) },
-        onNavigateBack = {viewModel.onAction(AuthActions.NavigateBack)},
+        onNavigateBack = { viewModel.onAction(AuthActions.NavigateBack) },
         onVerifyOTP = { viewModel.onAction(AuthActions.VerifyOTP) },
         onUpdateFirstName = { viewModel.onAction(AuthActions.ChangeFirstName(it)) },
         onUpdateLastName = { viewModel.onAction(AuthActions.ChangeLastName(it)) },
@@ -125,7 +132,7 @@ fun AuthScreenRoot(
     onUpdateOTP: (List<Int?>) -> Unit = {},
     onChangeEmail: () -> Unit = {},
     onVerifyOTP: () -> Unit = {},
-    onNavigateBack:() -> Unit = {},
+    onNavigateBack: () -> Unit = {},
     onUpdateFirstName: (String) -> Unit = {},
     onUpdateLastName: (String) -> Unit = {},
     onCompletePersonalization: () -> Unit = {}
@@ -147,6 +154,8 @@ fun AuthScreenRoot(
 
     val isScrollable = isLandscape && !isFloating
 
+    var LoaderContent: @Composable () -> Unit = {}
+
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
@@ -155,7 +164,7 @@ fun AuthScreenRoot(
         ).add(WindowInsets.displayCutout).add(WindowInsets.ime)
     ) { innerPadding ->
 
-        Loader(showLoader = state.isLoading) {
+        Loader(showLoader = state.isLoading, loaderContent = LoaderContent) {
 
             DoodleBackground()
 
@@ -189,6 +198,7 @@ fun AuthScreenRoot(
                                     end = MaterialTheme.dimens.sizeXL
                                 )
                             )
+                            LoaderContent = { EmailVerifyLoaderContent(state.email) }
                         }
                         entry<VerificationRoute> {
                             VerificationContent(
@@ -200,6 +210,7 @@ fun AuthScreenRoot(
                                 onChangeEmail = onChangeEmail,
                                 onVerifyOTP = onVerifyOTP
                             )
+                            LoaderContent = { OTPVerificationLoaderContent() }
                         }
                         entry<PersonalizationRoute> {
                             PersonalInformationContent(
@@ -219,6 +230,53 @@ fun AuthScreenRoot(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun EmailVerifyLoaderContent(email: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            stringResource(R.string.loader_sending_verification_code),
+            style = MaterialTheme.typeStyle.labelMedium,
+            color = MaterialTheme.colors.contentPrimary
+        )
+        Text(
+            email,
+            style = MaterialTheme.typeStyle.labelMedium,
+            color = MaterialTheme.colors.contentHighlight
+        )
+    }
+}
+
+@Composable
+fun OTPVerificationLoaderContent() {
+    Text(
+        stringResource(R.string.loader_verifying_code),
+        style = MaterialTheme.typeStyle.labelMedium,
+        color = MaterialTheme.colors.contentPrimary
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SendingOTPLoaderContentPreview() {
+    LittleLemonTheme {
+        Loader(
+            showLoader = true,
+            loaderContent = { EmailVerifyLoaderContent("test@gmail.com") }
+        ) { }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun VerificationLoaderContentPreview() {
+    LittleLemonTheme {
+        Loader(
+            showLoader = true,
+            loaderContent = { OTPVerificationLoaderContent() }
+        ) { }
     }
 }
 
