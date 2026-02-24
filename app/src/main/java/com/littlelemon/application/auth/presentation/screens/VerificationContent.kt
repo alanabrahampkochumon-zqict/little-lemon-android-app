@@ -43,13 +43,18 @@ fun VerificationContent(
     onOTPChange: (List<Int?>) -> Unit = {},
     onVerifyOTP: () -> Unit = {},
     onChangeEmail: () -> Unit = {},
-    onOTPResend: () -> Unit = {}
+    onOTPResend: () -> Unit = {},
+    onNavigateBack: () -> Unit = {}
 ) {
     Column(modifier = modifier) {
         TopNavigationBar(
             label = stringResource(R.string.nav_verify_email),
             navigationIcon = R.drawable.ic_caretleft,
-            navigationIconDescription = stringResource(R.string.act_back),
+            navigationIconDescription = stringResource(
+                R.string.act_back,
+                stringResource(R.string.screen_login)
+            ),
+            onNavigate = onNavigateBack,
             modifier = Modifier.heightIn(max = 48.dp)
         )
         Spacer(Modifier.height(MaterialTheme.dimens.sizeXL))
@@ -181,6 +186,21 @@ private fun VerificationScreenPreview() {
         VerificationContent(
             AuthState(
                 email = "test@littelemon.com",
+                oneTimePassword = otp
+            ),
+            onOTPChange = { otp = it }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun VerificationScreenLongEmailPreview() {
+    LittleLemonTheme {
+        var otp: List<Int?> = listOf(3, 1, 6, 3, 1, 6)
+        VerificationContent(
+            AuthState(
+                email = "verylongemail.email.email.email@littelemon.com",
                 oneTimePassword = otp
             ),
             onOTPChange = { otp = it }

@@ -4,6 +4,10 @@
     <!--    Image Descriptions    -->
     <string name="desc_logo">Little Lemon Logo</string>
 
+    <!-- Screen Names  -->
+    <string name="screen_home">Home Screen</string>
+    <string name="screen_login">Login Screen</string>
+
     <!--    Actions    -->
     <string name="act_send_otp">Send OTP</string>
     <string name="act_resend_otp">Resend Code</string>
@@ -60,5 +64,6 @@
 
     <!--  Test Tags -->
     <string name="test_tag_loader">LoaderTestTag</string>
+    <string name="test_tag_navigation_action_left">LeftNavigationActionTestTag</string>
 
 </resources>

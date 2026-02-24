@@ -2,6 +2,7 @@ package com.littlelemon.application.auth.presentation.screens
 
 import android.content.res.Configuration
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
@@ -18,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +47,7 @@ import com.littlelemon.application.core.presentation.components.DoodleBackground
 import com.littlelemon.application.core.presentation.components.Loader
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.dimens
+import io.github.jan.supabase.auth.Auth
 
 
 enum class Step {
@@ -60,11 +63,12 @@ fun AuthScreen(
     isPartiallyAuthenticated: Boolean = false,
     onAuthComplete: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val backStack =
         rememberNavBackStack(if (isPartiallyAuthenticated) PersonalizationRoute else LoginRoute)
-    Log.d("Session", isPartiallyAuthenticated.toString())
+
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(viewModel.authEvent, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -78,8 +82,14 @@ fun AuthScreen(
                         backStack.add(PersonalizationRoute)
                     }
 
-                    is AuthEvents.ShowError -> TODO()
-                    is AuthEvents.ShowInfo -> TODO()
+                    is AuthEvents.ShowError -> {
+                        Toast.makeText(context, event.errorMessage.toString(), Toast.LENGTH_LONG).show()
+                        // TODO: Replace with snackbar
+                    }
+                    is AuthEvents.ShowInfo -> {
+                        Toast.makeText(context, event.message.toString(), Toast.LENGTH_LONG).show()
+                        // TODO: Replace with snackbar
+                    }
                 }
             }
         }
@@ -96,6 +106,7 @@ fun AuthScreen(
         // Not updating the email. Action triggered when users taps on `change email` action.
         // Which should bring the user to the email screen.
         onChangeEmail = { viewModel.onAction(AuthActions.NavigateBack) },
+        onNavigateBack = {viewModel.onAction(AuthActions.NavigateBack)},
         onVerifyOTP = { viewModel.onAction(AuthActions.VerifyOTP) },
         onUpdateFirstName = { viewModel.onAction(AuthActions.ChangeFirstName(it)) },
         onUpdateLastName = { viewModel.onAction(AuthActions.ChangeLastName(it)) },
@@ -114,6 +125,7 @@ fun AuthScreenRoot(
     onUpdateOTP: (List<Int?>) -> Unit = {},
     onChangeEmail: () -> Unit = {},
     onVerifyOTP: () -> Unit = {},
+    onNavigateBack:() -> Unit = {},
     onUpdateFirstName: (String) -> Unit = {},
     onUpdateLastName: (String) -> Unit = {},
     onCompletePersonalization: () -> Unit = {}
@@ -183,6 +195,7 @@ fun AuthScreenRoot(
                                 authState = state,
                                 modifier = Modifier,
                                 isScrollable = isScrollable,
+                                onNavigateBack = onNavigateBack,
                                 onOTPChange = onUpdateOTP,
                                 onChangeEmail = onChangeEmail,
                                 onVerifyOTP = onVerifyOTP

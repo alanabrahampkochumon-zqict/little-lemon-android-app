@@ -107,7 +107,7 @@ dependencies {
     implementation(libs.kotlinx.datetime)
 
     implementation(libs.play.services.location)
-    implementation(libs.kotlinx.coroutines.play.services) // For .await for cb based methods of google play services like location
+    implementation(libs.kotlinx.coroutines.play.services) // For .await for cb based methods of Google play services like location
 
 
     coreLibraryDesugaring(libs.desugar.jdk)
@@ -125,6 +125,7 @@ dependencies {
     testImplementation(testFixtures(project(":app")))
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.androidx.espresso.core)
 
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.platform)
