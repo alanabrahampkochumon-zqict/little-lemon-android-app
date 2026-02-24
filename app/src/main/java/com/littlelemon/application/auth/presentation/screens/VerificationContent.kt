@@ -100,7 +100,8 @@ fun EmailSubsection(
         modifier = modifier
             .minimumInteractiveComponentSize()
             .clickable { onClick() },
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)
+    ) {
         Text(
             stringResource(R.string.body_verification_code),
             style = MaterialTheme.typeStyle.bodyMedium,
@@ -114,6 +115,7 @@ fun EmailSubsection(
                 emailAddress,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
+                modifier = Modifier.weight(1f, fill = false),
                 style = MaterialTheme.typeStyle.labelMedium,
                 color = MaterialTheme.colors.contentOnAction
             )
