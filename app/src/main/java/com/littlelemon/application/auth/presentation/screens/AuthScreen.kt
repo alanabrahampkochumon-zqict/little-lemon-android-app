@@ -14,21 +14,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.auth.presentation.AuthActions
+import com.littlelemon.application.auth.presentation.AuthRoute
 import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.auth.presentation.AuthViewModel
+import com.littlelemon.application.auth.presentation.LoginRoute
+import com.littlelemon.application.auth.presentation.PersonalizationRoute
+import com.littlelemon.application.auth.presentation.VerificationRoute
 import com.littlelemon.application.core.presentation.components.CardLayout
 import com.littlelemon.application.core.presentation.components.DoodleBackground
 import com.littlelemon.application.core.presentation.components.Loader
+import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.dimens
 
 
@@ -39,12 +47,13 @@ enum class Step {
 }
 
 @Composable
-fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
+fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier, startRoute: AuthRoute = LoginRoute) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     AuthScreenRoot(
         state = state,
         modifier = modifier,
+        route = startRoute,
         onUpdateEmail = { viewModel.onAction(AuthActions.ChangeEmail(it)) },
         onSendOTP = { viewModel.onAction(AuthActions.SendOTP) },
         onUpdateOTP = { viewModel.onAction(AuthActions.ChangeOTP(it)) },
@@ -64,7 +73,7 @@ fun AuthScreen(viewModel: AuthViewModel, modifier: Modifier = Modifier) {
 fun AuthScreenRoot(
     state: AuthState,
     modifier: Modifier = Modifier,
-    route: Step? = null, // TODO: Change
+    route: AuthRoute? = null, // TODO: Change
     onUpdateEmail: (String) -> Unit = {},
     onSendOTP: () -> Unit = {},
     onUpdateOTP: (List<Int?>) -> Unit = {},
@@ -75,8 +84,7 @@ fun AuthScreenRoot(
     onCompletePersonalization: () -> Unit = {}
 ) {
 
-    // FIXME: Remove Temporary Route
-    var route by remember { mutableStateOf(Step.Login) }
+    val backStack = rememberNavBackStack(route ?: LoginRoute)
 
     val screenDensityRatio = LocalDensity.current.density
     val (screenWidth, screenHeight) = LocalWindowInfo.current.containerDpSize
@@ -116,42 +124,77 @@ fun AuthScreenRoot(
                 maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
                 screenDensityRatio = screenDensityRatio
             ) {
-                when (route) {
-                    Step.Login -> LoginContent(
-                        authState = state,
-                        isScrollable = isScrollable,
-                        onEmailChange = onUpdateEmail,
-                        onSendOTP = onSendOTP,
-                        modifier = Modifier.padding(
-                            top = MaterialTheme.dimens.sizeMD,
-                            start = MaterialTheme.dimens.sizeXL,
-                            end = MaterialTheme.dimens.sizeXL
-                        )
-                    )
-
-                    Step.Verify -> VerificationContent(
-                        authState = state,
-                        modifier = Modifier,
-                        isScrollable = isScrollable,
-                        onOTPChange = onUpdateOTP,
-                        onChangeEmail = onChangeEmail,
-                        onVerifyOTP = onVerifyOTP
-                    )
-
-                    Step.Personalize -> PersonalInformationContent(
-                        state,
-                        isScrollable = isScrollable,
-                        onFirstNameChange = onUpdateFirstName,
-                        onLastNameChange = onUpdateLastName,
-                        onComplete = onCompletePersonalization,
-                        modifier = Modifier.padding(
-                            top = MaterialTheme.dimens.sizeMD,
-                            start = MaterialTheme.dimens.sizeXL,
-                            end = MaterialTheme.dimens.sizeXL
-                        )
-                    )
-                }
+                NavDisplay(
+                    entryDecorators = listOf(
+                        rememberSaveableStateHolderNavEntryDecorator(),
+                        rememberViewModelStoreNavEntryDecorator()
+                    ),
+                    backStack = backStack,
+                    entryProvider = entryProvider {
+                        entry<LoginRoute> {
+                            LoginContent(
+                                authState = state,
+                                isScrollable = isScrollable,
+                                onEmailChange = onUpdateEmail,
+                                onSendOTP = onSendOTP,
+                                modifier = Modifier.padding(
+                                    top = MaterialTheme.dimens.sizeMD,
+                                    start = MaterialTheme.dimens.sizeXL,
+                                    end = MaterialTheme.dimens.sizeXL
+                                )
+                            )
+                        }
+                        entry<VerificationRoute> {
+                            VerificationContent(
+                                authState = state,
+                                modifier = Modifier,
+                                isScrollable = isScrollable,
+                                onOTPChange = onUpdateOTP,
+                                onChangeEmail = onChangeEmail,
+                                onVerifyOTP = onVerifyOTP
+                            )
+                        }
+                        entry<PersonalizationRoute> {
+                            PersonalInformationContent(
+                                state,
+                                isScrollable = isScrollable,
+                                onFirstNameChange = onUpdateFirstName,
+                                onLastNameChange = onUpdateLastName,
+                                onComplete = onCompletePersonalization,
+                                modifier = Modifier.padding(
+                                    top = MaterialTheme.dimens.sizeMD,
+                                    start = MaterialTheme.dimens.sizeXL,
+                                    end = MaterialTheme.dimens.sizeXL
+                                )
+                            )
+                        }
+                    }
+                )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun AuthScreenRootLoginPreview() {
+    LittleLemonTheme {
+        AuthScreenRoot(AuthState())
+    }
+}
+
+@Preview
+@Composable
+private fun AuthScreenRootVerificationPreview() {
+    LittleLemonTheme {
+        AuthScreenRoot(AuthState(), route = VerificationRoute)
+    }
+}
+
+@Preview
+@Composable
+private fun AuthScreenRootPersonalizationPreview() {
+    LittleLemonTheme {
+        AuthScreenRoot(AuthState(), route = PersonalizationRoute)
     }
 }
