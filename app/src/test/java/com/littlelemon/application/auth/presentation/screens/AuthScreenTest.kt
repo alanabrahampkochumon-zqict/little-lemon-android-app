@@ -33,6 +33,11 @@ class AuthScreenTest {
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
     val loaderMatcher = hasTestTag(application.getString(R.string.test_tag_loader))
+    val sendingOTPLoaderMatcher =
+        hasText(application.getString(R.string.loader_sending_verification_code))
+    val verifyingLoaderMatcher =
+        hasText(application.getString(R.string.loader_verifying_code))
+
     val sendButtonMatcher = hasText(application.getString(R.string.act_send_otp))
     val verifyNavMatcher = hasText(application.getString(R.string.nav_verify_email))
     val changeEmailMatcher = hasText(application.getString(R.string.act_change_email))
@@ -161,5 +166,30 @@ class AuthScreenTest {
 
     }
 
+    @Test
+    fun authScreen_loginContent_loading_showsLoginLoaderContent() = runTest {
+        // Given auth screen with login content
+        // And is in the loading state
+        composeTestRule.setContent {
+            val backStack = rememberNavBackStack(LoginRoute)
+            AuthScreenRoot(AuthState(isLoading = true), backStack)
+        }
+
+        // Then login content for sending email is shown
+        composeTestRule.onNode(sendingOTPLoaderMatcher).assertIsDisplayed()
+    }
+
+    @Test
+    fun authScreen_verificationContent_loading_showsVerifyingLoaderContent() = runTest {
+        // Given auth screen with login content
+        // And is in the loading state
+        composeTestRule.setContent {
+            val backStack = rememberNavBackStack(VerificationRoute)
+            AuthScreenRoot(AuthState(isLoading = true), backStack)
+        }
+
+        // Then login content for verifying is shown
+        composeTestRule.onNode(verifyingLoaderMatcher).assertIsDisplayed()
+    }
 
 }
