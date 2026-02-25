@@ -41,6 +41,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.AuthActions
 import com.littlelemon.application.auth.presentation.AuthEvents
+import com.littlelemon.application.auth.presentation.AuthLoadingState
 import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.LoginRoute
@@ -140,9 +141,14 @@ fun AuthScreenRoot(
     onOTPResend: () -> Unit = {}
 ) {
     val loaderContent: @Composable () -> Unit = {
-        when (backStack.lastOrNull()) {
-            is LoginRoute -> EmailVerifyLoaderContent(state.email)
-            is VerificationRoute -> OTPVerificationLoaderContent()
+        when (state.loadingState) {
+            is AuthLoadingState.SendingOTP -> EmailVerifyLoaderContent(state.email)
+            is AuthLoadingState.VerifyingOTP -> OTPVerificationLoaderContent(stringResource(R.string.loader_verifying_code))
+            is AuthLoadingState.ResendingOTP -> OTPVerificationLoaderContent(stringResource(R.string.loader_resending_otp))
+            is AuthLoadingState.FinishingPersonalization -> OTPVerificationLoaderContent(
+                stringResource(R.string.loader_finishing_personalization)
+            )
+
             else -> {}
         }
     }
@@ -255,9 +261,9 @@ fun EmailVerifyLoaderContent(email: String) {
 }
 
 @Composable
-fun OTPVerificationLoaderContent() {
+fun OTPVerificationLoaderContent(message: String) {
     Text(
-        stringResource(R.string.loader_verifying_code),
+        message,
         style = MaterialTheme.typeStyle.labelMedium,
         color = MaterialTheme.colors.contentPrimary
     )
@@ -280,7 +286,7 @@ private fun VerificationLoaderContentPreview() {
     LittleLemonTheme {
         Loader(
             showLoader = true,
-            loaderContent = { OTPVerificationLoaderContent() }
+            loaderContent = { OTPVerificationLoaderContent("Please wait...") }
         ) { }
     }
 }

@@ -86,7 +86,7 @@ fun LoginContent(
             stringResource(R.string.act_send_otp),
             onSendOTP,
             modifier = Modifier.fillMaxWidth(),
-            enabled = authState.enableSendButton && authState.loadingState != null
+            enabled = authState.enableSendButton && authState.loadingState == null
         )
     }
 }

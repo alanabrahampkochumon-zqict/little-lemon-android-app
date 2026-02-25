@@ -39,6 +39,11 @@ class AuthScreenTest {
     val verifyingLoaderMatcher =
         hasText(application.getString(R.string.loader_verifying_code))
 
+    val resendingLoaderMatcher =
+        hasText(application.getString(R.string.loader_resending_otp))
+    val completingPersonalizationLoaderMatcher =
+        hasText(application.getString(R.string.loader_finishing_personalization))
+
     val sendButtonMatcher = hasText(application.getString(R.string.act_send_otp))
     val verifyNavMatcher = hasText(application.getString(R.string.nav_verify_email))
     val changeEmailMatcher = hasText(application.getString(R.string.act_change_email))
@@ -64,7 +69,7 @@ class AuthScreenTest {
     }
 
     @Test
-    fun authScreen_loginRoute_whenVerifyOTPButtonIsPressed_navigatesToVerifyScreen() = runTest {
+    fun authScreen_loginRoute_whenSendOTPButtonIsPressed_navigatesToVerifyScreen() = runTest {
         // Given auth screen with login content
         composeTestRule.setContent {
             val backStack = rememberNavBackStack(LoginRoute)
@@ -171,7 +176,7 @@ class AuthScreenTest {
     }
 
     @Test
-    fun authScreen_loginContent_loading_showsLoginLoaderContent() = runTest {
+    fun authScreen_loginContent_sendingOTP_showsLoginLoaderContent() = runTest {
         // Given auth screen with login content
         // And is in the loading state
         composeTestRule.setContent {
@@ -179,12 +184,12 @@ class AuthScreenTest {
             AuthScreenRoot(AuthState(loadingState = AuthLoadingState.SendingOTP), backStack)
         }
 
-        // Then login content for sending email is shown
+        // Then loading content for sending email is shown
         composeTestRule.onNode(sendingOTPLoaderMatcher).assertIsDisplayed()
     }
 
     @Test
-    fun authScreen_verificationContent_loading_showsVerifyingLoaderContent() = runTest {
+    fun authScreen_verificationContent_verifyingOTP_showsVerifyingLoaderContent() = runTest {
         // Given auth screen with login content
         // And is in the loading state
         composeTestRule.setContent {
@@ -192,8 +197,38 @@ class AuthScreenTest {
             AuthScreenRoot(AuthState(loadingState = AuthLoadingState.VerifyingOTP), backStack)
         }
 
-        // Then login content for verifying is shown
+        // Then loading content for verifying is shown
         composeTestRule.onNode(verifyingLoaderMatcher).assertIsDisplayed()
     }
+
+    @Test
+    fun authScreen_verificationContent_resendingOTP_showsLoginLoaderContent() = runTest {
+        // Given auth screen with login content
+        // And is resending otp
+        composeTestRule.setContent {
+            val backStack = rememberNavBackStack(VerificationRoute)
+            AuthScreenRoot(AuthState(loadingState = AuthLoadingState.ResendingOTP), backStack)
+        }
+
+        // Then loading content for resending email is shown
+        composeTestRule.onNode(resendingLoaderMatcher).assertIsDisplayed()
+    }
+
+    @Test
+    fun authScreen_personalizationContent_finishingPersonalization_showsVerifyingLoaderContent() =
+        runTest {
+            // Given auth screen with login content
+            // And is in the loading state
+            composeTestRule.setContent {
+                val backStack = rememberNavBackStack(PersonalizationRoute)
+                AuthScreenRoot(
+                    AuthState(loadingState = AuthLoadingState.FinishingPersonalization),
+                    backStack
+                )
+            }
+
+            // Then loading content for verifying is shown
+            composeTestRule.onNode(completingPersonalizationLoaderMatcher).assertIsDisplayed()
+        }
 
 }

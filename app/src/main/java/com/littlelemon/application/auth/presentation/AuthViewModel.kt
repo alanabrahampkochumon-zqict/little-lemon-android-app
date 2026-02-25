@@ -203,7 +203,7 @@ class AuthViewModel(
                     }
 
                     is Resource.Loading -> Unit // Loading already handled
-                    is Resource.Success<*> -> {
+                    is Resource.Success -> {
                         event = AuthEvents.NavigateToPersonalizationScreen
                     }
                 }
@@ -218,7 +218,7 @@ class AuthViewModel(
                 var event: AuthEvents? = null
                 when (val result =
                     saveUserInfo(UserInfoParams(state.value.firstName, state.value.lastName))) {
-                    is Resource.Failure<*> -> {
+                    is Resource.Failure -> {
                         event = AuthEvents.ShowError(
                             if (result.errorMessage != null) UiText.DynamicString(
                                 result.errorMessage

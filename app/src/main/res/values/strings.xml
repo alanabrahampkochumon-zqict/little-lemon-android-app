@@ -69,5 +69,7 @@
     <!--  Loader content  -->
     <string name="loader_sending_verification_code">Sending a verification code to</string>
     <string name="loader_verifying_code">Verifying your code…</string>
+    <string name="loader_resending_otp">Resending verification code…</string>
+    <string name="loader_finishing_personalization">Almost there. Tailoring your account…</string>
 
 </resources>
