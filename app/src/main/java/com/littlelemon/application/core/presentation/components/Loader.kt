@@ -1,6 +1,11 @@
 package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,7 +63,19 @@ fun Loader(
         ) {
             screenContent()
         }
-        AnimatedVisibility(showLoader) {
+
+        // TODO: Tune Animation
+        AnimatedVisibility(
+            showLoader,
+            enter = scaleIn(
+                initialScale = 0.8f,
+                animationSpec = tween(150)
+            ) + fadeIn(animationSpec = tween(150)),
+            exit = scaleOut(
+                targetScale = 0.8f,
+                animationSpec = tween(150)
+            ) + fadeOut(animationSpec = tween(150))
+        ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
@@ -79,7 +96,8 @@ fun Loader(
                     .background(
                         MaterialTheme.colors.primary, shape = MaterialTheme.shapes.medium
                     )
-                    .padding(MaterialTheme.dimens.sizeXL).testTag(stringResource(R.string.test_tag_loader))
+                    .padding(MaterialTheme.dimens.sizeXL)
+                    .testTag(stringResource(R.string.test_tag_loader))
             ) {
                 CircularProgressIndicator(
                     trackColor = MaterialTheme.colors.transparent,
