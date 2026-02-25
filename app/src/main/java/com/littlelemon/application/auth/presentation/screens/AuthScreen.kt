@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -83,6 +84,7 @@ fun AuthScreen(
 
     val backStack =
         rememberNavBackStack(if (isPartiallyAuthenticated) PersonalizationRoute else LoginRoute)
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(viewModel.authEvent, lifecycleOwner) {
@@ -123,17 +125,35 @@ fun AuthScreen(
         modifier = modifier,
         backStack = backStack,
         onUpdateEmail = { viewModel.onAction(AuthActions.ChangeEmail(it)) },
-        onSendOTP = { viewModel.onAction(AuthActions.SendOTP) },
+        onSendOTP = {
+            viewModel.onAction(AuthActions.SendOTP)
+            keyboardController?.hide()
+        },
         onUpdateOTP = { viewModel.onAction(AuthActions.ChangeOTP(it)) },
         // Not updating the email. Action triggered when users taps on `change email` action.
         // Which should bring the user to the email screen.
-        onChangeEmail = { viewModel.onAction(AuthActions.NavigateBack) },
-        onNavigateBack = { viewModel.onAction(AuthActions.NavigateBack) },
-        onVerifyOTP = { viewModel.onAction(AuthActions.VerifyOTP) },
+        onChangeEmail = {
+            viewModel.onAction(AuthActions.NavigateBack)
+            keyboardController?.hide()
+        },
+        onNavigateBack = {
+            viewModel.onAction(AuthActions.NavigateBack)
+            keyboardController?.hide()
+        },
+        onVerifyOTP = {
+            viewModel.onAction(AuthActions.VerifyOTP)
+            keyboardController?.hide()
+        },
         onUpdateFirstName = { viewModel.onAction(AuthActions.ChangeFirstName(it)) },
         onUpdateLastName = { viewModel.onAction(AuthActions.ChangeLastName(it)) },
-        onCompletePersonalization = { viewModel.onAction(AuthActions.CompletePersonalization) },
-        onOTPResend = { viewModel.onAction(AuthActions.ResendOTP) }
+        onCompletePersonalization = {
+            viewModel.onAction(AuthActions.CompletePersonalization)
+            keyboardController?.hide()
+        },
+        onOTPResend = {
+            viewModel.onAction(AuthActions.ResendOTP)
+            keyboardController?.hide()
+        }
     )
 
 }
@@ -190,7 +210,7 @@ fun AuthScreenRoot(
         ).add(WindowInsets.displayCutout).add(WindowInsets.ime)
     ) { innerPadding ->
 
-        Loader(showLoader = state.loadingState != null, loaderContent = loaderContent) {
+        Loader(showLoader = false, loaderContent = loaderContent) {
 
             DoodleBackground()
 
@@ -297,7 +317,7 @@ fun AuthScreenRoot(
                             animationSpec = premiumSpring,
                             targetOffsetY = { fullHeight -> -fullHeight / 3 } // Parallax effect: moves slower than entering screen
                         ) + fadeOut(animationSpec = fadeSpec)
-                    )
+                    ).apply { targetContentZIndex = 1f }
                 },
                 popTransitionSpec = {
                     // 3. Navigating BACKWARDS (Verify -> Login)
@@ -316,7 +336,7 @@ fun AuthScreenRoot(
                             animationSpec = premiumSpring,
                             targetOffsetY = { fullHeight -> fullHeight }
                         ) + fadeOut(animationSpec = fadeSpec)
-                    )
+                    ).apply { targetContentZIndex = -1f }
                 },
                 predictivePopTransitionSpec = {
                     val premiumSpring = spring<IntOffset>(
@@ -333,7 +353,7 @@ fun AuthScreenRoot(
                             animationSpec = premiumSpring,
                             targetOffsetY = { fullHeight -> fullHeight }
                         ) + fadeOut(animationSpec = fadeSpec)
-                    )
+                    ).apply { targetContentZIndex = -1f }
                 }
             )
         }
