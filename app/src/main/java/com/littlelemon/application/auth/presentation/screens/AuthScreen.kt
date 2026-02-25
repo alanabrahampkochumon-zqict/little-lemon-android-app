@@ -66,12 +66,6 @@ import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 
-enum class Step {
-    Login,
-    Verify,
-    Personalize
-}
-
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel,
