@@ -127,7 +127,7 @@ class AuthViewModel(
 
             // Navigation and Related Actions
             AuthActions.ResendOTP -> viewModelScope.launch {
-                _state.update { it.copy(isLoading = true) }
+                _state.update { it.copy(loadingState = AuthLoadingState.ResendingOTP) }
                 var event: AuthEvents? = null
                 when (val result = resendOTP(state.value.email)) {
                     is Resource.Failure<*> -> {
@@ -139,20 +139,25 @@ class AuthViewModel(
                         )
                     }
 
-                    is Resource.Loading<*> -> Unit // Already handled
-                    is Resource.Success<*> -> {
+                    is Resource.Loading -> Unit // Already handled
+                    is Resource.Success -> {
                         event =
                             AuthEvents.ShowInfo(UiText.StringResource(R.string.otp_resend_message))
                     }
                 }
-                _state.update { it.copy(isLoading = false) }
+                _state.update { it.copy(loadingState = null) }
                 event?.let { evt ->
                     _authChannel.send(evt)
                 }
             }
 
             AuthActions.SendOTP -> viewModelScope.launch {
-                _state.update { it.copy(isLoading = true, enableSendButton = false) }
+                _state.update {
+                    it.copy(
+                        loadingState = AuthLoadingState.SendingOTP,
+                        enableSendButton = false
+                    )
+                }
                 var event: AuthEvents? = null
                 when (val result = sendOTP(state.value.email)) {
                     is Resource.Failure<*> -> {
@@ -169,14 +174,19 @@ class AuthViewModel(
                         event = AuthEvents.NavigateToOTPScreen
                     }
                 }
-                _state.update { it.copy(isLoading = false, enableSendButton = true) }
+                _state.update { it.copy(loadingState = null, enableSendButton = true) }
                 event?.let { evt ->
                     _authChannel.send(evt)
                 }
             }
 
             AuthActions.VerifyOTP -> viewModelScope.launch {
-                _state.update { it.copy(isLoading = true, enableVerifyButton = false) }
+                _state.update {
+                    it.copy(
+                        loadingState = AuthLoadingState.VerifyingOTP,
+                        enableVerifyButton = false
+                    )
+                }
                 var event: AuthEvents? = null
                 when (val result = verifyOTP(
                     VerificationParams(
@@ -197,14 +207,14 @@ class AuthViewModel(
                         event = AuthEvents.NavigateToPersonalizationScreen
                     }
                 }
-                _state.update { it.copy(isLoading = false, enableVerifyButton = true) }
+                _state.update { it.copy(loadingState = null, enableVerifyButton = true) }
                 event?.let { authEvent ->
                     _authChannel.send(authEvent)
                 }
             }
 
             AuthActions.CompletePersonalization -> viewModelScope.launch {
-                _state.update { it.copy(isLoading = true) }
+                _state.update { it.copy(loadingState = AuthLoadingState.FinishingPersonalization) }
                 var event: AuthEvents? = null
                 when (val result =
                     saveUserInfo(UserInfoParams(state.value.firstName, state.value.lastName))) {
@@ -222,7 +232,7 @@ class AuthViewModel(
                         event = AuthEvents.AuthComplete
                     }
                 }
-                _state.update { it.copy(isLoading = false) }
+                _state.update { it.copy(loadingState = null) }
                 event?.let { evt ->
                     _authChannel.send(evt)
                 }

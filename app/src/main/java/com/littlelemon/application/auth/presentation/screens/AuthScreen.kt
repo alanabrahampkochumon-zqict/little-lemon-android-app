@@ -117,7 +117,8 @@ fun AuthScreen(
         onVerifyOTP = { viewModel.onAction(AuthActions.VerifyOTP) },
         onUpdateFirstName = { viewModel.onAction(AuthActions.ChangeFirstName(it)) },
         onUpdateLastName = { viewModel.onAction(AuthActions.ChangeLastName(it)) },
-        onCompletePersonalization = { viewModel.onAction(AuthActions.CompletePersonalization) }
+        onCompletePersonalization = { viewModel.onAction(AuthActions.CompletePersonalization) },
+        onOTPResend = { viewModel.onAction(AuthActions.ResendOTP) }
     )
 
 }
@@ -135,14 +136,15 @@ fun AuthScreenRoot(
     onNavigateBack: () -> Unit = {},
     onUpdateFirstName: (String) -> Unit = {},
     onUpdateLastName: (String) -> Unit = {},
-    onCompletePersonalization: () -> Unit = {}
+    onCompletePersonalization: () -> Unit = {},
+    onOTPResend: () -> Unit = {}
 ) {
     val loaderContent: @Composable () -> Unit = {
         when (backStack.lastOrNull()) {
-        is LoginRoute -> EmailVerifyLoaderContent(state.email)
-        is VerificationRoute -> OTPVerificationLoaderContent()
-        else -> {}
-    }
+            is LoginRoute -> EmailVerifyLoaderContent(state.email)
+            is VerificationRoute -> OTPVerificationLoaderContent()
+            else -> {}
+        }
     }
 
     val screenDensityRatio = LocalDensity.current.density
@@ -168,7 +170,7 @@ fun AuthScreenRoot(
         ).add(WindowInsets.displayCutout).add(WindowInsets.ime)
     ) { innerPadding ->
 
-        Loader(showLoader = state.isLoading, loaderContent = loaderContent) {
+        Loader(showLoader = state.loadingState != null, loaderContent = loaderContent) {
 
             DoodleBackground()
 
@@ -211,7 +213,8 @@ fun AuthScreenRoot(
                                 onNavigateBack = onNavigateBack,
                                 onOTPChange = onUpdateOTP,
                                 onChangeEmail = onChangeEmail,
-                                onVerifyOTP = onVerifyOTP
+                                onVerifyOTP = onVerifyOTP,
+                                onOTPResend = onOTPResend,
                             )
                         }
                         entry<PersonalizationRoute> {

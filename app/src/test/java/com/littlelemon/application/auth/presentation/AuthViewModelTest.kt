@@ -292,25 +292,23 @@ class AuthViewModelTest {
 
             viewModel.state.test {
                 // Initial Assertion
-                assertFalse(awaitItem().isLoading)
+                assertNull(awaitItem().loadingState)
 
                 // Act
                 viewModel.onAction(AuthActions.SendOTP)
                 runCurrent()
 
                 // State transition Assert
-                assertTrue(awaitItem().isLoading)
+                assertIs<AuthLoadingState.SendingOTP>(awaitItem().loadingState)
 
                 // Advancing delay
                 advanceTimeBy(NETWORK_LATENCY + 1)
                 runCurrent()
 
                 // Final Assert for state reset
-                assertFalse(awaitItem().isLoading)
+                assertNull(awaitItem().loadingState)
             }
         }
-
-        // TODO: Change the mocks to use email instead of any() by resolving flakiness caused by snapshotFlow
 
         @Test
         fun onSendOTP_sendOTPSuccess_navigationIsTriggered() = runTest {
@@ -372,19 +370,19 @@ class AuthViewModelTest {
 
             viewModel.state.test {
                 // Assert Loading Not Shown
-                assertFalse(awaitItem().isLoading)
+                assertNull(awaitItem().loadingState)
 
                 // Act I
                 viewModel.onAction(AuthActions.VerifyOTP)
                 runCurrent()
 
                 // Assert Loading Shown
-                assertTrue(awaitItem().isLoading)
+                assertIs<AuthLoadingState.VerifyingOTP>(awaitItem().loadingState)
 
                 advanceTimeBy(NETWORK_LATENCY + 1)
 
                 // Assert Loading is not shown after event is handled
-                assertFalse(awaitItem().isLoading)
+                assertNull(awaitItem().loadingState)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -434,18 +432,18 @@ class AuthViewModelTest {
 
             viewModel.state.test {
                 // Assert State before request
-                assertFalse(awaitItem().isLoading)
+                assertNull(awaitItem().loadingState)
 
                 // Act: Send the otp
                 viewModel.onAction(AuthActions.ResendOTP)
                 runCurrent()
 
                 // Assert state right after sending request
-                assertTrue(awaitItem().isLoading)
+                assertIs<AuthLoadingState.ResendingOTP>(awaitItem().loadingState)
                 advanceTimeBy(NETWORK_LATENCY + 1)
 
                 // Assert state after a proper response is received
-                assertFalse(awaitItem().isLoading)
+                assertNull(awaitItem().loadingState)
             }
         }
 
@@ -526,29 +524,18 @@ class AuthViewModelTest {
 
             viewModel.state.test {
                 // Assert I: Loader is not shown at the beginning
-                assertFalse(awaitItem().isLoading)
+                assertNull(awaitItem().loadingState)
                 // Act
                 viewModel.onAction(AuthActions.CompletePersonalization)
                 runCurrent()
                 // Assert II: Loader is shown on request
-                assertTrue(awaitItem().isLoading)
+                assertIs<AuthLoadingState.FinishingPersonalization>(awaitItem().loadingState)
 
                 advanceTimeBy(NETWORK_LATENCY + 1)
 
                 // Assert III: Loader dismissed on success.
-                assertFalse(awaitItem().isLoading)
+                assertNull(awaitItem().loadingState)
             }
         }
-
-        //
-//        @Test
-//        fun onAuthenticated_noAddressOrLocation_showAddressScreen() {
-//            TODO()
-//        }
-//
-//        @Test
-//        fun onAuthenticated_triggersAuthComplete() {
-//            TODO()
-//        }
     }
 }

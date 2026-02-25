@@ -11,6 +11,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.test.espresso.Espresso
 import androidx.test.filters.MediumTest
 import com.littlelemon.application.R
+import com.littlelemon.application.auth.presentation.AuthLoadingState
 import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.auth.presentation.LoginRoute
 import com.littlelemon.application.auth.presentation.PersonalizationRoute
@@ -52,7 +53,10 @@ class AuthScreenTest {
     fun authScreen_onLoading_loaderIsShown() {
         // Given a state with isLoading set to true
         composeTestRule.setContent {
-            AuthScreenRoot(AuthState(isLoading = true), rememberNavBackStack(LoginRoute))
+            AuthScreenRoot(
+                AuthState(loadingState = AuthLoadingState.SendingOTP),
+                rememberNavBackStack(LoginRoute)
+            )
         }
 
         // Then, loader is shown
@@ -172,7 +176,7 @@ class AuthScreenTest {
         // And is in the loading state
         composeTestRule.setContent {
             val backStack = rememberNavBackStack(LoginRoute)
-            AuthScreenRoot(AuthState(isLoading = true), backStack)
+            AuthScreenRoot(AuthState(loadingState = AuthLoadingState.SendingOTP), backStack)
         }
 
         // Then login content for sending email is shown
@@ -185,7 +189,7 @@ class AuthScreenTest {
         // And is in the loading state
         composeTestRule.setContent {
             val backStack = rememberNavBackStack(VerificationRoute)
-            AuthScreenRoot(AuthState(isLoading = true), backStack)
+            AuthScreenRoot(AuthState(loadingState = AuthLoadingState.VerifyingOTP), backStack)
         }
 
         // Then login content for verifying is shown
