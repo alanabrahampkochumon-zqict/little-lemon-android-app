@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -43,6 +44,8 @@ fun OTPInputField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     errorMessage: String? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    keyboardActions: KeyboardActions = KeyboardActions(),
 ) {
 
     var text by remember(number) {
@@ -104,7 +107,8 @@ fun OTPInputField(
                 textAlign = TextAlign.Center,
                 color = textColor
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = keyboardOptions.copy(keyboardType = KeyboardType.Number),
+            keyboardActions = keyboardActions,
             modifier = Modifier
                 .matchParentSize()
                 .focusRequester(focusRequester)

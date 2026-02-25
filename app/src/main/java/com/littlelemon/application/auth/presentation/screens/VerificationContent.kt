@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,7 +73,7 @@ fun VerificationContent(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXL)
         ) {
             EmailSubsection(emailAddress = authState.email, onClick = onChangeEmail)
-            OTPFields(otp = authState.oneTimePassword, onOTPChange = onOTPChange)
+            OTPFields(otp = authState.oneTimePassword, onOTPChange = onOTPChange, keyboardActions = KeyboardActions(onDone = {if(authState.enableVerifyButton) onVerifyOTP()}))
         }
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
             ResendTimer(onResendCode = onOTPResend)
@@ -133,7 +136,8 @@ fun EmailSubsection(
 private fun OTPFields(
     otp: List<Int?>,
     onOTPChange: (List<Int?>) -> Unit,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    keyboardActions: KeyboardActions = KeyboardActions()
 ) {
 
     val otpSize = 6
@@ -168,6 +172,8 @@ private fun OTPFields(
                             focusRequesters[index - 1].requestFocus()
                         }
                     },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = keyboardActions
                 )
             }
         }
