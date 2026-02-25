@@ -130,7 +130,7 @@ class AuthViewModel(
                 _state.update { it.copy(loadingState = AuthLoadingState.ResendingOTP) }
                 var event: AuthEvents? = null
                 when (val result = resendOTP(state.value.email)) {
-                    is Resource.Failure<*> -> {
+                    is Resource.Failure -> {
                         event = AuthEvents.ShowError(
                             errorMessage = if (result.errorMessage != null) UiText.DynamicString(
                                 result.errorMessage

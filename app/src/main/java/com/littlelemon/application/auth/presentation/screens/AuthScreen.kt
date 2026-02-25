@@ -2,6 +2,14 @@ package com.littlelemon.application.auth.presentation.screens
 
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -27,6 +35,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -89,13 +98,18 @@ fun AuthScreen(
                     }
 
                     is AuthEvents.ShowError -> {
-                        Toast.makeText(context, event.errorMessage.toString(), Toast.LENGTH_LONG)
+                        Toast.makeText(
+                            context,
+                            event.errorMessage.asString(context),
+                            Toast.LENGTH_LONG
+                        )
                             .show()
                         // TODO: Replace with snackbar
                     }
 
                     is AuthEvents.ShowInfo -> {
-                        Toast.makeText(context, event.message.toString(), Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, event.message.asString(context), Toast.LENGTH_LONG)
+                            .show()
                         // TODO: Replace with snackbar
                     }
                 }
@@ -181,24 +195,27 @@ fun AuthScreenRoot(
             DoodleBackground()
 
             //Content
-            CardLayout(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-                isFloating = isFloating,
-                isScrollable = isScrollable,
-                maxHeight = maxHeight,
-                maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
-                screenDensityRatio = screenDensityRatio
-            ) {
-                NavDisplay(
-                    entryDecorators = listOf(
-                        rememberSaveableStateHolderNavEntryDecorator(),
-                        rememberViewModelStoreNavEntryDecorator()
-                    ),
-                    backStack = backStack,
-                    entryProvider = entryProvider {
-                        entry<LoginRoute> {
+
+            NavDisplay(
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
+                ),
+                backStack = backStack,
+                onBack = { backStack.removeLastOrNull() },
+                entryProvider = entryProvider {
+
+                    entry<LoginRoute> {
+                        CardLayout(
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .fillMaxSize(),
+                            isFloating = isFloating,
+                            isScrollable = isScrollable,
+                            maxHeight = maxHeight,
+                            maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
+                            screenDensityRatio = screenDensityRatio
+                        ) {
                             LoginContent(
                                 authState = state,
                                 isScrollable = isScrollable,
@@ -211,7 +228,19 @@ fun AuthScreenRoot(
                                 )
                             )
                         }
-                        entry<VerificationRoute> {
+                    }
+                    entry<VerificationRoute> {
+
+                        CardLayout(
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .fillMaxSize(),
+                            isFloating = isFloating,
+                            isScrollable = isScrollable,
+                            maxHeight = maxHeight,
+                            maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
+                            screenDensityRatio = screenDensityRatio
+                        ) {
                             VerificationContent(
                                 authState = state,
                                 modifier = Modifier,
@@ -223,7 +252,18 @@ fun AuthScreenRoot(
                                 onOTPResend = onOTPResend,
                             )
                         }
-                        entry<PersonalizationRoute> {
+                    }
+                    entry<PersonalizationRoute> {
+                        CardLayout(
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .fillMaxSize(),
+                            isFloating = isFloating,
+                            isScrollable = isScrollable,
+                            maxHeight = maxHeight,
+                            maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
+                            screenDensityRatio = screenDensityRatio
+                        ) {
                             PersonalInformationContent(
                                 state,
                                 isScrollable = isScrollable,
@@ -238,8 +278,64 @@ fun AuthScreenRoot(
                             )
                         }
                     }
-                )
-            }
+                },
+                transitionSpec = {
+                    // 1. Define the premium, subtle spring physics
+                    val premiumSpring = spring<IntOffset>(
+                        dampingRatio = 0.75f, // Slight glide, almost no bounce
+                        stiffness = Spring.StiffnessLow // Slower, relaxed movement
+                    )
+                    val fadeSpec = tween<Float>(durationMillis = 250)
+
+                    // 2. Navigating FORWARD (Login -> Verify)
+                    // New screen slides UP from bottom. Old screen slides UP to top.
+                    (slideInVertically(
+                        animationSpec = premiumSpring,
+                        initialOffsetY = { fullHeight -> fullHeight }
+                    ) + fadeIn(animationSpec = fadeSpec)).togetherWith(
+                        slideOutVertically(
+                            animationSpec = premiumSpring,
+                            targetOffsetY = { fullHeight -> -fullHeight / 3 } // Parallax effect: moves slower than entering screen
+                        ) + fadeOut(animationSpec = fadeSpec)
+                    )
+                },
+                popTransitionSpec = {
+                    // 3. Navigating BACKWARDS (Verify -> Login)
+                    // New screen slides DOWN from top. Old screen slides DOWN to bottom.
+                    val premiumSpring = spring<IntOffset>(
+                        dampingRatio = 0.75f,
+                        stiffness = Spring.StiffnessLow
+                    )
+                    val fadeSpec = tween<Float>(durationMillis = 250)
+
+                    (slideInVertically(
+                        animationSpec = premiumSpring,
+                        initialOffsetY = { fullHeight -> -fullHeight / 3 } // Parallax effect
+                    ) + fadeIn(animationSpec = fadeSpec)).togetherWith(
+                        slideOutVertically(
+                            animationSpec = premiumSpring,
+                            targetOffsetY = { fullHeight -> fullHeight }
+                        ) + fadeOut(animationSpec = fadeSpec)
+                    )
+                },
+                predictivePopTransitionSpec = {
+                    val premiumSpring = spring<IntOffset>(
+                        dampingRatio = 0.75f,
+                        stiffness = Spring.StiffnessLow
+                    )
+                    val fadeSpec = tween<Float>(durationMillis = 250)
+
+                    (slideInVertically(
+                        animationSpec = premiumSpring,
+                        initialOffsetY = { fullHeight -> -fullHeight / 3 } // Parallax effect
+                    ) + fadeIn(animationSpec = fadeSpec)).togetherWith(
+                        slideOutVertically(
+                            animationSpec = premiumSpring,
+                            targetOffsetY = { fullHeight -> fullHeight }
+                        ) + fadeOut(animationSpec = fadeSpec)
+                    )
+                }
+            )
         }
     }
 }

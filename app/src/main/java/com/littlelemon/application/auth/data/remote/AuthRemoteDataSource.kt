@@ -20,8 +20,12 @@ class AuthRemoteDataSource(
         }
     }
 
+    // Send and Resend OTP uses similar methods since
+    // Dedicated method for only signup or email change exists
     suspend fun resendVerificationCode(emailAddress: String) {
-        client.auth.resendEmail(OtpType.Email.SIGNUP, emailAddress)
+        client.auth.signInWith(OTP) {
+            email = emailAddress
+        }
     }
 
     suspend fun verifyVerificationCode(emailAddress: String, verificationCode: String) {
