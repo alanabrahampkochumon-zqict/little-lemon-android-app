@@ -210,7 +210,7 @@ fun AuthScreenRoot(
         ).add(WindowInsets.displayCutout).add(WindowInsets.ime)
     ) { innerPadding ->
 
-        Loader(showLoader = false, loaderContent = loaderContent) {
+        Loader(showLoader = state.loadingState != null, loaderContent = loaderContent) {
 
             DoodleBackground()
 

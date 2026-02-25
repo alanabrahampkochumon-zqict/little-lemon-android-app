@@ -1,10 +1,10 @@
 package com.littlelemon.application.core.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -41,18 +41,24 @@ fun Loader(
     screenContent: @Composable () -> Unit = {}
 ) {
 
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        if (showLoader) {
-            Box(
-                modifier = Modifier
-                    .background(MaterialTheme.colors.darkOverlay24)
-                    .blur(MaterialTheme.dimens.sizeMD)
-                    .fillMaxSize()
-                    .disableTouch()
-                    .testTag(stringResource(R.string.test_tag_loader))
-            ) {
-                screenContent()
-            }
+    Box(
+        modifier = modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .then(
+                    if (showLoader) Modifier
+                        .blur(MaterialTheme.dimens.sizeMD)
+                        .disableTouch() else Modifier
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            screenContent()
+        }
+        AnimatedVisibility(showLoader) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
@@ -73,7 +79,7 @@ fun Loader(
                     .background(
                         MaterialTheme.colors.primary, shape = MaterialTheme.shapes.medium
                     )
-                    .padding(MaterialTheme.dimens.sizeXL)
+                    .padding(MaterialTheme.dimens.sizeXL).testTag(stringResource(R.string.test_tag_loader))
             ) {
                 CircularProgressIndicator(
                     trackColor = MaterialTheme.colors.transparent,
@@ -84,8 +90,6 @@ fun Loader(
                 )
                 loaderContent()
             }
-        } else {
-            screenContent()
         }
     }
 }
