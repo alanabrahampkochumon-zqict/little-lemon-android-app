@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
@@ -52,14 +55,20 @@ fun PersonalInformationContent(
                 label = stringResource(R.string.label_first_name),
                 value = authState.firstName,
                 placeholder = stringResource(R.string.placeholder_first_name),
-                onValueChange = onFirstNameChange
+                onValueChange = onFirstNameChange,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
             NameInputField(
                 label = stringResource(R.string.label_last_name),
                 value = authState.lastName,
                 placeholder = stringResource(R.string.placeholder_last_name),
-                onValueChange = onLastNameChange
+                onValueChange = onLastNameChange,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    if(authState.enableLetsGoButton)
+                        onComplete()
+                })
             )
         }
 
@@ -85,7 +94,9 @@ fun NameInputField(
     placeholder: String,
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    keyboardActions: KeyboardActions = KeyboardActions(),
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
@@ -98,7 +109,9 @@ fun NameInputField(
             placeholder = placeholder,
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions
         )
     }
 }
