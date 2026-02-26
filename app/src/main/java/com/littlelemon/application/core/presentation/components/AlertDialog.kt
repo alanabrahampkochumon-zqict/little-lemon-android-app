@@ -1,5 +1,6 @@
 package com.littlelemon.application.core.presentation.components
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -62,6 +63,8 @@ fun AlertDialog(
     val firstShadowLayer = dropShadow.firstShadow.toComposeShadow(screenDensityRatio)
     val secondShadowLayer =
         dropShadow.secondShadow?.toComposeShadow(screenDensityRatio) ?: Shadow(0.dp)
+
+    BackHandler(enabled = dismissable, onBack = onDismissDialog)
 
     Box(
         modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center

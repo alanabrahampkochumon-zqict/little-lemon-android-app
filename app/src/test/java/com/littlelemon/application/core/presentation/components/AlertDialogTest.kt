@@ -5,6 +5,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.test.espresso.Espresso
 import com.littlelemon.application.R
 import org.junit.Rule
 import org.junit.Test
@@ -98,6 +99,54 @@ class AlertDialogTest {
         assertFalse(onDismissCallback)
     }
 
+
+    @Test
+    fun alertDialogDismissable_whenDeviceBackButtonIsPressed_onDismissDialogIsTriggered() {
+        // Given a dismissable dialog is displayed
+        var onDismissCallback = false
+        composeTestRule.setContent {
+            AlertDialog(
+                dialogTitle = dialogTitle,
+                dialogText = dialogContent,
+                showDialog = true,
+                dismissable = true,
+                onDismissDialog = { onDismissCallback = true },
+                positiveActionText = dialogPositiveAction,
+                negativeActionText = dialogNegativeAction,
+            ) {
+            }
+        }
+
+        // When device back button is pressed
+        Espresso.pressBackUnconditionally()
+
+        // Then, onDismiss is triggered
+        assertTrue(onDismissCallback)
+    }
+
+    @Test
+    fun alertDialogNonDismissable_whenDeviceBackButtonIsPressed_onDismissDialogIsNotTriggered() {
+        // Given a dismissable dialog is displayed
+        var onDismissCallback = false
+        composeTestRule.setContent {
+            AlertDialog(
+                dialogTitle = dialogTitle,
+                dialogText = dialogContent,
+                showDialog = true,
+                dismissable = false,
+                onDismissDialog = { onDismissCallback = true },
+                positiveActionText = dialogPositiveAction,
+                negativeActionText = dialogNegativeAction,
+            ) {
+            }
+        }
+
+        // When device back button is pressed
+        Espresso.pressBackUnconditionally()
+
+        // Then, onDismiss is triggered
+        assertFalse(onDismissCallback)
+    }
 
     @Test
     fun alertDialog_whenDisplayedAndPositiveActionClicked_triggersPositiveActionCallback() {
