@@ -7,8 +7,11 @@ import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -22,11 +25,17 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,16 +44,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.core.presentation.components.Button
+import com.littlelemon.application.core.presentation.components.ButtonShape
 import com.littlelemon.application.core.presentation.components.ButtonSize
 import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.DoodleBackground
@@ -81,7 +94,7 @@ fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modif
                     ?: false
 
             if (!shouldShowRationale) {
-                showSettingsRedirect = true
+                viewModel.onAction(AddressActions.PermissionDenied)
             }
         }
     }
@@ -89,7 +102,6 @@ fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modif
         modifier = modifier,
         onEnableLocationClick = {
             permissionLauncher.launch(permissions)
-//            TODO("Implementation")
         },
         onManualLocationClick = {
             viewModel.onAction(AddressActions.EnterLocationManually)
@@ -171,8 +183,88 @@ fun EnableLocationScreenRoot(
             }
 
         }
+
     }
 
+}
+
+@Composable
+fun AlertDialogExample(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+    content: @Composable () -> Unit = {},
+) {
+
+    Box(
+        modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+    ) {
+        Box(Modifier.fillMaxSize().blur(MaterialTheme.dimens.sizeLG)){
+            content()
+            Box(Modifier.fillMaxSize().background(MaterialTheme.colors.darkOverlay24))
+        }
+        Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL).clip(
+            MaterialTheme.shapes.large).background(MaterialTheme.colors.primary)) {
+            Column(
+                modifier = Modifier,
+            ) {
+               Column(modifier = Modifier
+                   .padding(MaterialTheme.dimens.size2XL)) {
+                   Text(
+                       "Make reservation",
+                       style = MaterialTheme.typeStyle.displaySmall,
+                       textAlign = TextAlign.Start,
+                       color = MaterialTheme.colors.contentPrimary
+                   )
+                   Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+                   Text(
+                       text = "You are about to reserve a table for 3, on 29th June, 2026 at 07:30 PM",
+                       style = MaterialTheme.typeStyle.bodyMedium,
+                       color = MaterialTheme.colors.contentSecondary
+                   )
+               }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Button(
+                        label = "Edit Reservation",
+                        variant = ButtonVariant.GHOST,
+                        onClick = {},
+                        modifier = Modifier.weight(1f),
+                        buttonShape = ButtonShape.Square
+                    )
+                    Button(
+                        label = "Make Reservation",
+                        variant = ButtonVariant.PRIMARY,
+                        onClick = {},
+                        modifier = Modifier.weight(1f),
+                        buttonShape = ButtonShape.Square
+                    )
+                }
+            }
+        }
+        }
+    }
+
+
+
+
+@Preview
+@Composable
+private fun AlertDialogPreview() {
+    LittleLemonTheme {
+        AlertDialogExample(
+            {},
+            {},
+            "Test",
+            "This is some test content",
+        ) {
+            EnableLocationScreenRoot()
+        }
+    }
 }
 
 private fun hasLocationPermission(context: Context): Boolean {

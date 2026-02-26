@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
+import com.littlelemon.application.core.presentation.designsystem.none
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.shadows
@@ -41,6 +42,11 @@ enum class ButtonSize {
     Large
 }
 
+enum class ButtonShape {
+    Square,
+    Rounded
+}
+
 @Composable
 fun Button(
     label: String,
@@ -52,7 +58,8 @@ fun Button(
     @DrawableRes iconRight: Int? = null,
     iconRightDescription: String? = null,
     variant: ButtonVariant = ButtonVariant.PRIMARY,
-    size: ButtonSize = ButtonSize.Medium
+    size: ButtonSize = ButtonSize.Medium,
+    buttonShape: ButtonShape = ButtonShape.Rounded
 ) {
 
     val screenDensityRatio = LocalDensity.current.density
@@ -121,7 +128,7 @@ fun Button(
                 ) else modifier
             ),
         colors = colors,
-        shape = MaterialTheme.shapes.small,
+        shape = if(buttonShape == ButtonShape.Rounded)MaterialTheme.shapes.small else MaterialTheme.shapes.none,
         enabled = enabled
     ) {
         Row(

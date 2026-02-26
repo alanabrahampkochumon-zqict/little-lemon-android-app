@@ -12,7 +12,7 @@ val Shapes = Shapes(
 val Shapes.xLarge: RoundedCornerShape
     get() = RoundedCornerShape(40.dp)
 
-val Shapes.None: RoundedCornerShape
+val Shapes.none: RoundedCornerShape
     get() = RoundedCornerShape(0.dp)
 
 val Shapes.xSmall: RoundedCornerShape
