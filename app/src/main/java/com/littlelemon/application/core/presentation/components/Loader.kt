@@ -23,8 +23,6 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.shadow.Shadow
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,8 +61,6 @@ fun Loader(
         ) {
             screenContent()
         }
-
-        // TODO: Tune Animation
         AnimatedVisibility(
             showLoader,
             enter = scaleIn(
@@ -108,18 +104,6 @@ fun Loader(
                 )
                 loaderContent()
             }
-        }
-    }
-}
-
-/**
- * Disables touches from propagating down to children by consuming all the events.
- */
-private fun Modifier.disableTouch(): Modifier = this.pointerInput(Unit) {
-    awaitPointerEventScope {
-        while (true) {
-            val event = awaitPointerEvent(PointerEventPass.Initial)
-            event.changes.forEach { it.consume() }
         }
     }
 }
