@@ -156,6 +156,12 @@ class AddressViewModel(
                     _addressChannel.send(evt)
                 }
             }
+
+            AddressActions.PermissionDenied -> _state.update {
+                it.copy(
+                    locationPermissionDeniedPermanently = true
+                )
+            }
         }
     }
 

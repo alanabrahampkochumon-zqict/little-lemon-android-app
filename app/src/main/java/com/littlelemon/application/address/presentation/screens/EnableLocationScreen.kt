@@ -1,5 +1,11 @@
 package com.littlelemon.application.address.presentation.screens
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.activity.compose.LocalActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +29,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -30,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressViewModel
@@ -42,12 +53,43 @@ import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
+const val FINE_LOCATION_PERMISSION_CODE = 100
+
 @Composable
 fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
+
+    val activity = LocalActivity.current
+
+    var showSettingsRedirect by remember { mutableStateOf(false) }
+    val permissions =
+        arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val isGranted =
+            permissions.values.reduce { acc, isPermissionGranted -> acc && isPermissionGranted }
+
+        if (isGranted) {
+            // TODO: Permission Granted navigate
+        } else {
+            val shouldShowRationale =
+                activity?.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+                    ?: false
+
+            if (!shouldShowRationale) {
+                showSettingsRedirect = true
+            }
+        }
+    }
     EnableLocationScreenRoot(
         modifier = modifier,
         onEnableLocationClick = {
-            TODO("Implementation")
+            permissionLauncher.launch(permissions)
+//            TODO("Implementation")
         },
         onManualLocationClick = {
             viewModel.onAction(AddressActions.EnterLocationManually)
@@ -56,7 +98,11 @@ fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modif
 }
 
 @Composable
-fun EnableLocationScreenRoot(modifier: Modifier = Modifier, onEnableLocationClick: () -> Unit = {}, onManualLocationClick:() -> Unit = {}) {
+fun EnableLocationScreenRoot(
+    modifier: Modifier = Modifier,
+    onEnableLocationClick: () -> Unit = {},
+    onManualLocationClick: () -> Unit = {}
+) {
     val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
@@ -127,6 +173,13 @@ fun EnableLocationScreenRoot(modifier: Modifier = Modifier, onEnableLocationClic
         }
     }
 
+}
+
+private fun hasLocationPermission(context: Context): Boolean {
+    return ActivityCompat.checkSelfPermission(
+        context,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
 }
 
 @Preview

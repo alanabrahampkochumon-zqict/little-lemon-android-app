@@ -319,5 +319,19 @@ class AddressViewModelTest {
                 assertFalse(postLoadingState.isLoading)
             }
         }
+
+        @Test
+        fun onPermissionDeniedPermanently_updateState() = runTest {
+
+            viewModel.state.test {
+                skipItems(1) // Ignore initial state
+
+                // When permission denied action is called
+                viewModel.onAction(AddressActions.PermissionDenied)
+
+                // Then, the state is updated
+                assertTrue(awaitItem().locationPermissionDeniedPermanently)
+            }
+        }
     }
 }

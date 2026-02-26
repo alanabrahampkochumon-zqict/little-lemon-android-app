@@ -10,6 +10,8 @@ sealed interface AddressActions {
     data class ChangePinCode(val pinCode: String) : AddressActions
     data object GetLocation : AddressActions
     data object EnterLocationManually : AddressActions
+
+    data object PermissionDenied : AddressActions
     data object SaveAddress :
         AddressActions // For Saving manual location //TODO: Modify to use LocalAddress
 
