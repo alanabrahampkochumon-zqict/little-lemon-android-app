@@ -50,7 +50,7 @@ fun AlertDialog(
         Box(
             Modifier
                 .fillMaxSize()
-                .then(if (showDialog) Modifier.blur(MaterialTheme.dimens.sizeLG) else Modifier)
+                .then(if (showDialog) Modifier.blur(MaterialTheme.dimens.sizeLG).disableTouch() else Modifier)
         ) {
             content()
             AnimatedVisibility(showDialog) {
