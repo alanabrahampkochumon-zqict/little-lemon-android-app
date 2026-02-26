@@ -65,6 +65,7 @@
     <!--  Test Tags -->
     <string name="test_tag_loader">LoaderTestTag</string>
     <string name="test_tag_navigation_action_left">LeftNavigationActionTestTag</string>
+    <string name="test_tag_alert_dialog_overlay">AlertDialogOverlayTestTag</string>
 
     <!--  Loader content  -->
     <string name="loader_sending_verification_code">Sending a verification code to</string>

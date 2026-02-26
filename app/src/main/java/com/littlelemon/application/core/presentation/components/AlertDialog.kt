@@ -2,6 +2,7 @@ package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,9 +25,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
@@ -44,6 +48,8 @@ fun AlertDialog(
     modifier: Modifier = Modifier,
     onPositiveAction: () -> Unit = {},
     onNegativeAction: () -> Unit = {},
+    dismissable: Boolean = false,
+    onDismissDialog: () -> Unit = {},
     positiveActionVariant: ButtonVariant = ButtonVariant.PRIMARY,
     negativeActionVariant: ButtonVariant = ButtonVariant.GHOST,
     content: @Composable () -> Unit = {},
@@ -70,13 +76,16 @@ fun AlertDialog(
                 )
         ) {
             content()
-            AnimatedVisibility(showDialog) {
-                Box(
-                    Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colors.darkOverlay24)
-                )
-            }
+        }
+        // Overlay
+        AnimatedVisibility(showDialog) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.darkOverlay24)
+                    .clickable(enabled = dismissable, onClick = onDismissDialog)
+                    .testTag(stringResource(R.string.test_tag_alert_dialog_overlay))
+            )
         }
         // Alert Dialog
         AnimatedVisibility(showDialog) {
