@@ -21,13 +21,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
+import com.littlelemon.application.core.presentation.designsystem.shadows
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import com.littlelemon.application.core.presentation.utils.toComposeShadow
 
 @Composable
 fun AlertDialog(
@@ -44,13 +49,25 @@ fun AlertDialog(
     content: @Composable () -> Unit = {},
 ) {
 
+    val screenDensityRatio = LocalDensity.current.density
+
+    val dialogShape = MaterialTheme.shapes.large
+    val dropShadow = MaterialTheme.shadows.dropLG
+    val firstShadowLayer = dropShadow.firstShadow.toComposeShadow(screenDensityRatio)
+    val secondShadowLayer =
+        dropShadow.secondShadow?.toComposeShadow(screenDensityRatio) ?: Shadow(0.dp)
+
     Box(
         modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center
     ) {
         Box(
             Modifier
                 .fillMaxSize()
-                .then(if (showDialog) Modifier.blur(MaterialTheme.dimens.sizeLG).disableTouch() else Modifier)
+                .then(
+                    if (showDialog) Modifier
+                        .blur(MaterialTheme.dimens.sizeLG)
+                        .disableTouch() else Modifier
+                )
         ) {
             content()
             AnimatedVisibility(showDialog) {
@@ -68,8 +85,10 @@ fun AlertDialog(
                     .widthIn(max = 480.dp)
                     .padding(horizontal = MaterialTheme.dimens.sizeXL)
                     .clip(
-                        MaterialTheme.shapes.large
+                        dialogShape
                     )
+                    .dropShadow(dialogShape, secondShadowLayer)
+                    .dropShadow(dialogShape, firstShadowLayer)
                     .background(MaterialTheme.colors.primary)
             ) {
                 Column(
@@ -127,7 +146,7 @@ private fun AlertDialogPreview() {
             "Sample Dialog Title",
             "This is a sample dialog paragraph that is not quite long.",
             true,
-            "Let's go",
+            "Positive Action",
             "Negative Action",
         ) {
             LazyColumn(
@@ -137,9 +156,11 @@ private fun AlertDialogPreview() {
                     .padding(16.dp)
             ) {
                 items(100) {
-                    Column(Modifier
-                        .padding(12.dp)
-                        .fillMaxWidth()) {
+                    Column(
+                        Modifier
+                            .padding(12.dp)
+                            .fillMaxWidth()
+                    ) {
                         Text(
                             text = "Heading $it",
                             style = MaterialTheme.typeStyle.headlineMedium,
@@ -168,7 +189,7 @@ private fun AlertDialogNotShownPreview() {
             "Sample Dialog Title",
             "This is a sample dialog paragraph that is not quite long.",
             false,
-            "Let's go",
+            "Positive Action",
             "Negative Action",
         ) {
             LazyColumn(
@@ -178,9 +199,11 @@ private fun AlertDialogNotShownPreview() {
                     .padding(16.dp)
             ) {
                 items(100) {
-                    Column(Modifier
-                        .padding(12.dp)
-                        .fillMaxWidth()) {
+                    Column(
+                        Modifier
+                            .padding(12.dp)
+                            .fillMaxWidth()
+                    ) {
                         Text(
                             text = "Heading $it",
                             style = MaterialTheme.typeStyle.headlineMedium,
