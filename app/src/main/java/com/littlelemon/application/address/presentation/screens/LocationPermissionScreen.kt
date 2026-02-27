@@ -1,6 +1,10 @@
 package com.littlelemon.application.address.presentation.screens
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -51,8 +55,6 @@ import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
-const val FINE_LOCATION_PERMISSION_CODE = 100
-
 @Composable
 fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
 
@@ -72,7 +74,7 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
             permissions.values.reduce { acc, isPermissionGranted -> acc && isPermissionGranted }
 
         if (isGranted) {
-            // TODO: Permission Granted navigate
+            // TODO: Permission Granted: navigate
         } else {
             val shouldShowRationale =
                 activity?.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -96,11 +98,7 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
             viewModel.onAction(AddressActions.DismissLocationDialog)
         },
         onAllowLocationAccessClick = {
-            Toast.makeText(
-                activity?.baseContext,
-                "Allow location setting Dialog: TODO: Replace",
-                Toast.LENGTH_SHORT
-            ).show()
+            openAppSettings(activity?.applicationContext!!)
         }
     )
 }
@@ -193,7 +191,18 @@ fun LocationPermissionScreenRoot(
         }
 
     }
+}
 
+private fun openAppSettings(context: Context) {
+    val intent = Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", context.packageName, null)
+    ).apply {
+        addFlags(
+            Intent.FLAG_ACTIVITY_NEW_TASK
+        )
+    }
+    context.startActivity(intent)
 }
 
 @Preview
