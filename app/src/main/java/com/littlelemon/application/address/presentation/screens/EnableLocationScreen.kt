@@ -89,7 +89,7 @@ fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modif
                     ?: false
 
             if (!shouldShowRationale) {
-                viewModel.onAction(AddressActions.PermissionDenied)
+                viewModel.onAction(AddressActions.ShowLocationDialog)
             }
         }
     }

@@ -321,16 +321,35 @@ class AddressViewModelTest {
         }
 
         @Test
-        fun onPermissionDeniedPermanently_updateState() = runTest {
+        fun onShowDialog_updateStateToShowDialog() = runTest {
 
             viewModel.state.test {
                 skipItems(1) // Ignore initial state
 
-                // When permission denied action is called
-                viewModel.onAction(AddressActions.PermissionDenied)
+                // When show dialog action is triggered
+                viewModel.onAction(AddressActions.ShowLocationDialog)
 
-                // Then, the state is updated
-                assertTrue(awaitItem().locationPermissionDeniedPermanently)
+                // Then, the state is updated to showDialog = true
+                assertTrue(awaitItem().showLocationDialog)
+            }
+        }
+
+        @Test
+        fun onDismissDialog_updateStateToDismissDialog() = runTest {
+            viewModel.state.test {
+                skipItems(1) // Ignore initial state
+
+                // Set state to show dialog initially
+                viewModel.onAction(AddressActions.ShowLocationDialog)
+
+                // Assert that dialog is shown
+                assertTrue(awaitItem().showLocationDialog)
+
+                // When dismiss dialog is triggered
+                viewModel.onAction(AddressActions.DismissLocationDialog)
+
+                // Then, the state is updated to showDialog = false
+                assertFalse(awaitItem().showLocationDialog)
             }
         }
     }

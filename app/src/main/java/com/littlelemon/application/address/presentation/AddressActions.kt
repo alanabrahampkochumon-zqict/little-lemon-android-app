@@ -11,7 +11,8 @@ sealed interface AddressActions {
     data object GetLocation : AddressActions
     data object EnterLocationManually : AddressActions
 
-    data object PermissionDenied : AddressActions
+    data object ShowLocationDialog : AddressActions
+    data object DismissLocationDialog : AddressActions
     data object SaveAddress :
         AddressActions // For Saving manual location //TODO: Modify to use LocalAddress
 

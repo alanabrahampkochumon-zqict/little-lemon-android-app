@@ -157,11 +157,13 @@ class AddressViewModel(
                 }
             }
 
-            AddressActions.PermissionDenied -> _state.update {
+            AddressActions.ShowLocationDialog -> _state.update {
                 it.copy(
-                    locationPermissionDeniedPermanently = true
+                    showLocationDialog = true
                 )
             }
+
+            AddressActions.DismissLocationDialog -> _state.update { it.copy(showLocationDialog = false) }
         }
     }
 

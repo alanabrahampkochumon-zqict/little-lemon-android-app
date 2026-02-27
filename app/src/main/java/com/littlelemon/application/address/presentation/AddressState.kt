@@ -5,7 +5,7 @@ import com.littlelemon.application.core.presentation.UiText
 data class AddressState(
     // General
     val isLoading: Boolean = false,
-    val locationPermissionDeniedPermanently: Boolean = false,
+    val showLocationDialog: Boolean = false,
 
     // Location
     val label: String = "",
