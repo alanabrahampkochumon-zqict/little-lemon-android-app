@@ -79,6 +79,7 @@
 
     <string name="dialog_act_enter_manually">Enter manually</string>
     <string name="dialog_act_allow_access">Allow access</string>
+    <string name="label_address_label">Label</string>
 
 
 </resources>

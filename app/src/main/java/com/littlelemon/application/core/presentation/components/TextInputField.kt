@@ -63,6 +63,7 @@ fun TextInputField(
         focusedBorderColor = MaterialTheme.colors.outlineActive,
         unfocusedBorderColor = MaterialTheme.colors.transparent,
         errorBorderColor = MaterialTheme.colors.outlineError,
+        disabledBorderColor = MaterialTheme.colors.transparent,
 
         cursorColor = MaterialTheme.colors.contentAccentSecondary
     )
