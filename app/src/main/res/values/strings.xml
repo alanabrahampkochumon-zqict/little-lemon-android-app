@@ -80,6 +80,17 @@
     <string name="dialog_act_enter_manually">Enter manually</string>
     <string name="dialog_act_allow_access">Allow access</string>
     <string name="label_address_label">Label</string>
+    <string name="placeholder_address_label">E.g: Home</string>
+    <string name="label_address_building_name">Flat/Building name</string>
+    <string name="placeholder_address_building_name">1234, Sample Building</string>
+    <string name="label_address_street_address">Street address</string>
+    <string name="placeholder_address_street_address">123 Street Rd</string>
+    <string name="label_address_city">City</string>
+    <string name="placeholder_address_city">Chicago</string>
+    <string name="label_address_state">State</string>
+    <string name="placeholder_address_state">Illinois</string>
+    <string name="label_address_pincode">Pincode</string>
+    <string name="placeholder_address_pincode">123456</string>
 
 
 </resources>

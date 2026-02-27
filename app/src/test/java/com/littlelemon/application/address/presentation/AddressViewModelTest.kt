@@ -84,7 +84,7 @@ class AddressViewModelTest {
             // Assert
             viewModel.state.test {
                 val state = awaitItem()
-                assertEquals(address, state.address)
+                assertEquals(address, state.buildingName)
                 assertNull(state.addressError)
             }
         }

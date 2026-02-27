@@ -9,7 +9,7 @@ data class AddressState(
 
     // Location
     val label: String = "",
-    val address: String = "",
+    val buildingName: String = "",
     val addressError: UiText? = null,
     val streetAddress: String = "",
     val streetAddressError: UiText? = null,

@@ -40,7 +40,7 @@ class AddressViewModel(
             // State Updates
             is AddressActions.ChangeAddress -> _state.update {
                 it.copy(
-                    address = action.address,
+                    buildingName = action.address,
                     addressError = null
                 )
             }
@@ -120,7 +120,7 @@ class AddressViewModel(
                 val address = LocalAddress(
                     label = state.value.label,
                     address = PhysicalAddress(
-                        address = state.value.address,
+                        address = state.value.buildingName,
                         streetAddress = state.value.streetAddress,
                         city = state.value.city,
                         state = state.value.state,
