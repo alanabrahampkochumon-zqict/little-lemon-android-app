@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -54,6 +53,7 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
@@ -85,22 +85,24 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
             }
         }
     }
-    LocationPermissionScreenRoot(
-        state = state,
-        modifier = modifier,
-        onEnableLocationClick = {
-            permissionLauncher.launch(permissions)
-        },
-        onManualLocationClick = {
-            viewModel.onAction(AddressActions.EnterLocationManually)
-        },
-        onDismissAlert = {
-            viewModel.onAction(AddressActions.DismissLocationDialog)
-        },
-        onAllowLocationAccessClick = {
-            openAppSettings(activity?.applicationContext!!)
-        }
-    )
+    LocationEntryContent(koinViewModel<AddressViewModel>())
+    // TODO: Use navigation to switch content
+//    LocationPermissionScreenRoot(
+//        state = state,
+//        modifier = modifier,
+//        onEnableLocationClick = {
+//            permissionLauncher.launch(permissions)
+//        },
+//        onManualLocationClick = {
+//            viewModel.onAction(AddressActions.EnterLocationManually)
+//        },
+//        onDismissAlert = {
+//            viewModel.onAction(AddressActions.DismissLocationDialog)
+//        },
+//        onAllowLocationAccessClick = {
+//            openAppSettings(activity?.applicationContext!!)
+//        }
+//    )
 }
 
 @Composable

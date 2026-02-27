@@ -34,11 +34,24 @@
     <string name="label_email_address">Email Address</string>
     <string name="label_first_name">First Name</string>
     <string name="label_last_name">Last Name</string>
+    <string name="label_address_label">Label</string>
+    <string name="label_address_building_name">Flat/Building name</string>
+    <string name="label_address_street_address">Street address</string>
+    <string name="label_address_city">City</string>
+    <string name="label_address_state">State</string>
+    <string name="label_address_pincode">Pincode</string>
+    <string name="label_address_save_as_default">Save as default</string>
+
 
     <!--    Placeholder    -->
     <string name="placeholder_email_address">someone@example.com</string>
     <string name="placeholder_first_name">Jane</string>
     <string name="placeholder_last_name">Doe</string>
+    <string name="placeholder_address_building_name">1234, Sample Building</string>
+    <string name="placeholder_address_street_address">123 Street Rd</string>
+    <string name="placeholder_address_city">Chicago</string>
+    <string name="placeholder_address_state">Illinois</string>
+    <string name="placeholder_address_pincode">123456</string>
 
     <!--    Body Text    -->
     <string name="body_email_description">We\’ll send a verification code to get you in.</string>
@@ -66,6 +79,7 @@
     <string name="test_tag_loader">LoaderTestTag</string>
     <string name="test_tag_navigation_action_left">LeftNavigationActionTestTag</string>
     <string name="test_tag_alert_dialog_overlay">AlertDialogOverlayTestTag</string>
+    <string name="test_tag_address_save_as_default">AddressSaveAsDefaultTestTag</string>
 
     <!--  Loader content  -->
     <string name="loader_sending_verification_code">Sending a verification code to</string>
@@ -79,18 +93,7 @@
 
     <string name="dialog_act_enter_manually">Enter manually</string>
     <string name="dialog_act_allow_access">Allow access</string>
-    <string name="label_address_label">Label</string>
     <string name="placeholder_address_label">E.g: Home</string>
-    <string name="label_address_building_name">Flat/Building name</string>
-    <string name="placeholder_address_building_name">1234, Sample Building</string>
-    <string name="label_address_street_address">Street address</string>
-    <string name="placeholder_address_street_address">123 Street Rd</string>
-    <string name="label_address_city">City</string>
-    <string name="placeholder_address_city">Chicago</string>
-    <string name="label_address_state">State</string>
-    <string name="placeholder_address_state">Illinois</string>
-    <string name="label_address_pincode">Pincode</string>
-    <string name="placeholder_address_pincode">123456</string>
 
 
 </resources>
