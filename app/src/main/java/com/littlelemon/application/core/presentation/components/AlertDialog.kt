@@ -49,7 +49,7 @@ fun AlertDialog(
     modifier: Modifier = Modifier,
     onPositiveAction: () -> Unit = {},
     onNegativeAction: () -> Unit = {},
-    dismissable: Boolean = false,
+    dismissable: Boolean = true,
     onDismissDialog: () -> Unit = {},
     positiveActionVariant: ButtonVariant = ButtonVariant.PRIMARY,
     negativeActionVariant: ButtonVariant = ButtonVariant.GHOST,

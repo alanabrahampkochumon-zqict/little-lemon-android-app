@@ -19,6 +19,7 @@
     <string name="act_go">Let\'s Go!</string>
     <string name="act_enable_location">Use current location</string>
     <string name="act_enter_location_manually">Enter manually</string>
+    <string name="act_allow_access">Allow access</string>
 
 
     <!--    Headings    -->
@@ -72,5 +73,9 @@
     <string name="loader_verifying_code">Verifying your code…</string>
     <string name="loader_resending_otp">Resending verification code…</string>
     <string name="loader_finishing_personalization">Almost there. Tailoring your account…</string>
+
+    <!--  Dialog content -->
+    <string name="dialog_title_delivery_address_needed">Delivery address needed</string>
+    <string name="dialog_body_delivery_address_needed">Without location access, you\'ll need to type your address manually so we can verify we deliver to your area.</string>
 
 </resources>

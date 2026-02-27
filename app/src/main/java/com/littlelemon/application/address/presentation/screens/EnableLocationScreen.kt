@@ -3,6 +3,7 @@ package com.littlelemon.application.address.presentation.screens
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,9 +42,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressViewModel
+import com.littlelemon.application.core.presentation.components.AlertDialog
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonSize
 import com.littlelemon.application.core.presentation.components.ButtonVariant
@@ -59,8 +62,13 @@ const val FINE_LOCATION_PERMISSION_CODE = 100
 fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
 
     val activity = LocalActivity.current
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    var showDialog by remember { mutableStateOf(true) }
 
-    var showSettingsRedirect by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        showDialog = !hasLocationPermission(activity?.baseContext!!)
+    }
+
     val permissions =
         arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -87,11 +95,27 @@ fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modif
     }
     EnableLocationScreenRoot(
         modifier = modifier,
+        showDialog = showDialog,
         onEnableLocationClick = {
             permissionLauncher.launch(permissions)
         },
         onManualLocationClick = {
             viewModel.onAction(AddressActions.EnterLocationManually)
+        },
+        onDismissAlert = {
+            Toast.makeText(
+                activity?.baseContext,
+                "Dismiss Dialog: TODO: Replace",
+                Toast.LENGTH_SHORT
+            ).show()
+            showDialog = false
+        },
+        onAllowLocationAccessClick = {
+            Toast.makeText(
+                activity?.baseContext,
+                "Allow location setting Dialog: TODO: Replace",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     )
 }
@@ -99,8 +123,11 @@ fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modif
 @Composable
 fun EnableLocationScreenRoot(
     modifier: Modifier = Modifier,
+    showDialog: Boolean = false,
+    onDismissAlert: () -> Unit = {},
     onEnableLocationClick: () -> Unit = {},
-    onManualLocationClick: () -> Unit = {}
+    onManualLocationClick: () -> Unit = {},
+    onAllowLocationAccessClick: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
 
@@ -115,66 +142,74 @@ fun EnableLocationScreenRoot(
             WindowInsetsSides.Bottom
         ).add(WindowInsets.ime)
     ) { innerPadding ->
-        DoodleBackground(alpha = 0.1f)
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = MaterialTheme.dimens.sizeXL)
-                .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        AlertDialog(
+            dialogTitle = stringResource(R.string.dialog_title_delivery_address_needed),
+            dialogText = stringResource(R.string.dialog_body_delivery_address_needed),
+            showDialog = showDialog,
+            positiveActionText = stringResource(R.string.act_allow_access),
+            onPositiveAction = onAllowLocationAccessClick,
+            negativeActionText = stringResource(R.string.act_enter_location_manually),
+            onDismissDialog = onDismissAlert,
+            onNegativeAction = onManualLocationClick
         ) {
-            Image(
-                painterResource(R.drawable.enable_location_service),
-                contentDescription = null,
-                Modifier
-                    .widthIn(max = 450.dp)
-                    .offset(y = MaterialTheme.dimens.size2XL) // Offset applied to negate image's y height due to shadow
-            )
-            Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
-                Text(
-                    stringResource(R.string.heading_location_permission),
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typeStyle.displayLarge.copy(textAlign = TextAlign.Center),
-                    color = MaterialTheme.colors.contentPrimary
-                )
-                Text(
-                    stringResource(R.string.body_location),
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typeStyle.bodyMedium.copy(textAlign = TextAlign.Center),
-                    color = MaterialTheme.colors.contentSecondary
-                )
-            }
-
-            Spacer(Modifier.height(MaterialTheme.dimens.size4XL))
-
+            DoodleBackground(alpha = 0.1f)
             Column(
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG),
-                modifier = Modifier.widthIn(max = 480.dp)
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = MaterialTheme.dimens.sizeXL)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(
-                    label = stringResource(R.string.act_enable_location),
-                    onClick = onEnableLocationClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    variant = ButtonVariant.PRIMARY,
-                    size = ButtonSize.Medium
+                Image(
+                    painterResource(R.drawable.enable_location_service),
+                    contentDescription = null,
+                    Modifier
+                        .widthIn(max = 450.dp)
+                        .offset(y = MaterialTheme.dimens.size2XL) // Offset applied to negate image's y height due to shadow
                 )
-                Button(
-                    label = stringResource(R.string.act_enter_location_manually),
-                    onClick = onManualLocationClick,
-                    modifier = Modifier.fillMaxWidth(),
-                    variant = ButtonVariant.SECONDARY,
-                    size = ButtonSize.Medium
-                )
-            }
+                Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
+                    Text(
+                        stringResource(R.string.heading_location_permission),
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typeStyle.displayLarge.copy(textAlign = TextAlign.Center),
+                        color = MaterialTheme.colors.contentPrimary
+                    )
+                    Text(
+                        stringResource(R.string.body_location),
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typeStyle.bodyMedium.copy(textAlign = TextAlign.Center),
+                        color = MaterialTheme.colors.contentSecondary
+                    )
+                }
+                Spacer(Modifier.height(MaterialTheme.dimens.size4XL))
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG),
+                    modifier = Modifier.widthIn(max = 480.dp)
+                ) {
+                    Button(
+                        label = stringResource(R.string.act_enable_location),
+                        onClick = onEnableLocationClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        variant = ButtonVariant.PRIMARY,
+                        size = ButtonSize.Medium
+                    )
+                    Button(
+                        label = stringResource(R.string.act_enter_location_manually),
+                        onClick = onManualLocationClick,
+                        modifier = Modifier.fillMaxWidth(),
+                        variant = ButtonVariant.SECONDARY,
+                        size = ButtonSize.Medium
+                    )
+                }
 
+            }
         }
 
     }
 
 }
-
 
 private fun hasLocationPermission(context: Context): Boolean {
     return ActivityCompat.checkSelfPermission(
@@ -188,5 +223,13 @@ private fun hasLocationPermission(context: Context): Boolean {
 private fun EnableLocationScreenRootPreview() {
     LittleLemonTheme {
         EnableLocationScreenRoot()
+    }
+}
+
+@Preview
+@Composable
+private fun EnableLocationScreenDialogPreview() {
+    LittleLemonTheme {
+        EnableLocationScreenRoot(showDialog = true)
     }
 }

@@ -52,7 +52,9 @@ class EnableLocationScreenRootTest {
         // Given the location screen is displayed
         var callbackTriggered = false
         composeTestRule.setContent {
-            EnableLocationScreenRoot(onEnableLocationClick = { callbackTriggered = true })
+            EnableLocationScreenRoot(
+
+                onEnableLocationClick = { callbackTriggered = true })
         }
 
         // When the enable location button is pressed
@@ -68,7 +70,9 @@ class EnableLocationScreenRootTest {
         // Given the location screen is displayed
         var callbackTriggered = false
         composeTestRule.setContent {
-            EnableLocationScreenRoot(onManualLocationClick = { callbackTriggered = true })
+            EnableLocationScreenRoot(
+
+                onManualLocationClick = { callbackTriggered = true })
         }
 
         // When the enable location button is pressed
