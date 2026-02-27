@@ -18,8 +18,7 @@
     <string name="act_cancel">Cancel</string>
     <string name="act_go">Let\'s Go!</string>
     <string name="act_enable_location">Use current location</string>
-    <string name="act_enter_location_manually">Enter manually</string>
-    <string name="act_allow_access">Allow access</string>
+    <string name="act_enter_location_manually">Enter location manually</string>
 
 
     <!--    Headings    -->
@@ -77,5 +76,9 @@
     <!--  Dialog content -->
     <string name="dialog_title_delivery_address_needed">Delivery address needed</string>
     <string name="dialog_body_delivery_address_needed">Without location access, you\'ll need to type your address manually so we can verify we deliver to your area.</string>
+
+    <string name="dialog_act_enter_manually">Enter manually</string>
+    <string name="dialog_act_allow_access">Allow access</string>
+
 
 </resources>

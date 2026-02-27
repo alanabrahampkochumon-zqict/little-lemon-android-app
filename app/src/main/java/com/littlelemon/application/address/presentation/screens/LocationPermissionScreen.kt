@@ -1,8 +1,6 @@
 package com.littlelemon.application.address.presentation.screens
 
 import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -31,9 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -41,10 +36,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
+import com.littlelemon.application.address.presentation.AddressState
 import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.core.presentation.components.AlertDialog
 import com.littlelemon.application.core.presentation.components.Button
@@ -59,15 +54,10 @@ import com.littlelemon.application.core.presentation.designsystem.typeStyle
 const val FINE_LOCATION_PERMISSION_CODE = 100
 
 @Composable
-fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
+fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
 
     val activity = LocalActivity.current
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var showDialog by remember { mutableStateOf(true) }
-
-    LaunchedEffect(Unit) {
-        showDialog = !hasLocationPermission(activity?.baseContext!!)
-    }
 
     val permissions =
         arrayOf(
@@ -93,9 +83,9 @@ fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modif
             }
         }
     }
-    EnableLocationScreenRoot(
+    LocationPermissionScreenRoot(
+        state = state,
         modifier = modifier,
-        showDialog = showDialog,
         onEnableLocationClick = {
             permissionLauncher.launch(permissions)
         },
@@ -103,12 +93,7 @@ fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modif
             viewModel.onAction(AddressActions.EnterLocationManually)
         },
         onDismissAlert = {
-            Toast.makeText(
-                activity?.baseContext,
-                "Dismiss Dialog: TODO: Replace",
-                Toast.LENGTH_SHORT
-            ).show()
-            showDialog = false
+            viewModel.onAction(AddressActions.DismissLocationDialog)
         },
         onAllowLocationAccessClick = {
             Toast.makeText(
@@ -121,9 +106,9 @@ fun EnableLocationScreen(viewModel: AddressViewModel, modifier: Modifier = Modif
 }
 
 @Composable
-fun EnableLocationScreenRoot(
+fun LocationPermissionScreenRoot(
+    state: AddressState,
     modifier: Modifier = Modifier,
-    showDialog: Boolean = false,
     onDismissAlert: () -> Unit = {},
     onEnableLocationClick: () -> Unit = {},
     onManualLocationClick: () -> Unit = {},
@@ -145,10 +130,10 @@ fun EnableLocationScreenRoot(
         AlertDialog(
             dialogTitle = stringResource(R.string.dialog_title_delivery_address_needed),
             dialogText = stringResource(R.string.dialog_body_delivery_address_needed),
-            showDialog = showDialog,
-            positiveActionText = stringResource(R.string.act_allow_access),
+            showDialog = state.showLocationDialog,
+            positiveActionText = stringResource(R.string.dialog_act_allow_access),
             onPositiveAction = onAllowLocationAccessClick,
-            negativeActionText = stringResource(R.string.act_enter_location_manually),
+            negativeActionText = stringResource(R.string.dialog_act_enter_manually),
             onDismissDialog = onDismissAlert,
             onNegativeAction = onManualLocationClick
         ) {
@@ -211,25 +196,18 @@ fun EnableLocationScreenRoot(
 
 }
 
-private fun hasLocationPermission(context: Context): Boolean {
-    return ActivityCompat.checkSelfPermission(
-        context,
-        Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
-}
-
 @Preview
 @Composable
-private fun EnableLocationScreenRootPreview() {
+private fun LocationPermissionScreenRootPreview() {
     LittleLemonTheme {
-        EnableLocationScreenRoot()
+        LocationPermissionScreenRoot(AddressState())
     }
 }
 
 @Preview
 @Composable
-private fun EnableLocationScreenDialogPreview() {
+private fun LocationPermissionScreenDialogPreview() {
     LittleLemonTheme {
-        EnableLocationScreenRoot(showDialog = true)
+        LocationPermissionScreenRoot(AddressState(showLocationDialog = true))
     }
 }

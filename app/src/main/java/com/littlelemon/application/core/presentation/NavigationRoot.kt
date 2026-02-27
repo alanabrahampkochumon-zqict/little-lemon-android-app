@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.address.presentation.AddressViewModel
-import com.littlelemon.application.address.presentation.screens.EnableLocationScreen
+import com.littlelemon.application.address.presentation.screens.LocationPermissionScreen
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.screens.AuthScreen
 import com.littlelemon.application.core.domain.model.SessionStatus
@@ -21,7 +21,7 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
             if (userHasAddress == true)
                 HomeScreen()
             else
-                EnableLocationScreen(koinViewModel<AddressViewModel>())
+                LocationPermissionScreen(koinViewModel<AddressViewModel>())
         }
 
         SessionStatus.PartiallyAuthenticated -> {
