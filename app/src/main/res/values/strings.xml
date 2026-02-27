@@ -17,14 +17,14 @@
     <string name="act_back">Navigate back to %s</string>
     <string name="act_cancel">Cancel</string>
     <string name="act_go">Let\'s Go!</string>
-    <string name="act_enable_location">Enable Location</string>
-    <string name="act_enter_location_manually">Enter Location Manually</string>
+    <string name="act_enable_location">Use current location</string>
+    <string name="act_enter_location_manually">Enter manually</string>
 
 
     <!--    Headings    -->
     <string name="heading_login">What\'s your email?</string>
     <string name="heading_personalize">Let\'s get to know you</string>
-    <string name="heading_location">Enable Location Service</string>
+    <string name="heading_location_permission">Where are we delivering?</string>
 
     <!--    Navigation Headings    -->
     <string name="nav_verify_email">Verify Email Address</string>
@@ -45,7 +45,7 @@
     <string name="body_verification_code">Enter the 6-digit OTP sent to</string>
     <string name="body_no_otp_received">Didn\'t receive the code?</string>
     <string name="body_personalization">What should we called you?</string>
-    <string name="body_location">Let us know where you are for a better delivery experience</string>
+    <string name="body_location">Allow location access so we can check if you\'re in our delivery radius and get your food to your door fast.</string>
 
 
     <!--    Misc.    -->

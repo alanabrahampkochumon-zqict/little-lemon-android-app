@@ -21,7 +21,7 @@ class EnableLocationScreenRootTest {
     private val application = RuntimeEnvironment.getApplication()
 
     // Matchers
-    private val headerMatcher = hasText(application.getString(R.string.heading_location))
+    private val headerMatcher = hasText(application.getString(R.string.heading_location_permission))
     private val bodyCopyMatcher = hasText(application.getString(R.string.body_location))
 
     private val enableLocationMatcher = hasText(application.getString(R.string.act_enable_location))
