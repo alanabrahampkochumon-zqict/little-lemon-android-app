@@ -40,24 +40,24 @@ class TextInputFieldTest {
 
 
     @Test
-    fun inputField_placeholderAndEmptyValue_placeholderIsShown() {
+    fun inputField_placeholderAndEmptyValue_placeholderIsDisplayed() {
         // Given an input field with empty value and a placeholder
         composeTestRule.setContent {
             TextInputField(placeholder = placeholder, value = "")
         }
 
-        // Then, placeholder is shown
+        // Then, placeholder is displayed
         composeTestRule.onNodeWithText(placeholder).assertIsDisplayed()
     }
 
     @Test
-    fun inputField_placeholderAndNonEmptyValue_placeholderIsHiddenAndValueIsShown() {
+    fun inputField_placeholderAndNonEmptyValue_placeholderIsHiddenAndValueIsDisplayed() {
         // Given an input field with value and placeholder
         composeTestRule.setContent {
             TextInputField(placeholder = placeholder, value = value)
         }
 
-        // Then, placeholder is not shown and value is displayed
+        // Then, placeholder is not displayed and value is displayed
         composeTestRule.onNodeWithText(placeholder).assertIsNotDisplayed()
         composeTestRule.onNodeWithText(value).assertIsDisplayed()
     }
@@ -65,13 +65,10 @@ class TextInputFieldTest {
     @Test
     fun inputField_disabled_isNotEnabled() {
         // Given a disabled input field
-        var newValue = ""
-        val changedValue = "changed value"
         composeTestRule.setContent {
             TextInputField(
                 placeholder = placeholder,
                 value = value,
-                onValueChange = { newValue = it },
                 enabled = false
             )
         }
@@ -102,7 +99,7 @@ class TextInputFieldTest {
     }
 
     @Test
-    fun inputField_errorMessage_messageIsShown() {
+    fun inputField_errorMessage_messageIsDisplayed() {
         // Given an input field with error message
         composeTestRule.setContent {
             TextInputField(
@@ -112,7 +109,7 @@ class TextInputFieldTest {
             )
         }
 
-        // Then error message is shown
+        // Then error message is displayed
         composeTestRule.onNodeWithText(errorMessage).assertIsDisplayed()
     }
 
