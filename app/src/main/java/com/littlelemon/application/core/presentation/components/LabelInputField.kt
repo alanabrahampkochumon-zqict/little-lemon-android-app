@@ -32,7 +32,7 @@ fun LabelInputField(
     iconLeftDescription: String? = null,
     @DrawableRes iconRight: Int? = null,
     iconRightDescription: String? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onValueChange: (String) -> Unit = {},
