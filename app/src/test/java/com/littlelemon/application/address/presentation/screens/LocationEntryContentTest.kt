@@ -4,6 +4,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextInput
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressState
 import org.junit.Rule
@@ -11,6 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import kotlin.test.assertEquals
 
 @RunWith(RobolectricTestRunner::class)
 class LocationEntryContentTest {
@@ -59,8 +62,8 @@ class LocationEntryContentTest {
         }
 
         // Then, "label" label and its field is displayed
-        composeTestRule.onNode(labelLabelMatcher).assertIsDisplayed()
-        composeTestRule.onNode(labelPlaceholderMatcher).assertIsDisplayed()
+        composeTestRule.onNode(labelLabelMatcher).performScrollTo().assertIsDisplayed()
+        composeTestRule.onNode(labelPlaceholderMatcher).performScrollTo().assertIsDisplayed()
     }
 
     @Test
@@ -71,8 +74,8 @@ class LocationEntryContentTest {
         }
 
         // Then, "building name" label and its field is displayed
-        composeTestRule.onNode(buildingLabelMatcher).assertIsDisplayed()
-        composeTestRule.onNode(buildingPlaceholderMatcher).assertIsDisplayed()
+        composeTestRule.onNode(buildingLabelMatcher).performScrollTo().assertIsDisplayed()
+        composeTestRule.onNode(buildingPlaceholderMatcher).performScrollTo().assertIsDisplayed()
     }
 
 
@@ -84,8 +87,9 @@ class LocationEntryContentTest {
         }
 
         // Then "street address" label and its field is displayed
-        composeTestRule.onNode(streetAddressLabelMatcher).assertIsDisplayed()
-        composeTestRule.onNode(streetAddressPlaceholderMatcher).assertIsDisplayed()
+        composeTestRule.onNode(streetAddressLabelMatcher).performScrollTo().assertIsDisplayed()
+        composeTestRule.onNode(streetAddressPlaceholderMatcher).performScrollTo()
+            .assertIsDisplayed()
     }
 
     @Test
@@ -96,8 +100,8 @@ class LocationEntryContentTest {
         }
 
         // Then "city" label and its field is displayed
-        composeTestRule.onNode(cityLabelMatcher).assertIsDisplayed()
-        composeTestRule.onNode(cityPlaceholderMatcher).assertIsDisplayed()
+        composeTestRule.onNode(cityLabelMatcher).performScrollTo().assertIsDisplayed()
+        composeTestRule.onNode(cityPlaceholderMatcher).performScrollTo().assertIsDisplayed()
     }
 
 
@@ -109,8 +113,8 @@ class LocationEntryContentTest {
         }
 
         // Then "state" label and its field is displayed
-        composeTestRule.onNode(stateLabelMatcher).assertIsDisplayed()
-        composeTestRule.onNode(statePlaceholderMatcher).assertIsDisplayed()
+        composeTestRule.onNode(stateLabelMatcher).performScrollTo().assertIsDisplayed()
+        composeTestRule.onNode(statePlaceholderMatcher).performScrollTo().assertIsDisplayed()
     }
 
     @Test
@@ -121,8 +125,8 @@ class LocationEntryContentTest {
         }
 
         // Then "pincode" label and its field is displayed
-        composeTestRule.onNode(pinCodeLabelMatcher).assertIsDisplayed()
-        composeTestRule.onNode(pinCodePlaceholderMatcher).assertIsDisplayed()
+        composeTestRule.onNode(pinCodeLabelMatcher).performScrollTo().assertIsDisplayed()
+        composeTestRule.onNode(pinCodePlaceholderMatcher).performScrollTo().assertIsDisplayed()
     }
 
     @Test
@@ -133,8 +137,125 @@ class LocationEntryContentTest {
         }
 
         // Then "pincode" label and its field is displayed
-        composeTestRule.onNode(saveAsDefaultLabelMatcher).assertIsDisplayed()
-        composeTestRule.onNode(saveAsDefaultTestTag).assertIsDisplayed()
+        composeTestRule.onNode(saveAsDefaultLabelMatcher).performScrollTo().assertIsDisplayed()
+        composeTestRule.onNode(saveAsDefaultTestTag).performScrollTo().assertIsDisplayed()
     }
+
+    @Test
+    fun locationEntryContent_labelChange_onChangeCallbackIsTriggered() {
+        // Given a location entry screen
+        val content = "content"
+        var changedValue = ""
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState(), onLabelChange = { changedValue = it })
+        }
+
+        // When text input is performed
+        composeTestRule.onNode(labelPlaceholderMatcher).performTextInput(content)
+
+        // Then, the callback is triggered
+        assertEquals(content, changedValue)
+
+    }
+
+    @Test
+    fun locationEntryContent_buildingNameChange_onChangeCallbackIsTriggered() {
+        // Given a location entry screen
+        val content = "content"
+        var changedValue = ""
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState(), onBuildingNameChange = { changedValue = it })
+        }
+
+        // When text input is performed
+        composeTestRule.onNode(buildingPlaceholderMatcher).performTextInput(content)
+
+        // Then, the callback is triggered
+        assertEquals(content, changedValue)
+
+    }
+
+    @Test
+    fun locationEntryContent_streetAddressChange_onChangeCallbackIsTriggered() {
+        // Given a location entry screen
+        val content = "content"
+        var changedValue = ""
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState(), onStreetAddressChange = { changedValue = it })
+        }
+
+        // When text input is performed
+        composeTestRule.onNode(streetAddressPlaceholderMatcher).performTextInput(content)
+
+        // Then, the callback is triggered
+        assertEquals(content, changedValue)
+
+    }
+
+    @Test
+    fun locationEntryContent_cityChange_onChangeCallbackIsTriggered() {
+        // Given a location entry screen
+        val content = "content"
+        var changedValue = ""
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState(), onCityChange = { changedValue = it })
+        }
+
+        // When text input is performed
+        composeTestRule.onNode(cityPlaceholderMatcher).performTextInput(content)
+
+        // Then, the callback is triggered
+        assertEquals(content, changedValue)
+    }
+
+    @Test
+    fun locationEntryContent_stateChange_onChangeCallbackIsTriggered() {
+        // Given a location entry screen
+        val content = "content"
+        var changedValue = ""
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState(), onStateChange = { changedValue = it })
+        }
+
+        // When text input is performed
+        composeTestRule.onNode(statePlaceholderMatcher).performTextInput(content)
+
+        // Then, the callback is triggered
+        assertEquals(content, changedValue)
+    }
+
+    @Test
+    fun locationEntryContent_pinCodeChange_onChangeCallbackIsTriggered() {
+        // Given a location entry screen
+        val content = "content"
+        var changedValue = ""
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState(), onPinCodeChange = { changedValue = it })
+        }
+
+        // When text input is performed
+        composeTestRule.onNode(pinCodePlaceholderMatcher).performTextInput(content)
+
+        // Then, the callback is triggered
+        assertEquals(content, changedValue)
+    }
+
+    // TODO: Add back test after implementation
+//    @Test
+//    fun locationEntryContent_saveAsDefaultChange_onChangeCallbackIsTriggered() {
+//        // Given a location entry screen
+//        var changedValue = false
+//        composeTestRule.setContent {
+//            LocationEntryContentRoot(
+//                AddressState(),
+//                onSaveAsDefaultChange = { changedValue = true })
+//        }
+//
+//        // When text input is performed
+//        composeTestRule.onNode(saveAsDefaultTestTag).performClick()
+//
+//        // Then, the callback is triggered
+//        assertTrue(changedValue)
+//    }
 
 }

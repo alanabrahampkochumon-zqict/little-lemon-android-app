@@ -84,7 +84,7 @@ fun LocationEntryContentRoot(
 }
 
 @Composable
-private fun ModalForm(
+fun ModalForm(
     state: AddressState,
     modifier: Modifier = Modifier,
     onLabelChange: (String) -> Unit = {},
