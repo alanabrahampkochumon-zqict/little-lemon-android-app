@@ -44,9 +44,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
 
     }
-//    kotlinOptions {
-//        jvmTarget = "11"
-//    }
+
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
@@ -126,6 +124,7 @@ dependencies {
     testImplementation(platform(libs.androidx.compose.bom))
     testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.test.parameter.injector)
 
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.platform)
