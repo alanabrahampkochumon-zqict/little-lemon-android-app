@@ -104,9 +104,11 @@ class LocationEntryContentTest {
             .assertIsDisplayed()
     }
 
+
     @Test
     fun locationEntryContent_labelChange_onChangeCallbackIsTriggered() {
         // Given a location entry screen
+
         val content = "content"
         var changedValue = ""
         composeTestRule.setContent {
@@ -114,7 +116,12 @@ class LocationEntryContentTest {
         }
 
         // When text input is performed
-        composeTestRule.onNode(labelPlaceholderMatcher).performTextInput(content)
+        composeTestRule.onNode(
+            composeMatchHelper.getMatcher(
+                ContentMatchTestCase.LABEL.placeholder,
+                ContentMatchTestCase.LABEL.placeholderMatcherType
+            )
+        ).performTextInput(content)
 
         // Then, the callback is triggered
         assertEquals(content, changedValue)
@@ -131,7 +138,12 @@ class LocationEntryContentTest {
         }
 
         // When text input is performed
-        composeTestRule.onNode(buildingPlaceholderMatcher).performTextInput(content)
+        composeTestRule.onNode(
+            composeMatchHelper.getMatcher(
+                ContentMatchTestCase.BUILDING_NAME.placeholder,
+                ContentMatchTestCase.BUILDING_NAME.placeholderMatcherType
+            )
+        ).performTextInput(content)
 
         // Then, the callback is triggered
         assertEquals(content, changedValue)
@@ -148,7 +160,12 @@ class LocationEntryContentTest {
         }
 
         // When text input is performed
-        composeTestRule.onNode(streetAddressPlaceholderMatcher).performTextInput(content)
+        composeTestRule.onNode(
+            composeMatchHelper.getMatcher(
+                ContentMatchTestCase.STREET_ADDRESS.placeholder,
+                ContentMatchTestCase.STREET_ADDRESS.placeholderMatcherType
+            )
+        ).performTextInput(content)
 
         // Then, the callback is triggered
         assertEquals(content, changedValue)
@@ -165,7 +182,12 @@ class LocationEntryContentTest {
         }
 
         // When text input is performed
-        composeTestRule.onNode(cityPlaceholderMatcher).performTextInput(content)
+        composeTestRule.onNode(
+            composeMatchHelper.getMatcher(
+                ContentMatchTestCase.CITY.placeholder,
+                ContentMatchTestCase.CITY.placeholderMatcherType
+            )
+        ).performTextInput(content)
 
         // Then, the callback is triggered
         assertEquals(content, changedValue)
@@ -181,7 +203,12 @@ class LocationEntryContentTest {
         }
 
         // When text input is performed
-        composeTestRule.onNode(statePlaceholderMatcher).performTextInput(content)
+        composeTestRule.onNode(
+            composeMatchHelper.getMatcher(
+                ContentMatchTestCase.STATE.placeholder,
+                ContentMatchTestCase.STATE.placeholderMatcherType
+            )
+        ).performTextInput(content)
 
         // Then, the callback is triggered
         assertEquals(content, changedValue)
@@ -197,7 +224,12 @@ class LocationEntryContentTest {
         }
 
         // When text input is performed
-        composeTestRule.onNode(pinCodePlaceholderMatcher).performTextInput(content)
+        composeTestRule.onNode(
+            composeMatchHelper.getMatcher(
+                ContentMatchTestCase.PIN_CODE.placeholder,
+                ContentMatchTestCase.PIN_CODE.placeholderMatcherType
+            )
+        ).performTextInput(content)
 
         // Then, the callback is triggered
         assertEquals(content, changedValue)
@@ -215,7 +247,12 @@ class LocationEntryContentTest {
 //        }
 //
 //        // When text input is performed
-//        composeTestRule.onNode(saveAsDefaultTestTag).performClick()
+//        composeTestRule.onNode(
+//            composeMatchHelper.getMatcher(
+//                ContentMatchTestCase.SAVE_AS_DEFAULT.placeholder,
+//                ContentMatchTestCase.SAVE_AS_DEFAULT.placeholderMatcherType
+//            )
+//        ).performClick()
 //
 //        // Then, the callback is triggered
 //        assertTrue(changedValue)
