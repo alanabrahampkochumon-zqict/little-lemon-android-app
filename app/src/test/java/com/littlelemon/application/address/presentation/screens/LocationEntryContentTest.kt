@@ -1,7 +1,9 @@
 package com.littlelemon.application.address.presentation.screens
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import com.google.testing.junit.testparameterinjector.TestParameter
@@ -9,6 +11,7 @@ import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressState
 import com.littlelemon.application.utils.ComposeMatcherHelper
 import com.littlelemon.application.utils.MatcherType
+import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -203,27 +206,26 @@ class LocationEntryContentTest {
         assertEquals(content, changedValue)
     }
 
-    // TODO: Add back test after implementation
-//    @Test
-//    fun locationEntryContent_saveAsDefaultChange_onChangeCallbackIsTriggered() {
-//        // Given a location entry screen
-//        var changedValue = false
-//        composeTestRule.setContent {
-//            LocationEntryContentRoot(
-//                AddressState(),
-//                onSaveAsDefaultChange = { changedValue = true })
-//        }
-//
-//        // When text input is performed
-//        composeTestRule.onNode(
-//            composeMatchHelper.getMatcher(
-//                ContentMatchTestCase.SAVE_AS_DEFAULT.placeholder,
-//                ContentMatchTestCase.SAVE_AS_DEFAULT.placeholderMatcherType
-//            )
-//        ).performClick()
-//
-//        // Then, the callback is triggered
-//        assertTrue(changedValue)
-//    }
+    @Test
+    fun locationEntryContent_saveAsDefaultChange_onChangeCallbackIsTriggered() {
+        // Given a location entry screen
+        var changedValue = false
+        composeTestRule.setContent {
+            LocationEntryContentRoot(
+                AddressState(),
+                onSaveAsDefaultChange = { changedValue = true })
+        }
+
+        // When text input is performed
+        composeTestRule.onNode(
+            composeMatchHelper.getMatcher(
+                ContentMatchTestCase.SAVE_AS_DEFAULT.placeholder,
+                ContentMatchTestCase.SAVE_AS_DEFAULT.placeholderMatcherType
+            ) and isToggleable()
+        ).performClick()
+
+        // Then, the callback is triggered
+        assertTrue(changedValue)
+    }
 
 }
