@@ -8,8 +8,10 @@ sealed interface AddressActions {
     data class ChangeCity(val city: String) : AddressActions
     data class ChangeState(val state: String) : AddressActions
     data class ChangePinCode(val pinCode: String) : AddressActions
+    data class ChangeToDefaultAddress(val value: Boolean) : AddressActions
     data object GetLocation : AddressActions
     data object EnterLocationManually : AddressActions
+
 
     data object ShowLocationDialog : AddressActions
     data object DismissLocationDialog : AddressActions

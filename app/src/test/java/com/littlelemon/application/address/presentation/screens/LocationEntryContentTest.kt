@@ -1,8 +1,6 @@
 package com.littlelemon.application.address.presentation.screens
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
@@ -24,36 +22,6 @@ class LocationEntryContentTest {
     @get:Rule
     val composeTestRule = createComposeRule()
     private val application by lazy { RuntimeEnvironment.getApplication() }
-    val labelLabelMatcher = hasText(application.getString(R.string.label_address_label))
-    val labelPlaceholderMatcher =
-        hasText(application.getString(R.string.placeholder_address_label))
-    private val buildingLabelMatcher =
-        hasText(application.getString(R.string.label_address_building_name))
-    private val buildingPlaceholderMatcher =
-        hasText(application.getString(R.string.placeholder_address_building_name))
-
-    private val streetAddressLabelMatcher =
-        hasText(application.getString(R.string.label_address_street_address))
-    private val streetAddressPlaceholderMatcher =
-        hasText(application.getString(R.string.placeholder_address_street_address))
-
-    private val cityLabelMatcher = hasText(application.getString(R.string.label_address_city))
-    private val cityPlaceholderMatcher =
-        hasText(application.getString(R.string.placeholder_address_city))
-
-    private val stateLabelMatcher = hasText(application.getString(R.string.label_address_state))
-    private val statePlaceholderMatcher =
-        hasText(application.getString(R.string.placeholder_address_state))
-
-    private val pinCodeLabelMatcher =
-        hasText(application.getString(R.string.label_address_pincode))
-    private val pinCodePlaceholderMatcher =
-        hasText(application.getString(R.string.placeholder_address_pincode))
-
-    private val saveAsDefaultLabelMatcher =
-        hasText(application.getString(R.string.label_address_save_as_default))
-    private val saveAsDefaultTestTag =
-        hasTestTag(application.getString(R.string.test_tag_address_save_as_default))
 
     private val composeMatchHelper = ComposeMatcherHelper(application)
 

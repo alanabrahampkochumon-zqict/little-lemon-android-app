@@ -352,5 +352,21 @@ class AddressViewModelTest {
                 assertFalse(awaitItem().showLocationDialog)
             }
         }
+
+        @Test
+        fun onChangeToDefaultAddress_updatesStateToReflectChange() = runTest {
+            viewModel.state.test {
+                val initialState = awaitItem()
+
+                // If the initial state is false
+                assertFalse(initialState.isDefaultAddress)
+
+                // When, viewmodel action for update the state is triggered
+                viewModel.onAction(AddressActions.ChangeToDefaultAddress(true))
+
+                // Then, the state is updated to true
+                assertTrue(awaitItem().isDefaultAddress)
+            }
+        }
     }
 }

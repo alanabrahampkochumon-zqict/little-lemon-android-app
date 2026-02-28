@@ -164,6 +164,7 @@ class AddressViewModel(
             }
 
             AddressActions.DismissLocationDialog -> _state.update { it.copy(showLocationDialog = false) }
+            is AddressActions.ChangeToDefaultAddress -> _state.update { it.copy(isDefaultAddress = action.value) }
         }
     }
 

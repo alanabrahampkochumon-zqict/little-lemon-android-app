@@ -19,6 +19,7 @@ data class AddressState(
     val stateError: UiText? = null,
     val pinCode: String = "",
     val pinCodeError: UiText? = null,
+    val isDefaultAddress: Boolean = false,
 
     val latitude: Double? = null,
     val longitude: Double? = null

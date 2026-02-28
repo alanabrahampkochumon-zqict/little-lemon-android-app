@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +33,7 @@ import com.littlelemon.application.core.presentation.components.LabelInputField
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
+import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @Composable
 fun LocationEntryContent(viewModel: AddressViewModel) {
@@ -112,6 +114,13 @@ fun ModalForm(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2XL)
     ) {
+        Text(
+            stringResource(R.string.label_address_save_as_default),
+            style = MaterialTheme.typeStyle.labelMedium,
+            color = MaterialTheme.colors.secondary,
+            modifier = Modifier.testTag(stringResource(R.string.test_tag_address_save_as_default))
+        )
+//        Checkbox(state.)
         LabelInputField(
             label = stringResource(R.string.label_address_label),
             placeholder = stringResource(R.string.placeholder_address_label),
@@ -151,10 +160,7 @@ fun ModalForm(
 
         // TODO: Replace with checkbox
         // TODO: Replace test tag on the checkbox
-        Text(
-            stringResource(R.string.label_address_save_as_default),
-            modifier = Modifier.testTag(stringResource(R.string.test_tag_address_save_as_default))
-        )
+
 
     }
 }
