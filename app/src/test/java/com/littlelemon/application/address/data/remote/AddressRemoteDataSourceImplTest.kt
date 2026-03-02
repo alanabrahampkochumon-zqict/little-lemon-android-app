@@ -29,7 +29,7 @@ class AddressRemoteDataSourceImplTest {
     """.trimIndent()
 
     @Test
-    fun onGetAddress_remoteSuccess_returnListOfAddresses() = runTest {
+    fun getAddress_remoteSuccess_returnListOfAddresses() = runTest {
         // Arrange
         val numAddress = 5
         val addresses = List(numAddress) {
@@ -53,7 +53,7 @@ class AddressRemoteDataSourceImplTest {
     }
 
     @Test
-    fun onGetAddress_remoteFailure_throwsException() = runTest {
+    fun getAddress_remoteFailure_throwsException() = runTest {
 
         // Arrange
         client = createFakeSupabaseClient {
@@ -70,7 +70,7 @@ class AddressRemoteDataSourceImplTest {
     }
 
     @Test
-    fun onSaveAddress_remoteSuccess_returnsSavedAddress() = runTest {
+    fun saveAddress_remoteSuccess_returnsSavedAddress() = runTest {
         // Arrange
         val address = AddressGenerator.generateAddressDTO()
         val request = Json.encodeToString(listOf(address.toRequestDTO()))
@@ -91,7 +91,7 @@ class AddressRemoteDataSourceImplTest {
     }
 
     @Test
-    fun onSaveAddress_remoteFailure_throwsException() = runTest {
+    fun saveAddress_remoteFailure_throwsException() = runTest {
         // Arrange
         val address = AddressGenerator.generateAddressDTO()
         client = createFakeSupabaseClient {
@@ -107,46 +107,9 @@ class AddressRemoteDataSourceImplTest {
         assertThrows<PostgrestRestException> { remoteDatasource.saveAddress(address.toRequestDTO()) }
     }
 
-    @Test
-    fun onUpdateAddress_remoteSuccess_returnsUpdatedAddress() = runTest {
-        // Arrange
-        val address = AddressGenerator.generateAddressDTO()
-        val request = Json.encodeToString(listOf(address.toRequestDTO()))
-        client = createFakeSupabaseClient {
-            respond(
-                request,
-                HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, "application/json")
-            )
-        }
-        remoteDatasource = AddressRemoteDataSourceImpl(client)
-
-        // Act
-        val response = remoteDatasource.updateAddress(address.toRequestDTO())
-
-        // Assert
-        assertEquals(address, response)
-    }
 
     @Test
-    fun onUpdateAddress_remoteFailure_throwsException() = runTest {
-        // Arrange
-        val address = AddressGenerator.generateAddressDTO()
-        client = createFakeSupabaseClient {
-            respond(
-                errorResponse,
-                HttpStatusCode.BadRequest,
-                headers = headersOf(HttpHeaders.ContentType, "application/json")
-            )
-        }
-        remoteDatasource = AddressRemoteDataSourceImpl(client)
-
-        // Act & Assert
-        assertThrows<PostgrestRestException> { remoteDatasource.updateAddress(address.toRequestDTO()) }
-    }
-
-    @Test
-    fun onDeleteAddress_remoteSuccess_returnsTrue() = runTest {
+    fun deleteAddress_remoteSuccess_returnsTrue() = runTest {
         val address = AddressGenerator.generateAddressDTO()
         val request = Json.encodeToString(listOf(address.toRequestDTO()))
         client = createFakeSupabaseClient {
@@ -163,7 +126,7 @@ class AddressRemoteDataSourceImplTest {
     }
 
     @Test
-    fun onDeleteAddress_remoteFailure_throwsException() = runTest {
+    fun deleteAddress_remoteFailure_throwsException() = runTest {
         // Arrange
         val address = AddressGenerator.generateAddressDTO()
         client = createFakeSupabaseClient {

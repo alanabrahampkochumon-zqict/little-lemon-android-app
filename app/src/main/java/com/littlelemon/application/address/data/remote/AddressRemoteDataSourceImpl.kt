@@ -54,35 +54,9 @@ class AddressRemoteDataSourceImpl(
         HttpRequestTimeoutException::class,
         HttpRequestException::class
     )
-    override suspend fun updateAddress(address: AddressRequestDTO): AddressDTO {
-        return client.from(SupabaseTables.USER_ADDRESS).update(address) { select() }
-            .decodeSingle<AddressRequestDTO>().toResponse()
-    }
-
-//    suspend fun makeAddressDefault(address: AddressRequestDTO): AddressDTO {
-//        val allAddresses = getAddress().map { it.toRequestDTO().also { isDefault = false } }
-//        return client.from(SupabaseTables.USER_ADDRESS).up
-//    }
-
-    @Throws(
-        PostgrestRestException::class,
-        HttpRequestTimeoutException::class,
-        HttpRequestException::class
-    )
     override suspend fun deleteAddress(address: AddressRequestDTO) {
         if (address.id == null) return // Won't hit this case unless as id is only null for fresh addresses coming from VM
         client.from(SupabaseTables.USER_ADDRESS).delete { filter { eq("id", address.id) } }
     }
-
-//    @Throws(
-//        PostgrestRestException::class,
-//        HttpRequestTimeoutException::class,
-//        HttpRequestException::class
-//    )
-//    override suspend fun makeDefault(address: AddressRequestDTO) {
-//        client.from(SupabaseTables.USER_ADDRESS).update({ set("is_default", false) })
-//        client.from(SupabaseTables.USER_ADDRESS).update(address)
-//    }
-
 
 }
