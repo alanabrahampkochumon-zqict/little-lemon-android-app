@@ -10,21 +10,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,23 +28,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.R
+import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressState
 import com.littlelemon.application.address.presentation.AddressViewModel
+import com.littlelemon.application.core.presentation.components.Checkbox
 import com.littlelemon.application.core.presentation.components.LabelInputField
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @Composable
 fun LocationEntryContent(viewModel: AddressViewModel) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LocationEntryContentRoot(state)
+    LocationEntryContentRoot(
+        state,
+        onSaveAsDefaultChange = { viewModel.onAction(AddressActions.ChangeToDefaultAddress(it)) })
 
 }
 
+// TODO: Add IME padding
+// TODO: Add state change callbacks UP
 @Composable
 fun LocationEntryContentRoot(
     state: AddressState, modifier: Modifier = Modifier,
@@ -123,60 +123,66 @@ fun ModalForm(
             label = stringResource(R.string.label_address_label),
             placeholder = stringResource(R.string.placeholder_address_label),
             value = state.label,
-            onValueChange = onLabelChange, modifier = Modifier.widthIn(min = 280.dp).weight(1f)
+            onValueChange = onLabelChange, modifier = Modifier
+                .widthIn(min = 280.dp)
+                .weight(1f)
         )
         LabelInputField(
             label = stringResource(R.string.label_address_building_name),
             placeholder = stringResource(R.string.placeholder_address_building_name),
             value = state.buildingName,
-            onValueChange = onBuildingNameChange, modifier = Modifier.widthIn(min = 280.dp).weight(1f)
+            onValueChange = onBuildingNameChange,
+            modifier = Modifier
+                .widthIn(min = 280.dp)
+                .weight(1f)
         )
         LabelInputField(
             label = stringResource(R.string.label_address_street_address),
             placeholder = stringResource(R.string.placeholder_address_street_address),
             value = state.streetAddress,
-            onValueChange = onStreetAddressChange, modifier = Modifier.widthIn(min = 280.dp).weight(1f)
+            onValueChange = onStreetAddressChange,
+            modifier = Modifier
+                .widthIn(min = 280.dp)
+                .weight(1f)
         )
         LabelInputField(
             label = stringResource(R.string.label_address_city),
             placeholder = stringResource(R.string.placeholder_address_city),
             value = state.city,
-            onValueChange = onCityChange, modifier = Modifier.widthIn(min = 280.dp).weight(1f)
+            onValueChange = onCityChange, modifier = Modifier
+                .widthIn(min = 280.dp)
+                .weight(1f)
         )
         LabelInputField(
             label = stringResource(R.string.label_address_state),
             placeholder = stringResource(R.string.placeholder_address_state),
             value = state.state,
-            onValueChange = onStateChange, modifier = Modifier.widthIn(min = 280.dp).weight(1f)
+            onValueChange = onStateChange, modifier = Modifier
+                .widthIn(min = 280.dp)
+                .weight(1f)
         )
         LabelInputField(
             label = stringResource(R.string.label_address_pincode),
             placeholder = stringResource(R.string.placeholder_address_pincode),
             value = state.pinCode,
-            onValueChange = onPinCodeChange, modifier = Modifier.widthIn(min = 280.dp).weight(1f)
+            onValueChange = onPinCodeChange, modifier = Modifier
+                .widthIn(min = 280.dp)
+                .weight(1f)
         )
 
         // TODO: Replace with custom checkbox
         // TODO: Replace test tag on the checkbox
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier.fillMaxWidth()
+        ) {
 
             Checkbox(
                 state.isDefaultAddress,
                 onCheckedChange = onSaveAsDefaultChange,
-                colors = CheckboxDefaults.colors(
-                    checkedColor = MaterialTheme.colors.contentHighlight,
-                    uncheckedColor = MaterialTheme.colors.contentHighlight,
-                    checkmarkColor = MaterialTheme.colors.contentHighlight,
-                    disabledCheckedColor = MaterialTheme.colors.contentDisabled,
-                    disabledUncheckedColor = MaterialTheme.colors.contentDisabled,
-                    disabledIndeterminateColor = MaterialTheme.colors.contentDisabled,
-
-                    ), modifier = Modifier.testTag(stringResource(R.string.test_tag_address_save_as_default))
-            )
-            Text(
-                stringResource(R.string.label_address_save_as_default),
-                style = MaterialTheme.typeStyle.labelMedium,
-                color = MaterialTheme.colors.contentSecondary
+                label = stringResource(R.string.label_address_save_as_default),
+                modifier = Modifier.testTag(stringResource(R.string.test_tag_address_save_as_default))
             )
         }
 
