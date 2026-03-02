@@ -201,6 +201,7 @@ class AddressMappersTest {
             assertEquals(dto.state, responseDTO.state)
             assertEquals(dto.pinCode, responseDTO.pinCode)
             assertEquals(dto.createdAt, responseDTO.createdAt)
+            assertEquals(dto.isDefault, responseDTO.isDefault)
 
             assertNull(responseDTO.latitude)
             assertNull(responseDTO.longitude)
@@ -228,6 +229,7 @@ class AddressMappersTest {
             assertEquals(genDTO.latitude, responseDTO.latitude)
             assertNotNull(responseDTO.longitude)
             assertEquals(genDTO.longitude, responseDTO.longitude)
+            assertEquals(genDTO.isDefault, responseDTO.isDefault)
         }
     }
 

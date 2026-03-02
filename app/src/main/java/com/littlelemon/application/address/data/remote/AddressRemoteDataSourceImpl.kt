@@ -43,6 +43,11 @@ class AddressRemoteDataSourceImpl(
             .decodeSingle<AddressRequestDTO>().toResponse()
     }
 
+//    suspend fun makeAddressDefault(address: AddressRequestDTO): AddressDTO {
+//        val allAddresses = getAddress().map { it.toRequestDTO().also { isDefault = false } }
+//        return client.from(SupabaseTables.USER_ADDRESS).up
+//    }
+
     @Throws(
         PostgrestRestException::class,
         HttpRequestTimeoutException::class,

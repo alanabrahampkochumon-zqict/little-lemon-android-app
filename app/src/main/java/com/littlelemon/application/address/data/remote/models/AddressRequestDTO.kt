@@ -17,4 +17,5 @@ data class AddressRequestDTO(
     val location: String?,
     @SerialName("created_at")
     val createdAt: Long,
+    val isDefault: Boolean = false,
 )

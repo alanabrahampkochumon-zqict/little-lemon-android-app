@@ -18,4 +18,5 @@ data class AddressDTO(
     val longitude: Double?,
     @SerialName("created_at")
     val createdAt: Long,
+    val isDefault: Boolean = false,
 )

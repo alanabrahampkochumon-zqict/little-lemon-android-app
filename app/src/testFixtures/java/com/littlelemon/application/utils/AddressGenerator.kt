@@ -39,7 +39,8 @@ object AddressGenerator {
             pinCode = faker.address.postcode(),
             latitude = Math.random() * LATITUDE_LIMIT - (LATITUDE_LIMIT / 2),
             longitude = Math.random() * LONGITUDE_LIMIT - (LONGITUDE_LIMIT / 2),
-            createdAt = (Math.random() * 1000000).roundToLong()
+            createdAt = (Math.random() * 1000000).roundToLong(),
+            isDefault = Math.random() > 0.5
         )
     }
 

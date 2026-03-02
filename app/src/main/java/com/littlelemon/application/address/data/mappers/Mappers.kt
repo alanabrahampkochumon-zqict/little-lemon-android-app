@@ -48,7 +48,8 @@ fun AddressDTO.toRequestDTO(): AddressRequestDTO = AddressRequestDTO(
     state = state,
     pinCode = pinCode,
     location = if (longitude != null && latitude != null) "POINT($longitude $latitude)" else null,
-    createdAt = createdAt
+    createdAt = createdAt,
+    isDefault = isDefault
 )
 
 fun AddressRequestDTO.toResponse(): AddressDTO {
@@ -65,7 +66,8 @@ fun AddressRequestDTO.toResponse(): AddressDTO {
         pinCode = pinCode,
         latitude = latitude,
         longitude = longitude,
-        createdAt = createdAt
+        createdAt = createdAt,
+        isDefault = isDefault
     )
 }
 
