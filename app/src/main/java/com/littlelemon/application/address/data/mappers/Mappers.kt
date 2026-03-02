@@ -23,7 +23,8 @@ fun AddressEntity.toLocalAddress(): LocalAddress = LocalAddress(
     location = if (this.latitude != null && this.longitude != null) LocalLocation(
         this.latitude,
         this.longitude
-    ) else null
+    ) else null,
+    isDefault = isDefault
 )
 
 fun AddressDTO.toAddressEntity(): AddressEntity = AddressEntity(
@@ -37,6 +38,7 @@ fun AddressDTO.toAddressEntity(): AddressEntity = AddressEntity(
     latitude = latitude,
     longitude = longitude,
     createdAt = createdAt,
+    isDefault = isDefault
 )
 
 fun AddressDTO.toRequestDTO(): AddressRequestDTO = AddressRequestDTO(
@@ -80,5 +82,6 @@ fun LocalAddress.toRequestDTO(): AddressRequestDTO = AddressRequestDTO(
     state = address?.state,
     pinCode = address?.pinCode,
     location = if (location?.longitude != null) "POINT(${location.longitude} ${location.latitude})" else null,
-    createdAt = System.currentTimeMillis()
+    createdAt = System.currentTimeMillis(),
+    isDefault = isDefault
 )

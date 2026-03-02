@@ -4,7 +4,8 @@ data class LocalAddress(
     val id: String? = null,
     val label: String? = null,
     val address: PhysicalAddress? = null,
-    val location: LocalLocation? = null
+    val location: LocalLocation? = null,
+    val isDefault: Boolean = false,
 ) {
     init {
         require(address != null || location != null) {

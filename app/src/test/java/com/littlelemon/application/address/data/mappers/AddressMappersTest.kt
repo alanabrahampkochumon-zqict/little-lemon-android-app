@@ -13,7 +13,7 @@ import org.junit.jupiter.api.assertThrows
 
 class AddressMappersTest {
     @Nested
-    inner class ToLocalLocationTest() {
+    inner class ToLocalLocationTest {
         val latitude = 1.2345
         val longitude = 3.2354
 
@@ -55,6 +55,8 @@ class AddressMappersTest {
             assertEquals(addressEntity.city, localAddress.address?.city)
             assertEquals(addressEntity.state, localAddress.address?.state)
             assertEquals(addressEntity.pinCode, localAddress.address?.pinCode)
+            assertEquals(addressEntity.isDefault, localAddress.isDefault)
+
         }
 
         @Test
@@ -73,6 +75,8 @@ class AddressMappersTest {
             assertNotNull(localAddress.label)
             assertEquals(addressEntity.label, localAddress.label)
             assertNull(localAddress.address)
+            assertEquals(addressEntity.isDefault, localAddress.isDefault)
+
         }
 
         @Test
@@ -95,6 +99,8 @@ class AddressMappersTest {
             assertEquals(addressEntity.city, localAddress.address?.city)
             assertEquals(addressEntity.state, localAddress.address?.state)
             assertEquals(addressEntity.pinCode, localAddress.address?.pinCode)
+            assertEquals(addressEntity.isDefault, localAddress.isDefault)
+
         }
 
         // NOTE: Having both address and LatLng as null will throw an exception on initialization which is tested in the domain class layer itself.
@@ -122,6 +128,8 @@ class AddressMappersTest {
             assertEquals(addressDTO.latitude, result.latitude)
             assertEquals(addressDTO.longitude, result.longitude)
             assertEquals(addressDTO.createdAt, result.createdAt)
+            assertEquals(addressDTO.isDefault, result.isDefault)
+
         }
     }
 
@@ -145,6 +153,7 @@ class AddressMappersTest {
             assertEquals(dto.state, requestDTO.state)
             assertEquals(dto.pinCode, requestDTO.pinCode)
             assertEquals(dto.createdAt, requestDTO.createdAt)
+            assertEquals(dto.isDefault, requestDTO.isDefault)
 
             assertNull(requestDTO.location)
         }
@@ -166,6 +175,7 @@ class AddressMappersTest {
             assertEquals(dto.state, requestDTO.state)
             assertEquals(dto.pinCode, requestDTO.pinCode)
             assertEquals(dto.createdAt, requestDTO.createdAt)
+            assertEquals(dto.isDefault, requestDTO.isDefault)
 
             assertNotNull(requestDTO.location)
             assertEquals("POINT(${dto.longitude} ${dto.latitude})", requestDTO.location)
@@ -224,6 +234,7 @@ class AddressMappersTest {
             assertEquals(dto.state, responseDTO.state)
             assertEquals(dto.pinCode, responseDTO.pinCode)
             assertEquals(dto.createdAt, responseDTO.createdAt)
+            assertEquals(dto.isDefault, responseDTO.isDefault)
 
             assertNotNull(responseDTO.latitude)
             assertEquals(genDTO.latitude, responseDTO.latitude)
@@ -253,6 +264,7 @@ class AddressMappersTest {
             assertEquals(localAddress.address?.city, responseDTO.city)
             assertEquals(localAddress.address?.state, responseDTO.state)
             assertEquals(localAddress.address?.pinCode, responseDTO.pinCode)
+            assertEquals(localAddress.isDefault, responseDTO.isDefault)
             assertNull(responseDTO.location)
         }
 
@@ -273,6 +285,7 @@ class AddressMappersTest {
             assertEquals(localAddress.address?.city, responseDTO.city)
             assertEquals(localAddress.address?.state, responseDTO.state)
             assertEquals(localAddress.address?.pinCode, responseDTO.pinCode)
+            assertEquals(localAddress.isDefault, responseDTO.isDefault)
             assertNotNull(responseDTO.location)
             assertEquals(
                 "POINT(${localAddress.location?.longitude} ${localAddress.location?.latitude})",
