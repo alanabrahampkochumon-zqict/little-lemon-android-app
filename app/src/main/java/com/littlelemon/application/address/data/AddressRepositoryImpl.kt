@@ -49,13 +49,8 @@ class AddressRepositoryImpl(
     //TODO: Add Service to retry saving to network in case of network error.
     override suspend fun saveAddress(address: LocalAddress): Resource<Unit> {
         return try {
-            if (address.id == null) { // Creation
-                val remoteData = remoteDataSource.saveAddress(address.toRequestDTO())
-                localDataSource.saveAddress(remoteData.toAddressEntity())
-            } else { // Update
-//                val remoteData = remoteDataSource.updateAddress(address.toRequestDTO())
-//                localDataSource.saveAddress(remoteData.toAddressEntity())
-            }
+            val remoteData = remoteDataSource.saveAddress(address.toRequestDTO())
+            localDataSource.saveAddress(remoteData.toAddressEntity())
             Resource.Success()
         } catch (e: Exception) {
             currentCoroutineContext().ensureActive()
