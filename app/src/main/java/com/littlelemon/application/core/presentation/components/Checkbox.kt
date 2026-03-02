@@ -125,7 +125,7 @@ private fun CheckboxPreview() {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.padding(24.dp)
         ) {
-            var checkedStated = remember { mutableStateOf(false) }
+            val checkedStated = remember { mutableStateOf(false) }
             Checkbox(true)
             Checkbox(false)
             Checkbox(

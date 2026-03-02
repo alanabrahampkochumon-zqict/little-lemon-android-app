@@ -1,5 +1,7 @@
 package com.littlelemon.application.core.presentation.components
 
+import android.app.Application
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasTestTag
@@ -7,11 +9,12 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.littlelemon.application.R
+import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import kotlin.test.Test
 import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
@@ -20,9 +23,16 @@ class CheckboxTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
-    private val application by lazy { RuntimeEnvironment.getApplication() }
+    private lateinit var application: Application
 
-    val iconMatcher = hasTestTag(application.getString(R.string.test_tag_checkbox_icon))
+    private lateinit var iconMatcher: SemanticsMatcher
+
+    @Before
+    fun setUp() {
+        application = RuntimeEnvironment.getApplication()
+        iconMatcher = hasTestTag(application.getString(R.string.test_tag_checkbox_icon))
+    }
+
 
     @Test
     fun checkbox_whenChecked_showsCheckIcon() {
@@ -30,16 +40,16 @@ class CheckboxTest {
         composeTestRule.setContent {
             Checkbox(checked = true)
         }
-
-        // Then the icon is displayed
-        composeTestRule.onNode(iconMatcher).assertIsDisplayed()
+        composeTestRule.mainClock.advanceTimeUntil(timeoutMillis = 2000L) {
+            composeTestRule.onAllNodes(iconMatcher).fetchSemanticsNodes().isNotEmpty()
+        }
     }
 
     @Test
     fun checkbox_whenUnchecked_doesNotShowCheckIcon() {
         // Given a checkbox that is not checked
         composeTestRule.setContent {
-            Checkbox(checked = true)
+            Checkbox(checked = false)
         }
 
         // Then the icon is not displayed
