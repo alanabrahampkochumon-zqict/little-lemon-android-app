@@ -11,14 +11,17 @@ CREATE OR REPLACE FUNCTION upsert_address(
   arg_created_at TIMESTAMP DEFAULT now()
 )
 
-RETURNS void AS $$
+RETURNS SETOF user_address AS $$
 DECLARE
   final_default_state boolean;
   existing_count int;
+  final_id uuid;
 BEGIN
     SELECT count(*) INTO existing_count
     FROM user_address
     WHERE user_id = auth.uid();
+    
+    final_id := COALESCE(arg_id, gen_random_uuid());
 
     -- If user's first address, then make it default
     IF existing_count = 0 THEN
@@ -49,7 +52,7 @@ BEGIN
 
     )
     VALUES (
-        COALESCE(arg_id, gen_random_uuid()),
+        final_id,
         auth.uid(),
         arg_label,
         arg_building_name,
@@ -71,6 +74,7 @@ BEGIN
         is_default = EXCLUDED.is_default,
         location = EXCLUDED.location,
         created_at = EXCLUDED.created_at;
-
+    
+    RETURN QUERY SELECT * FROM user_address WHERE id = final_id;
 END;
 $$ LANGUAGE plpgsql;
