@@ -11,7 +11,8 @@ CREATE TABLE
         state VARCHAR(50),
         pin_code VARCHAR(20),
         location geography (POINT),
-        created_at TIMESTAMP DEFAULT now ()
+        created_at TIMESTAMP DEFAULT now (),
+        is_default boolean default(false)
     );
 
 -- RLS to prevent users from creating more than 5 addresses
@@ -45,5 +46,6 @@ SELECT
   -- Extract Lat/Long from the PostGIS 'location' column
   st_y(location::geometry) as latitude,
   st_x(location::geometry) as longitude,
-  user_address.created_at
+  user_address.created_at,
+  user_adderss.is_default
 FROM user_address;
