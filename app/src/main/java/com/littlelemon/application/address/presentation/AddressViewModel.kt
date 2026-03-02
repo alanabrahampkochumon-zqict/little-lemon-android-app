@@ -129,7 +129,8 @@ class AddressViewModel(
                     location = if (state.value.latitude != null && state.value.longitude != null) LocalLocation(
                         latitude = state.value.latitude!!,
                         longitude = state.value.longitude!!
-                    ) else null
+                    ) else null,
+                    isDefault = state.value.isDefaultAddress
                 )
                 val events = mutableListOf<AddressEvents>()
                 when (val result = saveAddress(address)) {
