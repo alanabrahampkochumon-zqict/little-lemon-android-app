@@ -402,4 +402,14 @@ class LocationEntryContentTest {
         assertTrue(callbackTriggered)
     }
 
+    @Test
+    fun locationEntryScreen_header_isDisplayed() {
+        TODO()
+    }
+
+    @Test
+    fun locationEntryScreen_closeButtonClick_triggersOnCloseCallback() {
+        TODO()
+    }
+
 }

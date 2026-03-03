@@ -1,29 +1,37 @@
 package com.littlelemon.application.address.presentation.screens
 
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,11 +45,11 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -94,76 +102,90 @@ fun LocationEntryContentRoot(
         bottomEnd = CornerSize(0.dp)
     )
 
-    var headerSize by remember { mutableStateOf(IntSize(0, 0)) }
-    val density = LocalDensity.current
-    val headerHeightPx = headerSize.height.toFloat()
-    var tabsSize by remember { mutableStateOf(IntSize(0, 0)) }
-    val tabsHeight by remember(tabsSize) { mutableStateOf(with(density) { tabsSize.height.toDp() }) }
-    val headerOffsetHeightPx = remember { mutableFloatStateOf(0f) }
+    val screenDensity = LocalDensity.current.density
 
+    // Content padding to ensure that the top navigation does not hit the system bar or camera cutout
+    val bottomSafeContentPadding = WindowInsets.safeContent.asPaddingValues().calculateTopPadding()
+    val topBarBottomPadding = MaterialTheme.dimens.sizeXL
+    val navBarHeight = 48.dp
+    val mapHeightDP = 400.dp // TODO: Use different height on mobile landscape
+    val topBarMinHeight = navBarHeight + bottomSafeContentPadding + topBarBottomPadding
+    val mapHeightInPx = (mapHeightDP.value) * screenDensity
+    val minTopBarHeightInPx = (topBarMinHeight.value * screenDensity)
 
-    val nestedScrollConnection = remember(headerSize) {
+    var mapHeight by remember { mutableFloatStateOf(mapHeightInPx) }
+
+    val nestedScrollConnection = remember(mapHeight) {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                val delta = available.y
-                val newOffset = headerOffsetHeightPx.floatValue + delta
-                headerOffsetHeightPx.floatValue = newOffset.coerceIn(-headerHeightPx, 0f)
-                return Offset.Zero
+                val delta = available.y.toInt()
+                val newHeight = mapHeight + delta
+                mapHeight = newHeight.coerceIn(minTopBarHeightInPx, mapHeightInPx)
+                val consumed = mapHeight - newHeight
+                return Offset(0f, consumed)
             }
         }
     }
 
-    val screenDensity = LocalDensity.current.density
 
-    Scaffold(modifier = modifier.fillMaxSize().nestedScroll(nestedScrollConnection), bottomBar = {
-        FlowRow(
-            modifier = Modifier
-                .dropShadow(
-                    shape = bottomSheetShape,
-                    MaterialTheme.shadows.dropLG.firstShadow.toComposeShadow(screenDensity)
-                )
-                .dropShadow(
-                    shape = bottomSheetShape,
-                    MaterialTheme.shadows.dropLG.secondShadow?.toComposeShadow(screenDensity)
-                        ?: Shadow(0.dp)
-                )
-                .background(MaterialTheme.colors.primary, shape = bottomSheetShape)
-                .navigationBarsPadding()
-                .padding(MaterialTheme.dimens.sizeXL),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)
-        ) {
-            Button(
-                stringResource(R.string.act_cancel),
-                onClose,
-                variant = ButtonVariant.GHOST_HIGHLIGHT,
+    Scaffold(
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(nestedScrollConnection), bottomBar = {
+            FlowRow(
                 modifier = Modifier
-                    .widthIn(min = 320.dp)
-                    .weight(1f)
-            )
-            Button(
-                stringResource(R.string.act_save_address),
-                onClick = onSaveAddress,
+                    .dropShadow(
+                        shape = bottomSheetShape,
+                        MaterialTheme.shadows.dropLG.firstShadow.toComposeShadow(screenDensity)
+                    )
+                    .dropShadow(
+                        shape = bottomSheetShape,
+                        MaterialTheme.shadows.dropLG.secondShadow?.toComposeShadow(screenDensity)
+                            ?: Shadow(0.dp)
+                    )
+                    .background(MaterialTheme.colors.primary, shape = bottomSheetShape)
+                    .navigationBarsPadding()
+                    .padding(MaterialTheme.dimens.sizeXL),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)
+            ) {
+                Button(
+                    stringResource(R.string.act_cancel),
+                    onClose,
+                    variant = ButtonVariant.GHOST_HIGHLIGHT,
+                    modifier = Modifier
+                        .widthIn(min = 320.dp)
+                        .weight(1f)
+                )
+                Button(
+                    stringResource(R.string.act_save_address),
+                    onClick = onSaveAddress,
+                    modifier = Modifier
+                        .widthIn(min = 320.dp)
+                        .weight(1f)
+                )
+            }
+        }, topBar = {
+            Box(
                 modifier = Modifier
-                    .widthIn(min = 320.dp)
-                    .weight(1f)
-            )
-        }
-    }, topBar = {
-        Box(
-            modifier = Modifier
-                .height(400.dp)
-                .fillMaxWidth()
-                .background(Color.DarkGray),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                "TODO: Google Map",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            ) //TODO: Make this collapsable
-        }
-    })
+                    .height((mapHeight / screenDensity).dp)
+                    .fillMaxWidth()
+                    .background(Color.DarkGray),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                FloatingActionBar(
+                    modifier = Modifier.padding(
+                        top = bottomSafeContentPadding,
+                        bottom = topBarBottomPadding
+                    ), onAction = onClose
+                )
+                Text(
+                    "TODO: Google Map",
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        })
     { innerPadding ->
         Column(
             modifier = Modifier
@@ -183,6 +205,49 @@ fun LocationEntryContentRoot(
                 onSaveAsDefaultChange = onSaveAsDefaultChange,
                 onSaveAddress = onSaveAddress,
             )
+        }
+    }
+}
+
+@Composable
+fun FloatingActionBar(modifier: Modifier = Modifier, onAction: () -> Unit = {}) {
+    val density = LocalDensity.current.density
+    val floatingBarShape = MaterialTheme.shapes.extraLarge
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = MaterialTheme.dimens.sizeXL, end = MaterialTheme.dimens.size4XL)
+    ) {
+        IconButton(
+            onClick = onAction, colors = IconButtonColors(
+                containerColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.contentSecondary,
+                disabledContainerColor = MaterialTheme.colors.disabled,
+                disabledContentColor = MaterialTheme.colors.contentDisabled
+            ),
+            modifier = Modifier.size(48.dp)
+        ) {
+            Image(painterResource(R.drawable.ic_x), contentDescription = "Close")
+        }
+
+        Box(
+            Modifier
+                .dropShadow(
+                    floatingBarShape,
+                    MaterialTheme.shadows.dropLG.firstShadow.toComposeShadow(density)
+                )
+                .dropShadow(
+                    floatingBarShape,
+                    MaterialTheme.shadows.dropLG.secondShadow?.toComposeShadow(density)
+                        ?: Shadow(0.dp)
+                )
+                .background(MaterialTheme.colors.primary, shape = floatingBarShape)
+                .padding(MaterialTheme.dimens.sizeLG)
+                .fillMaxWidth(), contentAlignment = Alignment.Center
+        ) {
+            Text(stringResource(R.string.heading_add_your_address))
         }
     }
 }
@@ -274,7 +339,7 @@ fun ModalForm(
 
         Checkbox(
             state.isDefaultAddress,
-            onCheckedChange = {onSaveAsDefaultChange(it)},
+            onCheckedChange = { onSaveAsDefaultChange(it) },
             label = stringResource(R.string.label_address_save_as_default),
             modifier = Modifier
                 .testTag(stringResource(R.string.test_tag_address_save_as_default))
