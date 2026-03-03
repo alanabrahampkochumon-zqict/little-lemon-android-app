@@ -38,7 +38,7 @@ class AddressViewModel(
         // Location Request and Permission
         when (action) {
             // State Updates
-            is AddressActions.ChangeAddress -> _state.update {
+            is AddressActions.ChangeBuildingName -> _state.update {
                 it.copy(
                     buildingName = action.address,
                     addressError = null

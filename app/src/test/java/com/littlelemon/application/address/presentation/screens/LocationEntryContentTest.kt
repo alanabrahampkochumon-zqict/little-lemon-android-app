@@ -1,7 +1,12 @@
 package com.littlelemon.application.address.presentation.screens
 
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import com.google.testing.junit.testparameterinjector.TestParameter
@@ -15,6 +20,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestParameterInjector
 import org.robolectric.RuntimeEnvironment
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestParameterInjector::class)
 class LocationEntryContentTest {
@@ -50,6 +56,41 @@ class LocationEntryContentTest {
         )
     }
 
+    private fun getInputField(nodeType: ContentMatchTestCase): SemanticsNodeInteraction {
+        return composeTestRule.onNode(
+            composeMatchHelper.getMatcher(
+                nodeType.placeholder,
+                nodeType.placeholderMatcherType
+            )
+        )
+    }
+
+    private val labelField by lazy {
+        getInputField(ContentMatchTestCase.LABEL)
+    }
+
+    private val buildingNameField by lazy {
+        getInputField(ContentMatchTestCase.BUILDING_NAME)
+    }
+
+    private val streetAddressField by lazy {
+        getInputField(ContentMatchTestCase.STREET_ADDRESS)
+
+    }
+    private val cityField by lazy {
+        getInputField(ContentMatchTestCase.CITY)
+
+    }
+    private val stateField by lazy {
+        getInputField(ContentMatchTestCase.STATE)
+
+    }
+    private val pinCodeField by lazy {
+        getInputField(ContentMatchTestCase.PIN_CODE)
+
+    }
+
+
     @Test
     fun locationEntryContent_fields_areDisplayed(
         @TestParameter case: ContentMatchTestCase
@@ -60,7 +101,7 @@ class LocationEntryContentTest {
         }
 
         // Then, an input field's label and its input is displayed
-        composeTestRule.onNode(composeMatchHelper.getMatcher(case.label, case.labelMatcherType))
+        getInputField(case)
             .performScrollTo()
             .assertIsDisplayed()
         composeTestRule.onNode(
@@ -70,6 +111,103 @@ class LocationEntryContentTest {
             )
         ).performScrollTo()
             .assertIsDisplayed()
+    }
+
+    @Test
+    fun locationEntryContent_imeActionOnLabel_focusesBuildingName() {
+        // Given a location entry screen with label field focused
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState())
+        }
+        labelField.performClick()
+
+        // When ime action is performed
+        labelField.performImeAction()
+
+        // Then, the next field is focused
+        labelField.assertIsNotFocused()
+        buildingNameField.assertIsFocused()
+    }
+
+    @Test
+    fun locationEntryContent_imeActionOnBuildingName_focusesStreetAddress() {
+        // Given a location entry screen with building name focused
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState())
+        }
+        buildingNameField.performClick()
+
+        // When ime action is performed
+        buildingNameField.performImeAction()
+
+        // Then, the next field is focused
+        buildingNameField.assertIsNotFocused()
+        streetAddressField.assertIsFocused()
+    }
+
+    @Test
+    fun locationEntryContent_imeActionOnStreetAddress_focusesCity() {
+        // Given a location entry screen with street address focused
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState())
+        }
+        streetAddressField.performClick()
+
+        // When ime action is performed
+        streetAddressField.performImeAction()
+
+        // Then, the next field is focused
+        streetAddressField.assertIsNotFocused()
+        cityField.assertIsFocused()
+    }
+
+    @Test
+    fun locationEntryContent_imeActionOnCity_focusesState() {
+        // Given a location entry screen with city focused
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState())
+        }
+        cityField.performClick()
+
+        // When ime action is performed
+        cityField.performImeAction()
+
+        // Then, the next field is focused
+        cityField.assertIsNotFocused()
+        stateField.assertIsFocused()
+    }
+
+    @Test
+    fun locationEntryContent_imeActionState_focusesPinCode() {
+        // Given a location entry screen with state focused
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState())
+        }
+        stateField.performClick()
+
+        // When ime action is performed
+        stateField.performImeAction()
+
+        // Then, the next field is focused
+        stateField.assertIsNotFocused()
+        pinCodeField.assertIsFocused()
+    }
+
+    @Test
+    fun locationEntryContent_imeActionState_triggersOnSaveAddressCallback() {
+        // Given a location entry screen with pin code focused
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState(), onSaveAddress = { callbackTriggered = true })
+        }
+        pinCodeField.performClick()
+
+        // When ime action is performed
+        pinCodeField.performImeAction()
+
+        // Then, the next field is focused
+        stateField.assertIsNotFocused()
+        assertTrue(callbackTriggered)
     }
 
 

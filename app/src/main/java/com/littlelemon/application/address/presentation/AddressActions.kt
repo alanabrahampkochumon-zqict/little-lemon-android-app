@@ -3,7 +3,7 @@ package com.littlelemon.application.address.presentation
 sealed interface AddressActions {
 
     data class ChangeLabel(val label: String) : AddressActions
-    data class ChangeAddress(val address: String) : AddressActions
+    data class ChangeBuildingName(val address: String) : AddressActions
     data class ChangeStreetAddress(val streetAddress: String) : AddressActions
     data class ChangeCity(val city: String) : AddressActions
     data class ChangeState(val state: String) : AddressActions

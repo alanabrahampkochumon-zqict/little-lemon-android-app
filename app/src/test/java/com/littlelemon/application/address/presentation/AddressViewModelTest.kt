@@ -79,7 +79,7 @@ class AddressViewModelTest {
             val address = "new address"
 
             // Act
-            viewModel.onAction(AddressActions.ChangeAddress(address))
+            viewModel.onAction(AddressActions.ChangeBuildingName(address))
 
             // Assert
             viewModel.state.test {
