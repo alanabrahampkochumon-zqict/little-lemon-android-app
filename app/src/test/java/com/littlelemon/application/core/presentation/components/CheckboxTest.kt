@@ -31,6 +31,7 @@ class CheckboxTest {
     fun setUp() {
         application = RuntimeEnvironment.getApplication()
         iconMatcher = hasTestTag(application.getString(R.string.test_tag_checkbox_icon))
+        composeTestRule.mainClock.autoAdvance = false
     }
 
 
@@ -40,9 +41,8 @@ class CheckboxTest {
         composeTestRule.setContent {
             Checkbox(checked = true)
         }
-        composeTestRule.mainClock.advanceTimeUntil(timeoutMillis = 2000L) {
-            composeTestRule.onAllNodes(iconMatcher).fetchSemanticsNodes().isNotEmpty()
-        }
+        composeTestRule.mainClock.advanceTimeBy(500L)
+        composeTestRule.onAllNodes(iconMatcher).fetchSemanticsNodes().isNotEmpty()
     }
 
     @Test
