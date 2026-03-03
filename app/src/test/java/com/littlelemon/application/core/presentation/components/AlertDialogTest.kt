@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso
+import androidx.test.filters.MediumTest
 import com.littlelemon.application.R
 import org.junit.Rule
 import org.junit.Test
@@ -15,6 +16,7 @@ import org.robolectric.RuntimeEnvironment
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
+@MediumTest
 @RunWith(RobolectricTestRunner::class)
 class AlertDialogTest {
 

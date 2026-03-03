@@ -8,6 +8,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.test.filters.MediumTest
 import com.littlelemon.application.R
 import org.junit.Before
 import org.junit.Rule
@@ -17,6 +18,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import kotlin.test.assertTrue
 
+@MediumTest
 @RunWith(RobolectricTestRunner::class)
 class CheckboxTest {
 

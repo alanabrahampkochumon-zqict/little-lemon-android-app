@@ -12,6 +12,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.text.input.ImeAction
+import androidx.test.filters.MediumTest
 import com.littlelemon.application.R
 import org.junit.Rule
 import org.junit.Test
@@ -20,6 +21,7 @@ import org.robolectric.RobolectricTestRunner
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+@MediumTest
 @RunWith(RobolectricTestRunner::class)
 class TextInputFieldTest {
 

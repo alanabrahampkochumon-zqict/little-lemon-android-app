@@ -95,6 +95,7 @@
     <string name="dialog_act_allow_access">Allow access</string>
     <string name="placeholder_address_label">E.g: Home</string>
     <string name="test_tag_checkbox_icon">CheckboxIconTestTag</string>
+    <string name="act_save_address">Save Address</string>
 
 
 </resources>

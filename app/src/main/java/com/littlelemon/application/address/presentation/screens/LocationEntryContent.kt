@@ -5,16 +5,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -24,7 +23,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,17 +39,20 @@ import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressState
 import com.littlelemon.application.address.presentation.AddressViewModel
+import com.littlelemon.application.core.presentation.components.Button
+import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.Checkbox
 import com.littlelemon.application.core.presentation.components.LabelInputField
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
+import com.littlelemon.application.core.presentation.designsystem.shadows
+import com.littlelemon.application.core.presentation.utils.toComposeShadow
 
 @Composable
 fun LocationEntryContent(viewModel: AddressViewModel) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
-
     LocationEntryContentRoot(
         state,
         onLabelChange = { viewModel.onAction(AddressActions.ChangeLabel(it)) },
@@ -73,36 +78,84 @@ fun LocationEntryContentRoot(
     onSaveAsDefaultChange: (Boolean) -> Unit = {},
     onSaveAddress: () -> Unit = {}
 ) {
-    Column(
-        modifier = modifier
-            .imePadding()
-            .verticalScroll(rememberScrollState())
-    ) {
-        Box(
+    val bottomSheetShape = MaterialTheme.shapes.medium.copy(
+        bottomStart = CornerSize(0.dp),
+        bottomEnd = CornerSize(0.dp)
+    )
+
+    val screenDensity = LocalDensity.current.density
+
+    Box(modifier = modifier.fillMaxSize())
+    {
+        Column(
             modifier = Modifier
-                .height(400.dp)
-                .fillMaxWidth()
-                .background(Color.DarkGray),
-            contentAlignment = Alignment.Center
+                .imePadding()
+                .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                "TODO: Google Map",
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+            Box(
+                modifier = Modifier
+                    .height(400.dp)
+                    .fillMaxWidth()
+                    .background(Color.DarkGray),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "TODO: Google Map",
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            ModalForm(
+                state,
+                onLabelChange = onLabelChange,
+                onBuildingNameChange = onBuildingNameChange,
+                onStreetAddressChange = onStreetAddressChange,
+                onCityChange = onCityChange,
+                onStateChange = onStateChange,
+                onPinCodeChange = onPinCodeChange,
+                onSaveAsDefaultChange = onSaveAsDefaultChange,
+                onSaveAddress = onSaveAddress,
             )
         }
-        ModalForm(
-            state,
-            onLabelChange = onLabelChange,
-            onBuildingNameChange = onBuildingNameChange,
-            onStreetAddressChange = onStreetAddressChange,
-            onCityChange = onCityChange,
-            onStateChange = onStateChange,
-            onPinCodeChange = onPinCodeChange,
-            onSaveAsDefaultChange = onSaveAsDefaultChange,
-            onSaveAddress = onSaveAddress,
-        )
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+        ) {
+
+            FlowRow(
+                modifier = Modifier
+                    .dropShadow(
+                        shape = bottomSheetShape,
+                        MaterialTheme.shadows.dropLG.firstShadow.toComposeShadow(screenDensity)
+                    )
+                    .dropShadow(
+                        shape = bottomSheetShape,
+                        MaterialTheme.shadows.dropLG.secondShadow?.toComposeShadow(screenDensity)
+                            ?: Shadow(0.dp)
+                    )
+                    .background(MaterialTheme.colors.primary, shape = bottomSheetShape)
+                    .navigationBarsPadding()
+                    .padding(MaterialTheme.dimens.sizeXL),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)
+            ) {
+                Button(
+                    stringResource(R.string.act_cancel),
+                    {},
+                    variant = ButtonVariant.GHOST_HIGHLIGHT,
+                    modifier = Modifier
+                        .widthIn(min = 320.dp)
+                        .weight(1f)
+                )
+                Button(
+                    stringResource(R.string.act_save_address),
+                    onClick = onSaveAddress,
+                    modifier = Modifier
+                        .widthIn(min = 320.dp)
+                        .weight(1f)
+                )
+            }
+        }
     }
 }
 
@@ -119,7 +172,6 @@ fun ModalForm(
     onSaveAsDefaultChange: (Boolean) -> Unit = {},
     onSaveAddress: () -> Unit = {},
 ) {
-
     FlowRow(
         modifier = modifier
             .fillMaxSize()
@@ -128,7 +180,7 @@ fun ModalForm(
                 start = MaterialTheme.dimens.sizeXL,
                 end = MaterialTheme.dimens.sizeXL,
                 top = MaterialTheme.dimens.size4XL,
-                bottom = MaterialTheme.dimens.size2XL
+                bottom = 100.dp
             ),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2XL),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2XL)
@@ -189,7 +241,7 @@ fun ModalForm(
                 .widthIn(min = 280.dp)
                 .weight(1f),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
-            keyboardActions = KeyboardActions(onGo = {onSaveAddress()})
+            keyboardActions = KeyboardActions(onGo = { onSaveAddress() })
         )
 
         Checkbox(
@@ -198,8 +250,6 @@ fun ModalForm(
             label = stringResource(R.string.label_address_save_as_default),
             modifier = Modifier.testTag(stringResource(R.string.test_tag_address_save_as_default))
         )
-
-
     }
 }
 
