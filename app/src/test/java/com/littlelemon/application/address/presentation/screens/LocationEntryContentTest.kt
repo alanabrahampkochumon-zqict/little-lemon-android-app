@@ -1,13 +1,16 @@
 package com.littlelemon.application.address.presentation.screens
 
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTextInput
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.littlelemon.application.R
@@ -87,7 +90,15 @@ class LocationEntryContentTest {
     }
     private val pinCodeField by lazy {
         getInputField(ContentMatchTestCase.PIN_CODE)
+    }
 
+    private val saveAsDefault by lazy {
+        composeTestRule.onNode(
+            composeMatchHelper.getMatcher(
+                ContentMatchTestCase.SAVE_AS_DEFAULT.label,
+                ContentMatchTestCase.SAVE_AS_DEFAULT.labelMatcherType
+            )
+        )
     }
 
 
@@ -106,8 +117,8 @@ class LocationEntryContentTest {
             .assertIsDisplayed()
         composeTestRule.onNode(
             composeMatchHelper.getMatcher(
-                case.placeholder,
-                case.placeholderMatcherType
+                case.label,
+                case.labelMatcherType
             )
         ).performScrollTo()
             .assertIsDisplayed()
@@ -340,27 +351,55 @@ class LocationEntryContentTest {
         // Then, the callback is triggered
         assertEquals(content, changedValue)
     }
-//TODO: Refactor
-//    @Test
-//    fun locationEntryContent_saveAsDefaultChange_onChangeCallbackIsTriggered() {
-//        // Given a location entry screen
-//        var changedValue = false
-//        composeTestRule.setContent {
-//            LocationEntryContentRoot(
-//                AddressState(),
-//                onSaveAsDefaultChange = { changedValue = true })
-//        }
-//
-//        // When text input is performed
-//        composeTestRule.onNode(
-//            composeMatchHelper.getMatcher(
-//                ContentMatchTestCase.SAVE_AS_DEFAULT.placeholder,
-//                ContentMatchTestCase.SAVE_AS_DEFAULT.placeholderMatcherType
-//            ) and isToggleable()
-//        ).performClick()
-//
-//        // Then, the callback is triggered
-//        assertTrue(changedValue)
-//    }
+
+    @Test
+    fun locationEntryScreen_saveAddressClicked_triggersOnSaveAddressCallback() {
+        // Given a location entry screen
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState(), onSaveAddress = { callbackTriggered = true })
+        }
+
+        // When Save address button is pressed
+        composeTestRule.onNodeWithText(application.getString(R.string.act_save_address))
+            .performClick()
+
+        // Then, callback is triggered
+        assertTrue(callbackTriggered)
+    }
+
+    @Test
+    fun locationEntryScreen_cancelClicked_triggersOnCloseCallback() {
+        // Given a location entry screen
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState(), onClose = { callbackTriggered = true })
+        }
+
+        // When Save address button is pressed
+        composeTestRule.onNodeWithText(application.getString(R.string.act_cancel))
+            .performClick()
+
+        // Then, callback is triggered
+        assertTrue(callbackTriggered)
+    }
+
+
+    @Test
+    fun locationEntryContent_saveAsDefaultChange_onChangeCallbackIsTriggered() {
+        // Given a location entry screen
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            LocationEntryContentRoot(
+                AddressState(),
+                onSaveAsDefaultChange = { callbackTriggered = true })
+        }
+
+        // When text input is performed
+        saveAsDefault.performSemanticsAction(SemanticsActions.OnClick)
+
+        // Then the callback is triggered
+        assertTrue(callbackTriggered)
+    }
 
 }
