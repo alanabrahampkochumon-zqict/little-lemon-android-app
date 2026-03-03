@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -18,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -76,7 +79,8 @@ fun LocationEntryContentRoot(
     onStateChange: (String) -> Unit = {},
     onPinCodeChange: (String) -> Unit = {},
     onSaveAsDefaultChange: (Boolean) -> Unit = {},
-    onSaveAddress: () -> Unit = {}
+    onSaveAddress: () -> Unit = {},
+    onClose: () -> Unit = {}
 ) {
     val bottomSheetShape = MaterialTheme.shapes.medium.copy(
         bottomStart = CornerSize(0.dp),
@@ -85,8 +89,41 @@ fun LocationEntryContentRoot(
 
     val screenDensity = LocalDensity.current.density
 
-    Box(modifier = modifier.fillMaxSize())
-    {
+    Scaffold(modifier = modifier.fillMaxSize(), bottomBar = {
+        FlowRow(
+            modifier = Modifier
+                .dropShadow(
+                    shape = bottomSheetShape,
+                    MaterialTheme.shadows.dropLG.firstShadow.toComposeShadow(screenDensity)
+                )
+                .dropShadow(
+                    shape = bottomSheetShape,
+                    MaterialTheme.shadows.dropLG.secondShadow?.toComposeShadow(screenDensity)
+                        ?: Shadow(0.dp)
+                )
+                .background(MaterialTheme.colors.primary, shape = bottomSheetShape)
+                .navigationBarsPadding()
+                .padding(MaterialTheme.dimens.sizeXL),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)
+        ) {
+            Button(
+                stringResource(R.string.act_cancel),
+                onClose,
+                variant = ButtonVariant.GHOST_HIGHLIGHT,
+                modifier = Modifier
+                    .widthIn(min = 320.dp)
+                    .weight(1f)
+            )
+            Button(
+                stringResource(R.string.act_save_address),
+                onClick = onSaveAddress,
+                modifier = Modifier
+                    .widthIn(min = 320.dp)
+                    .weight(1f)
+            )
+        }
+    })
+    { innerPadding ->
         Column(
             modifier = Modifier
                 .imePadding()
@@ -108,6 +145,7 @@ fun LocationEntryContentRoot(
             }
             ModalForm(
                 state,
+                modifier = Modifier.padding(innerPadding),
                 onLabelChange = onLabelChange,
                 onBuildingNameChange = onBuildingNameChange,
                 onStreetAddressChange = onStreetAddressChange,
@@ -117,44 +155,6 @@ fun LocationEntryContentRoot(
                 onSaveAsDefaultChange = onSaveAsDefaultChange,
                 onSaveAddress = onSaveAddress,
             )
-        }
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-        ) {
-
-            FlowRow(
-                modifier = Modifier
-                    .dropShadow(
-                        shape = bottomSheetShape,
-                        MaterialTheme.shadows.dropLG.firstShadow.toComposeShadow(screenDensity)
-                    )
-                    .dropShadow(
-                        shape = bottomSheetShape,
-                        MaterialTheme.shadows.dropLG.secondShadow?.toComposeShadow(screenDensity)
-                            ?: Shadow(0.dp)
-                    )
-                    .background(MaterialTheme.colors.primary, shape = bottomSheetShape)
-                    .navigationBarsPadding()
-                    .padding(MaterialTheme.dimens.sizeXL),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)
-            ) {
-                Button(
-                    stringResource(R.string.act_cancel),
-                    {},
-                    variant = ButtonVariant.GHOST_HIGHLIGHT,
-                    modifier = Modifier
-                        .widthIn(min = 320.dp)
-                        .weight(1f)
-                )
-                Button(
-                    stringResource(R.string.act_save_address),
-                    onClick = onSaveAddress,
-                    modifier = Modifier
-                        .widthIn(min = 320.dp)
-                        .weight(1f)
-                )
-            }
         }
     }
 }
@@ -179,9 +179,10 @@ fun ModalForm(
             .padding(
                 start = MaterialTheme.dimens.sizeXL,
                 end = MaterialTheme.dimens.sizeXL,
-                top = MaterialTheme.dimens.size4XL,
-                bottom = 100.dp
-            ),
+                top = MaterialTheme.dimens.sizeXL,
+                bottom = MaterialTheme.dimens.sizeXL
+            )
+            .offset(y = (-24).dp),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2XL),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2XL)
     ) {
@@ -248,7 +249,9 @@ fun ModalForm(
             state.isDefaultAddress,
             onCheckedChange = onSaveAsDefaultChange,
             label = stringResource(R.string.label_address_save_as_default),
-            modifier = Modifier.testTag(stringResource(R.string.test_tag_address_save_as_default))
+            modifier = Modifier
+                .testTag(stringResource(R.string.test_tag_address_save_as_default))
+                .fillMaxWidth()
         )
     }
 }
