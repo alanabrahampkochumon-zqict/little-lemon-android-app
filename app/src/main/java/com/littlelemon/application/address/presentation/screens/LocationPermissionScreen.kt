@@ -53,7 +53,6 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
@@ -85,7 +84,8 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
             }
         }
     }
-    LocationEntryContent(koinViewModel<AddressViewModel>())
+
+//    LocationEntryContent(koinViewModel<AddressViewModel>())
     // TODO: Use navigation to switch content
 //    LocationPermissionScreenRoot(
 //        state = state,

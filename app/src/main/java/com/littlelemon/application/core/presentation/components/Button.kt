@@ -22,9 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.none
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
+import com.littlelemon.application.core.presentation.designsystem.none
 import com.littlelemon.application.core.presentation.designsystem.shadows
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.core.presentation.utils.toComposeShadow
@@ -128,7 +128,7 @@ fun Button(
                 ) else modifier
             ),
         colors = colors,
-        shape = if(buttonShape == ButtonShape.Rounded)MaterialTheme.shapes.small else MaterialTheme.shapes.none,
+        shape = if (buttonShape == ButtonShape.Rounded) MaterialTheme.shapes.small else MaterialTheme.shapes.none,
         enabled = enabled
     ) {
         Row(
