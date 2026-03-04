@@ -1,5 +1,8 @@
 package com.littlelemon.application.address.presentation.screens
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +47,6 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.testTag
@@ -54,6 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -71,6 +74,7 @@ import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.shadows
 import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.toDP
 
 @Composable
 fun LocationEntryContent(viewModel: AddressViewModel) {
@@ -110,7 +114,6 @@ fun LocationEntryContentRoot(
 
     val screenDensity = LocalDensity.current.density
 
-    val orientation = LocalConfiguration.current.orientation
     val screenWidth = LocalWindowInfo.current.containerDpSize.width
     val mobileLandscape = screenWidth > 600.dp && !isFloating
 
@@ -121,10 +124,17 @@ fun LocationEntryContentRoot(
     val safeContentPadding = WindowInsets.safeContent.asPaddingValues().calculateTopPadding()
     val topBarBottomPadding = MaterialTheme.dimens.sizeXL
     val topBarMinHeight = navBarHeight + safeContentPadding + topBarBottomPadding
+
     val mapHeightInPx = (mapHeightDP.value) * screenDensity
     val minTopBarHeightInPx = (topBarMinHeight.value * screenDensity)
 
     var mapHeight by remember { mutableFloatStateOf(mapHeightInPx) }
+
+    val animatedHeight = animateFloatAsState(
+        mapHeight,
+        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy)
+    )
+
 
     val nestedScrollConnection = remember(mapHeight) {
         object : NestedScrollConnection {
@@ -134,6 +144,16 @@ fun LocationEntryContentRoot(
                 mapHeight = newHeight.coerceIn(minTopBarHeightInPx, mapHeightInPx)
                 val consumed = mapHeight - newHeight
                 return Offset(0f, consumed)
+            }
+
+            // TODO: Fix animation using animateable
+            override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                mapHeight =
+                    if (mapHeight > mapHeightInPx / 2) // If the current fling height 1/2 of the way then snap it to full height
+                        mapHeightInPx
+                    else
+                        minTopBarHeightInPx
+                return super.onPostFling(consumed, available)
             }
         }
     }
@@ -183,7 +203,7 @@ fun LocationEntryContentRoot(
             if (!mobileLandscape)
                 MapHeader(
                     Modifier
-                        .height((mapHeight / screenDensity).dp)
+                        .height(animatedHeight.value.toDP(screenDensity))
                         .fillMaxWidth()
                         .background(Color.DarkGray)
                         .testTag(AddressTestTags.NESTED_SCROLL_HEADER),
