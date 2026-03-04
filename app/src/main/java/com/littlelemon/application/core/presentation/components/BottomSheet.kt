@@ -61,7 +61,7 @@ fun BottomSheet(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.darkOverlay24)
+                    .background(MaterialTheme.colors.darkOverlay24).testTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET_BACKGROUND)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
