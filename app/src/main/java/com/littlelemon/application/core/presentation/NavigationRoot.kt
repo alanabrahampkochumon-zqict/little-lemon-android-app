@@ -1,6 +1,5 @@
 package com.littlelemon.application.core.presentation
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -10,9 +9,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.address.presentation.AddressViewModel
+import com.littlelemon.application.address.presentation.screens.LocationEntryContent
 import com.littlelemon.application.address.presentation.screens.LocationPermissionScreen
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.screens.AuthScreen
@@ -49,11 +50,15 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
             Box(Modifier.padding(48.dp)) {
                 Button("Show bottom sheet", onClick = { show = true })
             }
-            BottomSheet(show, onDismiss = { show = !show }) {
-                Button(
-                    "Test button",
-                    onClick = { Toast.makeText(context, "Clicking...", Toast.LENGTH_SHORT).show() })
-            }
+            val screenWidth = LocalWindowInfo.current.containerDpSize
+            val isFloating = screenWidth.width > 1200.dp || screenWidth.height > 1024.dp
+            // TODO: Handle better orientation
+            if (isFloating)
+                LocationEntryContent(koinViewModel<AddressViewModel>())
+            else
+                BottomSheet(show, onDismiss = { show = !show }) {
+                    LocationEntryContent(koinViewModel<AddressViewModel>(), isFloating = isFloating)
+                }
 //            AuthScreen(koinViewModel<AuthViewModel>())
         }
     }

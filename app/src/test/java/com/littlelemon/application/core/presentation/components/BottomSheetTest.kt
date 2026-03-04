@@ -1,6 +1,7 @@
 package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -10,6 +11,7 @@ import androidx.compose.ui.test.performSemanticsAction
 import androidx.test.filters.MediumTest
 import com.littlelemon.application.core.CoreTestTags
 import junit.framework.TestCase.assertFalse
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,16 +26,16 @@ class BottomSheetTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    val bottomSheetBackground by lazy {
-        composeTestRule.onNodeWithTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET_BACKGROUND)
-    }
-
-    val bottomSheet by lazy {
-        composeTestRule.onNodeWithTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET)
-    }
-
-    init {
+    private lateinit var bottomSheetBackground: SemanticsNodeInteraction
+    private lateinit var bottomSheet: SemanticsNodeInteraction
+    
+    @Before
+    fun setUp() {
         composeTestRule.mainClock.autoAdvance = false
+        bottomSheet = composeTestRule.onNodeWithTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET)
+        bottomSheetBackground =
+            composeTestRule.onNodeWithTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET_BACKGROUND)
+
     }
 
 

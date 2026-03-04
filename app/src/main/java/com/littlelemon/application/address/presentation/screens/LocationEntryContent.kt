@@ -77,7 +77,7 @@ import com.littlelemon.application.core.presentation.utils.toComposeShadow
 import com.littlelemon.application.core.presentation.utils.toDP
 
 @Composable
-fun LocationEntryContent(viewModel: AddressViewModel) {
+fun LocationEntryContent(viewModel: AddressViewModel, isFloating: Boolean = false) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     LocationEntryContentRoot(
@@ -89,7 +89,7 @@ fun LocationEntryContent(viewModel: AddressViewModel) {
         onStateChange = { viewModel.onAction(AddressActions.ChangeState(it)) },
         onPinCodeChange = { viewModel.onAction(AddressActions.ChangePinCode(it)) },
         onSaveAsDefaultChange = { viewModel.onAction(AddressActions.ChangeToDefaultAddress(it)) },
-        onSaveAddress = { viewModel.onAction(AddressActions.SaveAddress) })
+        onSaveAddress = { viewModel.onAction(AddressActions.SaveAddress) }, isFloating = isFloating)
 
 }
 
@@ -355,7 +355,6 @@ fun ModalForm(
 ) {
     FlowRow(
         modifier = modifier
-            .fillMaxSize()
             .background(MaterialTheme.colors.primary)
             .padding(
                 start = MaterialTheme.dimens.sizeXL,

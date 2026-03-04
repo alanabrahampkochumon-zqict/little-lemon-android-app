@@ -74,7 +74,7 @@ fun BottomSheet(
             Box(
                 modifier = Modifier
                     .widthIn(max = 800.dp)
-                    .heightIn(min = 400.dp)
+                    .heightIn(min = 400.dp, max = 900.dp)
                     .dropShadow(
                         bottomSheetShape, with(LocalDensity.current) {
                             bottomSheetShadow.firstShadow.toComposeShadow(
