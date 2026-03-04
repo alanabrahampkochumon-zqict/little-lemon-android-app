@@ -16,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
@@ -38,7 +40,7 @@ fun ActionScreen(
     modifier: Modifier = Modifier,
     headingColor: Color = MaterialTheme.colors.contentHighlight,
 ) {
-    // TODO: Screen Width
+    // TODO: Screen Width and check illustration shadow
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         DoodleBackground(alpha = 0.1f)
 
@@ -64,6 +66,7 @@ fun ActionScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .widthIn(max = 400.dp)
+                    .testTag(CoreTestTags.ACTION_SCREEN_ILLUSTRATION)
             )
             Spacer(Modifier.height(MaterialTheme.dimens.size4XL))
             Button(primaryActionLabel, onPrimaryActionClick)
