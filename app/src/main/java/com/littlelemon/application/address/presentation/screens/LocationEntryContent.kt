@@ -1,6 +1,5 @@
 package com.littlelemon.application.address.presentation.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -56,6 +55,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressState
+import com.littlelemon.application.address.presentation.AddressTestTags
 import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
@@ -227,7 +227,9 @@ fun FloatingActionBar(modifier: Modifier = Modifier, onAction: () -> Unit = {}) 
                 disabledContainerColor = MaterialTheme.colors.disabled,
                 disabledContentColor = MaterialTheme.colors.contentDisabled
             ),
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier
+                .size(48.dp)
+                .testTag(AddressTestTags.HEADER_CLOSE_BUTTON)
         ) {
             Image(painterResource(R.drawable.ic_x), contentDescription = "Close")
         }

@@ -6,6 +6,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
@@ -15,6 +16,7 @@ import androidx.compose.ui.test.performTextInput
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressState
+import com.littlelemon.application.address.presentation.AddressTestTags
 import com.littlelemon.application.utils.ComposeMatcherHelper
 import com.littlelemon.application.utils.MatcherType
 import org.junit.Rule
@@ -404,12 +406,29 @@ class LocationEntryContentTest {
 
     @Test
     fun locationEntryScreen_header_isDisplayed() {
-        TODO()
+        // Given a location entry screen
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState())
+        }
+
+        // Then, the header is displayed
+        composeTestRule.onNodeWithText(application.getString(R.string.heading_add_your_address))
+            .assertIsDisplayed()
     }
 
     @Test
     fun locationEntryScreen_closeButtonClick_triggersOnCloseCallback() {
-        TODO()
+        // Given a location entry screen
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            LocationEntryContentRoot(AddressState(), onClose = { callbackTriggered = true })
+        }
+
+        // When, close button is pressed
+        composeTestRule.onNodeWithTag(AddressTestTags.HEADER_CLOSE_BUTTON).performClick()
+
+        // Then, the callback is triggered
+        assertTrue(callbackTriggered)
     }
 
 }
