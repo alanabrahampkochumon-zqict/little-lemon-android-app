@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -42,13 +44,16 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -86,7 +91,9 @@ fun LocationEntryContent(viewModel: AddressViewModel) {
 
 @Composable
 fun LocationEntryContentRoot(
-    state: AddressState, modifier: Modifier = Modifier,
+    state: AddressState,
+    modifier: Modifier = Modifier,
+    isFloating: Boolean = false,
     onLabelChange: (String) -> Unit = {},
     onBuildingNameChange: (String) -> Unit = {},
     onStreetAddressChange: (String) -> Unit = {},
@@ -98,18 +105,22 @@ fun LocationEntryContentRoot(
     onClose: () -> Unit = {}
 ) {
     val bottomSheetShape = MaterialTheme.shapes.medium.copy(
-        bottomStart = CornerSize(0.dp),
-        bottomEnd = CornerSize(0.dp)
+        bottomStart = CornerSize(0.dp), bottomEnd = CornerSize(0.dp)
     )
 
     val screenDensity = LocalDensity.current.density
 
+    val orientation = LocalConfiguration.current.orientation
+    val screenWidth = LocalWindowInfo.current.containerDpSize.width
+    val mobileLandscape = screenWidth > 600.dp && !isFloating
+
+
     // Content padding to ensure that the top navigation does not hit the system bar or camera cutout
-    val bottomSafeContentPadding = WindowInsets.safeContent.asPaddingValues().calculateTopPadding()
-    val topBarBottomPadding = MaterialTheme.dimens.sizeXL
     val navBarHeight = 48.dp
-    val mapHeightDP = 400.dp // TODO: Use different height on mobile landscape
-    val topBarMinHeight = navBarHeight + bottomSafeContentPadding + topBarBottomPadding
+    val mapHeightDP = 400.dp
+    val safeContentPadding = WindowInsets.safeContent.asPaddingValues().calculateTopPadding()
+    val topBarBottomPadding = MaterialTheme.dimens.sizeXL
+    val topBarMinHeight = navBarHeight + safeContentPadding + topBarBottomPadding
     val mapHeightInPx = (mapHeightDP.value) * screenDensity
     val minTopBarHeightInPx = (topBarMinHeight.value * screenDensity)
 
@@ -131,7 +142,9 @@ fun LocationEntryContentRoot(
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .nestedScroll(nestedScrollConnection), bottomBar = {
+            .testTag(AddressTestTags.NESTED_SCROLL_VIEW)
+            .then(if (!isFloating && !mobileLandscape) Modifier.nestedScroll(nestedScrollConnection) else Modifier),
+        bottomBar = {
             FlowRow(
                 modifier = Modifier
                     .dropShadow(
@@ -164,30 +177,22 @@ fun LocationEntryContentRoot(
                         .weight(1f)
                 )
             }
-        }, topBar = {
-            Box(
-                modifier = Modifier
-                    .height((mapHeight / screenDensity).dp)
-                    .fillMaxWidth()
-                    .background(Color.DarkGray),
-                contentAlignment = Alignment.TopCenter
-            ) {
-                FloatingActionBar(
-                    modifier = Modifier.padding(
-                        top = bottomSafeContentPadding,
-                        bottom = topBarBottomPadding
-                    ), onAction = onClose
+        },
+        topBar = {
+            // Render as topbar if not mobile landscape
+            if (!mobileLandscape)
+                MapHeader(
+                    Modifier
+                        .height((mapHeight / screenDensity).dp)
+                        .fillMaxWidth()
+                        .background(Color.DarkGray)
+                        .testTag(AddressTestTags.NESTED_SCROLL_HEADER),
+                    onClose = onClose,
+                    floatingBarTopPadding = safeContentPadding,
+                    floatingBarBottomPadding = topBarBottomPadding
                 )
-                Text(
-                    "TODO: Google Map",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        })
-    { innerPadding ->
-        Column(
+        }) { innerPadding ->
+        if (!mobileLandscape) Column(
             modifier = Modifier
                 .imePadding()
                 .verticalScroll(rememberScrollState())
@@ -206,6 +211,67 @@ fun LocationEntryContentRoot(
                 onSaveAddress = onSaveAddress,
             )
         }
+        else Row {
+            MapHeader(
+                Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .background(Color.DarkGray)
+                    .testTag(AddressTestTags.NESTED_SCROLL_HEADER),
+                onClose = onClose,
+                floatingBarTopPadding = safeContentPadding,
+                floatingBarBottomPadding = topBarBottomPadding
+            )
+
+            ModalForm(
+                state,
+                modifier = Modifier
+                    .padding(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = innerPadding.calculateBottomPadding()
+                    )
+                    .consumeWindowInsets(innerPadding)
+                    .imePadding()
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState()),
+                onLabelChange = onLabelChange,
+                onBuildingNameChange = onBuildingNameChange,
+                onStreetAddressChange = onStreetAddressChange,
+                onCityChange = onCityChange,
+                onStateChange = onStateChange,
+                onPinCodeChange = onPinCodeChange,
+                onSaveAsDefaultChange = onSaveAsDefaultChange,
+                onSaveAddress = onSaveAddress,
+            )
+
+        }
+    }
+}
+
+// TODO: Add consume insetpadding to other composables.
+
+@Composable
+fun MapHeader(
+    modifier: Modifier,
+    onClose: () -> Unit,
+    floatingBarTopPadding: Dp,
+    floatingBarBottomPadding: Dp
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.TopCenter
+    ) {
+        FloatingActionBar(
+            modifier = Modifier.padding(
+                top = floatingBarTopPadding, bottom = floatingBarBottomPadding
+            ), onAction = onClose
+        )
+        Text(
+            "TODO: Google Map",
+            color = Color.White,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
@@ -226,8 +292,7 @@ fun FloatingActionBar(modifier: Modifier = Modifier, onAction: () -> Unit = {}) 
                 contentColor = MaterialTheme.colors.contentSecondary,
                 disabledContainerColor = MaterialTheme.colors.disabled,
                 disabledContentColor = MaterialTheme.colors.contentDisabled
-            ),
-            modifier = Modifier
+            ), modifier = Modifier
                 .size(48.dp)
                 .testTag(AddressTestTags.HEADER_CLOSE_BUTTON)
         ) {
@@ -247,7 +312,8 @@ fun FloatingActionBar(modifier: Modifier = Modifier, onAction: () -> Unit = {}) 
                 )
                 .background(MaterialTheme.colors.primary, shape = floatingBarShape)
                 .padding(MaterialTheme.dimens.sizeLG)
-                .fillMaxWidth(), contentAlignment = Alignment.Center
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
         ) {
             Text(stringResource(R.string.heading_add_your_address))
         }
@@ -285,10 +351,13 @@ fun ModalForm(
             label = stringResource(R.string.label_address_label),
             placeholder = stringResource(R.string.placeholder_address_label),
             value = state.label,
-            onValueChange = onLabelChange, modifier = Modifier
+            onValueChange = onLabelChange,
+            modifier = Modifier
                 .widthIn(min = 280.dp)
                 .weight(1f),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            )
         )
         LabelInputField(
             label = stringResource(R.string.label_address_building_name),
@@ -314,7 +383,8 @@ fun ModalForm(
             label = stringResource(R.string.label_address_city),
             placeholder = stringResource(R.string.placeholder_address_city),
             value = state.city,
-            onValueChange = onCityChange, modifier = Modifier
+            onValueChange = onCityChange,
+            modifier = Modifier
                 .widthIn(min = 280.dp)
                 .weight(1f),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
@@ -323,7 +393,8 @@ fun ModalForm(
             label = stringResource(R.string.label_address_state),
             placeholder = stringResource(R.string.placeholder_address_state),
             value = state.state,
-            onValueChange = onStateChange, modifier = Modifier
+            onValueChange = onStateChange,
+            modifier = Modifier
                 .widthIn(min = 280.dp)
                 .weight(1f),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
@@ -332,7 +403,8 @@ fun ModalForm(
             label = stringResource(R.string.label_address_pincode),
             placeholder = stringResource(R.string.placeholder_address_pincode),
             value = state.pinCode,
-            onValueChange = onPinCodeChange, modifier = Modifier
+            onValueChange = onPinCodeChange,
+            modifier = Modifier
                 .widthIn(min = 280.dp)
                 .weight(1f),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
@@ -350,9 +422,18 @@ fun ModalForm(
     }
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 private fun AddressEntryModalPreview() {
+
+    LittleLemonTheme {
+        LocationEntryContentRoot(AddressState())
+    }
+}
+
+@Preview(widthDp = 800, heightDp = 360)
+@Composable
+private fun AddressEntryModalLandscapePreview() {
 
     LittleLemonTheme {
         LocationEntryContentRoot(AddressState())

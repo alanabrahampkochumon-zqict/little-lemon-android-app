@@ -431,4 +431,20 @@ class LocationEntryContentTest {
         assertTrue(callbackTriggered)
     }
 
+    // TODO: Refactor test
+//    @Test
+//    fun locationEntryScreen_notFloating_whenScrolledReducesHeaderSize() {
+//        // Given the location entry screen
+//        composeTestRule.setContent {
+//            LocationEntryContentRoot(AddressState(), isFloating = false)
+//        }
+//
+//        // When the scrollview is scrolled
+//        composeTestRule.onNodeWithTag(AddressTestTags.NESTED_SCROLL_VIEW).performScrollTo()
+//
+//        // Then the height of the header section changes
+//        composeTestRule.onNodeWithTag(AddressTestTags.NESTED_SCROLL_HEADER)
+//            .assertHeightIsAtLeast(100.dp)
+//    }
+
 }
