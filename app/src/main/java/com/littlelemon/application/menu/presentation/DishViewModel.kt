@@ -52,4 +52,12 @@ class DishViewModel(
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DishState(isLoading = true))
 
 
+    fun onAction(action: DishActions) {
+        when (action) {
+            is DishActions.ApplyFiltering -> TODO()
+            is DishActions.ApplySorting -> TODO()
+            is DishActions.FetchDishes -> TODO()
+        }
+    }
+
 }
