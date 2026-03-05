@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,11 +42,17 @@ fun ActionScreen(
     modifier: Modifier = Modifier,
     headingColor: Color = MaterialTheme.colors.contentHighlight,
 ) {
-    // TODO: Screen Width and check illustration shadow
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         DoodleBackground(alpha = 0.1f)
 
-        Column(Modifier.padding(MaterialTheme.dimens.sizeXL)) {
+        Column(
+            Modifier
+                .padding(MaterialTheme.dimens.sizeXL)
+                .verticalScroll(rememberScrollState())
+                .widthIn(max = 400.dp)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
                 heading,
                 modifier = Modifier.fillMaxWidth(),
@@ -64,12 +72,12 @@ fun ActionScreen(
                 painterResource(illustration),
                 contentDescription = null,
                 modifier = Modifier
+                    .widthIn(max = 360.dp)
                     .fillMaxWidth()
-                    .widthIn(max = 400.dp)
                     .testTag(CoreTestTags.ACTION_SCREEN_ILLUSTRATION)
             )
             Spacer(Modifier.height(MaterialTheme.dimens.size4XL))
-            Button(primaryActionLabel, onPrimaryActionClick)
+            Button(primaryActionLabel, onPrimaryActionClick, variant = ButtonVariant.HIGH_CONTRAST)
             Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
             Button(secondaryActionLabel, onSecondaryActionClick, variant = ButtonVariant.GHOST)
         }
@@ -85,7 +93,7 @@ private fun ActionScreenPreview() {
             "Secondary Action",
             {},
             {},
-            R.drawable.order_success_illustration,
+            R.drawable.illustration_order_success,
             "This is a test heading",
             "this is some test content"
         )

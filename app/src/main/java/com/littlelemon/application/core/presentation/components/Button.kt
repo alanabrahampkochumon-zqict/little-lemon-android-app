@@ -35,6 +35,7 @@ enum class ButtonVariant {
     SECONDARY,
     GHOST,
     GHOST_HIGHLIGHT,
+    HIGH_CONTRAST,
 }
 
 enum class ButtonSize {
@@ -93,6 +94,12 @@ fun Button(
             disabledContainerColor = MaterialTheme.colors.transparent,
             disabledContentColor = MaterialTheme.colors.contentDisabled
         )
+        ButtonVariant.HIGH_CONTRAST -> ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colors.highlight,
+                contentColor = MaterialTheme.colors.contentOnColor,
+                disabledContainerColor = MaterialTheme.colors.transparent,
+                disabledContentColor = MaterialTheme.colors.contentDisabled
+            )
     }
 
     val textStyle = when (size) {
@@ -110,11 +117,6 @@ fun Button(
         ButtonSize.Large -> MaterialTheme.dimens.sizeLG
     }
 
-//    val border: BorderStroke? = if (variant == ButtonVariant.SECONDARY) {
-//        BorderStroke(1.dp, MaterialTheme.colors.outlineSecondary)
-//    } else {
-//        null
-//    }
 
     M3Button(
         onClick = onClick,
@@ -169,6 +171,13 @@ private fun ButtonPreview() {
             )
             Button(
                 variant = ButtonVariant.SECONDARY,
+                onClick = {},
+                label = "Button Label",
+                iconRight = R.drawable.ic_checkcircle,
+                iconLeft = R.drawable.ic_x
+            )
+            Button(
+                variant = ButtonVariant.HIGH_CONTRAST,
                 onClick = {},
                 label = "Button Label",
                 iconRight = R.drawable.ic_checkcircle,
