@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 class DishViewModel(
     private val getDishes: GetDishesUseCase
@@ -54,7 +55,7 @@ class DishViewModel(
 
     fun onAction(action: DishActions) {
         when (action) {
-            is DishActions.ApplyFiltering -> TODO()
+            is DishActions.ApplyFiltering -> _filterFlow.update { action.filter }
             is DishActions.ApplySorting -> TODO()
             is DishActions.FetchDishes -> TODO()
         }

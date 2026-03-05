@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
+import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.utils.DishEntityGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
@@ -25,6 +26,8 @@ import kotlin.test.assertTrue
 class DishViewModelTest {
 
     private val dishes = DishEntityGenerator.generateDishWithCategories(10).map { it.toDish() }
+    private val outOfStockDishes =
+        DishEntityGenerator.generateDishWithCategories(5).map { it.toDish().copy(stock = 0) }
     private val remoteDishes =
         DishEntityGenerator.generateDishWithCategories(15).map { it.toDish() }
 
@@ -36,6 +39,12 @@ class DishViewModelTest {
         useCase = mockk()
 
         coEvery { useCase.invoke() } returns flow { emit(Resource.Success(dishes)) }
+        coEvery { useCase.invoke(filter = null) } returns flow { emit(Resource.Success(dishes)) }
+        coEvery { useCase.invoke(filter = DishFilter.INCLUDE_OUT_OF_STOCK) } returns flow {
+            emit(
+                Resource.Success(dishes + outOfStockDishes)
+            )
+        }
 
         viewModel = DishViewModel(useCase)
     }
@@ -63,8 +72,39 @@ class DishViewModelTest {
             assertNull(state.error)
             assertEquals(dishes, state.dishes)
         }
-
-
     }
+
+    @Test
+    fun onApplyFilter_outOfStockFilter_emitsDishesIncludingOutOfStock() = runTest {
+        viewModel.state.test {
+            awaitItem() // Skip the initial loading
+
+            // When, include out of stock filter is applied
+            viewModel.onAction(DishActions.ApplyFiltering(filter = DishFilter.INCLUDE_OUT_OF_STOCK))
+
+            // Then, the result contains dishes including out of stock dishes
+            val state = awaitItem()
+            assertEquals(dishes + outOfStockDishes, state.dishes)
+        }
+    }
+
+    @Test
+    fun onApplyFilter_noFilterApplied_emitsOnlyInStockDishes() = runTest {
+        viewModel.state.test {
+            awaitItem() // Skip the initial loading
+
+            // When, include out of stock filter is applied
+            viewModel.onAction(DishActions.ApplyFiltering(filter = null))
+
+            // Then, the result contains dishes including out of stock dishes
+            val state = awaitItem()
+            assertEquals(dishes, state.dishes)
+        }
+    }
+
+//    @Test
+//    fun onApplyFilter_filterByNameAscending_emitsDishesFilteredByNameAscending() = runTest {
+//
+//    }
 
 }
