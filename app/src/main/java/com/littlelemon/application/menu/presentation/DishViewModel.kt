@@ -63,7 +63,7 @@ class DishViewModel(
         when (action) {
             is DishActions.ApplyFiltering -> _filterFlow.update { action.filter }
             is DishActions.ApplySorting -> _dishSortingFlow.update { action.sorting }
-            is DishActions.FetchDishes -> TODO()
+            is DishActions.FetchDishes -> _forceFetch.update { action.fromRemote }
         }
     }
 

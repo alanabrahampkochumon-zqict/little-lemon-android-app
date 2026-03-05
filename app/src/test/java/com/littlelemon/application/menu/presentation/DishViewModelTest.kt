@@ -69,6 +69,18 @@ class DishViewModelTest {
             )
         }
 
+        coEvery { useCase.invoke(forceFetch = true) } returns flow {
+            emit(
+                Resource.Success(remoteDishes)
+            )
+        }
+
+        coEvery { useCase.invoke(forceFetch = false) } returns flow {
+            emit(
+                Resource.Success(dishes)
+            )
+        }
+
         viewModel = DishViewModel(useCase, testDispatcher)
     }
 
@@ -170,6 +182,36 @@ class DishViewModelTest {
             assertTrue(state.dishes.zipWithNext { firstDish, secondDish -> firstDish.title >= secondDish.title }
                 .all { it })
             assertFalse(state.isLoading) // and isLoading is false
+        }
+    }
+
+    @Test
+    fun onFetchDishes_withFromRemote_fetchesItemFromRemote() = runTest {
+        viewModel.state.test {
+            awaitItem() // Skip the initial loading
+
+            // When forceFetch is called
+            viewModel.onAction(DishActions.FetchDishes(true))
+
+            // Then, items are fetched from remote
+            val state = awaitItem()
+            assertNotNull(state.dishes)
+            assertEquals(remoteDishes, state.dishes)
+        }
+    }
+
+    @Test
+    fun onFetchDishes_withoutFromRemote_fetchesItemFromCache() = runTest {
+        viewModel.state.test {
+            awaitItem() // Skip the initial loading
+
+            // When forceFetch is called
+            viewModel.onAction(DishActions.FetchDishes(false))
+
+            // Then, items are fetched from cache
+            val state = awaitItem()
+            assertNotNull(state.dishes)
+            assertEquals(dishes, state.dishes)
         }
     }
 
