@@ -6,24 +6,33 @@ import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.menu.domain.util.DishFilter
+import com.littlelemon.application.menu.domain.util.DishSorting
 import com.littlelemon.application.menu.utils.DishEntityGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.extension.RegisterExtension
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
-@ExtendWith(StandardTestDispatcherRule::class)
 class DishViewModelTest {
+
+    @JvmField
+    @RegisterExtension
+    val coroutineRule = StandardTestDispatcherRule()
+
+    private val testDispatcher = coroutineRule.testDispatcher
 
     private val dishes = DishEntityGenerator.generateDishWithCategories(10).map { it.toDish() }
     private val outOfStockDishes =
@@ -38,15 +47,29 @@ class DishViewModelTest {
     fun setUp() {
         useCase = mockk()
 
-        coEvery { useCase.invoke() } returns flow { emit(Resource.Success(dishes)) }
-        coEvery { useCase.invoke(filter = null) } returns flow { emit(Resource.Success(dishes)) }
+        coEvery { useCase.invoke() } returns flow {
+            emit(Resource.Success(dishes))
+        }
         coEvery { useCase.invoke(filter = DishFilter.INCLUDE_OUT_OF_STOCK) } returns flow {
             emit(
                 Resource.Success(dishes + outOfStockDishes)
             )
         }
+        coEvery { useCase.invoke(filter = null) } returns flow {
+            emit(Resource.Success(dishes))
+        }
+        coEvery { useCase.invoke(sorting = DishSorting.NAME_ASCENDING) } returns flow {
+            emit(
+                Resource.Success(dishes.sortedBy { dish -> dish.title })
+            )
+        }
+        coEvery { useCase.invoke(sorting = DishSorting.NAME_DESCENDING) } returns flow {
+            emit(
+                Resource.Success(dishes.sortedByDescending { dish -> dish.title })
+            )
+        }
 
-        viewModel = DishViewModel(useCase)
+        viewModel = DishViewModel(useCase, testDispatcher)
     }
 
 
@@ -68,6 +91,7 @@ class DishViewModelTest {
 
             // Then, then result is populated
             val state = awaitItem()
+
             assertFalse(state.isLoading)
             assertNull(state.error)
             assertEquals(dishes, state.dishes)
@@ -102,9 +126,51 @@ class DishViewModelTest {
         }
     }
 
+    // TODO: Implementation
 //    @Test
-//    fun onApplyFilter_filterByNameAscending_emitsDishesFilteredByNameAscending() = runTest {
+//    fun onApplySorting_showsLoadingInitially() = runTest {
+//        viewModel.state.test {
+//            awaitItem() // Skip the initial loading
 //
+//            // When, sort is applied
+//            viewModel.onAction(DishActions.ApplySorting(DishSorting.NAME_ASCENDING))
+//            // Then, the initial state is loading
+//            assertTrue(awaitItem().isLoading)
+//        }
 //    }
+
+    @Test
+    fun onApplySorting_sortedByNameAscending_emitsDishesSortedByNameAscending() = runTest {
+        viewModel.state.test {
+            awaitItem() // Skip the initial loading
+
+            // When, sort by name ascending is applied
+            viewModel.onAction(DishActions.ApplySorting(DishSorting.NAME_ASCENDING))
+
+            // Then, the result contains dishes sorted by name ascending
+            val state = awaitItem()
+            assertNotNull(state.dishes)
+            assertTrue(state.dishes.zipWithNext { firstDish, secondDish -> firstDish.title <= secondDish.title }
+                .all { it })
+            assertFalse(state.isLoading) // and isLoading is false
+        }
+    }
+
+    @Test
+    fun onApplySorting_sortedByNameDescending_emitsDishesSortedByNameAscending() = runTest {
+        viewModel.state.test {
+            awaitItem() // Skip the initial loading
+
+            // When, sort by name ascending is applied
+            viewModel.onAction(DishActions.ApplySorting(DishSorting.NAME_DESCENDING))
+
+            // Then, the result contains dishes sorted by name ascending
+            val state = awaitItem()
+            assertNotNull(state.dishes)
+            assertTrue(state.dishes.zipWithNext { firstDish, secondDish -> firstDish.title >= secondDish.title }
+                .all { it })
+            assertFalse(state.isLoading) // and isLoading is false
+        }
+    }
 
 }

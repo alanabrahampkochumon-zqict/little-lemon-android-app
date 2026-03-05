@@ -8,17 +8,21 @@ import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class DishViewModel(
-    private val getDishes: GetDishesUseCase
+    private val getDishes: GetDishesUseCase,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel(
 ) {
     private val _filterFlow = MutableStateFlow<DishFilter?>(null)
@@ -30,7 +34,7 @@ class DishViewModel(
         _dishSortingFlow,
         _filterFlow,
         _forceFetch
-    ) { filter, sorting, forceFetch -> Triple(filter, sorting, forceFetch) }
+    ) { sorting, filtering, forceFetch -> Triple(sorting, filtering, forceFetch) }
         .flatMapLatest { (sorting, filter, forceFetch) ->
             getDishes(sorting, filter, forceFetch)
         }.map { resource ->
@@ -50,13 +54,15 @@ class DishViewModel(
                     error = null
                 )
             }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DishState(isLoading = true))
+        }
+        .flowOn(ioDispatcher)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DishState(isLoading = true))
 
 
     fun onAction(action: DishActions) {
         when (action) {
             is DishActions.ApplyFiltering -> _filterFlow.update { action.filter }
-            is DishActions.ApplySorting -> TODO()
+            is DishActions.ApplySorting -> _dishSortingFlow.update { action.sorting }
             is DishActions.FetchDishes -> TODO()
         }
     }
