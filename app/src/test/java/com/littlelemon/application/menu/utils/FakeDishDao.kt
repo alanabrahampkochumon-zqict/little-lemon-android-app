@@ -18,16 +18,15 @@ class FakeDishDao(
 
     init {
         if (seedDatabase) {
-            val generator = MenuEntityGenerator()
             val dishCount = 20
             val categoryCount = 20
 
-            categoryEntities.addAll(generator.generateCategoryEntities(categoryCount))
+            categoryEntities.addAll(MenuEntityGenerator.generateCategoryEntities(categoryCount))
             repeat(dishCount) {
-                val dish = generator.generateDishEntity()
+                val dish = MenuEntityGenerator.generateDishEntity()
                 dishEntities.add(dish)
                 dishCategoryCrossRefs.addAll(
-                    generator.generateDishCategoryCrossRef(
+                    MenuEntityGenerator.generateDishCategoryCrossRef(
                         dish,
                         categoryEntities
                     )

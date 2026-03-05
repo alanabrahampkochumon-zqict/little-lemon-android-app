@@ -18,9 +18,8 @@ class DishEntityMapperTest {
         // Given
         val numCategories = 5
         val numDishes = 2
-        val entityGenerator = MenuEntityGenerator()
         val dishWithCategories =
-            entityGenerator.generateDishWithCategories(numDishes, numCategories)
+            MenuEntityGenerator.generateDishWithCategories(numDishes, numCategories)
 
         // Act
         val dishes = dishWithCategories.map { it.toDish() }
@@ -36,9 +35,8 @@ class DishEntityMapperTest {
         // Given
         val numCategories = 0
         val numDishes = 2
-        val entityGenerator = MenuEntityGenerator()
         val dishWithCategories =
-            entityGenerator.generateDishWithCategories(numDishes, numCategories)
+            MenuEntityGenerator.generateDishWithCategories(numDishes, numCategories)
 
         // Act
         val dishes = dishWithCategories.map { it.toDish() }

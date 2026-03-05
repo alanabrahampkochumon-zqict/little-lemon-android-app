@@ -24,7 +24,7 @@ class DishRepositoryImpl(
     private val remoteDataSource: MenuRemoteDataSource
 ) : DishRepository {
 
-    override suspend fun getDishes(
+    override fun getDishes(
         sorting: DishSorting,
         filter: DishFilter?,
         fetchFromRemote: Boolean

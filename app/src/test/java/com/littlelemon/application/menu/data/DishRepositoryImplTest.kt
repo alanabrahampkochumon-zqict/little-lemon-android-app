@@ -251,9 +251,8 @@ class DishRepositoryImplTest() {
             remoteDataSource = FakeDishRemoteDataSource()
             dishRepository = DishRepositoryImpl(localDataSource, remoteDataSource)
 
-            val dishGen = MenuEntityGenerator()
             localDataSource.insertDishes(List(outOfStockDishCount) {
-                dishGen.generateDishEntity().copy(stock = 0)
+                MenuEntityGenerator.generateDishEntity().copy(stock = 0)
             })
         }
 
@@ -303,7 +302,7 @@ class DishRepositoryImplTest() {
         private lateinit var remoteDataSource: MenuRemoteDataSource
         private lateinit var dishRepository: DishRepository
 
-        private val entityGenerator = MenuEntityGenerator()
+        private val entityGenerator = MenuEntityGenerator
         private val dtoGenerator = MenuDTOGenerator()
 
         private val ENTITY_TITLE_PREDICATE = "ENTITY: "
@@ -410,7 +409,7 @@ class DishRepositoryImplTest() {
                 // Arrange
                 remoteDataSource = FakeDishRemoteDataSource(throwError = true)
                 dishRepository = DishRepositoryImpl(localDataSource, remoteDataSource)
-                
+
 
                 //Act
                 val result =
