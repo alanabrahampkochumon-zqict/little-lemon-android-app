@@ -12,6 +12,7 @@ class GetDishesUseCase(
 ) {
     operator fun invoke(
         sorting: DishSorting = DishSorting.POPULARITY,
-        filter: DishFilter? = null
-    ): Flow<Resource<List<Dish>>> = repository.getDishes(sorting, filter)
+        filter: DishFilter? = null,
+        forceFetch: Boolean = false
+    ): Flow<Resource<List<Dish>>> = repository.getDishes(sorting, filter, forceFetch)
 }

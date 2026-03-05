@@ -5,7 +5,7 @@ import com.littlelemon.application.menu.data.local.models.DishEntity
 import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
-import com.littlelemon.application.menu.utils.MenuEntityGenerator
+import com.littlelemon.application.menu.utils.DishEntityGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -19,7 +19,7 @@ class DishEntityMapperTest {
         val numCategories = 5
         val numDishes = 2
         val dishWithCategories =
-            MenuEntityGenerator.generateDishWithCategories(numDishes, numCategories)
+            DishEntityGenerator.generateDishWithCategories(numDishes, numCategories)
 
         // Act
         val dishes = dishWithCategories.map { it.toDish() }
@@ -36,7 +36,7 @@ class DishEntityMapperTest {
         val numCategories = 0
         val numDishes = 2
         val dishWithCategories =
-            MenuEntityGenerator.generateDishWithCategories(numDishes, numCategories)
+            DishEntityGenerator.generateDishWithCategories(numDishes, numCategories)
 
         // Act
         val dishes = dishWithCategories.map { it.toDish() }

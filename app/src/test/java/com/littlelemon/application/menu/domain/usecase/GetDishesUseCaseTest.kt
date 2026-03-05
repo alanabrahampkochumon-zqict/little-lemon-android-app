@@ -7,7 +7,7 @@ import com.littlelemon.application.menu.domain.DishRepository
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
-import com.littlelemon.application.menu.utils.MenuEntityGenerator
+import com.littlelemon.application.menu.utils.DishEntityGenerator
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
@@ -23,7 +23,7 @@ import kotlin.test.assertTrue
 @SmallTest
 class GetDishesUseCaseTest {
 
-    val dishes = MenuEntityGenerator.generateDishWithCategories(5)
+    val dishes = DishEntityGenerator.generateDishWithCategories(5)
 
     private lateinit var repository: DishRepository
     private lateinit var useCase: GetDishesUseCase
@@ -103,6 +103,26 @@ class GetDishesUseCaseTest {
         // Then usecase also returns a failure
         val result = useCase().first()
         assertIs<Resource.Failure<List<Dish>>>(result)
+    }
+
+    @Test
+    fun getDishes_forceFetch_getsNewDishes() = runTest {
+        val newDishes = DishEntityGenerator.generateDishWithCategories(10).map { it.toDish() }
+        coEvery { repository.getDishes(fetchFromRemote = true) } returns flow {
+            emit(
+                Resource.Success(
+                    newDishes
+                )
+            )
+        }
+
+        // When dishes are forceFetched
+        val result = useCase(forceFetch = true).first()
+
+        // Then, the resource is success, with correct data
+        assertIs<Resource.Success<List<Dish>>>(result)
+        assertNotNull(result.data)
+        assertEquals(newDishes, result.data)
     }
 
 }
