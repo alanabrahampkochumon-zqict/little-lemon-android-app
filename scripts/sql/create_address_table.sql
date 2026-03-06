@@ -47,5 +47,5 @@ SELECT
   st_y(location::geometry) as latitude,
   st_x(location::geometry) as longitude,
   user_address.created_at,
-  user_adderss.is_default
+  user_address.is_default
 FROM user_address;
