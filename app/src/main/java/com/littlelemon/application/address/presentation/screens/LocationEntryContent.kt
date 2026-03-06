@@ -52,14 +52,18 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressState
@@ -89,7 +93,8 @@ fun LocationEntryContent(viewModel: AddressViewModel, isFloating: Boolean = fals
         onStateChange = { viewModel.onAction(AddressActions.ChangeState(it)) },
         onPinCodeChange = { viewModel.onAction(AddressActions.ChangePinCode(it)) },
         onSaveAsDefaultChange = { viewModel.onAction(AddressActions.ChangeToDefaultAddress(it)) },
-        onSaveAddress = { viewModel.onAction(AddressActions.SaveAddress) }, isFloating = isFloating)
+        onSaveAddress = { viewModel.onAction(AddressActions.SaveAddress) }, isFloating = isFloating
+    )
 
 }
 
@@ -277,6 +282,11 @@ fun MapHeader(
     floatingBarTopPadding: Dp,
     floatingBarBottomPadding: Dp
 ) {
+    val singapore = LatLng(1.35, 103.87)
+    val singaporeMarkerState = rememberUpdatedMarkerState(position = singapore)
+    val cameraPositionState = rememberCameraPositionState {
+        CameraPosition.fromLatLngZoom(singapore, 10f).also { position = it }
+    }
     Box(
         modifier = modifier,
         contentAlignment = Alignment.TopCenter
@@ -286,12 +296,17 @@ fun MapHeader(
                 top = floatingBarTopPadding, bottom = floatingBarBottomPadding
             ), onAction = onClose
         )
-        Text(
-            "TODO: Google Map",
-            color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
+
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState
+        ) {
+            Marker(
+                state = singaporeMarkerState,
+                title = "Singapore",
+                snippet = "Marker in Singapore"
+            )
+        }
     }
 }
 
