@@ -60,7 +60,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
@@ -287,19 +291,18 @@ fun MapHeader(
     val cameraPositionState = rememberCameraPositionState {
         CameraPosition.fromLatLngZoom(singapore, 10f).also { position = it }
     }
+    val uiSetting =
+        remember { MapUiSettings(zoomControlsEnabled = true, zoomGesturesEnabled = true) }
     Box(
         modifier = modifier,
         contentAlignment = Alignment.TopCenter
     ) {
-        FloatingActionBar(
-            modifier = Modifier.padding(
-                top = floatingBarTopPadding, bottom = floatingBarBottomPadding
-            ), onAction = onClose
-        )
-
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState
+            cameraPositionState = cameraPositionState,
+            uiSettings = uiSetting,
+            properties = MapProperties(mapType = MapType.NORMAL),
+            mapColorScheme = ComposeMapColorScheme.LIGHT
         ) {
             Marker(
                 state = singaporeMarkerState,
@@ -307,6 +310,13 @@ fun MapHeader(
                 snippet = "Marker in Singapore"
             )
         }
+
+        FloatingActionBar(
+            modifier = Modifier.padding(
+                top = floatingBarTopPadding, bottom = floatingBarBottomPadding
+            ), onAction = onClose
+        )
+
     }
 }
 
