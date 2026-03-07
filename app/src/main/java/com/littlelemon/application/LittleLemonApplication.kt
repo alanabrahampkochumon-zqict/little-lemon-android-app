@@ -4,6 +4,7 @@ import android.app.Application
 import com.littlelemon.application.address.di.addressModule
 import com.littlelemon.application.auth.di.authModule
 import com.littlelemon.application.core.di.coreModule
+import com.littlelemon.application.menu.di.dishModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -19,6 +20,7 @@ class LittleLemonApplication : Application() {
             modules(authModule)
             modules(coreModule)
             modules(addressModule)
+            modules(dishModule)
         }
     }
 }
