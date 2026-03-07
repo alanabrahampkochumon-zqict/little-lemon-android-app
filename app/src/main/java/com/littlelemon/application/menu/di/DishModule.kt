@@ -1,30 +1,30 @@
 package com.littlelemon.application.menu.di
 
 import androidx.room.Room
-import com.littlelemon.application.menu.data.DishRepositoryImpl
+import com.littlelemon.application.menu.data.MenuRepositoryImpl
 import com.littlelemon.application.menu.data.local.MenuDatabase
-import com.littlelemon.application.menu.data.local.dao.DishDao
+import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSourceImpl
-import com.littlelemon.application.menu.domain.DishRepository
+import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
-import com.littlelemon.application.menu.presentation.DishViewModel
+import com.littlelemon.application.menu.presentation.MenuViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val dishModule = module {
-    viewModel<DishViewModel> {
-        DishViewModel(get())
+    viewModel<MenuViewModel> {
+        MenuViewModel(get())
     }
 
     single<GetDishesUseCase> { GetDishesUseCase(get()) }
 
-    single<DishRepository> {
-        DishRepositoryImpl(get(), get())
+    single<MenuRepository> {
+        MenuRepositoryImpl(get(), get())
     }
 
-    single<DishDao> {
+    single<MenuDao> {
         Room.databaseBuilder(androidContext(), MenuDatabase::class.java, "dishes.db").build().dao
     }
 

@@ -3,12 +3,12 @@ package com.littlelemon.application.menu.data
 import com.littlelemon.application.core.domain.utils.Error
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.toNetworkError
-import com.littlelemon.application.menu.data.local.dao.DishDao
+import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.data.mappers.toDishWithCategories
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
-import com.littlelemon.application.menu.domain.DishRepository
+import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
@@ -19,10 +19,10 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class DishRepositoryImpl(
-    private val localDataSource: DishDao,
+class MenuRepositoryImpl(
+    private val localDataSource: MenuDao,
     private val remoteDataSource: MenuRemoteDataSource
-) : DishRepository {
+) : MenuRepository {
 
     override fun getDishes(
         sorting: DishSorting,

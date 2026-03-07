@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-class DishViewModel(
+class MenuViewModel(
     private val getDishes: GetDishesUseCase,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel(
@@ -39,7 +39,7 @@ class DishViewModel(
             getDishes(sorting, filter, forceFetch)
         }.map { resource ->
             when (resource) {
-                is Resource.Failure -> DishState(
+                is Resource.Failure -> MenuState(
                     dishes = resource.data,
                     isLoading = false,
                     error = if (resource.errorMessage != null) UiText.DynamicString(resource.errorMessage) else UiText.StringResource(
@@ -47,8 +47,8 @@ class DishViewModel(
                     )
                 )
 
-                is Resource.Loading -> DishState(isLoading = true, error = null)
-                is Resource.Success -> DishState(
+                is Resource.Loading -> MenuState(isLoading = true, error = null)
+                is Resource.Success -> MenuState(
                     dishes = resource.data,
                     isLoading = false,
                     error = null
@@ -56,14 +56,14 @@ class DishViewModel(
             }
         }
         .flowOn(ioDispatcher)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), DishState(isLoading = true))
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MenuState(isLoading = true))
 
 
-    fun onAction(action: DishActions) {
+    fun onAction(action: MenuActions) {
         when (action) {
-            is DishActions.ApplyFiltering -> _filterFlow.update { action.filter }
-            is DishActions.ApplySorting -> _dishSortingFlow.update { action.sorting }
-            is DishActions.FetchDishes -> _forceFetch.update { action.fromRemote }
+            is MenuActions.ApplyFiltering -> _filterFlow.update { action.filter }
+            is MenuActions.ApplySorting -> _dishSortingFlow.update { action.sorting }
+            is MenuActions.FetchDishes -> _forceFetch.update { action.fromRemote }
         }
     }
 

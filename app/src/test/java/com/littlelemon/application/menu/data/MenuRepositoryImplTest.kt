@@ -1,14 +1,14 @@
 package com.littlelemon.application.menu.data
 
 import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.menu.data.local.dao.DishDao
+import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
-import com.littlelemon.application.menu.domain.DishRepository
+import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
 import com.littlelemon.application.menu.utils.DishEntityGenerator
-import com.littlelemon.application.menu.utils.FakeDishDao
 import com.littlelemon.application.menu.utils.FakeDishRemoteDataSource
+import com.littlelemon.application.menu.utils.FakeMenuDao
 import com.littlelemon.application.menu.utils.MenuDTOGenerator
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
@@ -25,22 +25,22 @@ import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 import kotlin.math.roundToInt
 
-class DishRepositoryImplTest() {
+class MenuRepositoryImplTest() {
 
 
     @Nested
     inner class DishSortingTests {
 
-        private lateinit var localDataSource: DishDao
+        private lateinit var localDataSource: MenuDao
         private lateinit var remoteDataSource: MenuRemoteDataSource
-        private lateinit var dishRepository: DishRepository
+        private lateinit var menuRepository: MenuRepository
 
         @BeforeEach
         fun setUp() {
 
-            localDataSource = FakeDishDao(seedDatabase = true)
+            localDataSource = FakeMenuDao(seedDatabase = true)
             remoteDataSource = FakeDishRemoteDataSource()
-            dishRepository = DishRepositoryImpl(localDataSource, remoteDataSource)
+            menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
 
         }
 
@@ -51,7 +51,7 @@ class DishRepositoryImplTest() {
                 val sorting = DishSorting.NAME_ASCENDING
 
                 // Act
-                val result = dishRepository.getDishes(sorting = sorting)
+                val result = menuRepository.getDishes(sorting = sorting)
                     .filter { res -> res is Resource.Success }.first()
                 print(result)
                 // Assert
@@ -69,7 +69,7 @@ class DishRepositoryImplTest() {
                 val sorting = DishSorting.NAME_DESCENDING
 
                 // Act
-                val result = dishRepository.getDishes(sorting = sorting)
+                val result = menuRepository.getDishes(sorting = sorting)
                     .filter { res -> res is Resource.Success }.first()
 
                 // Assert
@@ -87,7 +87,7 @@ class DishRepositoryImplTest() {
                 val sorting = DishSorting.PRICE_ASCENDING
 
                 // Act
-                val result = dishRepository.getDishes(sorting = sorting)
+                val result = menuRepository.getDishes(sorting = sorting)
                     .filter { res -> res is Resource.Success }.first()
 
                 // Assert
@@ -105,7 +105,7 @@ class DishRepositoryImplTest() {
                 val sorting = DishSorting.PRICE_DESCENDING
 
                 // Act
-                val result = dishRepository.getDishes(sorting = sorting)
+                val result = menuRepository.getDishes(sorting = sorting)
                     .filter { res -> res is Resource.Success }.first()
 
                 // Assert
@@ -123,7 +123,7 @@ class DishRepositoryImplTest() {
                 val sorting = DishSorting.POPULARITY
 
                 // Act
-                val result = dishRepository.getDishes(sorting = sorting)
+                val result = menuRepository.getDishes(sorting = sorting)
                     .filter { res -> res is Resource.Success }.first()
 
                 // Assert
@@ -142,7 +142,7 @@ class DishRepositoryImplTest() {
                 val sorting = DishSorting.LOWEST_CALORIES
 
                 // Act
-                val result = dishRepository.getDishes(sorting = sorting)
+                val result = menuRepository.getDishes(sorting = sorting)
                     .filter { res -> res is Resource.Success }.first()
 
                 // Assert
@@ -163,7 +163,7 @@ class DishRepositoryImplTest() {
                 val sorting = DishSorting.HIGHEST_CALORIES
 
                 // Act
-                val result = dishRepository.getDishes(sorting = sorting)
+                val result = menuRepository.getDishes(sorting = sorting)
                     .filter { res -> res is Resource.Success }.first()
 
                 // Assert
@@ -184,7 +184,7 @@ class DishRepositoryImplTest() {
                 val sorting = DishSorting.HIGHEST_PROTEIN
 
                 // Act
-                val result = dishRepository.getDishes(sorting = sorting)
+                val result = menuRepository.getDishes(sorting = sorting)
                     .filter { res -> res is Resource.Success }.first()
 
                 // Assert
@@ -205,7 +205,7 @@ class DishRepositoryImplTest() {
                 val sorting = DishSorting.RECENTLY_ADDED
 
                 // Act
-                val result = dishRepository.getDishes(sorting = sorting)
+                val result = menuRepository.getDishes(sorting = sorting)
                     .filter { res -> res is Resource.Success }.first()
 
                 // Assert
@@ -223,7 +223,7 @@ class DishRepositoryImplTest() {
             runTest {
                 // Arrange & Act
                 val result =
-                    dishRepository.getDishes().filter { res -> res is Resource.Success }.first()
+                    menuRepository.getDishes().filter { res -> res is Resource.Success }.first()
 
                 // Assert
                 assertTrue(result is Resource.Success)
@@ -238,18 +238,18 @@ class DishRepositoryImplTest() {
     @Nested
     inner class FilteringTests {
 
-        private lateinit var localDataSource: DishDao
+        private lateinit var localDataSource: MenuDao
         private lateinit var remoteDataSource: MenuRemoteDataSource
-        private lateinit var dishRepository: DishRepository
+        private lateinit var menuRepository: MenuRepository
 
         private val outOfStockDishCount: Int = (Math.random() * 10 + 5).roundToInt()
 
         @BeforeEach
         fun setUp() = runTest {
 
-            localDataSource = FakeDishDao(seedDatabase = true)
+            localDataSource = FakeMenuDao(seedDatabase = true)
             remoteDataSource = FakeDishRemoteDataSource()
-            dishRepository = DishRepositoryImpl(localDataSource, remoteDataSource)
+            menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
 
             localDataSource.insertDishes(List(outOfStockDishCount) {
                 DishEntityGenerator.generateDishEntity().copy(stock = 0)
@@ -263,7 +263,7 @@ class DishRepositoryImplTest() {
                 val filter = DishFilter.INCLUDE_OUT_OF_STOCK
 
                 // Act
-                val result = dishRepository.getDishes(filter = filter)
+                val result = menuRepository.getDishes(filter = filter)
                     .filter { res -> res is Resource.Success }.first()
 
                 // Assert
@@ -282,7 +282,7 @@ class DishRepositoryImplTest() {
                 val filter = null
 
                 // Act
-                val result = dishRepository.getDishes(filter = filter)
+                val result = menuRepository.getDishes(filter = filter)
                     .filter { res -> res is Resource.Success }.first()
 
                 // Assert
@@ -298,9 +298,9 @@ class DishRepositoryImplTest() {
     @Nested
     inner class FetchFromRemoteTests {
 
-        private lateinit var localDataSource: DishDao
+        private lateinit var localDataSource: MenuDao
         private lateinit var remoteDataSource: MenuRemoteDataSource
-        private lateinit var dishRepository: DishRepository
+        private lateinit var menuRepository: MenuRepository
 
         private val entityGenerator = DishEntityGenerator
         private val dtoGenerator = MenuDTOGenerator()
@@ -311,9 +311,9 @@ class DishRepositoryImplTest() {
         @BeforeEach
         fun setUp() {
 
-            localDataSource = FakeDishDao(seedDatabase = false)
+            localDataSource = FakeMenuDao(seedDatabase = false)
             remoteDataSource = FakeDishRemoteDataSource(emptyList())
-            dishRepository = DishRepositoryImpl(localDataSource, remoteDataSource)
+            menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
 
         }
 
@@ -339,10 +339,10 @@ class DishRepositoryImplTest() {
                         )
                     }
                 remoteDataSource = FakeDishRemoteDataSource(dishDTO)
-                dishRepository = DishRepositoryImpl(localDataSource, remoteDataSource)
+                menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
 
                 //Act
-                val result = dishRepository.getDishes(fetchFromRemote = true)
+                val result = menuRepository.getDishes(fetchFromRemote = true)
                     .filter { res -> res is Resource.Success }.first()
                 // Assert
                 assertTrue(result is Resource.Success)
@@ -360,11 +360,11 @@ class DishRepositoryImplTest() {
             val dishDTO =
                 List(numDishDTO) { dtoGenerator.generateDishDTO() }.map { dish -> dish.copy(title = "$DTO_TITLE_PREDICATE: ${dish.title}") }
             remoteDataSource = FakeDishRemoteDataSource(dishDTO)
-            dishRepository = DishRepositoryImpl(localDataSource, remoteDataSource)
+            menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
 
             //Act
             val result =
-                dishRepository.getDishes().filter { res -> res is Resource.Success }.first()
+                menuRepository.getDishes().filter { res -> res is Resource.Success }.first()
 
             // Assert
             assertTrue(result is Resource.Success)
@@ -389,11 +389,11 @@ class DishRepositoryImplTest() {
 
                 localDataSource.insertDishes(dishEntities)
                 remoteDataSource = FakeDishRemoteDataSource(throwError = true)
-                dishRepository = DishRepositoryImpl(localDataSource, remoteDataSource)
+                menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
 
                 //Act
                 val result =
-                    dishRepository.getDishes().take(2).toList().last()
+                    menuRepository.getDishes().take(2).toList().last()
 
                 // Assert
                 assertTrue(result is Resource.Success)
@@ -408,12 +408,12 @@ class DishRepositoryImplTest() {
             runTest {
                 // Arrange
                 remoteDataSource = FakeDishRemoteDataSource(throwError = true)
-                dishRepository = DishRepositoryImpl(localDataSource, remoteDataSource)
+                menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
 
 
                 //Act
                 val result =
-                    dishRepository.getDishes().filter { res -> res is Resource.Failure }.first()
+                    menuRepository.getDishes().filter { res -> res is Resource.Failure }.first()
 
                 // Assert
                 assertTrue(result is Resource.Failure)

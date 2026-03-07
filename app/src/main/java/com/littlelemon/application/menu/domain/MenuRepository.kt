@@ -6,7 +6,7 @@ import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
 import kotlinx.coroutines.flow.Flow
 
-interface DishRepository {
+interface MenuRepository {
 
     fun getDishes(
         sorting: DishSorting = DishSorting.POPULARITY,

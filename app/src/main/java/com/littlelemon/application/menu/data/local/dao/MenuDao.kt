@@ -12,7 +12,7 @@ import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface DishDao {
+interface MenuDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCategories(categories: List<CategoryEntity>)

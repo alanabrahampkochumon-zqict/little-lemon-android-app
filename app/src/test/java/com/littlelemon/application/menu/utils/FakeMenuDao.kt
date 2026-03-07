@@ -1,6 +1,6 @@
 package com.littlelemon.application.menu.utils
 
-import com.littlelemon.application.menu.data.local.dao.DishDao
+import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity
@@ -8,9 +8,9 @@ import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class FakeDishDao(
+class FakeMenuDao(
     seedDatabase: Boolean = true
-) : DishDao {
+) : MenuDao {
 
     private val dishEntities = mutableListOf<DishEntity>()
     private val categoryEntities = mutableListOf<CategoryEntity>()

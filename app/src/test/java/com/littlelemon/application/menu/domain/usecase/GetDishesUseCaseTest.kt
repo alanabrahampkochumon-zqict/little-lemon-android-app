@@ -3,7 +3,7 @@ package com.littlelemon.application.menu.domain.usecase
 import androidx.test.filters.SmallTest
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.data.mappers.toDish
-import com.littlelemon.application.menu.domain.DishRepository
+import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
@@ -25,7 +25,7 @@ class GetDishesUseCaseTest {
 
     val dishes = DishEntityGenerator.generateDishWithCategories(5)
 
-    private lateinit var repository: DishRepository
+    private lateinit var repository: MenuRepository
     private lateinit var useCase: GetDishesUseCase
 
     @BeforeEach

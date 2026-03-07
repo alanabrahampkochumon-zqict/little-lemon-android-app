@@ -26,7 +26,7 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
-class DishViewModelTest {
+class MenuViewModelTest {
 
     @JvmField
     @RegisterExtension
@@ -41,7 +41,7 @@ class DishViewModelTest {
         DishEntityGenerator.generateDishWithCategories(15).map { it.toDish() }
 
     private lateinit var useCase: GetDishesUseCase
-    private lateinit var viewModel: DishViewModel
+    private lateinit var viewModel: MenuViewModel
 
     @BeforeEach
     fun setUp() {
@@ -81,7 +81,7 @@ class DishViewModelTest {
             )
         }
 
-        viewModel = DishViewModel(useCase, testDispatcher)
+        viewModel = MenuViewModel(useCase, testDispatcher)
     }
 
 
@@ -116,7 +116,7 @@ class DishViewModelTest {
             awaitItem() // Skip the initial loading
 
             // When, include out of stock filter is applied
-            viewModel.onAction(DishActions.ApplyFiltering(filter = DishFilter.INCLUDE_OUT_OF_STOCK))
+            viewModel.onAction(MenuActions.ApplyFiltering(filter = DishFilter.INCLUDE_OUT_OF_STOCK))
 
             // Then, the result contains dishes including out of stock dishes
             val state = awaitItem()
@@ -130,7 +130,7 @@ class DishViewModelTest {
             awaitItem() // Skip the initial loading
 
             // When, include out of stock filter is applied
-            viewModel.onAction(DishActions.ApplyFiltering(filter = null))
+            viewModel.onAction(MenuActions.ApplyFiltering(filter = null))
 
             // Then, the result contains dishes including out of stock dishes
             val state = awaitItem()
@@ -157,7 +157,7 @@ class DishViewModelTest {
             awaitItem() // Skip the initial loading
 
             // When, sort by name ascending is applied
-            viewModel.onAction(DishActions.ApplySorting(DishSorting.NAME_ASCENDING))
+            viewModel.onAction(MenuActions.ApplySorting(DishSorting.NAME_ASCENDING))
 
             // Then, the result contains dishes sorted by name ascending
             val state = awaitItem()
@@ -174,7 +174,7 @@ class DishViewModelTest {
             awaitItem() // Skip the initial loading
 
             // When, sort by name ascending is applied
-            viewModel.onAction(DishActions.ApplySorting(DishSorting.NAME_DESCENDING))
+            viewModel.onAction(MenuActions.ApplySorting(DishSorting.NAME_DESCENDING))
 
             // Then, the result contains dishes sorted by name ascending
             val state = awaitItem()
@@ -191,7 +191,7 @@ class DishViewModelTest {
             awaitItem() // Skip the initial loading
 
             // When forceFetch is called
-            viewModel.onAction(DishActions.FetchDishes(true))
+            viewModel.onAction(MenuActions.FetchDishes(true))
 
             // Then, items are fetched from remote
             val state = awaitItem()
@@ -206,7 +206,7 @@ class DishViewModelTest {
             awaitItem() // Skip the initial loading
 
             // When forceFetch is called
-            viewModel.onAction(DishActions.FetchDishes(false))
+            viewModel.onAction(MenuActions.FetchDishes(false))
 
             // Then, items are fetched from cache
             val state = awaitItem()
