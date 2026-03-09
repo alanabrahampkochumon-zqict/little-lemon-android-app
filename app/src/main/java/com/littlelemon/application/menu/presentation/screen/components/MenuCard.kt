@@ -43,8 +43,8 @@ fun MenuCard(
             dish.description?.let {
                 Text(it)
             }
-            Text("$12.99")
-            Text("$1.22")
+            Text(dish.price.toString())
+            Text(dish.discountedPrice.toString())
         }
     }
 }
