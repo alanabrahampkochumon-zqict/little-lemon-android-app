@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorProducer
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -58,7 +60,8 @@ fun BasicIconButton(
                 enabled = enabled,
                 onClick = onClick,
                 interactionSource = interactionSource,
-                role = Role.Button
+                role = Role.Button,
+                indication = ripple()
             )
             .background(backgroundColor, shape = shape)
             .minimumInteractiveComponentSize()
