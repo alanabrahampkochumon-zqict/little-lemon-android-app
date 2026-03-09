@@ -63,6 +63,14 @@
 
     <!--    Misc.    -->
     <string name="or">or</string>
+    <string name="calories">%d cals</string>
+    <string name="protein">%d\g protein</string>
+    <string name="carbs">%d\g carbs</string>
+    <string name="fats">%d\g fats</string>
+    <string name="currency_symbol">$</string>
+
+    <!--  Formatter  -->
+    <string name="price_format">%.2f</string>
 
     <!-- Error Messages -->
     <string name="generic_error_message">An unknown error occurred. Please try again!</string>
