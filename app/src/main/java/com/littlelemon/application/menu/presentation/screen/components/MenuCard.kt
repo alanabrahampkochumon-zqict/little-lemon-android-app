@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,12 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -26,11 +32,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.littlelemon.application.R
+import com.littlelemon.application.core.presentation.components.DotSeparator
 import com.littlelemon.application.core.presentation.components.Tag
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
+import com.littlelemon.application.core.presentation.designsystem.shadows
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import com.littlelemon.application.core.presentation.utils.toComposeShadow
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
 import kotlinx.datetime.TimeZone
@@ -43,19 +52,36 @@ fun MenuCard(
     dish: Dish,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    val cardShape = MaterialTheme.shapes.medium
+    val cardShadow = MaterialTheme.shadows.dropMD
+    val screenDensity = LocalDensity.current.density
+    Column(
+        modifier = modifier
+            .dropShadow(cardShape, cardShadow.firstShadow.toComposeShadow(screenDensity))
+            .dropShadow(
+                cardShape,
+                cardShadow.secondShadow?.toComposeShadow(screenDensity) ?: Shadow(0.dp)
+            )
+            .background(
+                MaterialTheme.colors.primary,
+                shape = cardShape
+            )
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(max = 240.dp)
                 .fillMaxHeight()
-                .background(Color.Green)
+                .background(Color.Green, shape = MaterialTheme.shapes.medium)
         ) {
 
         }
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colors.primary)
+                .background(
+                    MaterialTheme.colors.primary,
+                    shape = cardShape.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp))
+                )
                 .padding(
                     start = MaterialTheme.dimens.sizeXL,
                     end = MaterialTheme.dimens.sizeXL,
@@ -92,10 +118,12 @@ fun MenuCard(
                         stringResource(R.string.protein, nutrition.protein),
                         style = MaterialTheme.typeStyle.bodyXSmall
                     )
+                    DotSeparator()
                     Text(
                         stringResource(R.string.carbs, nutrition.carbs),
                         style = MaterialTheme.typeStyle.bodyXSmall
                     )
+                    DotSeparator()
                     Text(
                         stringResource(R.string.fats, nutrition.fats),
                         style = MaterialTheme.typeStyle.bodyXSmall
@@ -184,23 +212,56 @@ fun MenuCard(
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun MenuCardPreview() {
     LittleLemonTheme {
-        MenuCard(
-            Dish(
-                title = "Grilled Whole Fish",
-                description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
-                price = 29.85,
-                imageURL = "NO URL",
-                stock = 15,
-                nutritionInfo = NutritionInfo(155, 22, 15, 9),
-                discountedPrice = 15.83,
-                category = listOf(),
-                dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                popularityIndex = 392
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(16.dp)
+        ) {
+            MenuCard(
+                Dish(
+                    title = "Grilled Whole Fish",
+                    description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
+                    price = 29.85,
+                    imageURL = "NO URL",
+                    stock = 15,
+                    nutritionInfo = NutritionInfo(155, 22, 15, 9),
+                    discountedPrice = 15.83,
+                    category = listOf(),
+                    dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                    popularityIndex = 392
+                )
             )
-        )
+            MenuCard(
+                Dish(
+                    title = "Grilled Whole Fish",
+                    description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
+                    price = 29.85,
+                    imageURL = "NO URL",
+                    stock = 15,
+                    nutritionInfo = NutritionInfo(155, 22, 15, 9),
+                    discountedPrice = 15.83,
+                    category = listOf(),
+                    dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                    popularityIndex = 392
+                )
+            )
+            MenuCard(
+                Dish(
+                    title = "Grilled Whole Fish",
+                    description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
+                    price = 29.85,
+                    imageURL = "NO URL",
+                    stock = 15,
+                    nutritionInfo = NutritionInfo(155, 22, 15, 9),
+                    discountedPrice = 15.83,
+                    category = listOf(),
+                    dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                    popularityIndex = 392
+                )
+            )
+        }
     }
 }

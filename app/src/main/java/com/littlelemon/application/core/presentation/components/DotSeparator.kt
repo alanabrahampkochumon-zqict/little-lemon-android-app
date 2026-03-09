@@ -17,10 +17,9 @@ import com.littlelemon.application.core.presentation.designsystem.xLarge
 @Composable
 fun DotSeparator(modifier: Modifier = Modifier) {
     Box(
-        Modifier
-            .size(MaterialTheme.dimens.sizeSM)
-            .background(MaterialTheme.colors.contentTertiary, shape = MaterialTheme.shapes.xLarge)
-            .then(modifier)
+        modifier
+            .size(MaterialTheme.dimens.sizeXS)
+            .background(MaterialTheme.colors.contentTertiary, shape = MaterialTheme.shapes.medium)
     )
 }
 
