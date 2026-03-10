@@ -105,6 +105,8 @@
     <string name="test_tag_checkbox_icon">CheckboxIconTestTag</string>
     <string name="act_save_address">Save Address</string>
     <string name="heading_add_your_address">Add your address</string>
+    <string name="desc_decrease_quantity">Decrease quantity</string>
+    <string name="desc_increase_quantity">Increase quantity</string>
 
 
 </resources>
