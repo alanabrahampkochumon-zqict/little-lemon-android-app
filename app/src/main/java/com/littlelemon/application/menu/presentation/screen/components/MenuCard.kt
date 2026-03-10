@@ -64,6 +64,7 @@ import kotlin.math.min
 import kotlin.time.Clock
 
 
+// TODO: Out of stock and unavailable
 @Composable
 fun MenuCard(
     dish: Dish,
@@ -127,14 +128,6 @@ fun MenuCard(
                 .background(MaterialTheme.colors.transparent, shape = MaterialTheme.shapes.medium),
             contentAlignment = Alignment.TopEnd
         ) {
-//            Image(
-//                painterResource(R.drawable.greek_yogurt),
-//                contentDescription = null,
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier.clip(
-//                    imageShape
-//                )
-//            )
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(dish.imageURL)
