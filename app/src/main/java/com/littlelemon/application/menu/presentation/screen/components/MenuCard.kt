@@ -28,6 +28,8 @@ import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -49,6 +51,7 @@ import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.DotSeparator
 import com.littlelemon.application.core.presentation.components.Stepper
 import com.littlelemon.application.core.presentation.components.Tag
+import com.littlelemon.application.core.presentation.components.TagVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
@@ -69,7 +72,8 @@ fun MenuCard(
     orderQuantity: Int,
     onIncreaseQuantity: () -> Unit,
     onDecreaseQuantity: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    outOfStock: Boolean = false,
 ) {
 
     val cardShape = MaterialTheme.shapes.medium
@@ -107,7 +111,7 @@ fun MenuCard(
                 val topOffset =
                     stepperSize.height + imageCornerRadius // Draw from bottom of stepper offset after accounting for corner radius(which gives rough height)
                 val newHeight =
-                    height - (topOffset + imageCornerRadius) // Reduce height by offset, and hte bottom corner radius(which is greater than the rouding)
+                    height - (topOffset + imageCornerRadius) // Reduce height by offset, and hte bottom corner radius(which is greater than the rounding)
                 drawRect(
                     cardColor,
                     topLeft = Offset(0f, topOffset),
@@ -130,7 +134,10 @@ fun MenuCard(
                 placeholder = painterResource(R.drawable.greek_yogurt), // TODO: Replace with placeholder
                 contentDescription = dish.title,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.clip(imageShape)
+                modifier = Modifier.clip(imageShape),
+                colorFilter = if (outOfStock) ColorFilter.colorMatrix(
+                    ColorMatrix().apply { setToSaturation(0f) } // Makes out of stock images black and white
+                ) else null
             )
             Stepper(
                 orderQuantity,
@@ -176,7 +183,13 @@ fun MenuCard(
                     modifier = Modifier.weight(1f)
                 )
                 dish.nutritionInfo?.let { nutrition ->
-                    Tag(stringResource(R.string.calories, nutrition.calories))
+                    if (outOfStock)
+                        Tag(
+                            stringResource(R.string.calories, nutrition.calories),
+                            variant = TagVariant.NeutralFilled
+                        )
+                    else
+                        Tag(stringResource(R.string.calories, nutrition.calories))
                 }
             }
 
@@ -211,7 +224,7 @@ fun MenuCard(
                 Text(
                     it,
                     style = MaterialTheme.typeStyle.bodyMedium,
-                    color = MaterialTheme.colors.contentSecondary,
+                    color = if (outOfStock) MaterialTheme.colors.contentDisabled else MaterialTheme.colors.contentSecondary,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -240,6 +253,7 @@ fun MenuCard(
                             end = MaterialTheme.dimens.sizeLG
                         ),
                 ) {
+                    // TODO: Add discount tag, Add out of stock
                     Text(
                         stringResource(R.string.currency_symbol),
                         style = MaterialTheme.typeStyle.displaySmall.copy(
@@ -249,13 +263,16 @@ fun MenuCard(
                         color = MaterialTheme.colors.contentAccentSecondary
                     )
                     Text(
-                        stringResource(R.string.price_format, dish.price),
+                        stringResource(
+                            R.string.price_format,
+                            dish.discountedPrice ?: dish.price
+                        ), // TODO: Add test
                         style = MaterialTheme.typeStyle.displaySmall,
                         color = MaterialTheme.colors.contentAccentSecondary
                     )
                 }
                 //TODO: Make DiscountedPrice Optional
-                dish.discountedPrice?.let { discount ->
+                dish.discountedPrice?.let {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -273,7 +290,7 @@ fun MenuCard(
                             textDecoration = TextDecoration.LineThrough
                         )
                         Text(
-                            stringResource(R.string.price_format, dish.discountedPrice),
+                            stringResource(R.string.price_format, dish.price),
                             style = MaterialTheme.typeStyle.bodySmall,
                             color = MaterialTheme.colors.contentPlaceholder,
                             textDecoration = TextDecoration.LineThrough
@@ -322,6 +339,7 @@ private fun MenuCardPreview() {
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
                 ), orderQuantity = 0,
+                outOfStock = true,
                 onDecreaseQuantity = {}, onIncreaseQuantity = {}
             )
             MenuCard(

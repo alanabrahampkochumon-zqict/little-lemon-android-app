@@ -9,7 +9,7 @@ data class Dish(
     val imageURL: String,
     val stock: Int,
     val nutritionInfo: NutritionInfo?,
-    val discountedPrice: Double,
+    val discountedPrice: Double?,
     val category: List<Category>,
     val dateAdded: LocalDateTime,
     val popularityIndex: Int,
