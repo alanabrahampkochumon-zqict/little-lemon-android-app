@@ -109,6 +109,8 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.kotlinx.coroutines.play.services) // For .await for cb based methods of Google play services like location
 
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network)
 
     coreLibraryDesugaring(libs.desugar.jdk)
 

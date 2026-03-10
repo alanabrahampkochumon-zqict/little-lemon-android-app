@@ -1,8 +1,12 @@
 package com.littlelemon.application.core.presentation
 
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.address.presentation.screens.LocationPermissionScreen
@@ -29,13 +33,16 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
             if (userHasAddress == true)
                 HomeScreen()
             else
-                FlowRow {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.padding(16.dp)
+                ) {
                     MenuCard(
                         Dish(
                             title = "Grilled Whole Fish",
                             description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
                             price = 29.85,
-                            imageURL = "NO URL",
+                            imageURL = "https://images.pexels.com/photos/18698241/pexels-photo-18698241.jpeg",
                             stock = 15,
                             nutritionInfo = NutritionInfo(155, 22, 15, 9),
                             discountedPrice = 15.83,
@@ -50,7 +57,7 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
                             title = "Grilled Whole Fish",
                             description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
                             price = 29.85,
-                            imageURL = "NO URL",
+                            imageURL = "https://images.pexels.com/photos/18698241/pexels-photo-18698241.jpeg",
                             stock = 15,
                             nutritionInfo = NutritionInfo(155, 22, 15, 9),
                             discountedPrice = 15.83,
@@ -65,7 +72,7 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
                             title = "Grilled Whole Fish",
                             description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
                             price = 29.85,
-                            imageURL = "NO URL",
+                            imageURL = "https://images.pexels.com/photos/18698241/pexels-photo-18698241.jpeg",
                             stock = 15,
                             nutritionInfo = NutritionInfo(155, 22, 15, 9),
                             discountedPrice = 15.83,

@@ -1,12 +1,10 @@
 package com.littlelemon.application.menu.presentation.screen.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -26,12 +24,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,6 +43,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.DotSeparator
 import com.littlelemon.application.core.presentation.components.Stepper
@@ -78,9 +82,8 @@ fun MenuCard(
 
     var stepperSize by remember { mutableStateOf(Size.Zero) }
 
-    // TODO: Replace with value
-    val imageCornerRadius = MaterialTheme.dimens.sizeXL.value * screenDensity
 
+    val imageCornerRadius = MaterialTheme.dimens.sizeXL.value * screenDensity
     val imageShape = remember(stepperSize, imageCornerRadius) {
         MenuImageShape(
             stepperSize,
@@ -88,17 +91,33 @@ fun MenuCard(
         )
     }
 
+    val cardColor = MaterialTheme.colors.primary
+
     Column(
         modifier = modifier
-            .dropShadow(cardShape, cardShadow.firstShadow.toComposeShadow(screenDensity))
+            .dropShadow(imageShape, cardShadow.firstShadow.toComposeShadow(screenDensity))
             .dropShadow(
-                cardShape,
+                imageShape,
                 cardShadow.secondShadow?.toComposeShadow(screenDensity) ?: Shadow(0.dp)
             )
             .background(
-                MaterialTheme.colors.primary,
+                MaterialTheme.colors.transparent,
                 shape = cardShape
             )
+            .drawBehind {
+                // Draw a shape behind the card to mask out the area left by image's rounding
+                val height = size.height
+                val width = size.width
+                val topOffset =
+                    stepperSize.height + imageCornerRadius // Draw from bottom of stepper offset after accounting for corner radius(which gives rough height)
+                val newHeight =
+                    height - (topOffset + imageCornerRadius) // Reduce height by offset, and hte bottom corner radius(which is greater than the rouding)
+                drawRect(
+                    cardColor,
+                    topLeft = Offset(0f, topOffset),
+                    size = Size(width, newHeight)
+                )
+            }
     ) {
         Box(
             modifier = Modifier
@@ -108,13 +127,22 @@ fun MenuCard(
                 .background(MaterialTheme.colors.transparent, shape = MaterialTheme.shapes.medium),
             contentAlignment = Alignment.TopEnd
         ) {
-            Image(
-                painterResource(R.drawable.greek_yogurt),
-                contentDescription = null,
+//            Image(
+//                painterResource(R.drawable.greek_yogurt),
+//                contentDescription = null,
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier.clip(
+//                    imageShape
+//                )
+//            )
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(dish.imageURL)
+                    .crossfade(true).build(),
+                placeholder = painterResource(R.drawable.greek_yogurt), // TODO: Replace with placeholder
+                contentDescription = dish.title,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.clip(
-                    imageShape
-                )
+                modifier = Modifier.clip(imageShape)
             )
             Stepper(
                 itemCount,
@@ -137,7 +165,7 @@ fun MenuCard(
         Column(
             modifier = Modifier
                 .background(
-                    MaterialTheme.colors.primary,
+                    cardColor,
                     shape = cardShape.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp))
                 )
                 .padding(
@@ -274,8 +302,8 @@ fun MenuCard(
 @Composable
 private fun MenuCardPreview() {
     LittleLemonTheme {
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.padding(16.dp)
         ) {
             MenuCard(
@@ -283,7 +311,7 @@ private fun MenuCardPreview() {
                     title = "Grilled Whole Fish",
                     description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
                     price = 29.85,
-                    imageURL = "NO URL",
+                    imageURL = "https://images.pexels.com/photos/18698241/pexels-photo-18698241.jpeg",
                     stock = 15,
                     nutritionInfo = NutritionInfo(155, 22, 15, 9),
                     discountedPrice = 15.83,
@@ -297,7 +325,7 @@ private fun MenuCardPreview() {
                     title = "Grilled Whole Fish",
                     description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
                     price = 29.85,
-                    imageURL = "NO URL",
+                    imageURL = "https://images.pexels.com/photos/18698241/pexels-photo-18698241.jpeg",
                     stock = 15,
                     nutritionInfo = NutritionInfo(155, 22, 15, 9),
                     discountedPrice = 15.83,
@@ -311,7 +339,7 @@ private fun MenuCardPreview() {
                     title = "Grilled Whole Fish",
                     description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
                     price = 29.85,
-                    imageURL = "NO URL",
+                    imageURL = "https://images.pexels.com/photos/18698241/pexels-photo-18698241.jpeg",
                     stock = 15,
                     nutritionInfo = NutritionInfo(155, 22, 15, 9),
                     discountedPrice = 15.83,
