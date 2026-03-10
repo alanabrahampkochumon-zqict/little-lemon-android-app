@@ -1,5 +1,7 @@
 package com.littlelemon.application.menu.presentation.screen.components
 
+import android.graphics.CornerPathEffect
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -24,24 +26,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.PathOperation
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.asAndroidPath
+import androidx.compose.ui.graphics.asComposePath
 import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -81,12 +90,11 @@ fun MenuCard(
 
     var stepperSize by remember { mutableStateOf(Size.Zero) }
 
-    val stepperShape = MaterialTheme.shapes.small
-    val stepperCornerRadius =
-        CornerRadius(stepperShape.topStart.toPx(stepperSize, LocalDensity.current))
-    val cardCornerRadius =
-        CornerRadius(cardShape.topStart.toPx(stepperSize, LocalDensity.current))
+    // TODO: Replace with value
+    val imageCornerRadius = MaterialTheme.dimens.sizeXL.value * screenDensity
+    val context = LocalContext.current
 
+    var path by remember { mutableStateOf(Path()) }
     Column(
         modifier = modifier
             .dropShadow(cardShape, cardShadow.firstShadow.toComposeShadow(screenDensity))
@@ -104,58 +112,83 @@ fun MenuCard(
                 .fillMaxWidth()
                 .heightIn(max = 240.dp)
                 .fillMaxHeight()
-                .background(Color.Green, shape = MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colors.transparent, shape = MaterialTheme.shapes.medium)
                 .drawWithCache {
                     val width = size.width
                     val height = size.height
-                    onDrawBehind {
-//                        clipRect(
-//                            left = width - stepperSize.width,
-//                            right = stepperSize.width,
-//                            top = 0f,
-//                            bottom = stepperSize.height
-//                        ) {
-//                            drawRoundRect(Color.Red)
-//                        }
-                        val path1 = Path()
-                        path1.addRoundRect(
+
+                    // Path of the card
+                    val cardPath = Path().apply {
+                        addRoundRect(
                             RoundRect(
                                 left = 0f,
                                 right = width,
                                 top = 0f,
                                 bottom = height,
-//                                cornerRadius = cardCornerRadius
                             )
                         )
-                        val path2 = Path()
-                        path2.addRoundRect(
+                    }
+
+                    // Path of the stepper
+                    val stepperPath = Path().apply {
+                        addRoundRect(
                             RoundRect(
                                 left = width - stepperSize.width,
-                                right = width + 100f,
-                                top = -100f,
+                                right = width,
+                                top = 0f,
                                 bottom = stepperSize.height,
                             )
                         )
-                        drawPath(path2, Color.Yellow)
-                        val path = Path.combine(PathOperation.Difference, path1, path2)
-                        drawPath(
-                            path = path,
-                            color = Color.Magenta,
-                            style = Stroke(
-                                width = 5f,
-                                pathEffect = PathEffect.cornerPathEffect(64f)
-                            )
-                        )
-//                        drawRoundRect(
-//                            Color.Blue,
-//                            size = stepperSize,
-//                            topLeft = Offset(x = width - stepperSize.width, y = 0f),
-//                            cornerRadius = stepperCornerRadius
-//                        )
                     }
+
+                    // Combined path
+                    val imageShapePath =
+                        Path.combine(PathOperation.Difference, cardPath, stepperPath)
+
+                    // Applying corner radius using OG path
+                    // TODO: Refactor to method
+                    val imagePath = imageShapePath.asAndroidPath()
+                    val paint = android.graphics.Paint().apply {
+                        pathEffect = CornerPathEffect(imageCornerRadius)
+                    }
+
+                    val newPath = android.graphics.Path()
+                    paint.getFillPath(imagePath, newPath)
+                    val compPath = newPath.asComposePath()
+                    path = compPath
+                    onDrawBehind { }
+//                    onDrawBehind {
+//                        clipPath(compPath) {
+//                            drawRect(Color.Red)
+//                            val image = AppCompatResources.getDrawable(
+//                                context,
+//                                R.drawable.greek_yogurt
+//                            )?.toBitmap(width = width.roundToInt(), height = height.roundToInt())
+//                                ?.asImageBitmap()
+//                            image?.let { drawImage(it) }
+//                        }
+//
+//                    }
                 },
             contentAlignment = Alignment.TopEnd
         ) {
+            Image(
+                painterResource(R.drawable.greek_yogurt),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.clip(
+                    object: Shape {
+                        override fun createOutline(
+                            size: Size,
+                            layoutDirection: LayoutDirection,
+                            density: Density
+                        ): Outline {
+                            return Outline.Generic(path)
+                        }
+
+                    }
+                )
+            )
             Stepper(
                 itemCount,
                 onIncrease = incrementCount,
