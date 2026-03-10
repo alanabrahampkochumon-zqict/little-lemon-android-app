@@ -50,7 +50,7 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
                             dateAdded = Clock.System.now()
                                 .toLocalDateTime(TimeZone.currentSystemDefault()),
                             popularityIndex = 392
-                        )
+                        ), orderQuantity = 5, {}, {}
                     )
                     MenuCard(
                         Dish(
@@ -65,7 +65,7 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
                             dateAdded = Clock.System.now()
                                 .toLocalDateTime(TimeZone.currentSystemDefault()),
                             popularityIndex = 392
-                        )
+                        ),orderQuantity = 5, {}, {}
                     )
                     MenuCard(
                         Dish(
@@ -80,7 +80,7 @@ fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
                             dateAdded = Clock.System.now()
                                 .toLocalDateTime(TimeZone.currentSystemDefault()),
                             popularityIndex = 392
-                        )
+                        ),orderQuantity = 5, {}, {}
                     )
                 }
             LocationPermissionScreen(koinViewModel<AddressViewModel>())

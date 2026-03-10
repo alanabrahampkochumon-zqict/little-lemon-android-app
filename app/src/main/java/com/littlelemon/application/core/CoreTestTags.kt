@@ -6,4 +6,7 @@ object CoreTestTags {
     const val TEST_TAG_BOTTOM_SHEET_BACKGROUND = "TestTagBottomSheetBackground"
 
     const val ACTION_SCREEN_ILLUSTRATION = "TestTagActionScreenIllustration"
+
+    const val STEPPER_INCREASE = "TestTagStepperIncrease"
+    const val STEPPER_DECREASE = "TestTagStepperDecrease"
 }

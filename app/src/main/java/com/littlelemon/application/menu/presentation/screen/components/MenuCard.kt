@@ -17,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -60,7 +59,6 @@ import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlin.math.min
 import kotlin.time.Clock
 
 
@@ -68,14 +66,11 @@ import kotlin.time.Clock
 @Composable
 fun MenuCard(
     dish: Dish,
+    orderQuantity: Int,
+    onIncreaseQuantity: () -> Unit,
+    onDecreaseQuantity: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    // TODO: Replace with state from cart/order
-    var itemCount by remember { mutableIntStateOf(1) }
-    val incrementCount = { itemCount += 1 }
-    val decrementCount = { itemCount = min(0, itemCount + 1) }
-    // END TODO:
 
     val cardShape = MaterialTheme.shapes.medium
     val cardShadow = MaterialTheme.shadows.dropMD
@@ -138,9 +133,9 @@ fun MenuCard(
                 modifier = Modifier.clip(imageShape)
             )
             Stepper(
-                itemCount,
-                onIncrease = incrementCount,
-                onDecrease = decrementCount,
+                orderQuantity,
+                onIncrease = onIncreaseQuantity,
+                onDecrease = onDecreaseQuantity,
                 modifier = Modifier
                     .onGloballyPositioned { coordinates ->
                         stepperSize = coordinates.size.toSize()
@@ -311,7 +306,8 @@ private fun MenuCardPreview() {
                     category = listOf(),
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
-                )
+                ), orderQuantity = 2,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {}
             )
             MenuCard(
                 Dish(
@@ -325,7 +321,8 @@ private fun MenuCardPreview() {
                     category = listOf(),
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
-                )
+                ), orderQuantity = 0,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {}
             )
             MenuCard(
                 Dish(
@@ -339,7 +336,8 @@ private fun MenuCardPreview() {
                     category = listOf(),
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
-                )
+                ), orderQuantity = 0,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {}
             )
         }
     }

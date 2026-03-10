@@ -2,17 +2,16 @@ package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
-import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.littlelemon.application.R
+import com.littlelemon.application.core.CoreTestTags
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
 import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
@@ -21,15 +20,7 @@ class StepperTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val application = RuntimeEnvironment.getApplication()
-
-    private val increaseButtonMatcher by lazy {
-        hasContentDescription(application.getString(R.string.desc_increase_quantity))
-    }
-    private val decreaseButtonMatcher by lazy {
-        hasContentDescription(application.getString(R.string.desc_decrease_quantity))
-    }
-
+    
     @Test
     fun stepper_valueLessThanOne_incrementButtonIsDisplayed() = runTest {
         // Given a stepper with a value of 0
@@ -38,7 +29,7 @@ class StepperTest {
         }
 
         // Then, the increment button is displayed
-        composeTestRule.onNode(increaseButtonMatcher).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CoreTestTags.STEPPER_INCREASE).assertIsDisplayed()
     }
 
     @Test
@@ -49,7 +40,7 @@ class StepperTest {
         }
 
         // Then, the value and decrement button is not displayed
-        composeTestRule.onNode(decreaseButtonMatcher).assertIsNotDisplayed()
+        composeTestRule.onNodeWithTag(CoreTestTags.STEPPER_DECREASE).assertIsNotDisplayed()
         composeTestRule.onNodeWithText("0").assertIsNotDisplayed()
     }
 
@@ -61,7 +52,7 @@ class StepperTest {
         }
 
         // Then, the value and decrement button is displayed
-        composeTestRule.onNode(decreaseButtonMatcher).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CoreTestTags.STEPPER_DECREASE).assertIsDisplayed()
         composeTestRule.onNodeWithText("1").assertIsDisplayed()
     }
 
@@ -73,7 +64,7 @@ class StepperTest {
         }
 
         // Then, the value and decrement button is displayed
-        composeTestRule.onNode(decreaseButtonMatcher).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(CoreTestTags.STEPPER_DECREASE).assertIsDisplayed()
         composeTestRule.onNodeWithText("5").assertIsDisplayed()
     }
 
@@ -86,7 +77,7 @@ class StepperTest {
         }
 
         // When the decrement button is pressed
-        composeTestRule.onNode(decreaseButtonMatcher).performClick()
+        composeTestRule.onNodeWithTag(CoreTestTags.STEPPER_DECREASE).performClick()
 
         // Then, the callback is triggered
         assertTrue(callbackTriggered)
@@ -101,7 +92,7 @@ class StepperTest {
         }
 
         // When the increment button is pressed
-        composeTestRule.onNode(increaseButtonMatcher).performClick()
+        composeTestRule.onNodeWithTag(CoreTestTags.STEPPER_INCREASE).performClick()
 
         // Then, the callback is triggered
         assertTrue(callbackTriggered)

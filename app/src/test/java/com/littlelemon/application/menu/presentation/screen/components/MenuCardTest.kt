@@ -1,9 +1,13 @@
 package com.littlelemon.application.menu.presentation.screen.components
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import com.littlelemon.application.R
+import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
 import kotlinx.coroutines.test.runTest
@@ -14,6 +18,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import kotlin.test.assertTrue
 import kotlin.time.Clock
 
 
@@ -42,7 +47,9 @@ class MenuCardTest {
     fun menuCard_titleIsDisplayed() = runTest {
         // Given a menu card
         composeTestRule.setContent {
-            MenuCard(dish)
+            MenuCard(
+                dish, orderQuantity = 2,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {})
         }
 
         // Then, title is displayed
@@ -54,7 +61,9 @@ class MenuCardTest {
     fun menuCard_descriptionIsDisplayed() = runTest {
         // Given a menu card
         composeTestRule.setContent {
-            MenuCard(dish)
+            MenuCard(
+                dish, orderQuantity = 2,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {})
         }
 
         // Then, description is displayed
@@ -65,7 +74,9 @@ class MenuCardTest {
     fun menuCard_priceIsDisplayed() = runTest {
         // Given a menu card
         composeTestRule.setContent {
-            MenuCard(dish)
+            MenuCard(
+                dish, orderQuantity = 2,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {})
         }
 
         // Then, price is displayed
@@ -77,7 +88,9 @@ class MenuCardTest {
     fun menuCard_discountedPriceIsDisplayed() = runTest {
         // Given a menu card
         composeTestRule.setContent {
-            MenuCard(dish)
+            MenuCard(
+                dish, orderQuantity = 2,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {})
         }
 
         // Then, discounted price is displayed
@@ -94,7 +107,9 @@ class MenuCardTest {
     fun menuCard_caloriesIsDisplayed() = runTest {
         // Given a menu card
         composeTestRule.setContent {
-            MenuCard(dish)
+            MenuCard(
+                dish, orderQuantity = 2,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {})
         }
 
         // Then, calories is displayed
@@ -111,7 +126,9 @@ class MenuCardTest {
     fun menuCard_proteinIsDisplayed() = runTest {
         // Given a menu card
         composeTestRule.setContent {
-            MenuCard(dish)
+            MenuCard(
+                dish, orderQuantity = 2,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {})
         }
 
         // Then, calories is displayed
@@ -128,7 +145,9 @@ class MenuCardTest {
     fun menuCard_carbsIsDisplayed() = runTest {
         // Given a menu card
         composeTestRule.setContent {
-            MenuCard(dish)
+            MenuCard(
+                dish, orderQuantity = 2,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {})
         }
 
         // Then, carbs is displayed
@@ -145,7 +164,9 @@ class MenuCardTest {
     fun menuCard_fatsIsDisplayed() = runTest {
         // Given a menu card
         composeTestRule.setContent {
-            MenuCard(dish)
+            MenuCard(
+                dish, orderQuantity = 2,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {})
         }
 
         // Then, fats is displayed
@@ -156,6 +177,72 @@ class MenuCardTest {
             )
         )
             .assertIsDisplayed()
+    }
+
+    @Test
+    fun menuCard_quantityZero_isNotDisplayed() = runTest {
+        // Given a menu card with order Quantity of 0
+        composeTestRule.setContent {
+            MenuCard(
+                dish, orderQuantity = 0,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {})
+        }
+
+        // Then, the quantity is not displayed
+        composeTestRule.onNodeWithText(
+            "0"
+        )
+            .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun menuCard_quantityGreaterThanZero_isDisplayed() = runTest {
+        // Given a menu card with order Quantity of 10
+        composeTestRule.setContent {
+            MenuCard(
+                dish, orderQuantity = 10,
+                onDecreaseQuantity = {}, onIncreaseQuantity = {})
+        }
+
+        // Then, the quantity is displayed
+        composeTestRule.onNodeWithText(
+            "10"
+        )
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun menuCard_onQuantityIncrease_triggersCallback() = runTest {
+        // Given a menu card
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            MenuCard(
+                dish, orderQuantity = 10,
+                onDecreaseQuantity = {}, onIncreaseQuantity = { callbackTriggered = true })
+        }
+
+        // Then, plus(increase quantity) button is pressed
+        composeTestRule.onNodeWithTag(CoreTestTags.STEPPER_INCREASE).performClick()
+
+        // Then, callback is triggered
+        assertTrue(callbackTriggered)
+    }
+
+    @Test
+    fun menuCard_onQuantityDecrease_triggersCallback() = runTest {
+        // Given a menu card
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            MenuCard(
+                dish, orderQuantity = 10,
+                onDecreaseQuantity = { callbackTriggered = true }, onIncreaseQuantity = { })
+        }
+
+        // Then, plus(increase quantity) button is pressed
+        composeTestRule.onNodeWithTag(CoreTestTags.STEPPER_DECREASE).performClick()
+
+        // Then, callback is triggered
+        assertTrue(callbackTriggered)
     }
 
 
