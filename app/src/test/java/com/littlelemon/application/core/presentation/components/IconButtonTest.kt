@@ -64,4 +64,110 @@ class IconButtonTest {
         composeTestRule.onNodeWithContentDescription(buttonDescription).assertIsNotEnabled()
     }
 
+    @Test
+    fun primaryIconButton_whenPressed_triggersCallback() {
+        // Given an enabled primary icon button
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            PrimaryIconButton(
+                R.drawable.ic_plus, { callbackTriggered = true },
+                iconDescription = buttonDescription,
+                enabled = true
+            )
+        }
+
+        // When pressed
+        composeTestRule.onNodeWithContentDescription(buttonDescription).performClick()
+
+        // Then, it triggers callback
+        assertTrue(callbackTriggered)
+
+    }
+
+    @Test
+    fun primaryIconButton_whenNotEnabled_isDisabled() {
+        // Given a primary icon button with enabled = false
+        composeTestRule.setContent {
+            PrimaryIconButton(
+                R.drawable.ic_plus, { },
+                iconDescription = buttonDescription,
+                enabled = false
+            )
+        }
+
+        // Then, the button is not enabled
+        composeTestRule.onNodeWithContentDescription(buttonDescription).assertIsNotEnabled()
+    }
+
+    @Test
+    fun secondaryIconButton_whenPressed_triggersCallback() {
+        // Given an enabled secondary icon button
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            SecondaryIconButton(
+                R.drawable.ic_plus, { callbackTriggered = true },
+                iconDescription = buttonDescription,
+                enabled = true
+            )
+        }
+
+        // When pressed
+        composeTestRule.onNodeWithContentDescription(buttonDescription).performClick()
+
+        // Then, it triggers callback
+        assertTrue(callbackTriggered)
+
+    }
+
+    @Test
+    fun secondaryIconButton_whenNotEnabled_isDisabled() {
+        // Given a secondary icon button with enabled = false
+        composeTestRule.setContent {
+            SecondaryIconButton(
+                R.drawable.ic_plus, { },
+                iconDescription = buttonDescription,
+                enabled = false
+            )
+        }
+
+        // Then, the button is not enabled
+        composeTestRule.onNodeWithContentDescription(buttonDescription).assertIsNotEnabled()
+    }
+
+    @Test
+    fun destructiveIconButton_whenPressed_triggersCallback() {
+        // Given an enabled destructive icon button
+        var callbackTriggered = false
+        composeTestRule.setContent {
+            DestructiveIconButton(
+                R.drawable.ic_plus, { callbackTriggered = true },
+                iconDescription = buttonDescription,
+                enabled = true
+            )
+        }
+
+        // When pressed
+        composeTestRule.onNodeWithContentDescription(buttonDescription).performClick()
+
+        // Then, it triggers callback
+        assertTrue(callbackTriggered)
+
+    }
+
+    @Test
+    fun destructiveIconButton_whenNotEnabled_isDisabled() {
+        // Given a destructive icon button with enabled = false
+        composeTestRule.setContent {
+            SecondaryIconButton(
+                R.drawable.ic_plus, { },
+                iconDescription = buttonDescription,
+                enabled = false
+            )
+        }
+
+        // Then, the button is not enabled
+        composeTestRule.onNodeWithContentDescription(buttonDescription).assertIsNotEnabled()
+    }
+
+
 }
