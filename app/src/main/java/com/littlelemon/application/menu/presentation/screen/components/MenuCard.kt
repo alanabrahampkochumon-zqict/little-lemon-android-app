@@ -17,12 +17,25 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.PathOperation
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.shadow.Shadow
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,8 +44,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.DotSeparator
+import com.littlelemon.application.core.presentation.components.Stepper
 import com.littlelemon.application.core.presentation.components.Tag
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
@@ -44,6 +59,7 @@ import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.math.min
 import kotlin.time.Clock
 
 
@@ -52,9 +68,25 @@ fun MenuCard(
     dish: Dish,
     modifier: Modifier = Modifier
 ) {
+
+    // TODO: Replace with state from cart/order
+    var itemCount by remember { mutableIntStateOf(1) }
+    val incrementCount = { itemCount += 1 }
+    val decrementCount = { itemCount = min(0, itemCount + 1) }
+    // END TODO:
+
     val cardShape = MaterialTheme.shapes.medium
     val cardShadow = MaterialTheme.shadows.dropMD
     val screenDensity = LocalDensity.current.density
+
+    var stepperSize by remember { mutableStateOf(Size.Zero) }
+
+    val stepperShape = MaterialTheme.shapes.small
+    val stepperCornerRadius =
+        CornerRadius(stepperShape.topStart.toPx(stepperSize, LocalDensity.current))
+    val cardCornerRadius =
+        CornerRadius(cardShape.topStart.toPx(stepperSize, LocalDensity.current))
+
     Column(
         modifier = modifier
             .dropShadow(cardShape, cardShadow.firstShadow.toComposeShadow(screenDensity))
@@ -73,8 +105,74 @@ fun MenuCard(
                 .heightIn(max = 240.dp)
                 .fillMaxHeight()
                 .background(Color.Green, shape = MaterialTheme.shapes.medium)
+                .drawWithCache {
+                    val width = size.width
+                    val height = size.height
+                    onDrawBehind {
+//                        clipRect(
+//                            left = width - stepperSize.width,
+//                            right = stepperSize.width,
+//                            top = 0f,
+//                            bottom = stepperSize.height
+//                        ) {
+//                            drawRoundRect(Color.Red)
+//                        }
+                        val path1 = Path()
+                        path1.addRoundRect(
+                            RoundRect(
+                                left = 0f,
+                                right = width,
+                                top = 0f,
+                                bottom = height,
+//                                cornerRadius = cardCornerRadius
+                            )
+                        )
+                        val path2 = Path()
+                        path2.addRoundRect(
+                            RoundRect(
+                                left = width - stepperSize.width,
+                                right = width + 100f,
+                                top = -100f,
+                                bottom = stepperSize.height,
+                            )
+                        )
+                        drawPath(path2, Color.Yellow)
+                        val path = Path.combine(PathOperation.Difference, path1, path2)
+                        drawPath(
+                            path = path,
+                            color = Color.Magenta,
+                            style = Stroke(
+                                width = 5f,
+                                pathEffect = PathEffect.cornerPathEffect(64f)
+                            )
+                        )
+//                        drawRoundRect(
+//                            Color.Blue,
+//                            size = stepperSize,
+//                            topLeft = Offset(x = width - stepperSize.width, y = 0f),
+//                            cornerRadius = stepperCornerRadius
+//                        )
+                    }
+                },
+            contentAlignment = Alignment.TopEnd
         ) {
+            Stepper(
+                itemCount,
+                onIncrease = incrementCount,
+                onDecrease = decrementCount,
+                modifier = Modifier
+                    .onGloballyPositioned { coordinates ->
+                        stepperSize = coordinates.size.toSize()
+                    }
+                    .background(
+                        Color.Transparent,
+                        MaterialTheme.shapes.small
+                    )
+                    .padding(
+                        MaterialTheme.dimens.sizeSM
+                    )
 
+            )
         }
         Column(
             modifier = Modifier

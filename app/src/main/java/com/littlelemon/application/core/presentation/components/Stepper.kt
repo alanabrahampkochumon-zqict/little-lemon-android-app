@@ -25,6 +25,7 @@ fun Stepper(
     onIncrease: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // TODO: Stepper animations
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -46,7 +47,11 @@ fun Stepper(
                 modifier = Modifier.padding(end = MaterialTheme.dimens.sizeSM)
             )
         }
-        SecondaryIconButton(R.drawable.ic_plus, onIncrease, iconDescription = stringResource(R.string.desc_increase_quantity))
+        SecondaryIconButton(
+            R.drawable.ic_plus,
+            onIncrease,
+            iconDescription = stringResource(R.string.desc_increase_quantity)
+        )
     }
 }
 
