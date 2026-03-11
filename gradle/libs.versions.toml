@@ -34,6 +34,7 @@ testRules = "1.7.0"
 testParameterInjector = "1.21"
 composeMaps = "6.12.0"
 coil = "3.4.0"
+roborazzi = "1.21.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -105,6 +106,11 @@ jetbrains-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "k
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 test-parameter-injector = { group = "com.google.testparameterinjector", name = "test-parameter-injector", version.ref = "testParameterInjector" }
 
+# Screenshot testing
+roborazzi = { group = "io.github.takahirom.roborazzi", name = "roborazzi", version.ref = "roborazzi" }
+roborazzi-compose = { group = "io.github.takahirom.roborazzi", name = "roborazzi-compose", version.ref = "roborazzi" }
+roborazzi-robolectric = { group = "io.github.takahirom.roborazzi", name = "roborazzi-robolectric", version.ref = "roborazzi" }
+
 # Maps
 compose-maps = { group = "com.google.maps.android", name = "maps-compose", version.ref = "composeMaps" }
 
@@ -125,3 +131,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }

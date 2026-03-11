@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    alias(libs.plugins.roborazzi)
 }
 
 android {
@@ -129,6 +130,10 @@ dependencies {
     testImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.androidx.espresso.core)
     testImplementation(libs.test.parameter.injector)
+
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
+    testImplementation(libs.roborazzi.robolectric)
 
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.junit.platform)
