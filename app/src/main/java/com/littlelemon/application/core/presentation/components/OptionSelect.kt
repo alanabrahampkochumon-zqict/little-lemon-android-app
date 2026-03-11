@@ -1,13 +1,15 @@
 package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -40,12 +42,12 @@ fun OptionSelect(
     Row(
         modifier = modifier
             .background(MaterialTheme.colors.tertiary, shape = shape)
-            .padding(MaterialTheme.dimens.sizeMD)
+            .padding(MaterialTheme.dimens.sizeMD),
     ) {
         options.forEach { option ->
             Option(
-                option,
-                selectedOption == option,
+                value = option,
+                selected = selectedOption == option,
                 enabled = true,
                 onClick = { onOptionChange(option) },
                 modifier = Modifier.innerShadow(
@@ -91,13 +93,14 @@ fun Option(
                 horizontal = MaterialTheme.dimens.sizeXL,
                 vertical = MaterialTheme.dimens.sizeLG
             )
-            .wrapContentSize()
-            .clickable(
+            .selectable(
+                selected = selected,
                 enabled = enabled,
                 onClick = onClick,
                 indication = ripple(),
                 role = Role.Tab,
-                interactionSource = remember { MutableInteractionSource() }),
+                interactionSource = remember { MutableInteractionSource() })
+            ,
         contentAlignment = Alignment.Center
     ) {
         Text(value, color = textColor, style = textStyle)
