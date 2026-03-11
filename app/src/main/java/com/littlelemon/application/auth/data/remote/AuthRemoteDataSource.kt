@@ -45,36 +45,12 @@ class AuthRemoteDataSource(
         }
     }
 
-    // TODO: Extract and abstract user session when extracting interface
     suspend fun getCurrentSession(): UserSession? {
         return client.auth.sessionManager.loadSession()
     }
 
-    // TODO: Extract and remote session status when extracting interface
     fun getSessionStatus(): Flow<SessionStatus> {
         return client.auth.sessionStatus
     }
-    // TODO: For future refactoring if needed
-    /**
-     *      @Nested
-     *     inner class SessionStatusTests {
-     *         // SPECIAL NOTE: Right now these tests are testing supabase's implementation or echoing it.
-     *         // However, if we refactor out the class into interface, these tests are critically to knowing that our logic is correct.
-     *         @Test
-     *         fun getSessionStatus_statusInitializing_flowEmittedIsInitializing() = runTest {
-     *
-     *         }
-     *
-     *         @Test
-     *         fun getSessionStatus_statusAuthenticated_flowEmittedIsAuthenticated() = runTest {
-     *
-     *         }
-     *
-     *         @Test
-     *         fun getSessionStatus_statusNotAuthenticated_flowEmittedIsUnauthenticated() = runTest {
-     *
-     *         }
-     *     }
-     */
 
 }

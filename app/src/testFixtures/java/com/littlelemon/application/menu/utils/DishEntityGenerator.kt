@@ -27,7 +27,6 @@ object DishEntityGenerator {
     }
 
     fun generateDishEntity(): DishEntity {
-
         val nutritionInfo = DishEntity.NutritionInfo(
             calories = (Math.random() * 1000).roundToInt(),
             protein = (Math.random() * 1000).roundToInt(),

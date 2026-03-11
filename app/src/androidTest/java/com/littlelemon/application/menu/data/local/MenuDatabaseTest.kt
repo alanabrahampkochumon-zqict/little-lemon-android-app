@@ -7,8 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
-import com.littlelemon.application.menu.data.local.models.DishEntity
-import io.github.serpro69.kfaker.faker
+import com.littlelemon.application.menu.utils.DishEntityGenerator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import okio.IOException
@@ -16,11 +15,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
+import kotlin.random.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import kotlin.time.Clock
 
 @RunWith(AndroidJUnit4::class)
 class MenuDatabaseTest {
@@ -28,10 +25,6 @@ class MenuDatabaseTest {
     private lateinit var database: MenuDatabase
     private lateinit var dao: MenuDao
 
-    companion object {
-        private const val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
-
-    }
 
     @Before
     fun setUp() {
@@ -51,8 +44,8 @@ class MenuDatabaseTest {
     fun dishWithNoCategoriesInserted_whenQueried_returnsCorrectDish() = runTest {
         // Arrange
         val numCategories = 0
-        val dish = generateDish()
-        val categories = generateCategories(numCategories)
+        val dish = DishEntityGenerator.generateDishEntity()
+        val categories = DishEntityGenerator.generateCategoryEntities(numCategories)
         val crossRef = categories.map { (categoryId, _) ->
             DishCategoryCrossRef(
                 dishId = dish.dishId,
@@ -74,8 +67,8 @@ class MenuDatabaseTest {
     fun dishWithOneCategoriesInserted_whenQueried_returnsCorrectDishWithOneCategory() = runTest {
         // Arrange
         val numCategories = 1
-        val dish = generateDish()
-        val categories = generateCategories(numCategories)
+        val dish = DishEntityGenerator.generateDishEntity()
+        val categories = DishEntityGenerator.generateCategoryEntities(numCategories)
         val crossRef = categories.map { (categoryId, _) ->
             DishCategoryCrossRef(
                 dishId = dish.dishId,
@@ -98,8 +91,8 @@ class MenuDatabaseTest {
     fun dishWithTwoCategoriesInserted_whenQueried_returnsCorrectDishWithTwoCategories() = runTest {
         // Arrange
         val numCategories = 2
-        val dish = generateDish()
-        val categories = generateCategories(numCategories)
+        val dish = DishEntityGenerator.generateDishEntity()
+        val categories = DishEntityGenerator.generateCategoryEntities(numCategories)
         val crossRef = categories.map { (categoryId, _) ->
             DishCategoryCrossRef(
                 dishId = dish.dishId,
@@ -135,8 +128,7 @@ class MenuDatabaseTest {
     fun nonEmptyDatabase_whenQueriedForDishCount_returnsCorrectItemCount() = runTest {
         // Arrange
         val numDishes = 5
-        val numCategories = 5
-        insertDishes(numDishes, numCategories)
+        insertDishes(numDishes)
 
         // Act
         val result = dao.getDishCount()
@@ -149,8 +141,7 @@ class MenuDatabaseTest {
     fun dishesDeletedFromDBWithOnlyOneDish_whenQueried_returnsEmptyList() = runTest {
         // Arrange
         val numDishes = 1
-        val numCategories = 2
-        insertDishes(numDishes, numCategories)
+        insertDishes(numDishes)
 
         // Act
         dao.deleteAllDishes()
@@ -346,13 +337,12 @@ class MenuDatabaseTest {
                 .all { it })
         }
 
-    private suspend fun insertDishes(numDishes: Int = 7, numCategories: Int = 3) {
-        // Arrange
-        val dishes = List(numDishes) { generateDish() }
+    private suspend fun insertDishes(numDishes: Int = 7) {
+        val dishes = List(numDishes) { DishEntityGenerator.generateDishEntity() }
         val categories = mutableListOf<CategoryEntity>()
         val crossRefs = mutableListOf<DishCategoryCrossRef>()
         dishes.forEach { dish ->
-            categories.addAll(generateCategories(numCategories))
+            categories.addAll(DishEntityGenerator.generateCategoryEntities(Random.nextInt(5, 20)))
             crossRefs.addAll(categories.map { (categoryId, _) ->
                 DishCategoryCrossRef(
                     dishId = dish.dishId,
@@ -362,44 +352,5 @@ class MenuDatabaseTest {
         }
         dao.insertDishes(dishes, categories, crossRefs)
     }
-
-
-    private fun generateDish(popularityIndex: Int? = null): DishEntity {
-        val faker = faker {}
-        val nutritionInfo = DishEntity.NutritionInfo(
-            calories = (Math.random() * 1000).roundToInt(),
-            protein = (Math.random() * 1000).roundToInt(),
-            carbs = (Math.random() * 1000).roundToInt(),
-            fats = (Math.random() * 1000).roundToInt(),
-        )
-
-        val timeNowMillis = Clock.System.now().toEpochMilliseconds()
-
-        return DishEntity(
-            title = faker.dessert.dessert()(),
-            description = faker.lorem.words(),
-            price = Math.random() * 1000,
-            image = faker.internet.domain(subdomain = true),
-            stock = (Math.random() * 1000).roundToInt(),
-            nutritionInfo = nutritionInfo,
-            discountedPrice = Math.random() * 1000,
-            popularityIndex = popularityIndex ?: (0..100).random(),
-            dateAdded = (timeNowMillis - Math.random() * FOUR_YEARS_IN_MILLIS).roundToLong() // TODO: Update
-        )
-    }
-
-    private fun generateCategories(numCategories: Int = 1): List<CategoryEntity> {
-        val categories = mutableListOf<CategoryEntity>()
-        val faker = faker {}
-        repeat(numCategories) {
-            categories.add(
-                CategoryEntity(
-                    categoryName = faker.adjective.positive()
-                )
-            )
-        }
-        return categories
-    }
-
 
 }
