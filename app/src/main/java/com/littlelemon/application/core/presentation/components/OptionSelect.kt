@@ -11,12 +11,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.draw.innerShadow
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
@@ -46,7 +48,10 @@ fun OptionSelect(
                 selectedOption == option,
                 enabled = true,
                 onClick = { onOptionChange(option) },
-                modifier = Modifier.innerShadow(shape, MaterialTheme.shadows.innerSM.firstShadow.toComposeShadow(LocalDensity.current.density))
+                modifier = Modifier.innerShadow(
+                    shape,
+                    MaterialTheme.shadows.innerSM.firstShadow.toComposeShadow(LocalDensity.current.density)
+                )
             )
         }
     }
@@ -72,6 +77,7 @@ fun Option(
     val shape = MaterialTheme.shapes.xLarge
 
     // TODO: Fix size of ripple
+    // TODO: Add animation
     Box(
         modifier = modifier
             .then(
@@ -90,6 +96,7 @@ fun Option(
                 enabled = enabled,
                 onClick = onClick,
                 indication = ripple(),
+                role = Role.Tab,
                 interactionSource = remember { MutableInteractionSource() }),
         contentAlignment = Alignment.Center
     ) {
@@ -100,7 +107,9 @@ fun Option(
 @Preview
 @Composable
 private fun OptionSelectPreview() {
+    val options = listOf("Option 1", "Option 2", "Option 3")
+    val currentOption = remember { mutableStateOf(options[0]) }
     LittleLemonTheme {
-        OptionSelect(listOf("Option 1", "Option 2", "Option 3"), "Option 1", {})
+        OptionSelect(options, currentOption.value, { currentOption.value = it })
     }
 }
