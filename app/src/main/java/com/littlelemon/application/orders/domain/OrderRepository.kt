@@ -9,4 +9,9 @@ interface OrderRepository {
     suspend fun placeOrder(): Resource<Unit> // TODO: Change to order item(details)
     suspend fun cancelOrder(): Resource<Unit> // TODO: Change to order item
     fun getAllOrders(): Flow<Resource<Unit>> // TODO: Change to OrderList with sorting option
+    suspend fun updateCartQuantity(dishId: String, newQuantity: Int): Resource<Unit>
+    suspend fun getCartItemCount(dishId: String): Resource<Unit>
+    suspend fun clearCart(): Resource<Unit>
+//    suspend fun
+
 }
