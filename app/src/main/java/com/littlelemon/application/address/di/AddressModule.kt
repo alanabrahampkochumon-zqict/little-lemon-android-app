@@ -3,6 +3,8 @@ package com.littlelemon.application.address.di
 import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.maps.GeoApiContext
+import com.littlelemon.application.BuildConfig
 import com.littlelemon.application.address.data.AddressRepositoryImpl
 import com.littlelemon.application.address.data.local.AddressDatabase
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
@@ -36,11 +38,15 @@ val addressModule = module {
 
     single<AddressRepository> { AddressRepositoryImpl(get(), get()) }
 
-    single<AddressRemoteDataSource> { AddressRemoteDataSourceImpl(get()) }
+    single<AddressRemoteDataSource> { AddressRemoteDataSourceImpl(get(), get()) }
     single<AddressLocalDataSource> { AddressLocalDataSourceImpl(get(), get()) }
 
     single<FusedLocationProviderClient> {
         LocationServices.getFusedLocationProviderClient(androidContext())
+    }
+
+    single<GeoApiContext> {
+        GeoApiContext.Builder().apiKey(BuildConfig.MAPS_API_KEY).build()
     }
 
     single<AddressDao> {

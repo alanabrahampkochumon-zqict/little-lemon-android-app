@@ -114,7 +114,7 @@ roborazzi-robolectric = { group = "io.github.takahirom.roborazzi", name = "robor
 
 # Maps
 compose-maps = { group = "com.google.maps.android", name = "maps-compose", version.ref = "composeMaps" }
-google-maps-service = { group = "com.google.maps", name = "google-maps-servies", version.ref = "googleMapsService" }
+google-maps-service = { group = "com.google.maps", name = "google-maps-services", version.ref = "googleMapsService" }
 
 #Supabase
 supbase-bom = { group = "io.github.jan-tennert.supabase", name = "bom", version.ref = "supabase" }

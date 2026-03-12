@@ -1,6 +1,5 @@
 package com.littlelemon.application.address.data.remote
 
-import com.google.android.gms.maps.model.LatLng
 import com.littlelemon.application.address.data.remote.models.AddressDTO
 import com.littlelemon.application.address.data.remote.models.AddressRequestDTO
 
@@ -11,5 +10,5 @@ interface AddressRemoteDataSource {
 
     suspend fun geocodeAddress(address: AddressRequestDTO)
 
-    suspend fun reverseGeocodeAddress(latLng: LatLng)
+//    suspend fun reverseGeocodeAddress(latLng: LatLng)
 }

@@ -1,5 +1,6 @@
 package com.littlelemon.application.address.data.remote
 
+import com.google.maps.GeoApiContext
 import com.littlelemon.application.address.data.mappers.toResponse
 import com.littlelemon.application.address.data.remote.models.AddressDTO
 import com.littlelemon.application.address.data.remote.models.AddressRequestDTO
@@ -14,7 +15,8 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
 class AddressRemoteDataSourceImpl(
-    private val client: SupabaseClient
+    private val client: SupabaseClient,
+    private val geocodingContext: GeoApiContext
 ) : AddressRemoteDataSource {
 
     @Throws(
@@ -57,6 +59,14 @@ class AddressRemoteDataSourceImpl(
     override suspend fun deleteAddress(address: AddressRequestDTO) {
         if (address.id == null) return // Won't hit this case unless as id is only null for fresh addresses coming from VM
         client.from(SupabaseTables.USER_ADDRESS).delete { filter { eq("id", address.id) } }
+    }
+
+    @Throws(
+        IllegalStateException::class,
+    )
+    override suspend fun geocodeAddress(address: AddressRequestDTO) {
+//        val response = GeocodingApi.geocode(context)
+        TODO("Not yet implemented")
     }
 
 }

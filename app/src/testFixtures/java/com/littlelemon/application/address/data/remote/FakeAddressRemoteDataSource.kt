@@ -40,4 +40,12 @@ class FakeAddressRemoteDataSource(
         _address.remove(address.toResponse())
     }
 
+    override suspend fun geocodeAddress(address: AddressRequestDTO) {
+        TODO("Not yet implemented")
+    }
+
+//    override suspend fun reverseGeocodeAddress(latLng: LatLng) {
+//        TODO("Not yet implemented")
+//    }
+
 }
