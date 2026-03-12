@@ -5,11 +5,18 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -32,16 +39,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
+import com.littlelemon.application.address.presentation.AddressEvents
 import com.littlelemon.application.address.presentation.AddressState
 import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.core.presentation.components.AlertDialog
@@ -53,6 +68,7 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
@@ -60,11 +76,11 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
     val activity = LocalActivity.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val permissions =
-        arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
+    var showLocationEntryDialog by remember { mutableStateOf(false) }
+
+    val permissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
+    )
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -85,24 +101,61 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
         }
     }
 
-//    LocationEntryContent(koinViewModel<AddressViewModel>())
-    // TODO: Use navigation to switch content
-//    LocationPermissionScreenRoot(
-//        state = state,
-//        modifier = modifier,
-//        onEnableLocationClick = {
-//            permissionLauncher.launch(permissions)
-//        },
-//        onManualLocationClick = {
-//            viewModel.onAction(AddressActions.EnterLocationManually)
-//        },
-//        onDismissAlert = {
-//            viewModel.onAction(AddressActions.DismissLocationDialog)
-//        },
-//        onAllowLocationAccessClick = {
-//            openAppSettings(activity?.applicationContext!!)
-//        }
-//    )
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(viewModel.addressEvents, lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+            viewModel.addressEvents.collect { event ->
+                when (event) {
+                    AddressEvents.AddressSaved -> Toast.makeText(
+                        context,
+                        "Address Saved!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    is AddressEvents.ShowError -> Toast.makeText(
+                        context,
+                        event.errorMessage.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    is AddressEvents.ShowInfo -> Toast.makeText(
+                        context,
+                        event.message.asString(context),
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    AddressEvents.ShowLocationEntryPopup -> showLocationEntryDialog = true
+                }
+            }
+        }
+
+    }
+
+    Box(modifier) {
+
+        LocationPermissionScreenRoot(state = state, modifier = modifier, onEnableLocationClick = {
+            permissionLauncher.launch(permissions)
+        }, onManualLocationClick = {
+            viewModel.onAction(AddressActions.EnterLocationManually)
+        }, onDismissAlert = {
+            viewModel.onAction(AddressActions.DismissLocationDialog)
+        }, onAllowLocationAccessClick = {
+            openAppSettings(activity?.applicationContext!!)
+        })
+        AnimatedVisibility(
+            showLocationEntryDialog,
+            enter = slideInVertically { it } + fadeIn(),
+            exit = slideOutVertically { it } + fadeOut(),
+        ) {
+            LocationEntryContent(
+                koinViewModel<AddressViewModel>(),
+                modifier = Modifier.fillMaxSize(),
+                onClose = { showLocationEntryDialog = false })
+        }
+    }
+
 }
 
 @Composable
@@ -121,9 +174,7 @@ fun LocationPermissionScreenRoot(
     }
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize(),
-        contentWindowInsets = WindowInsets.systemBars.only(
+        modifier = modifier.fillMaxSize(), contentWindowInsets = WindowInsets.systemBars.only(
             WindowInsetsSides.Bottom
         ).add(WindowInsets.ime)
     ) { innerPadding ->

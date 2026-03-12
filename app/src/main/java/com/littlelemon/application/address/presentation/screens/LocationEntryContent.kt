@@ -85,11 +85,17 @@ import com.littlelemon.application.core.presentation.utils.toComposeShadow
 import com.littlelemon.application.core.presentation.utils.toDP
 
 @Composable
-fun LocationEntryContent(viewModel: AddressViewModel, isFloating: Boolean = false) {
+fun LocationEntryContent(
+    viewModel: AddressViewModel,
+    onClose: () -> Unit,
+    modifier: Modifier = Modifier,
+    isFloating: Boolean = false
+) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     LocationEntryContentRoot(
         state,
+        modifier = modifier,
         onLabelChange = { viewModel.onAction(AddressActions.ChangeLabel(it)) },
         onBuildingNameChange = { viewModel.onAction(AddressActions.ChangeBuildingName(it)) },
         onStreetAddressChange = { viewModel.onAction(AddressActions.ChangeStreetAddress(it)) },
@@ -97,7 +103,12 @@ fun LocationEntryContent(viewModel: AddressViewModel, isFloating: Boolean = fals
         onStateChange = { viewModel.onAction(AddressActions.ChangeState(it)) },
         onPinCodeChange = { viewModel.onAction(AddressActions.ChangePinCode(it)) },
         onSaveAsDefaultChange = { viewModel.onAction(AddressActions.ChangeToDefaultAddress(it)) },
-        onSaveAddress = { viewModel.onAction(AddressActions.SaveAddress) }, isFloating = isFloating
+        onSaveAddress = {
+            viewModel.onAction(AddressActions.SaveAddress)
+            onClose()
+        },
+        onClose = onClose,
+        isFloating = isFloating
     )
 
 }
@@ -140,8 +151,7 @@ fun LocationEntryContentRoot(
     var mapHeight by remember { mutableFloatStateOf(mapHeightInPx) }
 
     val animatedHeight = animateFloatAsState(
-        mapHeight,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy)
+        mapHeight, animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy)
     )
 
 
@@ -160,8 +170,7 @@ fun LocationEntryContentRoot(
                 mapHeight =
                     if (mapHeight > mapHeightInPx / 2) // If the current fling height 1/2 of the way then snap it to full height
                         mapHeightInPx
-                    else
-                        minTopBarHeightInPx
+                    else minTopBarHeightInPx
                 return super.onPostFling(consumed, available)
             }
         }
@@ -209,17 +218,16 @@ fun LocationEntryContentRoot(
         },
         topBar = {
             // Render as topbar if not mobile landscape
-            if (!mobileLandscape)
-                MapHeader(
-                    Modifier
-                        .height(animatedHeight.value.toDP(screenDensity))
-                        .fillMaxWidth()
-                        .background(Color.DarkGray)
-                        .testTag(AddressTestTags.NESTED_SCROLL_HEADER),
-                    onClose = onClose,
-                    floatingBarTopPadding = safeContentPadding,
-                    floatingBarBottomPadding = topBarBottomPadding
-                )
+            if (!mobileLandscape) MapHeader(
+                Modifier
+                    .height(animatedHeight.value.toDP(screenDensity))
+                    .fillMaxWidth()
+                    .background(Color.DarkGray)
+                    .testTag(AddressTestTags.NESTED_SCROLL_HEADER),
+                onClose = onClose,
+                floatingBarTopPadding = safeContentPadding,
+                floatingBarBottomPadding = topBarBottomPadding
+            )
         }) { innerPadding ->
         if (!mobileLandscape) Column(
             modifier = Modifier
@@ -281,10 +289,7 @@ fun LocationEntryContentRoot(
 
 @Composable
 fun MapHeader(
-    modifier: Modifier,
-    onClose: () -> Unit,
-    floatingBarTopPadding: Dp,
-    floatingBarBottomPadding: Dp
+    modifier: Modifier, onClose: () -> Unit, floatingBarTopPadding: Dp, floatingBarBottomPadding: Dp
 ) {
     val singapore = LatLng(1.35, 103.87)
     val singaporeMarkerState = rememberUpdatedMarkerState(position = singapore)
@@ -294,8 +299,7 @@ fun MapHeader(
     val uiSetting =
         remember { MapUiSettings(zoomControlsEnabled = true, zoomGesturesEnabled = true) }
     Box(
-        modifier = modifier,
-        contentAlignment = Alignment.TopCenter
+        modifier = modifier, contentAlignment = Alignment.TopCenter
     ) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
@@ -305,9 +309,7 @@ fun MapHeader(
             mapColorScheme = ComposeMapColorScheme.LIGHT
         ) {
             Marker(
-                state = singaporeMarkerState,
-                title = "Singapore",
-                snippet = "Marker in Singapore"
+                state = singaporeMarkerState, title = "Singapore", snippet = "Marker in Singapore"
             )
         }
 
