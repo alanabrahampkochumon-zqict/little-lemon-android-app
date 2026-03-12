@@ -43,7 +43,7 @@ class AddressRemoteDataSourceImplTest {
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
-        remoteDatasource = AddressRemoteDataSourceImpl(client)
+        remoteDatasource = SupabaseAddressRemoteDataSource(client)
 
         // Act
         val result = remoteDatasource.getAddress()
@@ -63,7 +63,7 @@ class AddressRemoteDataSourceImplTest {
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
-        remoteDatasource = AddressRemoteDataSourceImpl(client)
+        remoteDatasource = SupabaseAddressRemoteDataSource(client)
 
         // Act & Assert
         assertThrows<PostgrestRestException> { remoteDatasource.getAddress() }
@@ -81,7 +81,7 @@ class AddressRemoteDataSourceImplTest {
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
-        remoteDatasource = AddressRemoteDataSourceImpl(client)
+        remoteDatasource = SupabaseAddressRemoteDataSource(client)
 
         // Act
         val response = remoteDatasource.saveAddress(address.toRequestDTO())
@@ -101,7 +101,7 @@ class AddressRemoteDataSourceImplTest {
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
-        remoteDatasource = AddressRemoteDataSourceImpl(client)
+        remoteDatasource = SupabaseAddressRemoteDataSource(client)
 
         // Act & Assert
         assertThrows<PostgrestRestException> { remoteDatasource.saveAddress(address.toRequestDTO()) }
@@ -119,7 +119,7 @@ class AddressRemoteDataSourceImplTest {
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
-        remoteDatasource = AddressRemoteDataSourceImpl(client)
+        remoteDatasource = SupabaseAddressRemoteDataSource(client)
 
         // Act & Assert
         assertDoesNotThrow { remoteDatasource.deleteAddress(address.toRequestDTO()) }
@@ -136,7 +136,7 @@ class AddressRemoteDataSourceImplTest {
                 headers = headersOf(HttpHeaders.ContentType, "application/json")
             )
         }
-        remoteDatasource = AddressRemoteDataSourceImpl(client)
+        remoteDatasource = SupabaseAddressRemoteDataSource(client)
 
         // Act & Assert
         assertThrows<PostgrestRestException> { remoteDatasource.deleteAddress(address.toRequestDTO()) }

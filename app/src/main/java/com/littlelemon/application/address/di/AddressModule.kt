@@ -11,7 +11,7 @@ import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.local.AddressLocalDataSourceImpl
 import com.littlelemon.application.address.data.local.dao.AddressDao
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
-import com.littlelemon.application.address.data.remote.AddressRemoteDataSourceImpl
+import com.littlelemon.application.address.data.remote.SupabaseAddressRemoteDataSource
 import com.littlelemon.application.address.domain.AddressManagerImpl
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.usecase.GetAddressCountUseCase
@@ -38,7 +38,7 @@ val addressModule = module {
 
     single<AddressRepository> { AddressRepositoryImpl(get(), get()) }
 
-    single<AddressRemoteDataSource> { AddressRemoteDataSourceImpl(get(), get()) }
+    single<AddressRemoteDataSource> { SupabaseAddressRemoteDataSource(get(), get()) }
     single<AddressLocalDataSource> { AddressLocalDataSourceImpl(get(), get()) }
 
     single<FusedLocationProviderClient> {

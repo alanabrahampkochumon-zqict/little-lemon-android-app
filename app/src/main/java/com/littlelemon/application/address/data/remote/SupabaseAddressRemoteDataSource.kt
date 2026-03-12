@@ -1,14 +1,9 @@
 package com.littlelemon.application.address.data.remote
 
-import com.google.maps.GeoApiContext
 import com.littlelemon.application.address.data.mappers.toResponse
 import com.littlelemon.application.address.data.remote.models.AddressDTO
 import com.littlelemon.application.address.data.remote.models.AddressRequestDTO
-import com.littlelemon.application.address.domain.GeocoderException
 import com.littlelemon.application.core.data.remote.SupabaseTables
-import com.littlelemon.application.core.domain.exceptions.InvalidRequestException
-import com.littlelemon.application.core.domain.exceptions.RequestDeniedException
-import com.littlelemon.application.core.domain.exceptions.UnknownException
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.exceptions.HttpRequestException
 import io.github.jan.supabase.postgrest.exception.PostgrestRestException
@@ -18,9 +13,8 @@ import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
-class AddressRemoteDataSourceImpl(
-    private val client: SupabaseClient,
-    private val geocodingContext: GeoApiContext
+class SupabaseAddressRemoteDataSource(
+    private val client: SupabaseClient
 ) : AddressRemoteDataSource {
 
     @Throws(
@@ -65,17 +59,5 @@ class AddressRemoteDataSourceImpl(
         client.from(SupabaseTables.USER_ADDRESS).delete { filter { eq("id", address.id) } }
     }
 
-    @Throws(
-        GeocoderException.ZeroResults::class,
-        GeocoderException.DailyLimit::class,
-        GeocoderException.QueryLimit::class,
-        RequestDeniedException::class,
-        InvalidRequestException::class,
-        UnknownException::class,
-    )
-    override suspend fun geocodeAddress(address: AddressRequestDTO) {
-//        val response = GeocodingApi.geocode(context)
-        TODO("Not yet implemented")
-    }
 
 }

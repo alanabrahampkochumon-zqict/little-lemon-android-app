@@ -7,8 +7,4 @@ interface AddressRemoteDataSource {
     suspend fun getAddress(): List<AddressDTO>
     suspend fun saveAddress(address: AddressRequestDTO): AddressDTO
     suspend fun deleteAddress(address: AddressRequestDTO)
-
-    suspend fun geocodeAddress(address: AddressRequestDTO)
-
-//    suspend fun reverseGeocodeAddress(latLng: LatLng)
 }
