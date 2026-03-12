@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
-class AddressRemoteDataSourceImplTest {
+class SupabaseAddressRemoteDataSourceTest {
 
     private lateinit var client: SupabaseClient
     private lateinit var remoteDatasource: AddressRemoteDataSource
