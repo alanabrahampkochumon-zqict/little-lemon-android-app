@@ -1,4 +1,4 @@
-package com.littlelemon.application.address.data.remote
+package com.littlelemon.application.address.data.remote.geocoding
 
 import com.google.maps.GeoApiContext
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
