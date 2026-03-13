@@ -1,6 +1,5 @@
 package com.littlelemon.application.address.data.remote.geocoding
 
-import com.google.maps.GeoApiContext
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.domain.GeocoderException
 import com.littlelemon.application.core.domain.exceptions.InvalidRequestException
@@ -8,7 +7,7 @@ import com.littlelemon.application.core.domain.exceptions.RequestDeniedException
 import com.littlelemon.application.core.domain.exceptions.UnknownException
 
 class GoogleGeocodingRemoteDataSource(
-    private val geocodingContext: GeoApiContext
+    private val engine: GeocodingEngine
 ) : GeocodingRemoteDataSource {
     @Throws(
         GeocoderException.ZeroResults::class,

@@ -1,29 +1,21 @@
 package com.littlelemon.application.address.data.remote.models
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
-
-@Serializable
 data class GeocodingDTO(
-    val results: List<Result>,
-    val status: String
+    val latLng: LatLng,
+    val locationType: LocationType,
+    val partialMatch: Boolean
 ) {
-    @Serializable
-    data class Result(
-        val geometry: Geometry
-    )
-
-    @Serializable
-    data class Location(
+    data class LatLng(
         val lat: Double,
         val lng: Double
     )
 
-    @Serializable
-    data class Geometry(
-        val location: Location,
-        @SerialName("location_type")
-        val locationType: String,
-    )
+    enum class LocationType {
+        ROOFTOP,
+        RANGE_INTERPOLATED,
+        GEOMETRIC_CENTER,
+        APPROXIMATE,
+        UNKNOWN
+    }
 }
