@@ -4,6 +4,9 @@ import com.google.maps.errors.ApiException
 import com.google.maps.errors.OverDailyLimitException
 import com.google.maps.errors.OverQueryLimitException
 import com.google.maps.errors.ZeroResultsException
+import com.google.maps.model.GeocodingResult
+import com.google.maps.model.Geometry
+import com.google.maps.model.LatLng
 import com.google.maps.model.LocationType
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.domain.GeocoderException
@@ -11,6 +14,7 @@ import com.littlelemon.application.core.domain.exceptions.CoreException
 import com.littlelemon.application.core.domain.exceptions.InvalidRequestException
 import com.littlelemon.application.core.domain.exceptions.RequestDeniedException
 import com.littlelemon.application.core.domain.exceptions.UnknownException
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -66,5 +70,26 @@ class GeocodingMapperTests {
 
         // Then, the mapping is as expected
         assertEquals(to, result)
+    }
+
+    @Test
+    fun geocodingResultMapper_mapsToCorrectDTO() {
+        // Given a geocoding result
+        val geometry = Geometry()
+        geometry.location = LatLng(1.234, 5.4213)
+        geometry.locationType = LocationType.ROOFTOP
+
+        val geocodingResult = GeocodingResult()
+        geocodingResult.geometry = geometry
+        geocodingResult.partialMatch = true
+
+        // When mapped to GeocodingDTO
+        val dto = geocodingResult.toGeocodingDTO()
+
+        // Then, it has the correct result
+        assertEquals(geometry.location.lat, dto.latLng.lat)
+        assertEquals(geometry.location.lng, dto.latLng.lng)
+        assertEquals(geometry.locationType.toLocationTypeDTO(), dto.locationType)
+        assertEquals(geocodingResult.partialMatch, dto.partialMatch)
     }
 }

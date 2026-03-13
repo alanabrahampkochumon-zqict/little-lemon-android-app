@@ -4,6 +4,7 @@ import com.google.maps.errors.ApiException
 import com.google.maps.errors.OverDailyLimitException
 import com.google.maps.errors.OverQueryLimitException
 import com.google.maps.errors.ZeroResultsException
+import com.google.maps.model.GeocodingResult
 import com.google.maps.model.LocationType
 import com.google.maps.model.LocationType.APPROXIMATE
 import com.google.maps.model.LocationType.GEOMETRIC_CENTER
@@ -41,4 +42,12 @@ fun LocationType.toLocationTypeDTO(): GeocodingDTO.LocationType {
         APPROXIMATE -> GeocodingDTO.LocationType.APPROXIMATE
         UNKNOWN -> GeocodingDTO.LocationType.UNKNOWN
     }
+}
+
+fun GeocodingResult.toGeocodingDTO(): GeocodingDTO {
+    return GeocodingDTO(
+        GeocodingDTO.LatLng(geometry.location.lat, geometry.location.lng),
+        geometry.locationType.toLocationTypeDTO(),
+        partialMatch
+    )
 }

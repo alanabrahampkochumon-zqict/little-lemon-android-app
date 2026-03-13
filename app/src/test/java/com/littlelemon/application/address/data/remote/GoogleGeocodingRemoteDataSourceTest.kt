@@ -6,17 +6,20 @@ import com.google.maps.model.GeocodingResult
 import com.google.maps.model.Geometry
 import com.google.maps.model.LatLng
 import com.google.maps.model.LocationType
+import com.littlelemon.application.address.data.mappers.toLocationTypeDTO
 import com.littlelemon.application.address.data.remote.geocoding.GeocodingEngine
 import com.littlelemon.application.address.data.remote.geocoding.GeocodingRemoteDataSource
 import com.littlelemon.application.address.data.remote.geocoding.GoogleGeocodingRemoteDataSource
 import com.littlelemon.application.address.domain.GeocoderException
 import com.littlelemon.application.core.domain.exceptions.InvalidRequestException
+import com.littlelemon.application.core.domain.exceptions.RequestDeniedException
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertEquals
 
 class GoogleGeocodingRemoteDataSourceTest {
 
@@ -65,13 +68,13 @@ class GoogleGeocodingRemoteDataSourceTest {
         }
 
     @Test
-    fun geocoder_whenEngineThrowsIllegalStateException_throwsInvalidRequestException() = runTest {
+    fun geocoder_whenEngineThrowsIllegalStateException_throwsRequestDeniedException() = runTest {
         // Given the engine throws IllegalStateException
         coEvery { geocodingEngine.geocode(any()) } throws IllegalStateException()
 
         // When address is geocoded
-        // Then, it throws a `InvalidRequestException`
-        assertThrows<InvalidRequestException> { dataSource.geocodeAddress(address) }
+        // Then, it throws a `RequestDeniedException`
+        assertThrows<RequestDeniedException> { dataSource.geocodeAddress(address) }
     }
 
     @Test
@@ -106,7 +109,16 @@ class GoogleGeocodingRemoteDataSourceTest {
         val geocodingDTO = dataSource.geocodeAddress(address)
 
         // Then, it returns correct result
-//        assertEquals(geocodingResult.geometry.locationType)
+        assertEquals(
+            geocodingResult.geometry.locationType.toLocationTypeDTO(),
+            geocodingDTO.locationType
+        )
+        assertEquals(geocodingResult.geometry.location.lat, geocodingDTO.latLng.lat)
+        assertEquals(geocodingResult.geometry.location.lng, geocodingDTO.latLng.lng)
+        assertEquals(
+            geocodingResult.partialMatch,
+            geocodingDTO.partialMatch
+        )
     }
 
 }
