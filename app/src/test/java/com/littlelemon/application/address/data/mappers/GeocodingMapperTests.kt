@@ -4,6 +4,8 @@ import com.google.maps.errors.ApiException
 import com.google.maps.errors.OverDailyLimitException
 import com.google.maps.errors.OverQueryLimitException
 import com.google.maps.errors.ZeroResultsException
+import com.google.maps.model.LocationType
+import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.domain.GeocoderException
 import com.littlelemon.application.core.domain.exceptions.CoreException
 import com.littlelemon.application.core.domain.exceptions.InvalidRequestException
@@ -17,8 +19,7 @@ import kotlin.test.assertEquals
 import com.google.maps.errors.InvalidRequestException as GeoApiInvalidRequestException
 import com.google.maps.errors.RequestDeniedException as GeoApiRequestDeniedException
 
-class ToGeocodingExceptionTest {
-
+class GeocodingMapperTests {
 
     companion object {
         @JvmStatic
@@ -30,15 +31,40 @@ class ToGeocodingExceptionTest {
             Arguments.of(GeoApiRequestDeniedException(null), RequestDeniedException()),
             Arguments.of(ApiException.from("", ""), UnknownException()),
         )
+
+        @JvmStatic
+        fun locationTypeProvider(): Stream<Arguments> = Stream.of(
+            Arguments.of(LocationType.ROOFTOP, GeocodingDTO.LocationType.ROOFTOP),
+            Arguments.of(LocationType.GEOMETRIC_CENTER, GeocodingDTO.LocationType.GEOMETRIC_CENTER),
+            Arguments.of(
+                LocationType.RANGE_INTERPOLATED,
+                GeocodingDTO.LocationType.RANGE_INTERPOLATED
+            ),
+            Arguments.of(LocationType.APPROXIMATE, GeocodingDTO.LocationType.APPROXIMATE),
+            Arguments.of(LocationType.UNKNOWN, GeocodingDTO.LocationType.UNKNOWN),
+        )
     }
 
     @ParameterizedTest
     @MethodSource("exceptionProvider")
     fun exceptionMapper_mapsToCorrectException(from: ApiException, to: CoreException) {
-        // When mapped from Geocoding exceptions to CoreExceptions
+        // When mapping from Geocoding exceptions to CoreExceptions
         val result = from.toGeocodingException()
 
         // Then, the exception is of expected type
         assertEquals(result::class, to::class)
+    }
+
+    @ParameterizedTest
+    @MethodSource("locationTypeProvider")
+    fun locationTypeMapper_mapsToCorrectDTOLocationType(
+        from: LocationType,
+        to: GeocodingDTO.LocationType
+    ) {
+        // When mapping from Google's LocationType to GeocodingDTO.LocationType
+        val result = from.toLocationTypeDTO()
+
+        // Then, the mapping is as expected
+        assertEquals(to, result)
     }
 }
