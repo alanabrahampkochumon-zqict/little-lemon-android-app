@@ -24,12 +24,13 @@ class MainActivity : ComponentActivity() {
                         val context by inject<GeoApiContext>()
                         val geocoderResult = GeocodingApi.geocode(
                             context,
-                            "asdfasdfsadfasdfwqereqwer21asdfgasdfsaff12342134afasf"
+                            "asdfasdfasdfasdfasfdasdfasfdasdfasdfasfa423142afsfdaf"
                         ).await()
-                        Log.d("Location", geocoderResult.toString())
+//                        Log.d("Location", geocoderResult)
+                        Log.d("Location", geocoderResult.contentDeepToString())
 
                     } catch (e: Exception) {
-                        Log.d("Location", e.message.toString())
+                        Log.d("Location Exception", e.message.toString())
                         Log.d("Location", e.toString())
                     }
                 }

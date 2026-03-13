@@ -38,7 +38,7 @@ val addressModule = module {
 
     single<AddressRepository> { AddressRepositoryImpl(get(), get()) }
 
-    single<AddressRemoteDataSource> { SupabaseAddressRemoteDataSource(get(), get()) }
+    single<AddressRemoteDataSource> { SupabaseAddressRemoteDataSource(get()) }
     single<AddressLocalDataSource> { AddressLocalDataSourceImpl(get(), get()) }
 
     single<FusedLocationProviderClient> {
