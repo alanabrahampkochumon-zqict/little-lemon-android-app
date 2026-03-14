@@ -57,6 +57,7 @@ class GeocodingMapperTests {
             Arguments.of(AddressComponentType.LOCALITY),
             Arguments.of(AddressComponentType.COUNTRY),
             Arguments.of(AddressComponentType.POSTAL_CODE),
+            null
         )
 
     }
@@ -92,7 +93,7 @@ class GeocodingMapperTests {
         @ParameterizedTest
         @MethodSource("com.littlelemon.application.address.data.mappers.GeocodingMapperTests#addressComponentProvider")
         fun whenMappingGeocodingResultWithMissingAddressComponents_returnsEmptyString(
-            missingAddressComponent: AddressComponentType
+            missingAddressComponent: AddressComponentType?
         ) {
             // Given a geocoding result with an address component missing
             val (geocodingResult, expectedDto) = GeocodingResultGenerator.generateResult(

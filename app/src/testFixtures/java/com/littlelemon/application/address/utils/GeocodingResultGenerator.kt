@@ -13,7 +13,7 @@ import java.util.UUID
 import kotlin.random.Random
 
 object GeocodingResultGenerator {
-    val faker = faker { }
+    private val faker = faker { }
 
     fun generateResult(
         makeNull: AddressComponentType? = null,
@@ -58,7 +58,7 @@ object GeocodingResultGenerator {
         geocodingResult.geometry = geometry
         geocodingResult.placeId = placeId
         geocodingResult.partialMatch = partialMatch
-        
+
         val geocodingDTO = GeocodingDTO(
             latLng = GeocodingDTO.LatLng(
                 geometry.location.lat,
