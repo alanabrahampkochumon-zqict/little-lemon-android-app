@@ -4,16 +4,19 @@ import com.google.maps.errors.ApiException
 import com.google.maps.errors.OverDailyLimitException
 import com.google.maps.errors.OverQueryLimitException
 import com.google.maps.errors.ZeroResultsException
+import com.google.maps.model.AddressComponentType
 import com.google.maps.model.GeocodingResult
 import com.google.maps.model.Geometry
 import com.google.maps.model.LatLng
 import com.google.maps.model.LocationType
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.domain.GeocoderException
+import com.littlelemon.application.address.utils.GeocodingResultGenerator
 import com.littlelemon.application.core.domain.exceptions.CoreException
 import com.littlelemon.application.core.domain.exceptions.InvalidRequestException
 import com.littlelemon.application.core.domain.exceptions.RequestDeniedException
 import com.littlelemon.application.core.domain.exceptions.UnknownException
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -41,13 +44,23 @@ class GeocodingMapperTests {
             Arguments.of(LocationType.ROOFTOP, GeocodingDTO.LocationType.ROOFTOP),
             Arguments.of(LocationType.GEOMETRIC_CENTER, GeocodingDTO.LocationType.GEOMETRIC_CENTER),
             Arguments.of(
-                LocationType.RANGE_INTERPOLATED,
-                GeocodingDTO.LocationType.RANGE_INTERPOLATED
+                LocationType.RANGE_INTERPOLATED, GeocodingDTO.LocationType.RANGE_INTERPOLATED
             ),
             Arguments.of(LocationType.APPROXIMATE, GeocodingDTO.LocationType.APPROXIMATE),
             Arguments.of(LocationType.UNKNOWN, GeocodingDTO.LocationType.UNKNOWN),
         )
+
+        @JvmStatic
+        fun addressComponentProvider(): Stream<Arguments> = Stream.of(
+            Arguments.of(AddressComponentType.STREET_ADDRESS),
+            Arguments.of(AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_1),
+            Arguments.of(AddressComponentType.LOCALITY),
+            Arguments.of(AddressComponentType.COUNTRY),
+            Arguments.of(AddressComponentType.POSTAL_CODE),
+        )
+
     }
+
 
     @ParameterizedTest
     @MethodSource("exceptionProvider")
@@ -59,11 +72,11 @@ class GeocodingMapperTests {
         assertEquals(result::class, to::class)
     }
 
+
     @ParameterizedTest
     @MethodSource("locationTypeProvider")
     fun locationTypeMapper_mapsToCorrectDTOLocationType(
-        from: LocationType,
-        to: GeocodingDTO.LocationType
+        from: LocationType, to: GeocodingDTO.LocationType
     ) {
         // When mapping from Google's LocationType to GeocodingDTO.LocationType
         val result = from.toLocationTypeDTO()
@@ -72,6 +85,95 @@ class GeocodingMapperTests {
         assertEquals(to, result)
     }
 
+
+    @Nested
+    inner class GeocodingResultMapper {
+
+        @ParameterizedTest
+        @MethodSource("com.littlelemon.application.address.data.mappers.GeocodingMapperTests#addressComponentProvider")
+        fun whenMappingGeocodingResultWithMissingAddressComponents_returnsEmptyString(
+            missingAddressComponent: AddressComponentType
+        ) {
+            // Given a geocoding result with an address component missing
+            val (geocodingResult, expectedDto) = GeocodingResultGenerator.generateResult(
+                missingAddressComponent
+            )
+
+            // When mapped to address dto
+            val actualDTO = geocodingResult.toGeocodingDTO()
+
+            // Then it returns correct dto
+            assertEquals(expectedDto, actualDTO)
+        }
+
+        @Test
+        fun whenMappingGeocodingResultWithEmptyFullAddress_returnsDTOWithBlankFullAddress() {
+            // Given a geocoding result with null address
+            val (geocodingResult, expectedDTO) = GeocodingResultGenerator.generateResult(
+                makeFullAddressEmpty = true
+            )
+
+            // When mapped to address DTO
+            val actualDTO = geocodingResult.toGeocodingDTO()
+
+            // Then it returns correct DTO
+            assertEquals(
+                expectedDTO.copy(
+                    address = expectedDTO.address?.copy(address = ""), fullAddress = ""
+                ), actualDTO
+            )
+
+        }
+
+        @Test
+        fun whenMappingGeocodingResultNullFullAddress_returnsDTOWithBlankFullAddress() {
+            // Given a geocoding result with null address
+            val (geocodingResult, expectedDTO) = GeocodingResultGenerator.generateResult()
+            geocodingResult.formattedAddress = null
+
+            // When mapped to address DTO
+            val actualDTO = geocodingResult.toGeocodingDTO()
+
+            // Then it returns correct DTO
+            assertEquals(
+                expectedDTO.copy(fullAddress = "", address = actualDTO.address?.copy(address = "")),
+                actualDTO
+            )
+        }
+
+        @Test
+        fun whenMappingGeocodingResultNullPlaceID_returnsDTOWithBlankPlaceID() {
+            // Given a geocoding result with null address
+            val (geocodingResult, expectedDTO) = GeocodingResultGenerator.generateResult()
+            geocodingResult.placeId = null
+
+            // When mapped to address DTO
+            val actualDTO = geocodingResult.toGeocodingDTO()
+
+            // Then it returns correct DTO
+            assertEquals(expectedDTO.copy(placeId = ""), actualDTO)
+        }
+
+        @Test
+        fun whenMappingGeocodingResultNullAddressComponent_returnsDTOWithEmptyAddressFieldsExceptAddress() {
+            // Given a geocoding result with null address
+            val (geocodingResult, expectedDTO) = GeocodingResultGenerator.generateResult()
+            geocodingResult.addressComponents = null
+
+            // When mapped to address DTO
+            val actualDTO = geocodingResult.toGeocodingDTO()
+
+            // Then it returns correct DTO
+            assertEquals(
+                expectedDTO.copy(
+                    address = expectedDTO.address?.copy(
+                        streetAddress = "", city = "", state = "", country = "", pinCode = ""
+                    )
+                ), actualDTO
+            )
+        }
+
+    }
 
     @Test
     fun geocodingResultMapper_mapsToCorrectDTO() {
@@ -95,4 +197,6 @@ class GeocodingMapperTests {
         assertEquals(geocodingResult.formattedAddress, dto.fullAddress)
         assertEquals(geocodingResult.partialMatch, dto.partialMatch)
     }
+
+
 }

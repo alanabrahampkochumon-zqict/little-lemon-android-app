@@ -51,26 +51,28 @@ fun GeocodingResult.toGeocodingDTO(): GeocodingDTO {
         AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_1 to "", AddressComponentType.LOCALITY to "",
         AddressComponentType.POSTAL_CODE to ""
     )
-    for (addressComponent in addressComponents) {
-        for (type in addressComponent.types)
-            if (type in requiredComponents.keys)
-                requiredComponents[type] = addressComponent.longName
-    }
+    if (addressComponents != null)
+        for (addressComponent in addressComponents) {
+            for (type in addressComponent.types)
+                if (type in requiredComponents.keys)
+                    requiredComponents[type] = addressComponent.longName
+        }
 
     val address = GeocodingDTO.Address(
-        formattedAddress.split(",").firstOrNull() ?: "",
+        (formattedAddress ?: "").split(",").firstOrNull() ?: "",
         streetAddress = requiredComponents[AddressComponentType.STREET_ADDRESS],
         city = requiredComponents[AddressComponentType.LOCALITY],
         state = requiredComponents[AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_1],
         country = requiredComponents[AddressComponentType.COUNTRY],
         pinCode = requiredComponents[AddressComponentType.POSTAL_CODE]
     )
+
     return GeocodingDTO(
         latLng = GeocodingDTO.LatLng(geometry.location.lat, geometry.location.lng),
         locationType = geometry.locationType.toLocationTypeDTO(),
         partialMatch = partialMatch,
-        fullAddress = formattedAddress,
+        fullAddress = formattedAddress ?: "",
         address = address,
-        placeId = placeId
+        placeId = placeId ?: ""
     )
 }

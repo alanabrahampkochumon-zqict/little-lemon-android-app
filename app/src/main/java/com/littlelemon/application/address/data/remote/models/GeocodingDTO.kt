@@ -7,7 +7,7 @@ data class GeocodingDTO(
     val partialMatch: Boolean,
     val fullAddress: String,
     val address: Address?,
-    val placeId: String?
+    val placeId: String
 ) {
     data class LatLng(
         val lat: Double,

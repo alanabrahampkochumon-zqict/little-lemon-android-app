@@ -27,16 +27,15 @@ object GeocodingResultGenerator {
             AddressComponentType.LOCALITY to faker.address.city(),
             AddressComponentType.POSTAL_CODE to faker.address.postcode()
         )
-        
+
         makeNull?.let { key ->
             addressMap[key] = ""
         }
+        val placeId = UUID.randomUUID().toString()
+        val partialMatch = Random.nextInt(0, 10) > 5
         val address = faker.address.streetAddress()
         val fullAddress =
             if (makeFullAddressEmpty) "" else "$address, ${faker.address.fullAddress()}"
-
-        val geocodingResult = GeocodingResult()
-
         val geometry = Geometry()
         geometry.location = LatLng(Random.nextDouble(0.0, 180.0), Random.nextDouble(0.0, 180.0))
         geometry.locationType = LocationType.entries.random()
@@ -51,23 +50,32 @@ object GeocodingResultGenerator {
                 addressComponents.add(addressComponent)
             }
         }
+
+
+        val geocodingResult = GeocodingResult()
+        geocodingResult.addressComponents = addressComponents.toTypedArray()
+        geocodingResult.formattedAddress = fullAddress
+        geocodingResult.geometry = geometry
+        geocodingResult.placeId = placeId
+        geocodingResult.partialMatch = partialMatch
+        
         val geocodingDTO = GeocodingDTO(
             latLng = GeocodingDTO.LatLng(
                 geometry.location.lat,
                 geometry.location.lng
             ),
             locationType = geometry.locationType.toLocationTypeDTO(),
-            fullAddress = address,
-            partialMatch = Random.nextInt(0, 10) > 5,
+            fullAddress = fullAddress,
+            partialMatch = partialMatch,
             address = GeocodingDTO.Address(
-                address = fullAddress.split(",").firstOrNull() ?: "",
+                address = address,
                 streetAddress = addressMap[AddressComponentType.STREET_ADDRESS],
                 city = addressMap[AddressComponentType.LOCALITY],
                 state = addressMap[AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_1],
                 country = addressMap[AddressComponentType.COUNTRY],
                 pinCode = addressMap[AddressComponentType.POSTAL_CODE]
             ),
-            placeId = UUID.randomUUID().toString()
+            placeId = placeId
         )
         return geocodingResult to geocodingDTO
     }
