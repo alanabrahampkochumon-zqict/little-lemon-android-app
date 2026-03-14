@@ -8,7 +8,7 @@ import com.littlelemon.application.address.data.remote.geocoding.GeocodingRemote
 import com.littlelemon.application.address.data.remote.geocoding.GoogleGeocodingRemoteDataSource
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.domain.GeocoderException
-import com.littlelemon.application.address.utils.GeocodingResultGenerator
+import com.littlelemon.application.address.utils.GeocodingGenerator
 import com.littlelemon.application.core.domain.exceptions.InvalidRequestException
 import com.littlelemon.application.core.domain.exceptions.RequestDeniedException
 import io.mockk.coEvery
@@ -38,7 +38,7 @@ class GoogleGeocodingRemoteDataSourceTest {
         geocodingEngine = mockk()
         dataSource = GoogleGeocodingRemoteDataSource(geocodingEngine)
 
-        val (gResult, dto) = GeocodingResultGenerator.generateResult()
+        val (gResult, dto) = GeocodingGenerator.generateGeocodingResult()
 
         latLngDto = GeocodingDTO.LatLng(
             gResult.geometry.location.lat,

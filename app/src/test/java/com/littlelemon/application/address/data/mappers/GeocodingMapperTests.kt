@@ -11,7 +11,7 @@ import com.google.maps.model.LatLng
 import com.google.maps.model.LocationType
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.domain.GeocoderException
-import com.littlelemon.application.address.utils.GeocodingResultGenerator
+import com.littlelemon.application.address.utils.GeocodingGenerator
 import com.littlelemon.application.core.domain.exceptions.CoreException
 import com.littlelemon.application.core.domain.exceptions.InvalidRequestException
 import com.littlelemon.application.core.domain.exceptions.RequestDeniedException
@@ -96,7 +96,7 @@ class GeocodingMapperTests {
             missingAddressComponent: AddressComponentType?
         ) {
             // Given a geocoding result with an address component missing
-            val (geocodingResult, expectedDto) = GeocodingResultGenerator.generateResult(
+            val (geocodingResult, expectedDto) = GeocodingGenerator.generateGeocodingResult(
                 missingAddressComponent
             )
 
@@ -110,7 +110,7 @@ class GeocodingMapperTests {
         @Test
         fun whenMappingGeocodingResultWithEmptyFullAddress_returnsDTOWithBlankFullAddress() {
             // Given a geocoding result with null address
-            val (geocodingResult, expectedDTO) = GeocodingResultGenerator.generateResult(
+            val (geocodingResult, expectedDTO) = GeocodingGenerator.generateGeocodingResult(
                 makeFullAddressEmpty = true
             )
 
@@ -129,7 +129,7 @@ class GeocodingMapperTests {
         @Test
         fun whenMappingGeocodingResultNullFullAddress_returnsDTOWithBlankFullAddress() {
             // Given a geocoding result with null address
-            val (geocodingResult, expectedDTO) = GeocodingResultGenerator.generateResult()
+            val (geocodingResult, expectedDTO) = GeocodingGenerator.generateGeocodingResult()
             geocodingResult.formattedAddress = null
 
             // When mapped to address DTO
@@ -145,7 +145,7 @@ class GeocodingMapperTests {
         @Test
         fun whenMappingGeocodingResultNullPlaceID_returnsDTOWithBlankPlaceID() {
             // Given a geocoding result with null address
-            val (geocodingResult, expectedDTO) = GeocodingResultGenerator.generateResult()
+            val (geocodingResult, expectedDTO) = GeocodingGenerator.generateGeocodingResult()
             geocodingResult.placeId = null
 
             // When mapped to address DTO
@@ -158,7 +158,7 @@ class GeocodingMapperTests {
         @Test
         fun whenMappingGeocodingResultNullAddressComponent_returnsDTOWithEmptyAddressFieldsExceptAddress() {
             // Given a geocoding result with null address
-            val (geocodingResult, expectedDTO) = GeocodingResultGenerator.generateResult()
+            val (geocodingResult, expectedDTO) = GeocodingGenerator.generateGeocodingResult()
             geocodingResult.addressComponents = null
 
             // When mapped to address DTO

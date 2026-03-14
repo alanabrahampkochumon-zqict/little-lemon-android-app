@@ -6,16 +6,20 @@ import com.google.maps.model.GeocodingResult
 import com.google.maps.model.Geometry
 import com.google.maps.model.LatLng
 import com.google.maps.model.LocationType
+import com.littlelemon.application.address.data.local.models.GeocodingEntity
 import com.littlelemon.application.address.data.mappers.toLocationTypeDTO
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import io.github.serpro69.kfaker.faker
 import java.util.UUID
 import kotlin.random.Random
+import kotlin.time.Clock
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-object GeocodingResultGenerator {
+object GeocodingGenerator {
     private val faker = faker { }
 
-    fun generateResult(
+    fun generateGeocodingResult(
         makeNull: AddressComponentType? = null,
         makeFullAddressEmpty: Boolean = false
     ): Pair<GeocodingResult, GeocodingDTO> {
@@ -78,5 +82,43 @@ object GeocodingResultGenerator {
             placeId = placeId
         )
         return geocodingResult to geocodingDTO
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun generateGeocodingEntity(expiry: Long? = null): GeocodingEntity {
+        val address = faker.address.streetName()
+        val streetAddress = faker.address.streetAddress()
+        val city = faker.address.city()
+        val state = faker.address.state()
+        val country = faker.address.country()
+        val pinCode = faker.address.postcode()
+
+        val fullAddress = "$address, ${faker.address.fullAddress()}"
+        val latLng =
+            GeocodingEntity.LatLng(Random.nextDouble(0.0, 180.0), Random.nextDouble(0.0, 180.0))
+        val locationType = GeocodingEntity.LocationType.entries.random()
+        val placeId = Uuid.random().toString()
+        val partialMatch = Random.nextInt(0, 10) > 5
+
+        val addressEntity = GeocodingEntity.Address(
+            address = address,
+            streetAddress = streetAddress,
+            city = city,
+            state = state,
+            country = country,
+            pinCode = pinCode
+        )
+        val createdAt =
+            expiry ?: (Clock.System.now().toEpochMilliseconds() - Random.nextLong(1000000))
+
+        return GeocodingEntity(
+            placeId = placeId,
+            latLng = latLng,
+            locationType = locationType,
+            partialMatch = partialMatch,
+            fullAddress = fullAddress,
+            address = addressEntity,
+            createdTimestamp = createdAt
+        )
     }
 }
