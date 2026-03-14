@@ -76,3 +76,24 @@ fun GeocodingResult.toGeocodingDTO(): GeocodingDTO {
         placeId = placeId ?: ""
     )
 }
+
+//fun GeocodingDTO.toGeocodedAddress(): GeocodedAddress {
+//    val physicalAddress = address?.let { (address, streetAddress, city, state, _, pinCode) ->
+//        PhysicalAddress(
+//            address = address ?: "",
+//            streetAddress = streetAddress ?: "",
+//            city = city ?: "",
+//            state = state ?: "",
+//            pinCode = pinCode ?: ""
+//        )
+//    }
+//
+//    val location =
+//
+//    return GeocodedAddress(
+//        address = physicalAddress,
+//        id = placeId,
+//        partialMatch = partialMatch,
+//        location = LocalLocation
+//    )
+//}
