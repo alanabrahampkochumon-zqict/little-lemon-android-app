@@ -72,6 +72,7 @@ class GeocodingMapperTests {
         assertEquals(to, result)
     }
 
+
     @Test
     fun geocodingResultMapper_mapsToCorrectDTO() {
         // Given a geocoding result
@@ -81,6 +82,7 @@ class GeocodingMapperTests {
 
         val geocodingResult = GeocodingResult()
         geocodingResult.geometry = geometry
+        geocodingResult.formattedAddress = "Address, Street, City, Country, Pincode"
         geocodingResult.partialMatch = true
 
         // When mapped to GeocodingDTO
@@ -90,6 +92,7 @@ class GeocodingMapperTests {
         assertEquals(geometry.location.lat, dto.latLng.lat)
         assertEquals(geometry.location.lng, dto.latLng.lng)
         assertEquals(geometry.locationType.toLocationTypeDTO(), dto.locationType)
+        assertEquals(geocodingResult.formattedAddress, dto.fullAddress)
         assertEquals(geocodingResult.partialMatch, dto.partialMatch)
     }
 }

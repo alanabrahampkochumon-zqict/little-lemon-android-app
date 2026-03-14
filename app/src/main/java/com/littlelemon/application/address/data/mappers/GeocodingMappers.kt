@@ -4,6 +4,7 @@ import com.google.maps.errors.ApiException
 import com.google.maps.errors.OverDailyLimitException
 import com.google.maps.errors.OverQueryLimitException
 import com.google.maps.errors.ZeroResultsException
+import com.google.maps.model.AddressComponentType
 import com.google.maps.model.GeocodingResult
 import com.google.maps.model.LocationType
 import com.google.maps.model.LocationType.APPROXIMATE
@@ -45,9 +46,31 @@ fun LocationType.toLocationTypeDTO(): GeocodingDTO.LocationType {
 }
 
 fun GeocodingResult.toGeocodingDTO(): GeocodingDTO {
+    val requiredComponents = mutableMapOf(
+        AddressComponentType.STREET_ADDRESS to "", AddressComponentType.COUNTRY to "",
+        AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_1 to "", AddressComponentType.LOCALITY to "",
+        AddressComponentType.POSTAL_CODE to ""
+    )
+    for (addressComponent in addressComponents) {
+        for (type in addressComponent.types)
+            if (type in requiredComponents.keys)
+                requiredComponents[type] = addressComponent.longName
+    }
+
+    val address = GeocodingDTO.Address(
+        formattedAddress.split(",").firstOrNull() ?: "",
+        streetAddress = requiredComponents[AddressComponentType.STREET_ADDRESS],
+        city = requiredComponents[AddressComponentType.LOCALITY],
+        state = requiredComponents[AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_1],
+        country = requiredComponents[AddressComponentType.COUNTRY],
+        pinCode = requiredComponents[AddressComponentType.POSTAL_CODE]
+    )
     return GeocodingDTO(
-        GeocodingDTO.LatLng(geometry.location.lat, geometry.location.lng),
-        geometry.locationType.toLocationTypeDTO(),
-        partialMatch
+        latLng = GeocodingDTO.LatLng(geometry.location.lat, geometry.location.lng),
+        locationType = geometry.locationType.toLocationTypeDTO(),
+        partialMatch = partialMatch,
+        fullAddress = formattedAddress,
+        address = address,
+        placeId = placeId
     )
 }

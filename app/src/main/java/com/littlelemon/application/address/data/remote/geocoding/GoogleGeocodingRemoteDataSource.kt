@@ -24,6 +24,5 @@ class GoogleGeocodingRemoteDataSource(
         if (result.isEmpty())
             throw GeocoderException.ZeroResults("No matching results found for $address")
         result.first().toGeocodingDTO()
-
     }
 }

@@ -148,6 +148,7 @@ dependencies {
     testFixturesImplementation(libs.io.ktor.mock)
     testFixturesImplementation(libs.io.ktor.client)
     testFixturesImplementation(libs.kotlin.faker)
+    testFixturesImplementation(libs.google.maps.service)
 
 
     androidTestImplementation(testFixtures(project(":app")))
