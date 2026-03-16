@@ -141,4 +141,33 @@ class GeocodingDaoTest {
         assertNull(result)
     }
 
+    @Test
+    fun clearAll_clearsTheDatabase() = runTest {
+        // Given a database with existing geocoding entity
+        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntity() }
+        entities.forEach { dao.upsert(it) }
+
+        assertEquals(5, dao.getCount())
+
+        // When the db is cleared
+        dao.clearAll()
+
+        // Then, all the items are cleared
+        assertEquals(0, dao.getCount())
+    }
+
+    @Test
+    fun getCount_getCountFromDatabase() = runTest {
+        // Given a database with n items
+        val n = 50
+        val entities = Array(n) { GeocodingGenerator.generateGeocodingEntity() }
+        entities.forEach { dao.upsert(it) }
+
+        // When database is queried for count
+        val count = dao.getCount()
+
+        // Then, the correct count(n) is returned
+        assertEquals(n, count)
+    }
+
 }
