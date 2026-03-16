@@ -36,7 +36,7 @@ class GeocodingDaoTest {
     @Test
     fun upsert_insertsEntityIntoDatabase() = runTest {
         // When an entity is upserted
-        val (entity, _) = GeocodingGenerator.generateGeocodingEntity()
+        val (entity, _) = GeocodingGenerator.generateGeocodingEntities()
         dao.upsert(entity)
 
         // Then the database gets updated
@@ -49,7 +49,7 @@ class GeocodingDaoTest {
     @Test
     fun upsert_updatesExistingEntity() = runTest {
         // Given a database with existing geocoding entity
-        val (entity, _) = GeocodingGenerator.generateGeocodingEntity()
+        val (entity, _) = GeocodingGenerator.generateGeocodingEntities()
         dao.upsert(entity)
 
         // When the entity is upserted
@@ -66,7 +66,7 @@ class GeocodingDaoTest {
     @Test
     fun getAddress_withLatLng_whenDatabaseHasMatchingLatLng_returnsCorrectAddress() = runTest {
         // Given a database with existing geocoding entity
-        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntity().first }
+        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntities().first }
         entities.forEach { dao.upsert(it) }
 
         // When queried for a valid entity lat lng
@@ -80,7 +80,7 @@ class GeocodingDaoTest {
     @Test
     fun getAddress_withLatLng_whenDatabaseHasNoMatchingLatLng_returnsNull() = runTest {
         // Given a database with existing geocoding entity
-        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntity().first }
+        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntities().first }
         entities.forEach { dao.upsert(it) }
 
         // When queried for an entity with invalid lat lng
@@ -105,7 +105,7 @@ class GeocodingDaoTest {
     fun getAddress_withFullAddress_whenDatabaseHasMatchingFullAddress_returnsCorrectAddress() =
         runTest {
             // Given a database with existing geocoding entity
-            val entities = Array(5) { GeocodingGenerator.generateGeocodingEntity().first }
+            val entities = Array(5) { GeocodingGenerator.generateGeocodingEntities().first }
             entities.forEach { dao.upsert(it) }
 
             // When queried for an entity valid full address
@@ -119,7 +119,7 @@ class GeocodingDaoTest {
     @Test
     fun getAddress_withFullAddress_whenDatabaseHasNoMatchingLatLng_returnsNull() = runTest {
         // Given a database with existing geocoding entity
-        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntity().first }
+        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntities().first }
         entities.forEach { dao.upsert(it) }
 
         // When queried for an entity with invalid full address
@@ -143,7 +143,7 @@ class GeocodingDaoTest {
     @Test
     fun clearAll_clearsTheDatabase() = runTest {
         // Given a database with existing geocoding entity
-        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntity().first }
+        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntities().first }
         entities.forEach { dao.upsert(it) }
 
         assertEquals(5, dao.getCount())
@@ -159,7 +159,7 @@ class GeocodingDaoTest {
     fun getCount_getCountFromDatabase() = runTest {
         // Given a database with n items
         val n = 50
-        val entities = Array(n) { GeocodingGenerator.generateGeocodingEntity().first }
+        val entities = Array(n) { GeocodingGenerator.generateGeocodingEntities().first }
         entities.forEach { dao.upsert(it) }
 
         // When database is queried for count
@@ -174,7 +174,7 @@ class GeocodingDaoTest {
         // Given a database with n items
         val n = 50
         val entities =
-            Array(n) { GeocodingGenerator.generateGeocodingEntity(expiry = it.toLong()).first }
+            Array(n) { GeocodingGenerator.generateGeocodingEntities(expiry = it.toLong()).first }
         entities.forEach { dao.upsert(it) }
 
         // When the database is cleared with expiry of 25

@@ -12,8 +12,12 @@ import com.google.maps.model.LocationType.GEOMETRIC_CENTER
 import com.google.maps.model.LocationType.RANGE_INTERPOLATED
 import com.google.maps.model.LocationType.ROOFTOP
 import com.google.maps.model.LocationType.UNKNOWN
+import com.littlelemon.application.address.data.local.models.GeocodingEntity
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.domain.GeocoderException
+import com.littlelemon.application.address.domain.models.GeocodedAddress
+import com.littlelemon.application.address.domain.models.LocalLocation
+import com.littlelemon.application.address.domain.models.PhysicalAddress
 import com.littlelemon.application.core.domain.exceptions.CoreException
 import com.littlelemon.application.core.domain.exceptions.InvalidRequestException
 import com.littlelemon.application.core.domain.exceptions.RequestDeniedException
@@ -77,23 +81,21 @@ fun GeocodingResult.toGeocodingDTO(): GeocodingDTO {
     )
 }
 
-//fun GeocodingDTO.toGeocodedAddress(): GeocodedAddress {
-//    val physicalAddress = address?.let { (address, streetAddress, city, state, _, pinCode) ->
-//        PhysicalAddress(
-//            address = address ?: "",
-//            streetAddress = streetAddress ?: "",
-//            city = city ?: "",
-//            state = state ?: "",
-//            pinCode = pinCode ?: ""
-//        )
-//    }
-//
-//    val location =
-//
-//    return GeocodedAddress(
-//        address = physicalAddress,
-//        id = placeId,
-//        partialMatch = partialMatch,
-//        location = LocalLocation
-//    )
-//}
+fun GeocodingEntity.toGeocodedAddress(): GeocodedAddress {
+    val physicalAddress = address?.let { (address, streetAddress, city, state, _, pinCode) ->
+        PhysicalAddress(
+            address = address ?: "",
+            streetAddress = streetAddress ?: "",
+            city = city ?: "",
+            state = state ?: "",
+            pinCode = pinCode ?: ""
+        )
+    }
+    return GeocodedAddress(
+        address = physicalAddress,
+        id = placeId,
+        partialMatch = partialMatch,
+        location = LocalLocation(latLng.lat, latLng.lng),
+        fullAddress = fullAddress
+    )
+}

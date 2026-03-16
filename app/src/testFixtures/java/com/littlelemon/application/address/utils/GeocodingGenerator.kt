@@ -88,7 +88,7 @@ object GeocodingGenerator {
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun generateGeocodingEntity(expiry: Long? = null): Triple<GeocodingEntity, GeocodedAddress, GeocodingDTO> {
+    fun generateGeocodingEntities(expiry: Long? = null): Triple<GeocodingEntity, GeocodedAddress, GeocodingDTO> {
         val address = faker.address.streetName()
         val streetAddress = faker.address.streetAddress()
         val city = faker.address.city()

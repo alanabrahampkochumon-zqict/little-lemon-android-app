@@ -199,5 +199,30 @@ class GeocodingMapperTests {
         assertEquals(geocodingResult.partialMatch, dto.partialMatch)
     }
 
+    @Nested
+    inner class GeocodingEntityToGeocodedAddressMapperTests() {
+
+        @Test
+        fun whenMapping_withNullAddress_returnsGeocodedAddressWithNullAddress() {
+            // When mapping an Entity with null address
+            val (entity, local, _) = GeocodingGenerator.generateGeocodingEntities()
+            val actualAddress = entity.copy(address = null).toGeocodedAddress()
+
+            // Then, a geocoded address with null address is returned
+            assertEquals(local.copy(address = null), actualAddress)
+        }
+
+        @Test
+        fun whenMapping_withEntireNonNullFields_returnsFullGeocodedAddress() {
+            // When mapping an Entity
+            val (entity, local, _) = GeocodingGenerator.generateGeocodingEntities()
+            val actualAddress = entity.toGeocodedAddress()
+
+            // Then, a full matching geocoded address is returned
+            assertEquals(local, actualAddress)
+
+        }
+    }
+
 
 }
