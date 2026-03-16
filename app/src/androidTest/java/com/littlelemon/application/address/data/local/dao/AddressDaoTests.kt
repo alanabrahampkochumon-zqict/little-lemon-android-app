@@ -7,6 +7,7 @@ import com.littlelemon.application.address.data.local.AddressDatabase
 import com.littlelemon.application.utils.AddressGenerator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -23,7 +24,12 @@ class AddressDaoTests {
     @Before
     fun setUp() {
         db = Room.inMemoryDatabaseBuilder(context, AddressDatabase::class.java).build()
-        dao = db.dao
+        dao = db.addressDao
+    }
+
+    @After
+    fun tearDown() {
+        db.close()
     }
 
     @Test

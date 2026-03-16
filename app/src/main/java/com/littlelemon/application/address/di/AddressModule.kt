@@ -51,6 +51,6 @@ val addressModule = module {
 
     single<AddressDao> {
         Room.databaseBuilder(androidContext(), AddressDatabase::class.java, "address.db")
-            .build().dao
+            .build().addressDao
     }
 }
