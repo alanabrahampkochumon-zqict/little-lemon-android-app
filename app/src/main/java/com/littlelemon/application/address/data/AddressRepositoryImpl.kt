@@ -4,11 +4,13 @@ import android.Manifest
 import androidx.annotation.RequiresPermission
 import com.google.maps.model.LatLng
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
+import com.littlelemon.application.address.data.local.dao.GeocodingDao
 import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.mappers.toLocalLocation
 import com.littlelemon.application.address.data.mappers.toRequestDTO
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
+import com.littlelemon.application.address.data.remote.geocoding.GeocodingRemoteDataSource
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.models.GeocodedAddress
 import com.littlelemon.application.address.domain.models.LocalAddress
@@ -26,13 +28,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
 class AddressRepositoryImpl(
-    private val localDataSource: AddressLocalDataSource,
-    private val remoteDataSource: AddressRemoteDataSource
+    private val addressLocalDataSource: AddressLocalDataSource,
+    private val addressRemoteDataSource: AddressRemoteDataSource,
+    private val localGeocodingDatasource: GeocodingDao,
+    private val remoteGeocodingDataSource: GeocodingRemoteDataSource
 ) : AddressRepository {
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override suspend fun getLocation(): Resource<LocalLocation> {
         return try {
-            val location = localDataSource.getLocation()
+            val location = addressLocalDataSource.getLocation()
             Resource.Success(location.toLocalLocation())
             // TODO: Do geocoding
             // TODO: Store location as address
@@ -51,8 +55,8 @@ class AddressRepositoryImpl(
     //TODO: Add Service to retry saving to network in case of network error.
     override suspend fun saveAddress(address: LocalAddress): Resource<Unit> {
         return try {
-            val remoteData = remoteDataSource.saveAddress(address.toRequestDTO())
-            localDataSource.saveAddress(remoteData.toAddressEntity())
+            val remoteData = addressRemoteDataSource.saveAddress(address.toRequestDTO())
+            addressLocalDataSource.saveAddress(remoteData.toAddressEntity())
             Resource.Success()
         } catch (e: Exception) {
             currentCoroutineContext().ensureActive()
@@ -78,12 +82,13 @@ class AddressRepositoryImpl(
             var offlineData: List<LocalAddress>? = null
             try {
                 offlineData =
-                    localDataSource.getAddress().first().map { it.toLocalAddress() }
+                    addressLocalDataSource.getAddress().first().map { it.toLocalAddress() }
                 emit(Resource.Loading(offlineData))
 
-                val remoteResponse = remoteDataSource.getAddress().map { it.toAddressEntity() }
-                localDataSource.saveAddresses(remoteResponse)
-                val newData = localDataSource.getAddress()
+                val remoteResponse =
+                    addressRemoteDataSource.getAddress().map { it.toAddressEntity() }
+                addressLocalDataSource.saveAddresses(remoteResponse)
+                val newData = addressLocalDataSource.getAddress()
                     .map { addresses -> Resource.Success(data = addresses.map { it.toLocalAddress() }) }
                 emitAll(
                     flow = newData
@@ -104,7 +109,7 @@ class AddressRepositoryImpl(
 
     override suspend fun getAddressCount(): Long {
         try {
-            return localDataSource.getAddressCount()
+            return addressLocalDataSource.getAddressCount()
         } catch (e: Exception) {
             currentCoroutineContext().ensureActive()
             return -1

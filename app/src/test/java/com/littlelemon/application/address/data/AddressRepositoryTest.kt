@@ -4,12 +4,14 @@ import android.location.Location
 import app.cash.turbine.test
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.local.FakeAddressLocalDataSource
+import com.littlelemon.application.address.data.local.dao.FakeGeocodeDao
 import com.littlelemon.application.address.data.local.dao.GeocodingDao
 import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.mappers.toRequestDTO
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.address.data.remote.FakeAddressRemoteDataSource
+import com.littlelemon.application.address.data.remote.FakeRemoteGeocodingDataSource
 import com.littlelemon.application.address.data.remote.geocoding.GeocodingRemoteDataSource
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.models.LocalLocation
@@ -51,6 +53,8 @@ class AddressRepositoryTest {
         every { location.accuracy } returns 5.0f
         addressLocalDataSource = FakeAddressLocalDataSource(location = location)
         addressRemoteDataSource = FakeAddressRemoteDataSource()
+        geocodingLocalDataSource = FakeGeocodeDao()
+        geocodingRemoteDataSource = FakeRemoteGeocodingDataSource()
         repository = AddressRepositoryImpl(
             addressLocalDataSource,
             addressRemoteDataSource
