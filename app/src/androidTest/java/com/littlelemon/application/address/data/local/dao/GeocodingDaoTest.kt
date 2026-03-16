@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class GeocodingDaoTest {
 
@@ -61,6 +62,83 @@ class GeocodingDaoTest {
         val result = dao.getAddress(updatedEntity.fullAddress)
         assertNotNull(result)
         assertEquals(updatedEntity, result)
+    }
+
+    @Test
+    fun getAddress_withLatLng_whenDatabaseHasMatchingLatLng_returnsCorrectAddress() = runTest {
+        // Given a database with existing geocoding entity
+        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntity() }
+        entities.forEach { dao.upsert(it) }
+
+        // When queried for a valid entity lat lng
+        val result = dao.getAddress(entities[0].latLng.lat, entities[0].latLng.lng)
+
+        // Then, the correct entity is returned
+        assertNotNull(result)
+        assertEquals(entities[0], result)
+    }
+
+    @Test
+    fun getAddress_withLatLng_whenDatabaseHasNoMatchingLatLng_returnsNull() = runTest {
+        // Given a database with existing geocoding entity
+        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntity() }
+        entities.forEach { dao.upsert(it) }
+
+        // When queried for an entity with invalid lat lng
+        val result = dao.getAddress(entities[0].latLng.lat - 50.0, entities[0].latLng.lng + 125.0)
+
+        // Then, the result is null
+        assertNull(result)
+    }
+
+    @Test
+    fun getAddress_withLatLng_emptyDatabase_returnsNull() = runTest {
+        // Given an empty database
+
+        // When queried for an entity with valid lat lng
+        val result = dao.getAddress(1.1234, 2.546)
+
+        // Then, the result is null
+        assertNull(result)
+    }
+
+    @Test
+    fun getAddress_withFullAddress_whenDatabaseHasMatchingFullAddress_returnsCorrectAddress() =
+        runTest {
+            // Given a database with existing geocoding entity
+            val entities = Array(5) { GeocodingGenerator.generateGeocodingEntity() }
+            entities.forEach { dao.upsert(it) }
+
+            // When queried for an entity valid full address
+            val result = dao.getAddress(entities[0].fullAddress)
+
+            // Then, the correct entity is returned
+            assertNotNull(result)
+            assertEquals(entities[0], result)
+        }
+
+    @Test
+    fun getAddress_withFullAddress_whenDatabaseHasNoMatchingLatLng_returnsNull() = runTest {
+        // Given a database with existing geocoding entity
+        val entities = Array(5) { GeocodingGenerator.generateGeocodingEntity() }
+        entities.forEach { dao.upsert(it) }
+
+        // When queried for an entity with invalid full address
+        val result = dao.getAddress("Address does not exist")
+
+        // Then, the result is null
+        assertNull(result)
+    }
+
+    @Test
+    fun getAddress_withFullAddress_emptyDatabase_returnsNull() = runTest {
+        // Given an empty database
+
+        // When queried for an entity with valid fullAddress
+        val result = dao.getAddress("Littlemon, Illinois, Chicago")
+
+        // Then, the result is null
+        assertNull(result)
     }
 
 }
