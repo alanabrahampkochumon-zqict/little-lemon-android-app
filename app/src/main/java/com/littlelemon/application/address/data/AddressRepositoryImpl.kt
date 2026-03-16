@@ -2,6 +2,7 @@ package com.littlelemon.application.address.data
 
 import android.Manifest
 import androidx.annotation.RequiresPermission
+import com.google.maps.model.LatLng
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
@@ -9,6 +10,7 @@ import com.littlelemon.application.address.data.mappers.toLocalLocation
 import com.littlelemon.application.address.data.mappers.toRequestDTO
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.address.domain.AddressRepository
+import com.littlelemon.application.address.domain.models.GeocodedAddress
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
@@ -59,6 +61,14 @@ class AddressRepositoryImpl(
                 error = e.mapToDomainError()
             )
         }
+    }
+
+    override suspend fun geocodeLocation(latLng: LatLng): Resource<GeocodedAddress> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun reverseGeocodeAddress(fullAddress: String): Resource<GeocodedAddress> {
+        TODO("Not yet implemented")
     }
 
     // TODO: Edge case fix, use deletes address from one device and logs into their another device

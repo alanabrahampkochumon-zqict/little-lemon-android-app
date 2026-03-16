@@ -9,6 +9,9 @@ import com.google.maps.model.LocationType
 import com.littlelemon.application.address.data.local.models.GeocodingEntity
 import com.littlelemon.application.address.data.mappers.toLocationTypeDTO
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
+import com.littlelemon.application.address.domain.models.GeocodedAddress
+import com.littlelemon.application.address.domain.models.LocalLocation
+import com.littlelemon.application.address.domain.models.PhysicalAddress
 import io.github.serpro69.kfaker.faker
 import java.util.UUID
 import kotlin.random.Random
@@ -85,7 +88,7 @@ object GeocodingGenerator {
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun generateGeocodingEntity(expiry: Long? = null): GeocodingEntity {
+    fun generateGeocodingEntity(expiry: Long? = null): Pair<GeocodingEntity, GeocodedAddress> {
         val address = faker.address.streetName()
         val streetAddress = faker.address.streetAddress()
         val city = faker.address.city()
@@ -111,7 +114,7 @@ object GeocodingGenerator {
         val createdAt =
             expiry ?: (Clock.System.now().toEpochMilliseconds() - Random.nextLong(1000000))
 
-        return GeocodingEntity(
+        val geocodingEntity = GeocodingEntity(
             placeId = placeId,
             latLng = latLng,
             locationType = locationType,
@@ -120,5 +123,20 @@ object GeocodingGenerator {
             address = addressEntity,
             createdTimestamp = createdAt
         )
+        val geocodedAddress = GeocodedAddress(
+            id = placeId,
+            partialMatch = partialMatch,
+            fullAddress = fullAddress,
+            address = PhysicalAddress(
+                address = address,
+                streetAddress = streetAddress,
+                city = city,
+                state = state,
+                pinCode = pinCode
+            ),
+            location = LocalLocation(latLng.lat, latLng.lng),
+        )
+
+        return geocodingEntity to geocodedAddress
     }
 }
