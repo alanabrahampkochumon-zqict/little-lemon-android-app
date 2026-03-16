@@ -4,16 +4,20 @@ import com.littlelemon.application.address.data.remote.geocoding.GeocodingRemote
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.utils.GeocodingGenerator
 
-class FakeRemoteGeocodingDataSource(
+class FakeGeocodingRemoteDataSource(
+    private val returnValue: GeocodingDTO? = null,
     private val throwError: Boolean = false,
 ) : GeocodingRemoteDataSource {
+    
     override suspend fun geocodeAddress(address: String): GeocodingDTO {
         if (throwError) throw IllegalArgumentException()
+        if (returnValue != null) return returnValue
         return GeocodingGenerator.generateGeocodingResult().second.copy(fullAddress = address)
     }
 
     override suspend fun reverseGeocodeAddress(latLng: GeocodingDTO.LatLng): GeocodingDTO {
         if (throwError) throw IllegalArgumentException()
+        if (returnValue != null) return returnValue
         return GeocodingGenerator.generateGeocodingResult().second.copy(latLng = latLng)
     }
 }

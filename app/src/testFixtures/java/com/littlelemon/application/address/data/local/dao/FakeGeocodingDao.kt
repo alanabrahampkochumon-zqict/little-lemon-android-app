@@ -3,7 +3,7 @@ package com.littlelemon.application.address.data.local.dao
 import com.littlelemon.application.address.data.local.models.GeocodingEntity
 import com.littlelemon.application.address.utils.GeocodingGenerator
 
-class FakeGeocodeDao(
+class FakeGeocodingDao(
     entries: List<GeocodingEntity> = emptyList(),
     private val throwError: Boolean = false
 ) : GeocodingDao {
