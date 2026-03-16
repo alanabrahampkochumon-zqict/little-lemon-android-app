@@ -170,4 +170,23 @@ class GeocodingDaoTest {
         assertEquals(n, count)
     }
 
+    @Test
+    fun clearExpired_clearsOnlyExpiredItems() = runTest {
+        // Given a database with n items
+        val n = 50
+        val entities = Array(n) { GeocodingGenerator.generateGeocodingEntity(expiry = it.toLong()) }
+        entities.forEach { dao.upsert(it) }
+
+        // When the database is cleared with expiry of 25
+        dao.clearExpired(25)
+
+        // Then, all the remaining items in the database have timestamp greater than 25
+        entities.forEach { entity ->
+            if (entity.createdTimestamp <= 25)
+                assertNull(dao.getAddress(entity.fullAddress))
+            else
+                assertNotNull(dao.getAddress(entity.fullAddress))
+        }
+    }
+
 }

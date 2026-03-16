@@ -23,6 +23,6 @@ interface GeocodingDao {
     @Query("SELECT COUNT(*) FROM GEOCODINGENTITY")
     suspend fun getCount(): Int
 
-    @Query("DELETE FROM GEOCODINGENTITY WHERE createdTimestamp < :timestamp")
+    @Query("DELETE FROM GEOCODINGENTITY WHERE createdTimestamp <= :timestamp")
     suspend fun clearExpired(timestamp: Long)
 }
