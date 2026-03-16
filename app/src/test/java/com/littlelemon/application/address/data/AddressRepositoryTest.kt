@@ -416,7 +416,7 @@ class AddressRepositoryTest {
         @Test
         fun gecodeAddress_firstTimeGeocode_returnsCorrectAddress() = runTest {
             // When address is geocoded for the first time
-            val (entity, local, dto) = GeocodingGenerator.generateGeocodingEntities()
+            val (_, local, dto) = GeocodingGenerator.generateGeocodingEntities()
             geocodingRemoteDataSource = FakeGeocodingRemoteDataSource(dto)
             repository = AddressRepositoryImpl(
                 addressLocalDataSource, addressRemoteDataSource,
@@ -458,7 +458,7 @@ class AddressRepositoryTest {
         @Test
         fun gecodeAddress_expiredCache_returnsAddressFromRemote() = runTest {
             // Given expired local cache
-            val fortyFiveDays = 45 * 24 * 60 * 1000L
+            val fortyFiveDays = 45 * 24 * 60 * 60 * 1000L
             val (entity, local, dto) = GeocodingGenerator.generateGeocodingEntities()
             geocodingLocalDataSource = FakeGeocodingDao(
                 listOf(
@@ -513,7 +513,7 @@ class AddressRepositoryTest {
         @Test
         fun geocodeAddress_remoteFailureAndExpiredCache_returnsFailureWithNullData() = runTest {
             // Given remote failure and expired cache
-            val fortyFiveDays = 45 * 24 * 60 * 1000L
+            val fortyFiveDays = 45 * 24 * 60 * 60 * 1000L
             val (entity, _, dto) = GeocodingGenerator.generateGeocodingEntities()
             geocodingLocalDataSource = FakeGeocodingDao(
                 listOf(

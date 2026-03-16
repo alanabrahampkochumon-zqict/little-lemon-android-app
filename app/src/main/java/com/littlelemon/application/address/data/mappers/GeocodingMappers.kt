@@ -81,6 +81,35 @@ fun GeocodingResult.toGeocodingDTO(): GeocodingDTO {
     )
 }
 
+fun GeocodingDTO.toGeocodingEntity(): GeocodingEntity {
+    val locationType = when (locationType) {
+        GeocodingDTO.LocationType.ROOFTOP -> GeocodingEntity.LocationType.ROOFTOP
+        GeocodingDTO.LocationType.RANGE_INTERPOLATED -> GeocodingEntity.LocationType.RANGE_INTERPOLATED
+        GeocodingDTO.LocationType.GEOMETRIC_CENTER -> GeocodingEntity.LocationType.GEOMETRIC_CENTER
+        GeocodingDTO.LocationType.APPROXIMATE -> GeocodingEntity.LocationType.APPROXIMATE
+        GeocodingDTO.LocationType.UNKNOWN -> GeocodingEntity.LocationType.UNKNOWN
+    }
+
+    val address = address?.let { address ->
+        GeocodingEntity.Address(
+            address = address.address ?: "",
+            streetAddress = address.streetAddress ?: "",
+            city = address.city ?: "",
+            state = address.state ?: "",
+            country = address.country ?: "",
+            pinCode = address.pinCode ?: ""
+        )
+    }
+    return GeocodingEntity(
+        placeId = placeId,
+        latLng = GeocodingEntity.LatLng(latLng.lat, latLng.lng),
+        locationType = locationType,
+        partialMatch = partialMatch,
+        fullAddress = fullAddress,
+        address = address
+    )
+}
+
 fun GeocodingEntity.toGeocodedAddress(): GeocodedAddress {
     val physicalAddress = address?.let { (address, streetAddress, city, state, _, pinCode) ->
         PhysicalAddress(

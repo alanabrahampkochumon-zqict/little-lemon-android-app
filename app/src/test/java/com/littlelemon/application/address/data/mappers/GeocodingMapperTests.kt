@@ -200,6 +200,39 @@ class GeocodingMapperTests {
     }
 
     @Nested
+    inner class GeocodingDTOToEntityMapperTests() {
+
+        @Test
+        fun whenMapping_withNullAddress_returnsEntityWithNullAddress() {
+            // When mapping a DTO with null address
+            val (entity, _, dto) = GeocodingGenerator.generateGeocodingEntities()
+            val actualAddress = dto.copy(address = null).toGeocodingEntity()
+
+            // Then, a geocoding entity with null address is returned
+            // NOTE: Timestamp removed to test flakiness
+            assertEquals(
+                entity.copy(address = null, createdTimestamp = 0L),
+                actualAddress.copy(createdTimestamp = 0L)
+            )
+        }
+
+        @Test
+        fun whenMapping_withEntireNonNullFields_returnsFullGeocodedAddress() {
+            // When mapping an DTO
+            val (entity, _, dto) = GeocodingGenerator.generateGeocodingEntities()
+            val actualAddress = dto.toGeocodingEntity()
+
+            // Then, a full matching geocoded address is returned
+            // NOTE: Timestamp removed to test flakiness
+            assertEquals(
+                entity.copy(createdTimestamp = 0L),
+                actualAddress.copy(createdTimestamp = 0L)
+            )
+
+        }
+    }
+
+    @Nested
     inner class GeocodingEntityToGeocodedAddressMapperTests() {
 
         @Test

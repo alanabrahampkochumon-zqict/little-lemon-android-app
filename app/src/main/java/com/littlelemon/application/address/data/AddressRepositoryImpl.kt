@@ -72,7 +72,23 @@ class AddressRepositoryImpl(
     }
 
     override suspend fun geocodeAddress(fullAddress: String): Resource<GeocodedAddress> {
+        val THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000L
         TODO("Not yet implemented")
+//        try {
+////            localGeocodingDatasource.clearExpired(THIRTY_DAYS)
+////            val cachedAddress = localGeocodingDatasource.getAddress(fullAddress)
+////            if (cachedAddress != null)
+////                return Resource.Success(cachedAddress.toGeocodedAddress())
+////
+////            val remoteAddress = remoteGeocodingDataSource.geocodeAddress(fullAddress)
+////            localGeocodingDatasource.upsert(remoteAddress)
+//        } catch (e: Exception) {
+//            currentCoroutineContext().ensureActive()
+//            Resource.Failure(
+//                errorMessage = e.message,
+//                error = e.mapToDomainError()
+//            )
+//        }
     }
 
     // TODO: Edge case fix, use deletes address from one device and logs into their another device
