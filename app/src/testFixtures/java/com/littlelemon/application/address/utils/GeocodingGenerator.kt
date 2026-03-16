@@ -88,7 +88,7 @@ object GeocodingGenerator {
     }
 
     @OptIn(ExperimentalUuidApi::class)
-    fun generateGeocodingEntity(expiry: Long? = null): Pair<GeocodingEntity, GeocodedAddress> {
+    fun generateGeocodingEntity(expiry: Long? = null): Triple<GeocodingEntity, GeocodedAddress, GeocodingDTO> {
         val address = faker.address.streetName()
         val streetAddress = faker.address.streetAddress()
         val city = faker.address.city()
@@ -137,6 +137,32 @@ object GeocodingGenerator {
             location = LocalLocation(latLng.lat, latLng.lng),
         )
 
-        return geocodingEntity to geocodedAddress
+        val locationTypeDTO = when (locationType) {
+            GeocodingEntity.LocationType.ROOFTOP -> GeocodingDTO.LocationType.ROOFTOP
+            GeocodingEntity.LocationType.RANGE_INTERPOLATED -> GeocodingDTO.LocationType.RANGE_INTERPOLATED
+            GeocodingEntity.LocationType.GEOMETRIC_CENTER -> GeocodingDTO.LocationType.GEOMETRIC_CENTER
+            GeocodingEntity.LocationType.APPROXIMATE -> GeocodingDTO.LocationType.APPROXIMATE
+            GeocodingEntity.LocationType.UNKNOWN -> GeocodingDTO.LocationType.UNKNOWN
+        }
+
+        val geocodingDTO = GeocodingDTO(
+            latLng = GeocodingDTO.LatLng(
+                latLng.lat, latLng.lng
+            ),
+            locationType = locationTypeDTO,
+            fullAddress = fullAddress,
+            partialMatch = partialMatch,
+            address = GeocodingDTO.Address(
+                address = address,
+                streetAddress = streetAddress,
+                city = city,
+                state = state,
+                country = country,
+                pinCode = pinCode
+            ),
+            placeId = placeId
+        )
+
+        return Triple(geocodingEntity, geocodedAddress, geocodingDTO)
     }
 }

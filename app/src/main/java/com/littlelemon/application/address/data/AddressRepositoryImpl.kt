@@ -67,11 +67,11 @@ class AddressRepositoryImpl(
         }
     }
 
-    override suspend fun geocodeLocation(latLng: LatLng): Resource<GeocodedAddress> {
+    override suspend fun reverseGeocodeLocation(latLng: LatLng): Resource<GeocodedAddress> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun reverseGeocodeAddress(fullAddress: String): Resource<GeocodedAddress> {
+    override suspend fun geocodeAddress(fullAddress: String): Resource<GeocodedAddress> {
         TODO("Not yet implemented")
     }
 

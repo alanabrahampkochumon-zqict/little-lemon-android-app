@@ -12,9 +12,9 @@ interface AddressRepository {
 
     suspend fun saveAddress(address: LocalAddress): Resource<Unit>
 
-    suspend fun geocodeLocation(latLng: LatLng): Resource<GeocodedAddress>
+    suspend fun reverseGeocodeLocation(latLng: LatLng): Resource<GeocodedAddress>
 
-    suspend fun reverseGeocodeAddress(fullAddress: String): Resource<GeocodedAddress>
+    suspend fun geocodeAddress(fullAddress: String): Resource<GeocodedAddress>
 
     fun getAddress(): Flow<Resource<List<LocalAddress>>>
     suspend fun getAddressCount(): Long

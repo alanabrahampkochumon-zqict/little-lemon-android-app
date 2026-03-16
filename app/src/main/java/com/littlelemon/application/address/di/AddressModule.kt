@@ -10,8 +10,13 @@ import com.littlelemon.application.address.data.local.AddressDatabase
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.local.AddressLocalDataSourceImpl
 import com.littlelemon.application.address.data.local.dao.AddressDao
+import com.littlelemon.application.address.data.local.dao.GeocodingDao
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.address.data.remote.SupabaseAddressRemoteDataSource
+import com.littlelemon.application.address.data.remote.geocoding.GeocodingEngine
+import com.littlelemon.application.address.data.remote.geocoding.GeocodingRemoteDataSource
+import com.littlelemon.application.address.data.remote.geocoding.GoogleGeocodingEngine
+import com.littlelemon.application.address.data.remote.geocoding.GoogleGeocodingRemoteDataSource
 import com.littlelemon.application.address.domain.AddressManagerImpl
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.usecase.GetAddressCountUseCase
@@ -36,7 +41,7 @@ val addressModule = module {
     single<GetAddressUseCase> { GetAddressUseCase(get()) }
     single<SaveAddressUseCase> { SaveAddressUseCase(get()) }
 
-    single<AddressRepository> { AddressRepositoryImpl(get(), get()) }
+    single<AddressRepository> { AddressRepositoryImpl(get(), get(), get(), get()) }
 
     single<AddressRemoteDataSource> { SupabaseAddressRemoteDataSource(get()) }
     single<AddressLocalDataSource> { AddressLocalDataSourceImpl(get(), get()) }
@@ -45,12 +50,27 @@ val addressModule = module {
         LocationServices.getFusedLocationProviderClient(androidContext())
     }
 
+    single<AddressDao> {
+        get<AddressDatabase>().addressDao
+    }
+
+    single<GeocodingDao> {
+        get<AddressDatabase>().geocodingDao
+    }
+    single<AddressDatabase> {
+        Room.databaseBuilder(androidContext(), AddressDatabase::class.java, "address.db").build()
+    }
+
+    single<GeocodingRemoteDataSource> {
+        GoogleGeocodingRemoteDataSource(get())
+    }
+
+    single<GeocodingEngine> {
+        GoogleGeocodingEngine(get())
+    }
+
     single<GeoApiContext> {
         GeoApiContext.Builder().apiKey(BuildConfig.MAPS_API_KEY).build()
     }
 
-    single<AddressDao> {
-        Room.databaseBuilder(androidContext(), AddressDatabase::class.java, "address.db")
-            .build().addressDao
-    }
 }

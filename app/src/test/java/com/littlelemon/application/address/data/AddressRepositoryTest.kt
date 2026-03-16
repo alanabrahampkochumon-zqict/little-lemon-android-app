@@ -25,6 +25,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
@@ -57,7 +58,9 @@ class AddressRepositoryTest {
         geocodingRemoteDataSource = FakeRemoteGeocodingDataSource()
         repository = AddressRepositoryImpl(
             addressLocalDataSource,
-            addressRemoteDataSource
+            addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
         )
     }
 
@@ -81,7 +84,9 @@ class AddressRepositoryTest {
         addressLocalDataSource = FakeAddressLocalDataSource(throwError = true)
         repository = AddressRepositoryImpl(
             addressLocalDataSource,
-            addressRemoteDataSource
+            addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
         )
 
         // Act
@@ -100,7 +105,9 @@ class AddressRepositoryTest {
         addressRemoteDataSource = FakeAddressRemoteDataSource(throwError = true)
         repository = AddressRepositoryImpl(
             addressLocalDataSource,
-            addressRemoteDataSource
+            addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
         )
 
         // Act
@@ -132,7 +139,9 @@ class AddressRepositoryTest {
         addressRemoteDataSource = FakeAddressRemoteDataSource(initialData = remoteAddress)
         repository = AddressRepositoryImpl(
             addressLocalDataSource,
-            addressRemoteDataSource
+            addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
         )
 
         // Act
@@ -168,7 +177,9 @@ class AddressRepositoryTest {
         addressRemoteDataSource = FakeAddressRemoteDataSource()
         repository = AddressRepositoryImpl(
             addressLocalDataSource,
-            addressRemoteDataSource
+            addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
         )
 
         // Act
@@ -201,7 +212,9 @@ class AddressRepositoryTest {
         addressRemoteDataSource = FakeAddressRemoteDataSource(throwError = true)
         repository = AddressRepositoryImpl(
             addressLocalDataSource,
-            addressRemoteDataSource
+            addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
         )
 
         // Act
@@ -232,7 +245,9 @@ class AddressRepositoryTest {
         addressRemoteDataSource = FakeAddressRemoteDataSource(throwError = true)
         repository = AddressRepositoryImpl(
             addressLocalDataSource,
-            addressRemoteDataSource
+            addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
         )
 
         // Act
@@ -261,7 +276,9 @@ class AddressRepositoryTest {
         addressRemoteDataSource = FakeAddressRemoteDataSource(initialData = remoteAddress)
         repository = AddressRepositoryImpl(
             addressLocalDataSource,
-            addressRemoteDataSource
+            addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
         )
 
         // Act
@@ -329,7 +346,9 @@ class AddressRepositoryTest {
         addressRemoteDataSource = FakeAddressRemoteDataSource(throwError = true)
         repository = AddressRepositoryImpl(
             addressLocalDataSource,
-            addressRemoteDataSource
+            addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
         )
 
         // Act
@@ -357,7 +376,11 @@ class AddressRepositoryTest {
         val expectedAddressCount = 5
         val addresses = List(expectedAddressCount) { AddressGenerator.generateAddressEntity() }
         addressLocalDataSource = FakeAddressLocalDataSource(addresses)
-        repository = AddressRepositoryImpl(addressLocalDataSource, addressRemoteDataSource)
+        repository = AddressRepositoryImpl(
+            addressLocalDataSource, addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
+        )
 
         // When getAddressCount is called
         val addressCount = repository.getAddressCount()
@@ -370,12 +393,26 @@ class AddressRepositoryTest {
     fun getAddressCount_localDataSourceError_returnsNegativeOne() = runTest {
         // Given local data source error
         addressLocalDataSource = FakeAddressLocalDataSource(throwError = true)
-        repository = AddressRepositoryImpl(addressLocalDataSource, addressRemoteDataSource)
+        repository = AddressRepositoryImpl(
+            addressLocalDataSource, addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
+        )
 
         // When getAddressCount is called
         val addressCount = repository.getAddressCount()
 
         // Then, -1 is returned
         assertEquals(-1, addressCount)
+    }
+
+    @Nested
+    inner class GeocodingTests {
+
+        @Test
+        fun gecodeAddress_remoteSuccess_returnsCorrectAddress() = runTest {
+            // When address is geocoded for the first time
+//            val (entity, location) =
+        }
     }
 }
