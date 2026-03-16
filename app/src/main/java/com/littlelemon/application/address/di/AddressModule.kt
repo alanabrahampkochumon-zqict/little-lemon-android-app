@@ -5,7 +5,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.maps.GeoApiContext
 import com.littlelemon.application.BuildConfig
-import com.littlelemon.application.address.data.AddressRepositoryImpl
+import com.littlelemon.application.address.data.DefaultAddressRepository
 import com.littlelemon.application.address.data.local.AddressDatabase
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.local.AddressLocalDataSourceImpl
@@ -41,7 +41,7 @@ val addressModule = module {
     single<GetAddressUseCase> { GetAddressUseCase(get()) }
     single<SaveAddressUseCase> { SaveAddressUseCase(get()) }
 
-    single<AddressRepository> { AddressRepositoryImpl(get(), get(), get(), get()) }
+    single<AddressRepository> { DefaultAddressRepository(get(), get(), get(), get()) }
 
     single<AddressRemoteDataSource> { SupabaseAddressRemoteDataSource(get()) }
     single<AddressLocalDataSource> { AddressLocalDataSourceImpl(get(), get()) }

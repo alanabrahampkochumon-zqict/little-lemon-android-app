@@ -1,6 +1,6 @@
 package com.littlelemon.application.address.domain.usecase
 
-import com.littlelemon.application.address.data.AddressRepositoryImpl
+import com.littlelemon.application.address.data.DefaultAddressRepository
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.core.domain.utils.Resource
@@ -18,7 +18,7 @@ class GetLocationUseCaseTest {
 
     @BeforeEach
     fun setUp() {
-        repository = mockk<AddressRepositoryImpl>()
+        repository = mockk<DefaultAddressRepository>()
         useCase = GetLocationUseCase(repository)
     }
 

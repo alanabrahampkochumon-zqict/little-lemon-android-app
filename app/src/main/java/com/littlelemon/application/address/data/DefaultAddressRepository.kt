@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlin.time.Clock
 
-class AddressRepositoryImpl(
+class DefaultAddressRepository(
     private val addressLocalDataSource: AddressLocalDataSource,
     private val addressRemoteDataSource: AddressRemoteDataSource,
     private val localGeocodingDatasource: GeocodingDao,
@@ -122,7 +122,7 @@ class AddressRepositoryImpl(
         }
     }
 
-    
+
     override fun getAddress(): Flow<Resource<List<LocalAddress>>> =
         flow {
             var offlineData: List<LocalAddress>? = null

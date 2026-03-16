@@ -36,7 +36,7 @@ import kotlin.test.assertIs
 import kotlin.time.Clock
 
 @ExtendWith(StandardTestDispatcherRule::class)
-class AddressRepositoryTest {
+class DefaultAddressRepositoryTest {
 
     private lateinit var addressLocalDataSource: AddressLocalDataSource
     private lateinit var addressRemoteDataSource: AddressRemoteDataSource
@@ -60,7 +60,7 @@ class AddressRepositoryTest {
         addressRemoteDataSource = FakeAddressRemoteDataSource()
         geocodingLocalDataSource = FakeGeocodingDao()
         geocodingRemoteDataSource = FakeGeocodingRemoteDataSource()
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource,
             addressRemoteDataSource,
             geocodingLocalDataSource,
@@ -86,7 +86,7 @@ class AddressRepositoryTest {
     fun onGetLocation_dataSourceError_returnsResourceError() = runTest {
         // Arrange
         addressLocalDataSource = FakeAddressLocalDataSource(throwError = true)
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource,
             addressRemoteDataSource,
             geocodingLocalDataSource,
@@ -107,7 +107,7 @@ class AddressRepositoryTest {
         val cachedAddress = List(numAddress) { AddressGenerator.generateAddressEntity() }
         addressLocalDataSource = FakeAddressLocalDataSource(initialData = cachedAddress)
         addressRemoteDataSource = FakeAddressRemoteDataSource(throwError = true)
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource,
             addressRemoteDataSource,
             geocodingLocalDataSource,
@@ -141,7 +141,7 @@ class AddressRepositoryTest {
         val remoteAddress = List(numAddress) { AddressGenerator.generateAddressDTO() }
         addressLocalDataSource = FakeAddressLocalDataSource()
         addressRemoteDataSource = FakeAddressRemoteDataSource(initialData = remoteAddress)
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource,
             addressRemoteDataSource,
             geocodingLocalDataSource,
@@ -179,7 +179,7 @@ class AddressRepositoryTest {
         // Arrange
         addressLocalDataSource = FakeAddressLocalDataSource()
         addressRemoteDataSource = FakeAddressRemoteDataSource()
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource,
             addressRemoteDataSource,
             geocodingLocalDataSource,
@@ -214,7 +214,7 @@ class AddressRepositoryTest {
         // Arrange
         addressLocalDataSource = FakeAddressLocalDataSource()
         addressRemoteDataSource = FakeAddressRemoteDataSource(throwError = true)
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource,
             addressRemoteDataSource,
             geocodingLocalDataSource,
@@ -247,7 +247,7 @@ class AddressRepositoryTest {
         // Arrange
         addressLocalDataSource = FakeAddressLocalDataSource(throwError = true)
         addressRemoteDataSource = FakeAddressRemoteDataSource(throwError = true)
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource,
             addressRemoteDataSource,
             geocodingLocalDataSource,
@@ -278,7 +278,7 @@ class AddressRepositoryTest {
         val localAddress = List(numAddress) { AddressGenerator.generateAddressEntity() }
         addressLocalDataSource = FakeAddressLocalDataSource(initialData = localAddress)
         addressRemoteDataSource = FakeAddressRemoteDataSource(initialData = remoteAddress)
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource,
             addressRemoteDataSource,
             geocodingLocalDataSource,
@@ -348,7 +348,7 @@ class AddressRepositoryTest {
         // Arrange
         val address = AddressGenerator.generateLocalAddress()
         addressRemoteDataSource = FakeAddressRemoteDataSource(throwError = true)
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource,
             addressRemoteDataSource,
             geocodingLocalDataSource,
@@ -380,7 +380,7 @@ class AddressRepositoryTest {
         val expectedAddressCount = 5
         val addresses = List(expectedAddressCount) { AddressGenerator.generateAddressEntity() }
         addressLocalDataSource = FakeAddressLocalDataSource(addresses)
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource, addressRemoteDataSource,
             geocodingLocalDataSource,
             geocodingRemoteDataSource
@@ -397,7 +397,7 @@ class AddressRepositoryTest {
     fun getAddressCount_localDataSourceError_returnsNegativeOne() = runTest {
         // Given local data source error
         addressLocalDataSource = FakeAddressLocalDataSource(throwError = true)
-        repository = AddressRepositoryImpl(
+        repository = DefaultAddressRepository(
             addressLocalDataSource, addressRemoteDataSource,
             geocodingLocalDataSource,
             geocodingRemoteDataSource
@@ -418,7 +418,7 @@ class AddressRepositoryTest {
             // When address is geocoded for the first time
             val (_, local, dto) = GeocodingGenerator.generateGeocodingEntities()
             geocodingRemoteDataSource = FakeGeocodingRemoteDataSource(dto)
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
@@ -441,7 +441,7 @@ class AddressRepositoryTest {
                     )
                 )
             )
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
@@ -469,7 +469,7 @@ class AddressRepositoryTest {
             )
             geocodingRemoteDataSource =
                 FakeGeocodingRemoteDataSource(dto.copy(fullAddress = "Remote Address"))
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
@@ -496,7 +496,7 @@ class AddressRepositoryTest {
             )
             geocodingRemoteDataSource =
                 FakeGeocodingRemoteDataSource(throwError = true)
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
@@ -524,7 +524,7 @@ class AddressRepositoryTest {
             )
             geocodingRemoteDataSource =
                 FakeGeocodingRemoteDataSource(throwError = true)
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
@@ -545,7 +545,7 @@ class AddressRepositoryTest {
             geocodingLocalDataSource = FakeGeocodingDao(throwError = true)
             geocodingRemoteDataSource =
                 FakeGeocodingRemoteDataSource(returnValue = dto)
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
@@ -569,7 +569,7 @@ class AddressRepositoryTest {
             // When address is reverse geocoded for the first time
             val (entity, local, dto) = GeocodingGenerator.generateGeocodingEntities()
             geocodingRemoteDataSource = FakeGeocodingRemoteDataSource(dto)
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
@@ -592,7 +592,7 @@ class AddressRepositoryTest {
                     )
                 )
             )
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
@@ -620,7 +620,7 @@ class AddressRepositoryTest {
             )
             geocodingRemoteDataSource =
                 FakeGeocodingRemoteDataSource(dto.copy(fullAddress = "Remote Address"))
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
@@ -647,7 +647,7 @@ class AddressRepositoryTest {
             )
             geocodingRemoteDataSource =
                 FakeGeocodingRemoteDataSource(throwError = true)
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
@@ -677,7 +677,7 @@ class AddressRepositoryTest {
                 )
                 geocodingRemoteDataSource =
                     FakeGeocodingRemoteDataSource(throwError = true)
-                repository = AddressRepositoryImpl(
+                repository = DefaultAddressRepository(
                     addressLocalDataSource, addressRemoteDataSource,
                     geocodingLocalDataSource,
                     geocodingRemoteDataSource
@@ -698,7 +698,7 @@ class AddressRepositoryTest {
             geocodingLocalDataSource = FakeGeocodingDao(throwError = true)
             geocodingRemoteDataSource =
                 FakeGeocodingRemoteDataSource(returnValue = dto)
-            repository = AddressRepositoryImpl(
+            repository = DefaultAddressRepository(
                 addressLocalDataSource, addressRemoteDataSource,
                 geocodingLocalDataSource,
                 geocodingRemoteDataSource
