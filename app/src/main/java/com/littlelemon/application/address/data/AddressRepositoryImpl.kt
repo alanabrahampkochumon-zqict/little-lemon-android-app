@@ -41,8 +41,6 @@ class AddressRepositoryImpl(
         return try {
             val location = addressLocalDataSource.getLocation()
             Resource.Success(location.toLocalLocation())
-            // TODO: Do geocoding
-            // TODO: Store location as address
         } catch (e: LocationUnavailableException) {
             Resource.Failure(errorMessage = e.message)
         } catch (e: Exception) {
@@ -124,8 +122,7 @@ class AddressRepositoryImpl(
         }
     }
 
-    // TODO: Edge case fix, use deletes address from one device and logs into their another device
-    // TODO: Try to refresh form supabase
+    
     override fun getAddress(): Flow<Resource<List<LocalAddress>>> =
         flow {
             var offlineData: List<LocalAddress>? = null
