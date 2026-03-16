@@ -2,7 +2,6 @@ package com.littlelemon.application.address.data
 
 import android.Manifest
 import androidx.annotation.RequiresPermission
-import com.google.maps.model.LatLng
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.local.dao.GeocodingDao
 import com.littlelemon.application.address.data.mappers.toAddressEntity
@@ -70,7 +69,7 @@ class AddressRepositoryImpl(
         }
     }
 
-    override suspend fun reverseGeocodeLocation(latLng: LatLng): Resource<GeocodedAddress> {
+    override suspend fun reverseGeocodeLocation(latLng: LocalLocation): Resource<GeocodedAddress> {
         TODO("Not yet implemented")
     }
 

@@ -1,6 +1,5 @@
 package com.littlelemon.application.address.domain
 
-import com.google.maps.model.LatLng
 import com.littlelemon.application.address.domain.models.GeocodedAddress
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
@@ -12,7 +11,7 @@ interface AddressRepository {
 
     suspend fun saveAddress(address: LocalAddress): Resource<Unit>
 
-    suspend fun reverseGeocodeLocation(latLng: LatLng): Resource<GeocodedAddress>
+    suspend fun reverseGeocodeLocation(latLng: LocalLocation): Resource<GeocodedAddress>
 
     suspend fun geocodeAddress(fullAddress: String): Resource<GeocodedAddress>
 

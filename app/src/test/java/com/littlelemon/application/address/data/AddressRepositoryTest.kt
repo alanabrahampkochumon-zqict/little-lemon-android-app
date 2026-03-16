@@ -560,4 +560,157 @@ class AddressRepositoryTest {
         }
 
     }
+
+    @Nested
+    inner class ReverseGeocodingTests {
+
+        @Test
+        fun reverseGecodeAddress_firstTimeGeocode_returnsCorrectAddress() = runTest {
+            // When address is reverse geocoded for the first time
+            val (entity, local, dto) = GeocodingGenerator.generateGeocodingEntities()
+            geocodingRemoteDataSource = FakeGeocodingRemoteDataSource(dto)
+            repository = AddressRepositoryImpl(
+                addressLocalDataSource, addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+            val actualGeocodedResult = repository.reverseGeocodeLocation(local.location!!)
+
+            // Then, then a valid result is returned from the server
+            assertIs<Resource.Success<GeocodedAddress>>(actualGeocodedResult)
+            assertEquals(local, actualGeocodedResult.data)
+        }
+
+        @Test
+        fun reverseGeocodeAddress_validCache_returnsAddressFromCache() = runTest {
+            // Given valid cache
+            val (entity, local, _) = GeocodingGenerator.generateGeocodingEntities()
+            geocodingLocalDataSource = FakeGeocodingDao(
+                listOf(
+                    entity.copy(
+                        createdTimestamp = Clock.System.now().toEpochMilliseconds()
+                    )
+                )
+            )
+            repository = AddressRepositoryImpl(
+                addressLocalDataSource, addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When latlng is reverse geocoded
+            val actualGeocodedResult = repository.reverseGeocodeLocation(local.location!!)
+
+            // Then, a valid result is returned from the cache
+            assertIs<Resource.Success<GeocodedAddress>>(actualGeocodedResult)
+            assertEquals(local, actualGeocodedResult.data)
+        }
+
+        @Test
+        fun reverseGecodeAddress_expiredCache_returnsAddressFromRemote() = runTest {
+            // Given expired local cache
+            val fortyFiveDays = 45 * 24 * 60 * 60 * 1000L
+            val (entity, local, dto) = GeocodingGenerator.generateGeocodingEntities()
+            geocodingLocalDataSource = FakeGeocodingDao(
+                listOf(
+                    entity.copy(
+                        createdTimestamp = Clock.System.now().toEpochMilliseconds() - fortyFiveDays
+                    )
+                )
+            )
+            geocodingRemoteDataSource =
+                FakeGeocodingRemoteDataSource(dto.copy(fullAddress = "Remote Address"))
+            repository = AddressRepositoryImpl(
+                addressLocalDataSource, addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When latlng is reverse geocoded
+            val actualGeocodedResult = repository.reverseGeocodeLocation(local.location!!)
+
+            // Then, result is fetched from the server
+            assertIs<Resource.Success<GeocodedAddress>>(actualGeocodedResult)
+            assertEquals(local.copy(fullAddress = "Remote Address"), actualGeocodedResult.data)
+        }
+
+        @Test
+        fun reverseGeocodeAddress_remoteFailure_returnsSuccessWithCachedData() = runTest {
+            // Given remote failure with non-stale cache
+            val (entity, local, dto) = GeocodingGenerator.generateGeocodingEntities()
+            geocodingLocalDataSource = FakeGeocodingDao(
+                listOf(
+                    entity.copy(
+                        createdTimestamp = Clock.System.now().toEpochMilliseconds()
+                    )
+                )
+            )
+            geocodingRemoteDataSource =
+                FakeGeocodingRemoteDataSource(throwError = true)
+            repository = AddressRepositoryImpl(
+                addressLocalDataSource, addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When latlng is reverse geocoded
+            val actualGeocodedResult = repository.reverseGeocodeLocation(local.location!!)
+
+            // Then, a valid result is returned from the cache with remote success
+            assertIs<Resource.Success<GeocodedAddress>>(actualGeocodedResult)
+            assertEquals(local, actualGeocodedResult.data)
+        }
+
+        @Test
+        fun reverseGeocodeAddress_remoteFailureAndExpiredCache_returnsFailureWithNullData() =
+            runTest {
+                // Given remote failure and expired cache
+                val fortyFiveDays = 45 * 24 * 60 * 60 * 1000L
+                val (entity, local, _) = GeocodingGenerator.generateGeocodingEntities()
+                geocodingLocalDataSource = FakeGeocodingDao(
+                    listOf(
+                        entity.copy(
+                            createdTimestamp = Clock.System.now()
+                                .toEpochMilliseconds() - fortyFiveDays
+                        )
+                    )
+                )
+                geocodingRemoteDataSource =
+                    FakeGeocodingRemoteDataSource(throwError = true)
+                repository = AddressRepositoryImpl(
+                    addressLocalDataSource, addressRemoteDataSource,
+                    geocodingLocalDataSource,
+                    geocodingRemoteDataSource
+                )
+
+                // When latlng is reverse geocoded
+                val actualGeocodedResult = repository.reverseGeocodeLocation(local.location!!)
+
+                // Then, failure is returned
+                assertIs<Resource.Failure<GeocodedAddress>>(actualGeocodedResult)
+                kotlin.test.assertNull(actualGeocodedResult.data)
+            }
+
+        @Test
+        fun reverseGeocodeAddress_cacheFailure_returnsFailureWithNullData() = runTest {
+            // Given cache failure
+            val (_, local, dto) = GeocodingGenerator.generateGeocodingEntities()
+            geocodingLocalDataSource = FakeGeocodingDao(throwError = true)
+            geocodingRemoteDataSource =
+                FakeGeocodingRemoteDataSource(returnValue = dto)
+            repository = AddressRepositoryImpl(
+                addressLocalDataSource, addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When latlng is reverse geocoded
+            val actualGeocodedResult = repository.reverseGeocodeLocation(local.location!!)
+
+            // Then, failure is returned
+            assertIs<Resource.Failure<GeocodedAddress>>(actualGeocodedResult)
+            kotlin.test.assertNull(actualGeocodedResult.data)
+        }
+
+    }
 }
