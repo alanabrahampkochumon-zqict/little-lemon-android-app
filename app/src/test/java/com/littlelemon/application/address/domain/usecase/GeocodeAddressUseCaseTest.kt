@@ -7,7 +7,7 @@ import com.littlelemon.application.core.domain.utils.Resource
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNull
 import kotlin.test.assertEquals
@@ -19,7 +19,7 @@ class GeocodeAddressUseCaseTest {
     private lateinit var useCase: GeocodeAddressUseCase
 
 
-    @Before
+    @BeforeEach
     fun setUp() {
         repository = mockk()
         useCase = GeocodeAddressUseCase(repository)
@@ -32,7 +32,7 @@ class GeocodeAddressUseCaseTest {
         coEvery { repository.geocodeAddress(any()) } returns Resource.Success(local)
 
         // When usecase is invoke
-        val geocodedAddress = useCase()
+        val geocodedAddress = useCase(local.fullAddress!!)
 
         // Then success is returned
         assertIs<Resource.Success<GeocodedAddress>>(geocodedAddress)
@@ -46,7 +46,7 @@ class GeocodeAddressUseCaseTest {
         coEvery { repository.geocodeAddress(any()) } returns Resource.Failure()
 
         // When usecase is invoke
-        val geocodedAddress = useCase()
+        val geocodedAddress = useCase("address")
 
         // Then failure is returned
         assertIs<Resource.Failure<GeocodedAddress>>(geocodedAddress)

@@ -7,5 +7,6 @@ import com.littlelemon.application.core.domain.utils.Resource
 class GeocodeAddressUseCase(
     private val repository: AddressRepository
 ) {
-    suspend operator fun invoke(): Resource<GeocodedAddress> = TODO();
+    suspend operator fun invoke(address: String): Resource<GeocodedAddress> =
+        repository.geocodeAddress(address)
 }
