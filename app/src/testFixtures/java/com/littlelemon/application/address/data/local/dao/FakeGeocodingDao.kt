@@ -16,6 +16,8 @@ class FakeGeocodingDao(
             repeat(defaultEntryCount) {
                 geocodedAddressList.add(GeocodingGenerator.generateGeocodingEntities().first)
             }
+        } else {
+            geocodedAddressList.addAll(entries)
         }
     }
 

@@ -6,6 +6,8 @@ import com.google.maps.model.LatLng
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.local.dao.GeocodingDao
 import com.littlelemon.application.address.data.mappers.toAddressEntity
+import com.littlelemon.application.address.data.mappers.toGeocodedAddress
+import com.littlelemon.application.address.data.mappers.toGeocodingEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.mappers.toLocalLocation
 import com.littlelemon.application.address.data.mappers.toRequestDTO
@@ -26,6 +28,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlin.time.Clock
 
 class AddressRepositoryImpl(
     private val addressLocalDataSource: AddressLocalDataSource,
@@ -73,22 +76,26 @@ class AddressRepositoryImpl(
 
     override suspend fun geocodeAddress(fullAddress: String): Resource<GeocodedAddress> {
         val THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000L
-        TODO("Not yet implemented")
-//        try {
-////            localGeocodingDatasource.clearExpired(THIRTY_DAYS)
-////            val cachedAddress = localGeocodingDatasource.getAddress(fullAddress)
-////            if (cachedAddress != null)
-////                return Resource.Success(cachedAddress.toGeocodedAddress())
-////
-////            val remoteAddress = remoteGeocodingDataSource.geocodeAddress(fullAddress)
-////            localGeocodingDatasource.upsert(remoteAddress)
-//        } catch (e: Exception) {
-//            currentCoroutineContext().ensureActive()
-//            Resource.Failure(
-//                errorMessage = e.message,
-//                error = e.mapToDomainError()
-//            )
-//        }
+        val expiry = Clock.System.now().toEpochMilliseconds() - THIRTY_DAYS
+        return try {
+            // Fetching from cache
+            localGeocodingDatasource.clearExpired(expiry)
+            val cachedAddress = localGeocodingDatasource.getAddress(fullAddress)
+            if (cachedAddress != null)
+                return Resource.Success(cachedAddress.toGeocodedAddress())
+            // If cache is expired or has no data, fetch from remote
+            val remoteAddress = remoteGeocodingDataSource.geocodeAddress(fullAddress)
+            localGeocodingDatasource.upsert(remoteAddress.toGeocodingEntity())
+
+            val newCache = localGeocodingDatasource.getAddress(remoteAddress.fullAddress)
+            Resource.Success(newCache?.toGeocodedAddress())
+        } catch (e: Exception) {
+            currentCoroutineContext().ensureActive()
+            Resource.Failure(
+                errorMessage = e.message,
+                error = e.mapToDomainError()
+            )
+        }
     }
 
     // TODO: Edge case fix, use deletes address from one device and logs into their another device
