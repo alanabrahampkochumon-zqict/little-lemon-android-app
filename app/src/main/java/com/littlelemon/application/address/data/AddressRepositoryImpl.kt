@@ -12,6 +12,7 @@ import com.littlelemon.application.address.data.mappers.toLocalLocation
 import com.littlelemon.application.address.data.mappers.toRequestDTO
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.address.data.remote.geocoding.GeocodingRemoteDataSource
+import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.models.GeocodedAddress
 import com.littlelemon.application.address.domain.models.LocalAddress
@@ -70,7 +71,33 @@ class AddressRepositoryImpl(
     }
 
     override suspend fun reverseGeocodeLocation(latLng: LocalLocation): Resource<GeocodedAddress> {
-        TODO("Not yet implemented")
+        val THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000L
+        val expiry = Clock.System.now().toEpochMilliseconds() - THIRTY_DAYS
+        return try {
+            // Fetching from cache
+            localGeocodingDatasource.clearExpired(expiry)
+            val cachedAddress =
+                localGeocodingDatasource.getAddress(latLng.latitude, latLng.longitude)
+            if (cachedAddress != null)
+                return Resource.Success(cachedAddress.toGeocodedAddress())
+            // If cache is expired or has no data, fetch from remote
+            val remoteAddress = remoteGeocodingDataSource.reverseGeocodeAddress(
+                GeocodingDTO.LatLng(
+                    latLng.latitude,
+                    latLng.longitude
+                )
+            )
+            localGeocodingDatasource.upsert(remoteAddress.toGeocodingEntity())
+
+            val newCache = localGeocodingDatasource.getAddress(latLng.latitude, latLng.longitude)
+            Resource.Success(newCache?.toGeocodedAddress())
+        } catch (e: Exception) {
+            currentCoroutineContext().ensureActive()
+            Resource.Failure(
+                errorMessage = e.message,
+                error = e.mapToDomainError()
+            )
+        }
     }
 
     override suspend fun geocodeAddress(fullAddress: String): Resource<GeocodedAddress> {
