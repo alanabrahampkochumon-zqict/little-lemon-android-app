@@ -172,6 +172,7 @@ class AddressViewModel(
     }
 
 
+    // TODO: Refactor to map
     private fun validateAddress(): Boolean {
         val validate = RequiredFieldValidator()
         var isValid = true
