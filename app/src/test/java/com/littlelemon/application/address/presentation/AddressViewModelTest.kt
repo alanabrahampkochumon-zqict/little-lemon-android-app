@@ -61,195 +61,91 @@ class AddressViewModelTest {
 
         @Test
         fun onLabelChange_toValidLabel_updatesTheState() = runTest {
-            // Arrange
             val label = "new label"
 
-            // Act
-            viewModel.onAction(AddressActions.ChangeLabel(label))
-
-            // Assert
             viewModel.state.test {
+                skipItems(1)
+                // When label is updated
+                viewModel.onAction(AddressActions.ChangeLabel(label))
+                // Then state reflects the update
                 val state = awaitItem()
                 assertEquals(label, state.label)
             }
         }
 
         @Test
-        fun onBuildingNameChange_toValidAddress_updatesTheStateAndResetsAnyError() = runTest {
-            // Arrange
-            val address = "new address"
+        fun onBuildingNameChange_toValidAddress_updatesTheState() = runTest {
+            val buildingName = "building name"
 
-            // Act
-            viewModel.onAction(AddressActions.ChangeBuildingName(address))
-
-            // Assert
-            viewModel.state.test {
-                val state = awaitItem()
-                assertEquals(address, state.buildingName)
-                assertNull(state.buildingNameError)
-            }
-        }
-
-        @Test
-        fun onBuildingNameChange_toValidLabel_resetsErrorState() = runTest {
-            val newValue = "value"
             viewModel.state.test {
                 skipItems(1)
-
-                // Given a state with building name error
-                viewModel.onAction(AddressActions.ChangeBuildingName(""))
-                viewModel.onAction(AddressActions.SaveAddress)
-                assertNotNull(awaitItem().buildingNameError)
-
                 // When building name is updated
-                viewModel.onAction(AddressActions.ChangeBuildingName(newValue))
-
-                // Then error state is reset
-                assertNull(awaitItem().buildingNameError)
-            }
-        }
-
-        @Test
-        fun onCityChange_toValidCity_updatesTheStateAndResetsAnyError() = runTest {
-            // Arrange
-            val city = "city"
-
-            // Act
-            viewModel.onAction(AddressActions.ChangeCity(city))
-
-            // Assert
-            viewModel.state.test {
+                viewModel.onAction(AddressActions.ChangeBuildingName(buildingName))
+                // Then state reflects the update
                 val state = awaitItem()
-                assertEquals(city, state.city)
-                assertNull(state.cityError)
+                assertEquals(buildingName, state.buildingName)
             }
         }
 
         @Test
-        fun onCityChange_toValidCity_resetsErrorState() = runTest {
-            val newValue = "value"
-            viewModel.state.test {
-                skipItems(1)
-
-                // Given a state with city error
-                viewModel.onAction(AddressActions.ChangeCity(""))
-                viewModel.onAction(AddressActions.SaveAddress)
-                assertNotNull(awaitItem().cityError)
-
-                // When city is updated
-                viewModel.onAction(AddressActions.ChangeCity(newValue))
-
-                // Then error state is reset
-                assertNull(awaitItem().cityError)
-            }
-        }
-
-
-        @Test
-        fun onStreetAddressChange_toValidStreetAddress_updatesTheStateAndResetsAnyError() =
+        fun onStreetAddressChange_toValidStreetAddress_updatesTheState() =
             runTest {
-                // Arrange
                 val streetAddress = "street address"
 
-                // Act
-                viewModel.onAction(AddressActions.ChangeStreetAddress(streetAddress))
-
-                // Assert
                 viewModel.state.test {
+                    skipItems(1)
+                    // When street address is updated
+                    viewModel.onAction(AddressActions.ChangeStreetAddress(streetAddress))
+                    // Then state reflects the update
                     val state = awaitItem()
                     assertEquals(streetAddress, state.streetAddress)
-                    assertNull(state.streetAddressError)
                 }
             }
 
         @Test
-        fun onStreetAddressChange_toValidStreetAddress_resetsErrorState() = runTest {
-            val newValue = "value"
+        fun onCityChange_toValidCity_updatesTheState() = runTest {
+            // Arrange
+            val city = "city"
+
             viewModel.state.test {
                 skipItems(1)
-
-                // Given a state with street address error
-                viewModel.onAction(AddressActions.ChangeStreetAddress(""))
-                viewModel.onAction(AddressActions.SaveAddress)
-                assertNotNull(awaitItem().streetAddressError)
-
-                // When street address is updated
-                viewModel.onAction(AddressActions.ChangeStreetAddress(newValue))
-
-                // Then error state is reset
-                assertNull(awaitItem().streetAddressError)
+                // When city is updated
+                viewModel.onAction(AddressActions.ChangeCity(city))
+                // Then state reflects the update
+                val state = awaitItem()
+                assertEquals(city, state.city)
             }
         }
 
         @Test
-        fun onStateChange_toValidState_updatesTheStateAndResetsAnyError() = runTest {
-            // Arrange
+        fun onStateChange_toValidState_updatesTheState() = runTest {
             val stateName = "state"
 
-            // Act
-            viewModel.onAction(AddressActions.ChangeState(stateName))
-
-            // Assert
-            viewModel.state.test {
-                val state = awaitItem()
-                assertEquals(stateName, state.state)
-                assertNull(state.stateError)
-            }
-        }
-
-        @Test
-        fun onStateChange_toValidState_resetsErrorState() = runTest {
-            val newValue = "value"
             viewModel.state.test {
                 skipItems(1)
-
-                // Given a state with state error
-                viewModel.onAction(AddressActions.ChangeState(""))
-                viewModel.onAction(AddressActions.SaveAddress)
-                assertNotNull(awaitItem().stateError)
-
                 // When state is updated
-                viewModel.onAction(AddressActions.ChangeState(newValue))
-
-                // Then error state is reset
-                assertNull(awaitItem().stateError)
+                viewModel.onAction(AddressActions.ChangeState(stateName))
+                // Then state reflects the update
+                val state = awaitItem()
+                assertEquals(stateName, state.state)
             }
         }
 
         @Test
-        fun onPinCodeChange_toValidPinCode_updatesTheStateAndResetsAnyError() = runTest {
+        fun onPinCodeChange_toValidPinCode_updatesTheState() = runTest {
             // Arrange
             val pinCode = "pinCode"
 
-            // Act
-            viewModel.onAction(AddressActions.ChangePinCode(pinCode))
-
-            // Assert
-            viewModel.state.test {
-                val state = awaitItem()
-                assertEquals(pinCode, state.pinCode)
-                assertNull(state.pinCodeError)
-            }
-        }
-
-        @Test
-        fun onPinCodeChange_toValidPinCode_resetsErrorState() = runTest {
-            val newValue = "value"
             viewModel.state.test {
                 skipItems(1)
-
-                // Given a state with pin code error
-                viewModel.onAction(AddressActions.ChangePinCode(""))
-                viewModel.onAction(AddressActions.SaveAddress)
-                assertNotNull(awaitItem().pinCodeError)
-
                 // When pin code is updated
-                viewModel.onAction(AddressActions.ChangePinCode(newValue))
-
-                // Then error state is reset
-                assertNull(awaitItem().pinCodeError)
+                viewModel.onAction(AddressActions.ChangePinCode(pinCode))
+                // Then state reflects the update
+                val state = awaitItem()
+                assertEquals(pinCode, state.pinCode)
             }
         }
+
 
         @Test
         fun onDefaultAddressChange_toTrue_updatesTheState() = runTest {
@@ -267,8 +163,6 @@ class AddressViewModelTest {
                 assertTrue(finalState.isDefaultAddress)
 
             }
-
-
         }
 
         @Test
@@ -370,6 +264,107 @@ class AddressViewModelTest {
                 assertIs<AddressEvents.ShowLocationEntryPopup>(awaitItem())
             }
 
+        }
+    }
+
+    @Nested
+    inner class StateErrorResetTests {
+
+        @Test
+        fun onBuildingNameChange_toBuildingName_resetsErrorState() = runTest {
+            val newValue = "value"
+            viewModel.state.test {
+                skipItems(1)
+
+                // Given a state with building name error
+                viewModel.onAction(AddressActions.ChangeBuildingName(""))
+                viewModel.onAction(AddressActions.SaveAddress)
+                assertNotNull(awaitItem().buildingNameError)
+
+                // When building name is updated
+                viewModel.onAction(AddressActions.ChangeBuildingName(newValue))
+
+                // Then error state is reset
+                assertNull(awaitItem().buildingNameError)
+            }
+        }
+
+        @Test
+        fun onStreetAddressChange_toValidStreetAddress_resetsErrorState() = runTest {
+            val newValue = "value"
+            viewModel.state.test {
+                skipItems(1)
+
+                // Given a state with street address error
+                viewModel.onAction(AddressActions.ChangeStreetAddress(""))
+                viewModel.onAction(AddressActions.SaveAddress)
+                assertNotNull(awaitItem().streetAddressError)
+
+                // When street address is updated
+                viewModel.onAction(AddressActions.ChangeStreetAddress(newValue))
+
+                // Then error state is reset
+                assertNull(awaitItem().streetAddressError)
+            }
+        }
+
+        @Test
+        fun onCityChange_toValidCity_resetsErrorState() = runTest {
+            val newValue = "value"
+            viewModel.state.test {
+                skipItems(1)
+
+                // Given a state with city error
+                viewModel.onAction(AddressActions.ChangeCity(""))
+                viewModel.onAction(AddressActions.SaveAddress)
+                assertNotNull(awaitItem().cityError)
+
+                // When city is updated
+                viewModel.onAction(AddressActions.ChangeCity(newValue))
+
+                // Then error state is reset
+                assertNull(awaitItem().cityError)
+            }
+        }
+
+
+        @Test
+        fun onStateChange_toValidState_resetsErrorState() = runTest {
+            val newValue = "value"
+            viewModel.state.test {
+                skipItems(1)
+
+                // Given a state with state error
+                viewModel.onAction(AddressActions.ChangeState(""))
+                viewModel.onAction(AddressActions.SaveAddress)
+                assertNotNull(awaitItem().stateError)
+
+                // When state is updated
+                viewModel.onAction(AddressActions.ChangeState(newValue))
+
+                // Then error state is reset
+                assertNull(awaitItem().stateError)
+            }
+        }
+
+
+        @Test
+        fun onPinCodeChange_toValidPinCode_resetsErrorState() = runTest {
+            val newValue = "value"
+            viewModel.state.test {
+                skipItems(1)
+
+                // Given a state with pin code error
+                viewModel.onAction(AddressActions.ChangePinCode(""))
+                viewModel.onAction(AddressActions.SaveAddress)
+                assertNotNull(awaitItem().pinCodeError)
+
+                // When pin code is updated
+                viewModel.onAction(AddressActions.ChangePinCode(newValue))
+
+                // Then error state is reset
+                assertNull(awaitItem().pinCodeError)
+            }
         }
     }
 
