@@ -17,6 +17,7 @@ import com.google.testing.junit.testparameterinjector.TestParameter
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressState
 import com.littlelemon.application.address.presentation.AddressTestTags
+import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.utils.ComposeMatcherHelper
 import com.littlelemon.application.utils.MatcherType
 import org.junit.Rule
@@ -59,6 +60,23 @@ class LocationEntryContentTest {
             R.string.test_tag_address_save_as_default,
             placeholderMatcherType = MatcherType.TestTag
         )
+    }
+
+    enum class ErrorStateTestCases(val state: AddressState, val error: String) {
+        BUILDING_NAME_ERROR(
+            AddressState(buildingNameError = UiText.DynamicString("building name error")),
+            "building name error"
+        ),
+        STREET_ADDRESS_ERROR(
+            AddressState(streetAddressError = UiText.DynamicString("street address error")),
+            "street address error"
+        ),
+        CITY_ERROR(AddressState(cityError = UiText.DynamicString("city error")), "city error"),
+        STATE_ERROR(AddressState(stateError = UiText.DynamicString("state error")), "state error"),
+        PIN_CODE_ERROR(
+            AddressState(pinCodeError = UiText.DynamicString("pin code error")),
+            "pin code error"
+        ),
     }
 
     private fun getInputField(nodeType: ContentMatchTestCase): SemanticsNodeInteraction {
@@ -123,6 +141,20 @@ class LocationEntryContentTest {
                 case.labelMatcherType
             )
         ).performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun locationEntryScreen_whenFieldErrorOccurs_theyAreDisplayed(
+        @TestParameter case: ErrorStateTestCases
+    ) {
+        // When a field error occurs
+        composeTestRule.setContent {
+            LocationEntryContentRoot(case.state)
+        }
+
+        // Then, it is displayed
+        composeTestRule.onNodeWithText(case.error, useUnmergedTree = true).performScrollTo()
             .assertIsDisplayed()
     }
 
