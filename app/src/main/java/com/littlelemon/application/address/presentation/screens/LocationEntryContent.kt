@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.testTag
@@ -73,6 +74,7 @@ import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressState
 import com.littlelemon.application.address.presentation.AddressTestTags
 import com.littlelemon.application.address.presentation.AddressViewModel
+import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.Checkbox
@@ -380,6 +382,8 @@ fun ModalForm(
     onSaveAsDefaultChange: (Boolean) -> Unit = {},
     onSaveAddress: () -> Unit = {},
 ) {
+    val context = LocalContext.current
+
     FlowRow(
         modifier = modifier
             .background(MaterialTheme.colors.primary)
@@ -409,6 +413,7 @@ fun ModalForm(
             label = stringResource(R.string.label_address_building_name),
             placeholder = stringResource(R.string.placeholder_address_building_name),
             value = state.buildingName,
+            errorMessage = state.buildingNameError?.asString(context),
             onValueChange = onBuildingNameChange,
             modifier = Modifier
                 .widthIn(min = 280.dp)
@@ -419,6 +424,7 @@ fun ModalForm(
             label = stringResource(R.string.label_address_street_address),
             placeholder = stringResource(R.string.placeholder_address_street_address),
             value = state.streetAddress,
+            errorMessage = state.streetAddressError?.asString(context),
             onValueChange = onStreetAddressChange,
             modifier = Modifier
                 .widthIn(min = 280.dp)
@@ -429,6 +435,7 @@ fun ModalForm(
             label = stringResource(R.string.label_address_city),
             placeholder = stringResource(R.string.placeholder_address_city),
             value = state.city,
+            errorMessage = state.cityError?.asString(context),
             onValueChange = onCityChange,
             modifier = Modifier
                 .widthIn(min = 280.dp)
@@ -439,6 +446,7 @@ fun ModalForm(
             label = stringResource(R.string.label_address_state),
             placeholder = stringResource(R.string.placeholder_address_state),
             value = state.state,
+            errorMessage = state.stateError?.asString(context),
             onValueChange = onStateChange,
             modifier = Modifier
                 .widthIn(min = 280.dp)
@@ -449,6 +457,7 @@ fun ModalForm(
             label = stringResource(R.string.label_address_pincode),
             placeholder = stringResource(R.string.placeholder_address_pincode),
             value = state.pinCode,
+            errorMessage = state.pinCodeError?.asString(context),
             onValueChange = onPinCodeChange,
             modifier = Modifier
                 .widthIn(min = 280.dp)
@@ -467,6 +476,11 @@ fun ModalForm(
         )
     }
 }
+
+
+///////////////////////////////////////////////////////////
+//                     PREVIEWS                          //
+///////////////////////////////////////////////////////////
 
 @Preview(showSystemUi = true)
 @Composable
@@ -499,6 +513,29 @@ private fun AddressEntryModalFilledPreview() {
                 city = "City",
                 state = "State",
                 pinCode = "123456"
+            )
+        )
+    }
+}
+
+@Preview(heightDp = 2000)
+@Composable
+private fun AddressEntryModalErrorPreview() {
+
+    LittleLemonTheme {
+        LocationEntryContentRoot(
+            AddressState(
+                label = "Home",
+                buildingName = "1234 Building name",
+                buildingNameError = UiText.DynamicString("Building name error"),
+                streetAddress = "Street Address",
+                streetAddressError = UiText.DynamicString("Street address error"),
+                city = "City",
+                cityError = UiText.DynamicString("City error"),
+                state = "State",
+                stateError = UiText.DynamicString("State error"),
+                pinCode = "123456",
+                pinCodeError = UiText.DynamicString("Pincode error")
             )
         )
     }
