@@ -79,7 +79,7 @@
     <string name="city_required_error">City is required</string>
     <string name="state_required_error">State is required</string>
     <string name="pin_code_required_error">Pin code is required</string>
-    
+
     <!--  Info Messages  -->
     <string name="otp_resend_message">OTP resend successfully!</string>
     <string name="location_granted_success_message">Location granted successfully!</string>
@@ -112,6 +112,10 @@
     <string name="heading_add_your_address">Add your address</string>
     <string name="desc_decrease_quantity">Decrease quantity</string>
     <string name="desc_increase_quantity">Increase quantity</string>
+
+    <!--  Internal error messages  -->
+    <string name="no_gmap_api_key_header">API Key not found!</string>
+    <string name="no_gmap_api_key_body">Make sure you have your Google Maps API configured in local.properties file</string>
 
 
 </resources>

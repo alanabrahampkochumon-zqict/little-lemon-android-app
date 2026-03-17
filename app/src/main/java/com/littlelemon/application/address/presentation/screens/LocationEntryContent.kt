@@ -55,20 +55,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.ComposeMapColorScheme
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapType
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressState
@@ -222,7 +211,7 @@ fun LocationEntryContentRoot(
         topBar = {
             // Render as topbar if not mobile landscape
             if (!mobileLandscape) MapHeader(
-                Modifier
+                modifier = Modifier
                     .height(animatedHeight.value.toDP(screenDensity))
                     .fillMaxWidth()
                     .background(Color.DarkGray)
@@ -253,7 +242,7 @@ fun LocationEntryContentRoot(
         }
         else Row {
             MapHeader(
-                Modifier
+                modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
                     .background(Color.DarkGray)
