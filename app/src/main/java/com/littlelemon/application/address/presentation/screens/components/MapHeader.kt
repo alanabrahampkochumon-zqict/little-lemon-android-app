@@ -29,7 +29,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 import com.littlelemon.application.BuildConfig
 import com.littlelemon.application.R
-import com.littlelemon.application.address.presentation.screens.FloatingActionBar
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
@@ -98,9 +97,11 @@ fun MapHeader(
             }
 
         FloatingActionBar(
+            stringResource(R.string.heading_add_your_address),
+            onAction = onClose,
             modifier = Modifier.padding(
                 top = floatingBarTopPadding, bottom = floatingBarBottomPadding
-            ), onAction = onClose
+            ),
         )
 
     }

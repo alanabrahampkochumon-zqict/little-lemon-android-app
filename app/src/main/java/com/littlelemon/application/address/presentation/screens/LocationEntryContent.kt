@@ -146,7 +146,7 @@ fun LocationEntryContentRoot(
         mapHeight, animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy)
     )
 
-
+    //TODO: Disable maps when scrolled up to min size
     val nestedScrollConnection = remember(mapHeight) {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
@@ -280,50 +280,6 @@ fun LocationEntryContentRoot(
 // TODO: Add consume insetpadding to other composables.
 
 
-@Composable
-fun FloatingActionBar(modifier: Modifier = Modifier, onAction: () -> Unit = {}) {
-    val density = LocalDensity.current.density
-    val floatingBarShape = MaterialTheme.shapes.extraLarge
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(start = MaterialTheme.dimens.sizeXL, end = MaterialTheme.dimens.size4XL)
-    ) {
-        IconButton(
-            onClick = onAction, colors = IconButtonColors(
-                containerColor = MaterialTheme.colors.primary,
-                contentColor = MaterialTheme.colors.contentSecondary,
-                disabledContainerColor = MaterialTheme.colors.disabled,
-                disabledContentColor = MaterialTheme.colors.contentDisabled
-            ), modifier = Modifier
-                .size(48.dp)
-                .testTag(AddressTestTags.HEADER_CLOSE_BUTTON)
-        ) {
-            Image(painterResource(R.drawable.ic_x), contentDescription = "Close")
-        }
-
-        Box(
-            Modifier
-                .dropShadow(
-                    floatingBarShape,
-                    MaterialTheme.shadows.dropLG.firstShadow.toComposeShadow(density)
-                )
-                .dropShadow(
-                    floatingBarShape,
-                    MaterialTheme.shadows.dropLG.secondShadow?.toComposeShadow(density)
-                        ?: Shadow(0.dp)
-                )
-                .background(MaterialTheme.colors.primary, shape = floatingBarShape)
-                .padding(MaterialTheme.dimens.sizeLG)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(stringResource(R.string.heading_add_your_address))
-        }
-    }
-}
 
 @Composable
 fun ModalForm(
