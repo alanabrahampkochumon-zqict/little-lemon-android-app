@@ -74,7 +74,12 @@
 
     <!-- Error Messages -->
     <string name="generic_error_message">An unknown error occurred. Please try again!</string>
-
+    <string name="building_name_required_error">Building/Flat name is required</string>
+    <string name="street_address_required_error">Street address is required</string>
+    <string name="city_required_error">City is required</string>
+    <string name="state_required_error">State is required</string>
+    <string name="pin_code_required_error">Pin code is required</string>
+    
     <!--  Info Messages  -->
     <string name="otp_resend_message">OTP resend successfully!</string>
     <string name="location_granted_success_message">Location granted successfully!</string>

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertIs
@@ -85,7 +86,7 @@ class AddressViewModelTest {
             viewModel.state.test {
                 val state = awaitItem()
                 assertEquals(address, state.buildingName)
-                assertNull(state.addressError)
+                assertNull(state.buildingNameError)
             }
         }
 
@@ -281,18 +282,25 @@ class AddressViewModelTest {
 
         @Test
         fun onSaveAddress_success_showInfoAndTriggersAddressSavedEvent() = runTest {
-            // Arrange
+            // Given a viewmodel with valid fields
+            viewModel.onAction(AddressActions.ChangeBuildingName("address"))
+            viewModel.onAction(AddressActions.ChangeStreetAddress("street"))
+            viewModel.onAction(AddressActions.ChangeCity("city"))
+            viewModel.onAction(AddressActions.ChangeState("state"))
+            viewModel.onAction(AddressActions.ChangePinCode("123456"))
+
+            // and network success
             coEvery { saveAddressUseCase.invoke(any()) } returns Resource.Success()
 
             viewModel.addressEvents.test {
-                // Act
+                // When address is saved
                 viewModel.onAction(AddressActions.SaveAddress)
 
-                // Assert I
+                // Then it triggers show info
                 val firstEvent = awaitItem()
                 assertIs<AddressEvents.ShowInfo>(firstEvent)
 
-                // Assert II
+                // And address saved event
                 val secondEvent = awaitItem()
                 assertIs<AddressEvents.AddressSaved>(secondEvent)
                 cancelAndConsumeRemainingEvents()
@@ -301,14 +309,21 @@ class AddressViewModelTest {
 
         @Test
         fun onSaveAddress_failure_showError() = runTest {
-            // Arrange
+            // Given a viewmodel with valid fields
+            viewModel.onAction(AddressActions.ChangeBuildingName("address"))
+            viewModel.onAction(AddressActions.ChangeStreetAddress("street"))
+            viewModel.onAction(AddressActions.ChangeCity("city"))
+            viewModel.onAction(AddressActions.ChangeState("state"))
+            viewModel.onAction(AddressActions.ChangePinCode("123456"))
+
+            // But network fails
             coEvery { saveAddressUseCase.invoke(any()) } returns Resource.Failure(errorMessage = ERROR_MESSAGE)
 
             viewModel.addressEvents.test {
-                // Act
+                // When address is saved
                 viewModel.onAction(AddressActions.SaveAddress)
 
-                // Assert I
+                // Then, error message is shown
                 val event = awaitItem()
                 assertIs<AddressEvents.ShowError>(event)
                 assertEquals(EXPECTED_ERROR, event.errorMessage)
@@ -318,7 +333,13 @@ class AddressViewModelTest {
 
         @Test
         fun onSaveAddress_whileSaving_showsLoader() = runTest {
-            // Arrange
+            // Given a viewmodel with valid fields
+            viewModel.onAction(AddressActions.ChangeBuildingName("address"))
+            viewModel.onAction(AddressActions.ChangeStreetAddress("street"))
+            viewModel.onAction(AddressActions.ChangeCity("city"))
+            viewModel.onAction(AddressActions.ChangeState("state"))
+            viewModel.onAction(AddressActions.ChangePinCode("123456"))
+
             coEvery { saveAddressUseCase.invoke(any()) } coAnswers {
                 delay(NETWORK_LATENCY)
                 Resource.Success()
@@ -327,14 +348,14 @@ class AddressViewModelTest {
             viewModel.state.test {
                 assertFalse(awaitItem().isLoading) // Initial Loading State
 
-                // Act
+                // When address is saved
                 viewModel.onAction(AddressActions.SaveAddress)
 
-                // Assert I
+                // Then, loading state is first shown
                 val loadingState = awaitItem()
                 assertTrue(loadingState.isLoading)
 
-                // Assert II
+                // And then dismissed
                 val postLoadingState = awaitItem()
                 assertFalse(postLoadingState.isLoading)
             }
@@ -370,6 +391,106 @@ class AddressViewModelTest {
 
                 // Then, the state is updated to showDialog = false
                 assertFalse(awaitItem().showLocationDialog)
+            }
+        }
+
+
+        @Test
+        fun saveAddress_blankBuildingName_showsErrorMessage() = runTest {
+            // Given a viewmodel with blank building name
+            viewModel.onAction(AddressActions.ChangeBuildingName(""))
+            viewModel.state.test {
+                skipItems(1) // Ignore initial state
+                // When save address is pressed
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Then it shows an error
+                val state = awaitItem()
+                assertNotNull(state.buildingNameError)
+            }
+        }
+
+        @Test
+        fun saveAddress_blankStreetAddress_showsErrorMessage() = runTest {
+            // Given a viewmodel with blank street address
+            viewModel.onAction(AddressActions.ChangeStreetAddress(""))
+            viewModel.state.test {
+                skipItems(1) // Ignore initial state
+                // When save address is pressed
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Then it shows an error
+                val state = awaitItem()
+                assertNotNull(state.streetAddressError)
+            }
+        }
+
+        @Test
+        fun saveAddress_blankCity_showsErrorMessage() = runTest {
+            // Given a viewmodel with blank city
+            viewModel.onAction(AddressActions.ChangeCity(""))
+            viewModel.state.test {
+                skipItems(1) // Ignore initial state
+                // When save address is pressed
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Then it shows an error
+                val state = awaitItem()
+                assertNotNull(state.cityError)
+            }
+        }
+
+        @Test
+        fun saveAddress_blankState_showsErrorMessage() = runTest {
+            // Given a viewmodel with blank state
+            viewModel.onAction(AddressActions.ChangeState(""))
+            viewModel.state.test {
+                skipItems(1) // Ignore initial state
+                // When save address is pressed
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Then it shows an error
+                val state = awaitItem()
+                assertNotNull(state.stateError)
+            }
+        }
+
+        @Test
+        fun saveAddress_blankPinCode_showsErrorMessage() = runTest {
+            // Given a viewmodel with blank pin code
+            viewModel.onAction(AddressActions.ChangePinCode(""))
+            viewModel.state.test {
+                skipItems(1) // Ignore initial state
+                // When save address is pressed
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Then it shows an error
+                val state = awaitItem()
+                assertNotNull(state.pinCodeError)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+        @Test
+        fun saveAddress_withAllFieldsBlank_showsIndividualError() = runTest {
+            // Given a viewmodel with all required fields blank
+            viewModel.onAction(AddressActions.ChangeBuildingName(""))
+            viewModel.onAction(AddressActions.ChangeStreetAddress(""))
+            viewModel.onAction(AddressActions.ChangeCity(""))
+            viewModel.onAction(AddressActions.ChangeState(""))
+            viewModel.onAction(AddressActions.ChangePinCode(""))
+            viewModel.state.test {
+                skipItems(1) // Ignore initial state
+                // When save address is pressed
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Then it shows an error
+                val state = awaitItem()
+                assertNotNull(state.buildingNameError)
+                assertNotNull(state.streetAddressError)
+                assertNotNull(state.cityError)
+                assertNotNull(state.stateError)
+                assertNotNull(state.pinCodeError)
             }
         }
     }

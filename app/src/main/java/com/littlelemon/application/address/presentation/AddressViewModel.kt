@@ -12,6 +12,7 @@ import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
 import com.littlelemon.application.address.presentation.AddressEvents.ShowError
 import com.littlelemon.application.address.presentation.AddressEvents.ShowInfo
 import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.core.domain.validators.RequiredFieldValidator
 import com.littlelemon.application.core.presentation.UiText.DynamicString
 import com.littlelemon.application.core.presentation.UiText.StringResource
 import kotlinx.coroutines.channels.Channel
@@ -41,7 +42,7 @@ class AddressViewModel(
             is AddressActions.ChangeBuildingName -> _state.update {
                 it.copy(
                     buildingName = action.address,
-                    addressError = null
+                    buildingNameError = null
                 )
             }
 
@@ -116,6 +117,7 @@ class AddressViewModel(
             }
 
             is AddressActions.SaveAddress -> viewModelScope.launch {
+                if (!validateAddress()) return@launch
                 _state.update { it.copy(isLoading = true) }
                 val address = LocalAddress(
                     label = state.value.label,
@@ -169,4 +171,35 @@ class AddressViewModel(
         }
     }
 
+
+    private fun validateAddress(): Boolean {
+        val validate = RequiredFieldValidator()
+        var isValid = true
+        var newState = state.value.copy()
+        if (!(validate(state.value.buildingName))) {
+            newState =
+                newState.copy(buildingNameError = StringResource(R.string.building_name_required_error))
+            isValid = false
+        }
+        if (!(validate(state.value.streetAddress))) {
+            newState =
+                newState.copy(streetAddressError = StringResource(R.string.street_address_required_error))
+            isValid = false
+        }
+        if (!(validate(state.value.city))) {
+            newState = newState.copy(cityError = StringResource(R.string.city_required_error))
+            isValid = false
+        }
+        if (!(validate(state.value.state))) {
+            newState = newState.copy(stateError = StringResource(R.string.state_required_error))
+            isValid = false
+        }
+        if (!(validate(state.value.pinCode))) {
+            newState =
+                newState.copy(pinCodeError = StringResource(R.string.pin_code_required_error))
+            isValid = false
+        }
+        _state.update { newState }
+        return isValid
+    }
 }
