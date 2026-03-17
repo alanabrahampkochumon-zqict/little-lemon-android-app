@@ -74,6 +74,7 @@ import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressState
 import com.littlelemon.application.address.presentation.AddressTestTags
 import com.littlelemon.application.address.presentation.AddressViewModel
+import com.littlelemon.application.address.presentation.screens.components.MapHeader
 import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
@@ -289,40 +290,6 @@ fun LocationEntryContentRoot(
 
 // TODO: Add consume insetpadding to other composables.
 
-@Composable
-fun MapHeader(
-    modifier: Modifier, onClose: () -> Unit, floatingBarTopPadding: Dp, floatingBarBottomPadding: Dp
-) {
-    val singapore = LatLng(1.35, 103.87)
-    val singaporeMarkerState = rememberUpdatedMarkerState(position = singapore)
-    val cameraPositionState = rememberCameraPositionState {
-        CameraPosition.fromLatLngZoom(singapore, 10f).also { position = it }
-    }
-    val uiSetting =
-        remember { MapUiSettings(zoomControlsEnabled = true, zoomGesturesEnabled = true) }
-    Box(
-        modifier = modifier, contentAlignment = Alignment.TopCenter
-    ) {
-        GoogleMap(
-            modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState,
-            uiSettings = uiSetting,
-            properties = MapProperties(mapType = MapType.NORMAL),
-            mapColorScheme = ComposeMapColorScheme.LIGHT
-        ) {
-            Marker(
-                state = singaporeMarkerState, title = "Singapore", snippet = "Marker in Singapore"
-            )
-        }
-
-        FloatingActionBar(
-            modifier = Modifier.padding(
-                top = floatingBarTopPadding, bottom = floatingBarBottomPadding
-            ), onAction = onClose
-        )
-
-    }
-}
 
 @Composable
 fun FloatingActionBar(modifier: Modifier = Modifier, onAction: () -> Unit = {}) {
