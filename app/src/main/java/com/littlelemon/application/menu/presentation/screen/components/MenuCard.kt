@@ -134,6 +134,7 @@ fun MenuCard(
                     .crossfade(true).build(),
                 placeholder = painterResource(R.drawable.illustration_image_loading),
                 onError = {
+                    // TODO:
                     Log.d("Coil", "Error $it")
                 },
                 contentDescription = dish.title,

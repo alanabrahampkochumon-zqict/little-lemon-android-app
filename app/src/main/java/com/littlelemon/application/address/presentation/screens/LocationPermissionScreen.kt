@@ -1,9 +1,9 @@
 package com.littlelemon.application.address.presentation.screens
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
@@ -93,6 +93,12 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
         viewModel.onAction(AddressActions.GetLocation)
     }
 
+    var checkLocationSettingsTrigger by remember { mutableStateOf(false) }
+
+    LaunchedEffect(checkLocationSettingsTrigger) {
+
+    }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -100,6 +106,7 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
             permissions.values.reduce { acc, isPermissionGranted -> acc && isPermissionGranted }
 
         if (isGranted) {
+            checkLocationSetting(activity!!)
             getLocation()
             Log.d("Location", "${state.latitude}, ${state.longitude}")
             // TODO: Permission Granted: navigate
@@ -115,27 +122,6 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
         }
     }
 
-    val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100000)
-        .setMinUpdateIntervalMillis(50000).build()
-    val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-
-    val client = LocationServices.getSettingsClient(LocalActivity.current?.applicationContext!!)
-    val task = client.checkLocationSettings(builder.build())
-
-    task.addOnSuccessListener { locationSettingsResponse ->
-        getLocation()
-        Log.d("Location from listener", "${state.latitude}, ${state.longitude}")
-    }
-
-    task.addOnFailureListener { exception ->
-        if (exception is ResolvableApiException) {
-            try {
-                exception.startResolutionForResult(activity!!, 5001)
-            } catch (sendEx: IntentSender.SendIntentException) {
-                // Ignore
-            }
-        }
-    }
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -282,6 +268,29 @@ fun LocationPermissionScreenRoot(
         }
 
     }
+}
+
+
+private fun checkLocationSetting(activity: Activity) {
+    val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
+        .build()
+    val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+    val client = LocationServices.getSettingsClient(activity.applicationContext!!)
+    Log.d("Location", "Running checks")
+    client.checkLocationSettings(builder.build())
+        .addOnSuccessListener {
+            Log.d("Location", "Setting activated")
+        }
+        .addOnFailureListener { exception ->
+            if (exception is ResolvableApiException) {
+                try {
+                    // GPS IS OFF: This shows the "Turn on GPS" system dialog
+                    exception.startResolutionForResult(activity, 5001)
+                } catch (e: Exception) {
+                    Log.e("Location", "Error starting resolution", e)
+                }
+            }
+        }
 }
 
 
