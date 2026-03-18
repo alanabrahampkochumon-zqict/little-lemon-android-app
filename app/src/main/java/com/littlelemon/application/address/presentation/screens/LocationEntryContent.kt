@@ -115,12 +115,9 @@ fun LocationEntryContentRoot(
     val bottomSheetShape = MaterialTheme.shapes.medium.copy(
         bottomStart = CornerSize(0.dp), bottomEnd = CornerSize(0.dp)
     )
-
     val screenDensity = LocalDensity.current.density
-
     val screenWidth = LocalWindowInfo.current.containerDpSize.width
     val mobileLandscape = screenWidth > 600.dp && !isFloating
-
 
     // Content padding to ensure that the top navigation does not hit the system bar or camera cutout
     val navBarHeight = 48.dp

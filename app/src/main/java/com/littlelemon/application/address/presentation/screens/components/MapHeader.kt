@@ -45,6 +45,7 @@ import com.littlelemon.application.core.presentation.designsystem.xLarge
 import com.littlelemon.application.core.presentation.utils.toComposeShadow
 
 
+// TODO: Fix navigation button not showing on landscape
 @Composable
 fun MapHeader(
     floatingBarTopPadding: Dp,
@@ -52,6 +53,7 @@ fun MapHeader(
     onClose: () -> Unit,
     onFetchCurrentLocation: () -> Unit,
     modifier: Modifier = Modifier,
+    isMyLocationEnabled: Boolean = false,
 ) {
 
     val buttonShape = MaterialTheme.shapes.xLarge
@@ -63,7 +65,7 @@ fun MapHeader(
         CameraPosition.fromLatLngZoom(singapore, 10f).also { position = it }
     }
     val uiSetting =
-        remember { MapUiSettings(zoomControlsEnabled = true, zoomGesturesEnabled = true) }
+        remember { MapUiSettings(zoomControlsEnabled = false, zoomGesturesEnabled = true) }
     Box(
         modifier = modifier, contentAlignment = Alignment.TopCenter
     ) {
@@ -110,7 +112,12 @@ fun MapHeader(
                 )
             }
 
-        Box(modifier = Modifier.fillMaxSize().padding(MaterialTheme.dimens.sizeXL), contentAlignment = Alignment.BottomEnd) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(MaterialTheme.dimens.sizeXL),
+            contentAlignment = Alignment.BottomEnd
+        ) {
             IconButton(
                 onClick = onFetchCurrentLocation,
                 modifier = Modifier
@@ -141,6 +148,11 @@ fun MapHeader(
 @Composable
 private fun MapHeaderPreview() {
     LittleLemonTheme {
-        MapHeader(onClose = {}, onFetchCurrentLocation = {}, floatingBarTopPadding = 16.dp, floatingBarBottomPadding = 0.dp)
+        MapHeader(
+            onClose = {},
+            onFetchCurrentLocation = {},
+            floatingBarTopPadding = 16.dp,
+            floatingBarBottomPadding = 0.dp
+        )
     }
 }
