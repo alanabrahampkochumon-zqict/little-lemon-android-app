@@ -3,10 +3,8 @@ package com.littlelemon.application.address.presentation.screens
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -21,24 +19,19 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.geometry.Offset
@@ -51,7 +44,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -218,7 +210,8 @@ fun LocationEntryContentRoot(
                     .testTag(AddressTestTags.NESTED_SCROLL_HEADER),
                 onClose = onClose,
                 floatingBarTopPadding = safeContentPadding,
-                floatingBarBottomPadding = topBarBottomPadding
+                floatingBarBottomPadding = topBarBottomPadding,
+                onFetchCurrentLocation = { TODO("Implementation") }
             )
         }) { innerPadding ->
         if (!mobileLandscape) Column(
@@ -249,7 +242,8 @@ fun LocationEntryContentRoot(
                     .testTag(AddressTestTags.NESTED_SCROLL_HEADER),
                 onClose = onClose,
                 floatingBarTopPadding = safeContentPadding,
-                floatingBarBottomPadding = topBarBottomPadding
+                floatingBarBottomPadding = topBarBottomPadding,
+                onFetchCurrentLocation = { TODO("Implementation") }
             )
 
             ModalForm(
@@ -278,7 +272,6 @@ fun LocationEntryContentRoot(
 }
 
 // TODO: Add consume insetpadding to other composables.
-
 
 
 @Composable
