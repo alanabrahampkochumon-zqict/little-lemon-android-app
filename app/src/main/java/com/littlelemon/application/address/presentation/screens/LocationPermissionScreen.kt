@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -82,6 +83,10 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
+    fun getLocation() {
+        viewModel.onAction(AddressActions.GetLocation)
+    }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -89,7 +94,11 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
             permissions.values.reduce { acc, isPermissionGranted -> acc && isPermissionGranted }
 
         if (isGranted) {
+            getLocation()
+            Log.d("Location", "${state.latitude}, ${state.longitude}")
             // TODO: Permission Granted: navigate
+            // TODO: Auto dismiss dialog
+            // TODO: Auto take location
         } else {
             val shouldShowRationale =
                 activity?.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -139,10 +148,12 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
             permissionLauncher.launch(permissions)
         }, onManualLocationClick = {
             viewModel.onAction(AddressActions.EnterLocationManually)
+            viewModel.onAction(AddressActions.DismissLocationDialog)
         }, onDismissAlert = {
             viewModel.onAction(AddressActions.DismissLocationDialog)
         }, onAllowLocationAccessClick = {
             openAppSettings(activity?.applicationContext!!)
+            viewModel.onAction(AddressActions.DismissLocationDialog)
         })
         AnimatedVisibility(
             showLocationEntryDialog,
@@ -245,6 +256,13 @@ fun LocationPermissionScreenRoot(
 
     }
 }
+
+//private fun enabledLocationRequest(
+//    context: Context,
+//    makeRequest: (intentSenderRequest: IntentSenderRequest) -> Unit
+//) {
+//    val locationRequest = LocationRequest.Builder(10000L).build()
+//}
 
 private fun openAppSettings(context: Context) {
     val intent = Intent(
