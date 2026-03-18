@@ -3,6 +3,7 @@ package com.littlelemon.application.address.presentation.screens
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
@@ -55,6 +56,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.Priority
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressEvents
@@ -97,7 +103,6 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
             getLocation()
             Log.d("Location", "${state.latitude}, ${state.longitude}")
             // TODO: Permission Granted: navigate
-            // TODO: Auto dismiss dialog
             // TODO: Auto take location
         } else {
             val shouldShowRationale =
@@ -106,6 +111,28 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
 
             if (!shouldShowRationale) {
                 viewModel.onAction(AddressActions.ShowLocationDialog)
+            }
+        }
+    }
+
+    val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100000)
+        .setMinUpdateIntervalMillis(50000).build()
+    val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+
+    val client = LocationServices.getSettingsClient(LocalActivity.current?.applicationContext!!)
+    val task = client.checkLocationSettings(builder.build())
+
+    task.addOnSuccessListener { locationSettingsResponse ->
+        getLocation()
+        Log.d("Location from listener", "${state.latitude}, ${state.longitude}")
+    }
+
+    task.addOnFailureListener { exception ->
+        if (exception is ResolvableApiException) {
+            try {
+                exception.startResolutionForResult(activity!!, 5001)
+            } catch (sendEx: IntentSender.SendIntentException) {
+                // Ignore
             }
         }
     }
