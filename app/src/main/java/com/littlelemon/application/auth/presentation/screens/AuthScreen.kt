@@ -65,7 +65,9 @@ import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
-
+// TODO: Add bottom nav padding
+// TODO: Consume ime padding to disable jitteriness in login
+// TODO: Change loader animation
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel,

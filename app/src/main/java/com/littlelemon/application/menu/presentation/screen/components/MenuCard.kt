@@ -1,5 +1,6 @@
 package com.littlelemon.application.menu.presentation.screen.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -131,7 +132,10 @@ fun MenuCard(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(dish.imageURL)
                     .crossfade(true).build(),
-                placeholder = painterResource(R.drawable.greek_yogurt), // TODO: Replace with placeholder
+                placeholder = painterResource(R.drawable.illustration_image_loading),
+                onError = {
+                    Log.d("Coil", "Error $it")
+                },
                 contentDescription = dish.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.clip(imageShape),

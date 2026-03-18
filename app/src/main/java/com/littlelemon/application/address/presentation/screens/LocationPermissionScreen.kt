@@ -284,12 +284,6 @@ fun LocationPermissionScreenRoot(
     }
 }
 
-//private fun enabledLocationRequest(
-//    context: Context,
-//    makeRequest: (intentSenderRequest: IntentSenderRequest) -> Unit
-//) {
-//    val locationRequest = LocationRequest.Builder(10000L).build()
-//}
 
 private fun openAppSettings(context: Context) {
     val intent = Intent(
