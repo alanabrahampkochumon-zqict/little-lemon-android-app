@@ -70,6 +70,9 @@ import com.littlelemon.application.core.presentation.designsystem.typeStyle
 // TODO: Animate card translation
 // TODO: Clear focus of text field on submit
 // TODO: Change loader animation
+// TODO: Clear OTP on back
+// TODO: Format OTP Verification
+
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel,

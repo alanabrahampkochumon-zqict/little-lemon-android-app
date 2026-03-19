@@ -1,5 +1,6 @@
 package com.littlelemon.application.auth.presentation.screens
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -75,7 +76,7 @@ fun PersonalInformationContent(
         if (isScrollable) {
             Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
         } else {
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.weight(1f).animateContentSize())
         }
 
         Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)) {

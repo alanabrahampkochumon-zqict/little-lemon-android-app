@@ -1,6 +1,10 @@
 package com.littlelemon.application.orders.domain.models
 
 data class CartItem(
-//    private val menuItem: MenuItem , TODO: Add to common
-    val quantity: Int = 0
+    val menuItemItem: List<MenuItem>,
+    val subtotal: Double,
+    val taxes: Double,
+    val discount: Double,
+    val shippingFee: Double,
+    val total: Double,
 )
