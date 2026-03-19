@@ -1,5 +1,6 @@
 package com.littlelemon.application.auth.presentation.screens
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -81,7 +82,7 @@ fun VerificationContent(
         if (isScrollable) {
             Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
         } else {
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.weight(1f).animateContentSize())
         }
         Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.size2XL)) {
             Button(

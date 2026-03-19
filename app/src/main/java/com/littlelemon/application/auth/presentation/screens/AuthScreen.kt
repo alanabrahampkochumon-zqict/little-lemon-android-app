@@ -2,6 +2,7 @@ package com.littlelemon.application.auth.presentation.screens
 
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -10,13 +11,16 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -28,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -210,8 +215,7 @@ fun AuthScreenRoot(
 
             DoodleBackground()
 
-            //Content
-
+            // Content
             NavDisplay(
                 entryDecorators = listOf(
                     rememberSaveableStateHolderNavEntryDecorator(),
@@ -225,6 +229,7 @@ fun AuthScreenRoot(
                         CardLayout(
                             modifier = Modifier
                                 .padding(innerPadding)
+                                .consumeWindowInsets(innerPadding)
                                 .fillMaxSize(),
                             isFloating = isFloating,
                             isScrollable = isScrollable,
@@ -237,16 +242,16 @@ fun AuthScreenRoot(
                                 isScrollable = isScrollable,
                                 onEmailChange = onUpdateEmail,
                                 onSendOTP = onSendOTP,
-                                modifier = Modifier.padding(
+                                modifier = Modifier
+                                    .padding(
                                     top = MaterialTheme.dimens.sizeMD,
                                     start = MaterialTheme.dimens.sizeXL,
                                     end = MaterialTheme.dimens.sizeXL
-                                )
+                                ).navigationBarsPadding()
                             )
                         }
                     }
                     entry<VerificationRoute> {
-
                         CardLayout(
                             modifier = Modifier
                                 .padding(innerPadding)

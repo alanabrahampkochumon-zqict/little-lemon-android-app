@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,7 +46,6 @@ fun LoginContent(
 
     Column(
         modifier = modifier
-            .animateContentSize()
             .padding(horizontal = MaterialTheme.dimens.sizeMD)
     ) {
         Image(
@@ -93,7 +93,7 @@ fun LoginContent(
         if (isScrollable) {
             Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
         } else {
-            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.weight(1f).animateContentSize())
         }
         Button(
             stringResource(R.string.act_send_otp),
