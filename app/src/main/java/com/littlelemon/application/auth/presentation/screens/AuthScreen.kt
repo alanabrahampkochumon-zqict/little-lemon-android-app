@@ -2,7 +2,6 @@ package com.littlelemon.application.auth.presentation.screens
 
 import android.content.res.Configuration
 import android.widget.Toast
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -11,7 +10,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -32,7 +30,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -70,8 +67,8 @@ import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
-// TODO: Add bottom nav padding
-// TODO: Consume ime padding to disable jitteriness in login
+// TODO: Animate card translation
+// TODO: Clear focus of text field on submit
 // TODO: Change loader animation
 @Composable
 fun AuthScreen(
@@ -244,10 +241,11 @@ fun AuthScreenRoot(
                                 onSendOTP = onSendOTP,
                                 modifier = Modifier
                                     .padding(
-                                    top = MaterialTheme.dimens.sizeMD,
-                                    start = MaterialTheme.dimens.sizeXL,
-                                    end = MaterialTheme.dimens.sizeXL
-                                ).navigationBarsPadding()
+                                        top = MaterialTheme.dimens.sizeMD,
+                                        start = MaterialTheme.dimens.sizeXL,
+                                        end = MaterialTheme.dimens.sizeXL
+                                    )
+                                    .navigationBarsPadding()
                             )
                         }
                     }
@@ -301,15 +299,11 @@ fun AuthScreenRoot(
                     }
                 },
                 transitionSpec = {
-                    // 1. Define the premium, subtle spring physics
                     val premiumSpring = spring<IntOffset>(
-                        dampingRatio = 0.75f, // Slight glide, almost no bounce
-                        stiffness = Spring.StiffnessLow // Slower, relaxed movement
+                        stiffness = Spring.StiffnessLow
                     )
                     val fadeSpec = tween<Float>(durationMillis = 250)
 
-                    // 2. Navigating FORWARD (Login -> Verify)
-                    // New screen slides UP from bottom. Old screen slides UP to top.
                     (slideInVertically(
                         animationSpec = premiumSpring,
                         initialOffsetY = { fullHeight -> fullHeight }
@@ -321,8 +315,6 @@ fun AuthScreenRoot(
                     ).apply { targetContentZIndex = 1f }
                 },
                 popTransitionSpec = {
-                    // 3. Navigating BACKWARDS (Verify -> Login)
-                    // New screen slides DOWN from top. Old screen slides DOWN to bottom.
                     val premiumSpring = spring<IntOffset>(
                         dampingRatio = 0.75f,
                         stiffness = Spring.StiffnessLow

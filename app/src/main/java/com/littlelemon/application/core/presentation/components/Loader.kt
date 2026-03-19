@@ -1,6 +1,8 @@
 package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -50,7 +52,7 @@ fun Loader(
         contentAlignment = Alignment.Center
     ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .then(
                     if (showLoader) Modifier
@@ -61,16 +63,21 @@ fun Loader(
         ) {
             screenContent()
         }
+        AnimatedVisibility(showLoader, enter = fadeIn(animationSpec = tween(200)), exit = fadeOut(animationSpec = tween(200))) {
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.darkOverlay24))
+        }
         AnimatedVisibility(
             showLoader,
             enter = scaleIn(
                 initialScale = 0.8f,
-                animationSpec = tween(150)
-            ) + fadeIn(animationSpec = tween(150)),
+                animationSpec = spring()
+            ) + fadeIn(animationSpec = tween(200)),
             exit = scaleOut(
                 targetScale = 0.8f,
-                animationSpec = tween(150)
-            ) + fadeOut(animationSpec = tween(150))
+                animationSpec = spring()
+            ) + fadeOut(animationSpec = tween(200))
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
