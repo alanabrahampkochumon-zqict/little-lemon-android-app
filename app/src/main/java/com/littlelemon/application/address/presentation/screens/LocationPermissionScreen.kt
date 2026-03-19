@@ -276,10 +276,10 @@ private fun checkLocationSetting(activity: Activity) {
         .build()
     val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
     val client = LocationServices.getSettingsClient(activity.applicationContext!!)
-    Log.d("Location", "Running checks")
     client.checkLocationSettings(builder.build())
         .addOnSuccessListener {
             Log.d("Location", "Setting activated")
+            //TODO: Refactor
         }
         .addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
