@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,6 +25,8 @@ import kotlin.random.Random
 
 @Composable
 fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
+
+    val color = MaterialTheme.colors.contentHighlight
     val drawables = remember { mutableListOf<Int>() }
     try {
         val drawableClass = R.drawable::class.java
@@ -36,6 +39,7 @@ fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
     } catch (e: Exception) {
         e.printStackTrace()
     }
+
     // TODO: Update to cache all the calculated values
     val painters = drawables.map { rememberVectorPainter(ImageVector.vectorResource(it)) }
     Canvas(
@@ -67,7 +71,7 @@ fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
                             draw(
                                 Size(
                                     drawWidth, drawHeight
-                                ), alpha = alpha
+                                ), alpha = alpha, colorFilter = ColorFilter.tint(color)
                             )
                         }
                     }
@@ -83,7 +87,7 @@ fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
 @Preview(showBackground = true)
 @Composable
 private fun DoodleBackgroundPreview() {
-    LittleLemonTheme() {
+    LittleLemonTheme {
         DoodleBackground()
     }
 }
@@ -91,7 +95,7 @@ private fun DoodleBackgroundPreview() {
 @Preview(showBackground = true, widthDp = 1024, heightDp = 768)
 @Composable
 private fun DoodleBackgroundPreviewTab() {
-    LittleLemonTheme() {
+    LittleLemonTheme {
         DoodleBackground()
     }
 }
