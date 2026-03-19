@@ -159,11 +159,15 @@ fun OrderItem(
         ) {
             Button(
                 stringResource(R.string.act_remove),
-                {},
+                onRemoveItem,
                 variant = ButtonVariant.GHOST,
                 modifier = Modifier.weight(1f)
             )
-            Stepper(menuItem.quantity, onIncrease = {}, onDecrease = {})
+            Stepper(
+                menuItem.quantity,
+                onIncrease = onIncreaseQuantity,
+                onDecrease = onDecreaseQuantity
+            )
         }
     }
 }
