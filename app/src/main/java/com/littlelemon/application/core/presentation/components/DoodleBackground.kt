@@ -64,7 +64,6 @@ fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
                         pivot = Offset(drawHeight / 2, drawWidth / 2)
                     ) {
                         with(painter) {
-//                            drawRect(Color.Red, size = Size(drawWidth, drawHeight))
                             draw(
                                 Size(
                                     drawWidth, drawHeight
@@ -77,77 +76,9 @@ fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
                 offset = max(offset, pWidth)
             }
             remainingWidth -= offset / 1.05f
-
-//
-//            val gap = Random.nextInt(4.dp.toPx().roundToInt()) + 4
-//            val size = Random.nextDouble(24.dp.toPx().toDouble(), 40.dp.toPx().toDouble())
-//            var remainingHeight = height
-//            var width = 0.0f
-//            while (remainingHeight > 0) {
-//                val p = painters.random()
-//                val randomScale = Random.nextDouble(0.75, 1.25).toFloat()
-//                val (pWidth, pHeight) = p.intrinsicSize
-//                val aspectRatio = if (pWidth > pHeight) pHeight / pWidth else pWidth / pHeight
-//                rotate(Random.nextDouble(-4.0, 4.0).toFloat()) {
-//
-//                    translate(width - remainingWidth, height - remainingHeight) {
-//                        with(p) {
-//                            draw(
-//                                Size(
-//                                    pWidth * randomScale, pHeight * randomScale
-//                                )
-//                            )
-//                        }
-//                    }
-//                }
-//                remainingHeight -= pHeight
-//                width = max(pWidth, width)
-//            }
-//            remainingWidth -= width
         }
     }
 }
-//    Box(
-//        modifier = modifier
-//            .fillMaxWidth()
-//            .fillMaxHeight()
-//            .background(MaterialTheme.colors.secondary)
-//            .drawBehind {
-//                val (width, height) = size
-//                var remainingWidth = width
-//                while (remainingWidth > 0) {
-//                    val gap = Random.nextInt(4.dp.toPx().roundToInt()) + 4
-//                    val size = Random.nextDouble(24.dp.toPx().toDouble(), 40.dp.toPx().toDouble())
-//                    var remainingHeight = height
-//                    with(rememberVectorPainter(imageBitmaps[0])) {
-//                        draw(Size(size.toFloat(), size.toFloat()))
-//                    }
-//                    while (remainingHeight > 0) {
-//                        drawRect(
-//                            Color.Green,
-//                            Offset(width - remainingWidth, height - remainingHeight),
-//                            size = Size(size.toFloat(), size.toFloat())
-//                        )
-//                        remainingHeight -= size.toFloat() + gap
-//                    }
-//                    remainingWidth -= size.toFloat() + gap
-//                }
-//            }
-//    ) {
-//
-////        Image(painterResource(drawables[0]), null)
-//        Image(imageBitmaps[1], null)
-//        // TODO: Implement using individual vector collection
-////        Image(
-////            painter = painterResource(R.drawable.doodles),
-////            contentDescription = stringResource(R.string.desc_logo),
-////            Modifier.fillMaxSize(),
-////            contentScale = ContentScale.Crop,
-////            colorFilter = ColorFilter.tint(MaterialTheme.colors.contentHighlight),
-////            alpha = alpha
-////        )
-//    }
-//}
 
 @Preview(showBackground = true)
 @Composable
