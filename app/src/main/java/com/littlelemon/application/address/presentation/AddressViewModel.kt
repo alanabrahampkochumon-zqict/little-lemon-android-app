@@ -206,7 +206,7 @@ class AddressViewModel(
 //
 //                    is Resource.Loading -> Unit
 //                }
-//            }
+            }
         }
     }
 
