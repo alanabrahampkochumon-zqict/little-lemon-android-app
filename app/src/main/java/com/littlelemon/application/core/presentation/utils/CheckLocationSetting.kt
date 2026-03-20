@@ -9,7 +9,6 @@ import com.google.android.gms.location.Priority
 
 fun checkLocationSetting(
     activity: Activity,
-    requestCode: Int,
     onLocationEnabled: () -> Unit,
     onStartResolution: (exception: ResolvableApiException) -> Unit = {},
 ) {
@@ -24,7 +23,6 @@ fun checkLocationSetting(
         .addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
                 try {
-                    exception.startResolutionForResult(activity, requestCode)
                     onStartResolution(exception)
                 } catch (_: Exception) {
                 }

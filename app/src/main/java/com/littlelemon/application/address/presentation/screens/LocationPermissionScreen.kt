@@ -1,13 +1,8 @@
 package com.littlelemon.application.address.presentation.screens
 
 import android.Manifest
-import android.app.Activity
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -67,15 +62,19 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.utils.checkLocationSetting
 import com.littlelemon.application.core.presentation.utils.openAppSettings
+import com.littlelemon.application.core.presentation.utils.requestLocationPermission
 import org.koin.androidx.compose.koinViewModel
 
-
-private const val LOCATION_REQUEST_CODE = 316
-
+private val permissions = arrayOf(
+    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
+)
 @Composable
-fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier, onNavigate: () -> Unit) {
+fun LocationPermissionScreen(
+    viewModel: AddressViewModel,
+    modifier: Modifier = Modifier,
+    onNavigate: () -> Unit
+) {
 
     val activity = LocalActivity.current
     val context = LocalContext.current
@@ -85,52 +84,14 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
 
     var showLocationEntryDialog by remember { mutableStateOf(false) }
 
-    val permissions = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
+    val permissionLauncher = requestLocationPermission(
+        onLocationGranted = { viewModel.onAction(AddressActions.GetLocation) },
+        onLocationPermissionDenied = { viewModel.onAction(AddressActions.ShowLocationDialog) },
+        activity = activity!!
     )
-
-    fun getLocation() {
-        viewModel.onAction(AddressActions.GetLocation)
-    }
-
-    val locationRequestLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartIntentSenderForResult()) { activityResult ->
-            if (activityResult.resultCode == Activity.RESULT_OK) {
-                getLocation()
-                Log.d("Location", "Location enabled")
-            } else
-                Log.d("Location", "Location disabled still")
-        }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val isGranted =
-            permissions.values.reduce { acc, isPermissionGranted -> acc && isPermissionGranted }
-
-        if (isGranted) {
-            checkLocationSetting(
-                activity!!,
-                onLocationEnabled = { getLocation() },
-                requestCode = LOCATION_REQUEST_CODE,
-                onStartResolution = { exception ->
-                    locationRequestLauncher.launch(IntentSenderRequest.Builder(exception.resolution).build())
-                })
-            // TODO: Permission Granted: navigate
-        } else {
-            val shouldShowRationale =
-                activity?.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
-                    ?: false
-
-            if (!shouldShowRationale) {
-                viewModel.onAction(AddressActions.ShowLocationDialog)
-            }
-        }
-    }
 
     LaunchedEffect(viewModel.addressEvents, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
             viewModel.addressEvents.collect { event ->
                 when (event) {
                     AddressEvents.AddressSaved -> {
@@ -170,7 +131,7 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
         }, onDismissAlert = {
             viewModel.onAction(AddressActions.DismissLocationDialog)
         }, onAllowLocationAccessClick = {
-            openAppSettings(activity?.applicationContext!!)
+            openAppSettings(activity.applicationContext!!)
             viewModel.onAction(AddressActions.DismissLocationDialog)
         })
         AnimatedVisibility(
