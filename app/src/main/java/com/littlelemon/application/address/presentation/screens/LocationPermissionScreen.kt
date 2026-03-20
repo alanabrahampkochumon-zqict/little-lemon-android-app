@@ -1,11 +1,6 @@
 package com.littlelemon.application.address.presentation.screens
 
 import android.Manifest
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
@@ -56,11 +51,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.Priority
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressActions
 import com.littlelemon.application.address.presentation.AddressEvents
@@ -75,12 +65,20 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import com.littlelemon.application.core.presentation.utils.checkLocationSetting
+import com.littlelemon.application.core.presentation.utils.openAppSettings
 import org.koin.androidx.compose.koinViewModel
+
+
+private const val LOCATION_REQUEST_CODE = 316
 
 @Composable
 fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
 
     val activity = LocalActivity.current
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     var showLocationEntryDialog by remember { mutableStateOf(false) }
@@ -93,11 +91,10 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
         viewModel.onAction(AddressActions.GetLocation)
     }
 
-    var checkLocationSettingsTrigger by remember { mutableStateOf(false) }
-
-    LaunchedEffect(checkLocationSettingsTrigger) {
-
-    }
+    val locationRequestLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
+            Log.d("Result", "$it")
+        }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -106,11 +103,8 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
             permissions.values.reduce { acc, isPermissionGranted -> acc && isPermissionGranted }
 
         if (isGranted) {
-            checkLocationSetting(activity!!)
-            getLocation()
-            Log.d("Location", "${state.latitude}, ${state.longitude}")
+            checkLocationSetting(activity!!, onLocationEnabled = { getLocation() }, LOCATION_REQUEST_CODE)
             // TODO: Permission Granted: navigate
-            // TODO: Auto take location
         } else {
             val shouldShowRationale =
                 activity?.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -122,9 +116,6 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
         }
     }
 
-
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(viewModel.addressEvents, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
@@ -156,7 +147,6 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
     }
 
     Box(modifier) {
-
         LocationPermissionScreenRoot(state = state, modifier = modifier, onEnableLocationClick = {
             permissionLauncher.launch(permissions)
         }, onManualLocationClick = {
@@ -271,41 +261,9 @@ fun LocationPermissionScreenRoot(
 }
 
 
-private fun checkLocationSetting(activity: Activity) {
-    val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
-        .build()
-    val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-    val client = LocationServices.getSettingsClient(activity.applicationContext!!)
-    client.checkLocationSettings(builder.build())
-        .addOnSuccessListener {
-            Log.d("Location", "Setting activated")
-            //TODO: Refactor
-        }
-        .addOnFailureListener { exception ->
-            if (exception is ResolvableApiException) {
-                try {
-                    // GPS IS OFF: This shows the "Turn on GPS" system dialog
-                    exception.startResolutionForResult(activity, 5001)
-                } catch (e: Exception) {
-                    Log.e("Location", "Error starting resolution", e)
-                }
-            }
-        }
-}
-
-
-private fun openAppSettings(context: Context) {
-    val intent = Intent(
-        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-        Uri.fromParts("package", context.packageName, null)
-    ).apply {
-        addFlags(
-            Intent.FLAG_ACTIVITY_NEW_TASK
-        )
-    }
-    context.startActivity(intent)
-}
-
+//////////////////////////////////////////////////////////
+//                     PREVIEWS
+//////////////////////////////////////////////////////////
 @Preview
 @Composable
 private fun LocationPermissionScreenRootPreview() {
