@@ -6,8 +6,10 @@ import com.littlelemon.application.R
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.models.PhysicalAddress
+import com.littlelemon.application.address.domain.usecase.GeocodeAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
+import com.littlelemon.application.address.domain.usecase.ReverseGeocodeLocationUseCase
 import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
 import com.littlelemon.application.address.presentation.AddressEvents.ShowError
 import com.littlelemon.application.address.presentation.AddressEvents.ShowInfo
@@ -26,6 +28,8 @@ import kotlinx.coroutines.launch
 class AddressViewModel(
     private val getLocation: GetLocationUseCase,
     private val getAddress: GetAddressUseCase,
+    private val geocodeAddress: GeocodeAddressUseCase,
+    private val reverseGeocodedLocation: ReverseGeocodeLocationUseCase,
     private val saveAddress: SaveAddressUseCase
 ) : ViewModel() {
 
@@ -169,6 +173,40 @@ class AddressViewModel(
 
             AddressActions.DismissLocationDialog -> _state.update { it.copy(showLocationDialog = false) }
             is AddressActions.ChangeToDefaultAddress -> _state.update { it.copy(isDefaultAddress = action.value) }
+            is AddressActions.SaveLocation -> {
+                _state.update { it.copy(isLoading = true) }
+//                val geocodedResult = reverseGeocodedLocation(
+//                    LocalLocation(
+//                        state.value.latitude,
+//                        state.value.longitude
+//                    )
+//                )
+//                when (geocodedResult) {
+//                    is Resource.Failure -> {
+//
+//                    }
+//
+//                    is Resource.Success -> {
+//                        val address = LocalAddress(
+//                            label = if (state.value.label.isBlank()) "Unnamed Location" else state.value.label,
+//                            address = PhysicalAddress(
+//                                address = state.value.buildingName,
+//                                streetAddress = state.value.streetAddress,
+//                                city = state.value.city,
+//                                state = state.value.state,
+//                                pinCode = state.value.pinCode
+//                            ),
+//                            location = if (state.value.latitude != null && state.value.longitude != null) LocalLocation(
+//                                latitude = state.value.latitude!!,
+//                                longitude = state.value.longitude!!
+//                            ) else null,
+//                            isDefault = state.value.isDefaultAddress
+//                        )
+//                    }
+//
+//                    is Resource.Loading -> Unit
+//                }
+//            }
         }
     }
 

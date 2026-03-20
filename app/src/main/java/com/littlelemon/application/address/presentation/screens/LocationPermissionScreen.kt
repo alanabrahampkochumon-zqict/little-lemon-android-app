@@ -119,8 +119,15 @@ fun LocationPermissionScreen(
                     ).show()
 
                     AddressEvents.ShowLocationEntryPopup -> showLocationEntryDialog = true
-                    AddressEvents.LocationRetrieved -> // TODO: Later add geocoding here
+                    AddressEvents.LocationRetrieved -> {
+                        // TODO: Geocoding add
+                        Toast.makeText(
+                            context,
+                            "Location retrieved!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         viewModel.onAction(AddressActions.SaveAddress)
+                    }
                 }
             }
         }

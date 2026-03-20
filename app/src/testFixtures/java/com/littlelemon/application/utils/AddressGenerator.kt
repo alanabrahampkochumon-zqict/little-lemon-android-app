@@ -2,6 +2,7 @@ package com.littlelemon.application.utils
 
 import com.littlelemon.application.address.data.local.models.AddressEntity
 import com.littlelemon.application.address.data.remote.models.AddressDTO
+import com.littlelemon.application.address.domain.models.GeocodedAddress
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.models.PhysicalAddress
@@ -10,6 +11,7 @@ import kotlin.math.roundToLong
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 object AddressGenerator {
 
     private val faker = faker { }
@@ -17,7 +19,7 @@ object AddressGenerator {
 
     private const val LONGITUDE_LIMIT = 360
 
-    @OptIn(ExperimentalUuidApi::class)
+
     fun generateLocalAddress(): LocalAddress {
         return LocalAddress(
             id = Uuid.random().toString(),
@@ -28,7 +30,16 @@ object AddressGenerator {
         )
     }
 
-    @OptIn(ExperimentalUuidApi::class)
+    fun generateGeocodedAddress(): GeocodedAddress {
+        return GeocodedAddress(
+            id = Uuid.random().toString(),
+            partialMatch = Math.random() > 0.5,
+            fullAddress = faker.address.fullAddress(),
+            address = generatePhysicalAddress(),
+            location = generateLocalLocation()
+        )
+    }
+
     fun generateAddressDTO(): AddressDTO {
         return AddressDTO(
             id = Uuid.random().toString(),
@@ -45,7 +56,6 @@ object AddressGenerator {
         )
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     fun generateAddressEntity(): AddressEntity {
         return AddressEntity(
             id = Uuid.random().toString(),
