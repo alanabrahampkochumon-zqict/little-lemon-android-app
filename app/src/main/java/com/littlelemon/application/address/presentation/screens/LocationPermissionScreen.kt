@@ -69,6 +69,7 @@ import org.koin.androidx.compose.koinViewModel
 private val permissions = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION
 )
+
 @Composable
 fun LocationPermissionScreen(
     viewModel: AddressViewModel,
@@ -85,7 +86,9 @@ fun LocationPermissionScreen(
     var showLocationEntryDialog by remember { mutableStateOf(false) }
 
     val permissionLauncher = requestLocationPermission(
-        onLocationGranted = { viewModel.onAction(AddressActions.GetLocation) },
+        onLocationGranted = {
+            viewModel.onAction(AddressActions.GetLocation)
+        },
         onLocationPermissionDenied = { viewModel.onAction(AddressActions.ShowLocationDialog) },
         activity = activity!!
     )
@@ -116,6 +119,8 @@ fun LocationPermissionScreen(
                     ).show()
 
                     AddressEvents.ShowLocationEntryPopup -> showLocationEntryDialog = true
+                    AddressEvents.LocationRetrieved -> // TODO: Later add geocoding here
+                        viewModel.onAction(AddressActions.SaveAddress)
                 }
             }
         }

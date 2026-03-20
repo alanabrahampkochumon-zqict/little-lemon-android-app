@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+// TODO: Add geocoding
 class AddressViewModel(
     private val getLocation: GetLocationUseCase,
     private val getAddress: GetAddressUseCase,
@@ -103,7 +104,7 @@ class AddressViewModel(
                             }
                         }
                         events.add(ShowInfo(StringResource(R.string.location_granted_success_message)))
-                        events.add(AddressEvents.AddressSaved)
+                        events.add(AddressEvents.LocationRetrieved)
                     }
                 }
 

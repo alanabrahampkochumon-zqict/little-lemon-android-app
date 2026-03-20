@@ -190,7 +190,7 @@ class AddressViewModelTest {
 
 
         @Test
-        fun onRequestLocation_success_showsInfoAndTriggersAddressSavedEvent() = runTest {
+        fun onRequestLocation_success_showsInfoAndTriggersLocationRetrievedEvent() = runTest {
             // Arrange
             coEvery { getLocationUseCase.invoke() } returns Resource.Success()
 
@@ -203,7 +203,7 @@ class AddressViewModelTest {
                 assertIs<AddressEvents.ShowInfo>(awaitItem())
 //                val job = launch { viewModel.addressEvent.collect { } }
                 // Assert II
-                assertIs<AddressEvents.AddressSaved>(awaitItem())
+                assertIs<AddressEvents.LocationRetrieved>(awaitItem())
 //                job.cancel()
             }
 
