@@ -9,8 +9,9 @@ import com.google.android.gms.location.Priority
 
 fun checkLocationSetting(
     activity: Activity,
+    requestCode: Int,
     onLocationEnabled: () -> Unit,
-    requestCode: Int
+    onStartResolution: (exception: ResolvableApiException) -> Unit = {},
 ) {
     val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
         .build()
@@ -24,7 +25,8 @@ fun checkLocationSetting(
             if (exception is ResolvableApiException) {
                 try {
                     exception.startResolutionForResult(activity, requestCode)
-                } catch (e: Exception) {
+                    onStartResolution(exception)
+                } catch (_: Exception) {
                 }
             }
         }

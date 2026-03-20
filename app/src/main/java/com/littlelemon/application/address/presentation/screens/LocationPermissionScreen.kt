@@ -1,10 +1,12 @@
 package com.littlelemon.application.address.presentation.screens
 
 import android.Manifest
+import android.app.Activity
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -73,7 +75,7 @@ import org.koin.androidx.compose.koinViewModel
 private const val LOCATION_REQUEST_CODE = 316
 
 @Composable
-fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier) {
+fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = Modifier, onNavigate: () -> Unit) {
 
     val activity = LocalActivity.current
     val context = LocalContext.current
@@ -92,8 +94,12 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
     }
 
     val locationRequestLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {
-            Log.d("Result", "$it")
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartIntentSenderForResult()) { activityResult ->
+            if (activityResult.resultCode == Activity.RESULT_OK) {
+                getLocation()
+                Log.d("Location", "Location enabled")
+            } else
+                Log.d("Location", "Location disabled still")
         }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -103,7 +109,13 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
             permissions.values.reduce { acc, isPermissionGranted -> acc && isPermissionGranted }
 
         if (isGranted) {
-            checkLocationSetting(activity!!, onLocationEnabled = { getLocation() }, LOCATION_REQUEST_CODE)
+            checkLocationSetting(
+                activity!!,
+                onLocationEnabled = { getLocation() },
+                requestCode = LOCATION_REQUEST_CODE,
+                onStartResolution = { exception ->
+                    locationRequestLauncher.launch(IntentSenderRequest.Builder(exception.resolution).build())
+                })
             // TODO: Permission Granted: navigate
         } else {
             val shouldShowRationale =
@@ -121,11 +133,14 @@ fun LocationPermissionScreen(viewModel: AddressViewModel, modifier: Modifier = M
 
             viewModel.addressEvents.collect { event ->
                 when (event) {
-                    AddressEvents.AddressSaved -> Toast.makeText(
-                        context,
-                        "Address Saved!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    AddressEvents.AddressSaved -> {
+                        Toast.makeText(
+                            context,
+                            "Address Saved!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        onNavigate()
+                    }
 
                     is AddressEvents.ShowError -> Toast.makeText(
                         context,
