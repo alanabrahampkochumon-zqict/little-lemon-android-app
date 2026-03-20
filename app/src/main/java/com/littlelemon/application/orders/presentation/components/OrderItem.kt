@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import com.littlelemon.application.R
+import com.littlelemon.application.core.presentation.components.BasicStepper
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.Stepper
@@ -164,11 +165,7 @@ fun OrderItem(
                 variant = ButtonVariant.GHOST,
                 modifier = Modifier.weight(1f)
             )
-            Stepper(
-                menuItem.quantity,
-                onIncrease = onIncreaseQuantity,
-                onDecrease = onDecreaseQuantity
-            )
+            BasicStepper(menuItem.quantity, onIncrease = onIncreaseQuantity, onDecrease = onDecreaseQuantity)
         }
     }
 }
