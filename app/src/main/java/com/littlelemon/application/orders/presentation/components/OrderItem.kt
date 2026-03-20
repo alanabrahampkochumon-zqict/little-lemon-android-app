@@ -96,7 +96,8 @@ fun OrderItem(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(top = imageOffset)
+                    .padding(top = imageOffset),
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2XS)
             ) {
                 Text(
                     text = menuItem.dish.title,
