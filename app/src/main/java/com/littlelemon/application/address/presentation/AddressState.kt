@@ -8,6 +8,7 @@ data class AddressState(
     val showLocationDialog: Boolean = false,
 
     // Location
+    val addressId: String? = null,
     val label: String = "",
     val buildingName: String = "",
     val buildingNameError: UiText? = null,

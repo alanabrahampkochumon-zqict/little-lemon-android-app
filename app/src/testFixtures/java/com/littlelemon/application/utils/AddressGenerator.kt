@@ -6,6 +6,7 @@ import com.littlelemon.application.address.domain.models.GeocodedAddress
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.models.PhysicalAddress
+import com.littlelemon.application.address.presentation.AddressState
 import io.github.serpro69.kfaker.faker
 import kotlin.math.roundToLong
 import kotlin.uuid.ExperimentalUuidApi
@@ -37,6 +38,20 @@ object AddressGenerator {
             fullAddress = faker.address.fullAddress(),
             address = generatePhysicalAddress(),
             location = generateLocalLocation()
+        )
+    }
+
+    fun generateUIState(): AddressState {
+        return AddressState(
+            addressId = Uuid.random().toString(),
+            label = faker.name.name(),
+            buildingName = faker.address.secondaryAddress(),
+            streetAddress = faker.address.streetAddress(),
+            city = faker.address.city(),
+            state = faker.address.state(),
+            pinCode = faker.address.postcode(),
+            latitude = Math.random() * LATITUDE_LIMIT - (LATITUDE_LIMIT / 2),
+            longitude = Math.random() * LONGITUDE_LIMIT - (LONGITUDE_LIMIT / 2),
         )
     }
 
