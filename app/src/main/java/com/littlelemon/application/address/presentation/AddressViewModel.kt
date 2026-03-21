@@ -161,45 +161,46 @@ class AddressViewModel(
 
             AddressActions.DismissLocationDialog -> _state.update { it.copy(showLocationDialog = false) }
 
-            is AddressActions.SaveLocation -> {
+            is AddressActions.SaveLocation -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true) }
-//                val (result = saveAddress())
-//                val geocodedResult = reverseGeocodedLocation(
-//                    LocalLocation(
-//                        state.value.latitude,
-//                        state.value.longitude
-//                    )
-//                )
-//                when (geocodedResult) {
-//                    is Resource.Failure -> {
-//
-//                    }
-//
-//                    is Resource.Success -> {
-//                        val address = LocalAddress(
-//                            label = if (state.value.label.isBlank()) "Unnamed Location" else state.value.label,
-//                            address = PhysicalAddress(
-//                                address = state.value.buildingName,
-//                                streetAddress = state.value.streetAddress,
-//                                city = state.value.city,
-//                                state = state.value.state,
-//                                pinCode = state.value.pinCode
-//                            ),
-//                            location = if (state.value.latitude != null && state.value.longitude != null) LocalLocation(
-//                                latitude = state.value.latitude!!,
-//                                longitude = state.value.longitude!!
-//                            ) else null,
-//                            isDefault = state.value.isDefaultAddress
-//                        )
-//                    }
-//
-//                    is Resource.Loading -> Unit
-//                }
+                when (val result = saveAddress(state.value.toLocalAddress())) {
+                    is Resource.Failure -> {
+                        val errorMessage = if (result.errorMessage != null) {
+                            DynamicString(result.errorMessage)
+                        } else {
+                            StringResource(R.string.location_saving_unknown_error)
+                        }
+                        _state.update { it.copy(isLoading = false) }
+                        _addressChannel.send(AddressEvents.ShowError(errorMessage))
+                    }
+
+                    is Resource.Loading -> Unit
+                    is Resource.Success -> {
+                        _state.update { it.copy(isLoading = false) }
+                        _addressChannel.send(AddressEvents.AddressSaved)
+                    }
+                }
             }
         }
     }
 
-
+    //    is Resource.Success -> {
+//        val address = LocalAddress(
+//            label = if (state.value.label.isBlank()) "Unnamed Location" else state.value.label,
+//            address = PhysicalAddress(
+//                address = state.value.buildingName,
+//                streetAddress = state.value.streetAddress,
+//                city = state.value.city,
+//                state = state.value.state,
+//                pinCode = state.value.pinCode
+//            ),
+//            location = if (state.value.latitude != null && state.value.longitude != null) LocalLocation(
+//                latitude = state.value.latitude!!,
+//                longitude = state.value.longitude!!
+//            ) else null,
+//            isDefault = state.value.isDefaultAddress
+//        )
+//    }
     // TODO: Refactor to map
     private fun validateAddress(): Boolean {
         val validate = RequiredFieldValidator()

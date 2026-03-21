@@ -118,6 +118,7 @@
     <!--  Internal error messages  -->
     <string name="no_gmap_api_key_header">API Key not found!</string>
     <string name="no_gmap_api_key_body">Make sure you have your Google Maps API configured in local.properties file</string>
+    <string name="location_saving_unknown_error">Oops! There was an error saving your location. Please try again!</string>
 
 
 </resources>
