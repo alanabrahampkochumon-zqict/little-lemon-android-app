@@ -180,9 +180,13 @@ class AddressViewModelTest {
 
             }
         }
+    }
+
+    @Nested
+    inner class GetLocationTests {
 
         @Test
-        fun onGetLocation_success_updatesTheState() = runTest {
+        fun success_updatesTheState() = runTest {
             // Arrange
             val location = AddressGenerator.generateLocalLocation()
             coEvery { getLocationUseCase.invoke() } returns Resource.Success(data = location)
@@ -203,7 +207,7 @@ class AddressViewModelTest {
 
 
         @Test
-        fun onRequestLocation_success_showsInfoAndTriggersLocationRetrievedEvent() = runTest {
+        fun success_showsInfoAndTriggersLocationRetrievedEvent() = runTest {
             // Arrange
             coEvery { getLocationUseCase.invoke() } returns Resource.Success()
 
@@ -222,7 +226,7 @@ class AddressViewModelTest {
         }
 
         @Test
-        fun onRequestLocation_failure_showError() = runTest {
+        fun failure_showError() = runTest {
             // Arrange
             coEvery { getLocationUseCase.invoke() } returns Resource.Failure(errorMessage = ERROR_MESSAGE)
 
@@ -240,7 +244,7 @@ class AddressViewModelTest {
 
 
         @Test
-        fun onRequestLocation_whileRequesting_showsLoader() = runTest {
+        fun whileRequesting_showsLoader() = runTest {
             coEvery { getLocationUseCase.invoke() } coAnswers {
                 delay(NETWORK_LATENCY)
                 Resource.Success(AddressGenerator.generateLocalLocation())
@@ -257,19 +261,6 @@ class AddressViewModelTest {
 
                 // Assert that loading is reset in the end
                 assertFalse(awaitItem().isLoading)
-            }
-
-        }
-
-        @Test
-        fun onEnterLocationManually_triggerLocationEntryPopup() = runTest {
-            viewModel.addressEvents.test {
-                // Arrange & Act
-                viewModel.onAction(AddressActions.EnterLocationManually)
-                runCurrent()
-
-                // Assert that popup event is triggered
-                assertIs<AddressEvents.ShowLocationEntryPopup>(awaitItem())
             }
 
         }
@@ -891,6 +882,19 @@ class AddressViewModelTest {
                 assertFalse(awaitItem().isLoading) // Stop loading (Error)
             }
         }
+    }
+
+    @Test
+    fun onEnterLocationManually_triggerLocationEntryPopup() = runTest {
+        viewModel.addressEvents.test {
+            // Arrange & Act
+            viewModel.onAction(AddressActions.EnterLocationManually)
+            runCurrent()
+
+            // Assert that popup event is triggered
+            assertIs<AddressEvents.ShowLocationEntryPopup>(awaitItem())
+        }
+
     }
 
 }
