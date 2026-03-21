@@ -728,17 +728,11 @@ class AddressViewModelTest {
     }
 
     @Nested
-    inner class GeocodingTests {
+    inner class ReverseGeocodingTests {
 
         @Test
         fun success_updatesFieldsIfEmpty() = runTest {
             // Given empty fields
-            coEvery {
-                saveAddressUseCase.invoke(any())
-            } coAnswers {
-                delay(NETWORK_LATENCY)
-                Resource.Success()
-            }
             viewModel.onAction(AddressActions.ChangeBuildingName(""))
             viewModel.onAction(AddressActions.ChangeStreetAddress(""))
             viewModel.onAction(AddressActions.ChangeCity(""))
@@ -748,8 +742,8 @@ class AddressViewModelTest {
             viewModel.state.test {
                 skipItems(1)
 
-                // When the location is saved
-                viewModel.onAction(AddressActions.SaveLocation)
+                // When location is reverse geocoded
+                viewModel.onAction(AddressActions.ReverseGeocodeLocation)
 
                 // Then, after initial loading
                 skipItems(1)
@@ -771,12 +765,6 @@ class AddressViewModelTest {
             // Given some non-empty fields
             val stateName = "state"
             val buildingName = "building name"
-            coEvery {
-                saveAddressUseCase.invoke(any())
-            } coAnswers {
-                delay(NETWORK_LATENCY)
-                Resource.Success()
-            }
             viewModel.onAction(AddressActions.ChangeBuildingName(buildingName))
             viewModel.onAction(AddressActions.ChangeStreetAddress(""))
             viewModel.onAction(AddressActions.ChangeCity(""))
@@ -786,8 +774,8 @@ class AddressViewModelTest {
             viewModel.state.test {
                 skipItems(1)
 
-                // When the location is saved
-                viewModel.onAction(AddressActions.SaveLocation)
+                // When location is reverse geocoded
+                viewModel.onAction(AddressActions.ReverseGeocodeLocation)
 
                 // Then, after initial loading
                 skipItems(1)
@@ -808,11 +796,6 @@ class AddressViewModelTest {
         @Test
         fun success_triggersSuccessMessageEvent() = runTest {
             // Given network success
-            coEvery {
-                saveAddressUseCase.invoke(any())
-            } coAnswers {
-                Resource.Success()
-            }
             viewModel.onAction(AddressActions.ChangeBuildingName(""))
             viewModel.onAction(AddressActions.ChangeStreetAddress(""))
             viewModel.onAction(AddressActions.ChangeCity(""))
@@ -820,8 +803,8 @@ class AddressViewModelTest {
             viewModel.onAction(AddressActions.ChangePinCode(""))
 
             viewModel.addressEvents.test {
-                // When the location is saved
-                viewModel.onAction(AddressActions.SaveLocation)
+                // When location is reverse geocoded
+                viewModel.onAction(AddressActions.ReverseGeocodeLocation)
 
                 // Then, show info event is triggered
                 assertIs<AddressEvents.ShowInfo>(awaitItem())
@@ -832,7 +815,7 @@ class AddressViewModelTest {
         fun failure_triggersErrorMessageEvent() = runTest {
             // Given network failure
             coEvery {
-                saveAddressUseCase.invoke(any())
+                reverseGeocodeLocationUseCase.invoke(any())
             } coAnswers {
                 Resource.Failure()
             }
@@ -843,8 +826,8 @@ class AddressViewModelTest {
             viewModel.onAction(AddressActions.ChangePinCode(""))
 
             viewModel.addressEvents.test {
-                // When the location is saved
-                viewModel.onAction(AddressActions.SaveLocation)
+                // When location is reverse geocoded
+                viewModel.onAction(AddressActions.ReverseGeocodeLocation)
 
                 // Then, show error event is triggered
                 assertIs<AddressEvents.ShowError>(awaitItem())
@@ -855,7 +838,7 @@ class AddressViewModelTest {
         fun whileLoading_loadingIsTrueAndFalseAfterwards() = runTest {
             // Given network failure
             coEvery {
-                saveAddressUseCase.invoke(any())
+                reverseGeocodeLocationUseCase.invoke(any())
             } coAnswers {
                 delay(NETWORK_LATENCY)
                 Resource.Failure()
@@ -863,8 +846,8 @@ class AddressViewModelTest {
 
             viewModel.state.test {
                 skipItems(1)
-                // When address is saved
-                viewModel.onAction(AddressActions.SaveAddress)
+                // When location is reverse geocoded
+                viewModel.onAction(AddressActions.ReverseGeocodeLocation)
 
                 // Loading is first true
                 assertTrue(awaitItem().isLoading)

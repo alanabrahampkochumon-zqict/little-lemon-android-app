@@ -182,8 +182,13 @@ class AddressViewModel(
                 }
             }
 
-            AddressActions.GeocodeAddress -> TODO()
-            AddressActions.ReverseGeocodeAddress -> TODO()
+            AddressActions.GeocodeAddress -> {
+                _state.update { it.copy(isLoading = true) }
+                TODO()
+//                when(val result = geocodeAddress())
+            }
+
+            AddressActions.ReverseGeocodeLocation -> TODO()
         }
     }
 
