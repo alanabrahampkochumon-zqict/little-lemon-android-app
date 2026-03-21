@@ -232,13 +232,11 @@ class AddressViewModel(
                                     cityError = null,
                                 )
                             }
-                            println("EVENT")
                             events.add(ShowInfo(StringResource(R.string.geocoding_success_message)))
                             events.add(AddressEvents.GeocodeSuccess)
                         }
                     }
                 }
-                println("EV")
                 for (evt in events)
                     _addressChannel.send(evt)
             }
