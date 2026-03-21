@@ -3,9 +3,6 @@ package com.littlelemon.application.address.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.R
-import com.littlelemon.application.address.domain.models.LocalAddress
-import com.littlelemon.application.address.domain.models.LocalLocation
-import com.littlelemon.application.address.domain.models.PhysicalAddress
 import com.littlelemon.application.address.domain.usecase.GeocodeAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
@@ -13,6 +10,7 @@ import com.littlelemon.application.address.domain.usecase.ReverseGeocodeLocation
 import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
 import com.littlelemon.application.address.presentation.AddressEvents.ShowError
 import com.littlelemon.application.address.presentation.AddressEvents.ShowInfo
+import com.littlelemon.application.address.presentation.mappers.toLocalAddress
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.validators.RequiredFieldValidator
 import com.littlelemon.application.core.presentation.UiText.DynamicString
@@ -127,23 +125,8 @@ class AddressViewModel(
                 if (!validateAddress()) return@launch
                 var showDialog = true
                 _state.update { it.copy(isLoading = true) }
-                val address = LocalAddress(
-                    label = state.value.label,
-                    address = PhysicalAddress(
-                        address = state.value.buildingName,
-                        streetAddress = state.value.streetAddress,
-                        city = state.value.city,
-                        state = state.value.state,
-                        pinCode = state.value.pinCode
-                    ),
-                    location = if (state.value.latitude != null && state.value.longitude != null) LocalLocation(
-                        latitude = state.value.latitude!!,
-                        longitude = state.value.longitude!!
-                    ) else null,
-                    isDefault = state.value.isDefaultAddress
-                )
                 val events = mutableListOf<AddressEvents>()
-                when (val result = saveAddress(address)) {
+                when (val result = saveAddress(state.value.toLocalAddress())) {
                     is Resource.Failure -> {
                         events.add(
                             ShowError(

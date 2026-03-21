@@ -384,7 +384,7 @@ class AddressViewModelTest {
     }
 
     @Nested
-    inner class SaveLocationTests {
+    inner class SaveAddressTests {
 
         @Test
         fun onSaveAddress_success_showInfoAndTriggersAddressSavedEvent() = runTest {
@@ -665,6 +665,10 @@ class AddressViewModelTest {
                 assertNotNull(state.pinCodeError)
             }
         }
+    }
+
+    @Nested
+    inner class SaveLocationTests {
 
 
         // TODO: Delegate to separate function
