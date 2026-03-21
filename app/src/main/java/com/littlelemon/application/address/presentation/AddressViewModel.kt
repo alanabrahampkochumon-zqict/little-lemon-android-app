@@ -108,7 +108,7 @@ class AddressViewModel(
                             }
                         }
                         events.add(ShowInfo(StringResource(R.string.location_granted_success_message)))
-                        events.add(AddressEvents.LocationRetrieved)
+                        events.add(AddressEvents.LocationRetrievalSuccess)
                     }
                 }
 
@@ -143,7 +143,7 @@ class AddressViewModel(
                         events.add(
                             ShowInfo(StringResource(R.string.location_saved_success_message))
                         )
-                        events.add(AddressEvents.AddressSaved)
+                        events.add(AddressEvents.AddressSaveSuccess)
                         showDialog = false
                     }
                 }
@@ -171,16 +171,19 @@ class AddressViewModel(
                             StringResource(R.string.location_saving_unknown_error)
                         }
                         _state.update { it.copy(isLoading = false) }
-                        _addressChannel.send(AddressEvents.ShowError(errorMessage))
+                        _addressChannel.send(ShowError(errorMessage))
                     }
 
                     is Resource.Loading -> Unit
                     is Resource.Success -> {
                         _state.update { it.copy(isLoading = false) }
-                        _addressChannel.send(AddressEvents.AddressSaved)
+                        _addressChannel.send(AddressEvents.AddressSaveSuccess)
                     }
                 }
             }
+
+            AddressActions.GeocodeAddress -> TODO()
+            AddressActions.ReverseGeocodeAddress -> TODO()
         }
     }
 

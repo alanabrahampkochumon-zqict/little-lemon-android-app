@@ -218,7 +218,7 @@ class AddressViewModelTest {
                 assertIs<AddressEvents.ShowInfo>(awaitItem())
 //                val job = launch { viewModel.addressEvent.collect { } }
                 // Assert II
-                assertIs<AddressEvents.LocationRetrieved>(awaitItem())
+                assertIs<AddressEvents.LocationRetrievalSuccess>(awaitItem())
 //                job.cancel()
             }
 
@@ -408,7 +408,7 @@ class AddressViewModelTest {
 
                 // And address saved event
                 val secondEvent = awaitItem()
-                assertIs<AddressEvents.AddressSaved>(secondEvent)
+                assertIs<AddressEvents.AddressSaveSuccess>(secondEvent)
                 cancelAndConsumeRemainingEvents()
             }
         }
@@ -670,42 +670,6 @@ class AddressViewModelTest {
     @Nested
     inner class SaveLocationTests {
 
-
-        // TODO: Delegate to separate function
-//        @Test
-//        fun saveLocation_emptyAddressFields_fillAddressFields() = runTest {
-//            coEvery {
-//                saveAddressUseCase.invoke(any())
-//            } coAnswers {
-//                delay(NETWORK_LATENCY)
-//                Resource.Success()
-//            }
-//            viewModel.onAction(AddressActions.ChangeBuildingName(""))
-//            viewModel.onAction(AddressActions.ChangeStreetAddress(""))
-//            viewModel.onAction(AddressActions.ChangeCity(""))
-//            viewModel.onAction(AddressActions.ChangeState(""))
-//            viewModel.onAction(AddressActions.ChangePinCode(""))
-//
-//            viewModel.state.test {
-//                skipItems(1)
-//
-//                // When the location is saved
-//                viewModel.onAction(AddressActions.SaveLocation)
-//
-//                // Then, after initial loading
-//                skipItems(1)
-//
-//                // Addresses are filled in
-//                val state = awaitItem()
-//                assertEquals(geocodedAddress.address?.address, state.buildingName)
-//                assertEquals(geocodedAddress.address?.streetAddress, state.streetAddress)
-//                assertEquals(geocodedAddress.address?.state, state.state)
-//                assertEquals(geocodedAddress.address?.city, state.city)
-//                assertEquals(geocodedAddress.address?.state, state.state)
-//                assertEquals(geocodedAddress.address?.pinCode, state.pinCode)
-//
-//            }
-
         @Test
         fun saveLocation_setLoadingToTrueWhileSavingAndToFalseAfterwards() = runTest {
             coEvery {
@@ -742,7 +706,7 @@ class AddressViewModelTest {
                 viewModel.onAction(AddressActions.SaveLocation)
 
                 // Then, address saved event is triggered
-                assertIs<AddressEvents.AddressSaved>(awaitItem())
+                assertIs<AddressEvents.AddressSaveSuccess>(awaitItem())
             }
         }
 
@@ -759,6 +723,154 @@ class AddressViewModelTest {
 
                 // Then, address saved event is triggered
                 assertIs<AddressEvents.ShowError>(awaitItem())
+            }
+        }
+    }
+
+    @Nested
+    inner class GeocodingTests {
+
+        @Test
+        fun success_updatesFieldsIfEmpty() = runTest {
+            // Given empty fields
+            coEvery {
+                saveAddressUseCase.invoke(any())
+            } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Success()
+            }
+            viewModel.onAction(AddressActions.ChangeBuildingName(""))
+            viewModel.onAction(AddressActions.ChangeStreetAddress(""))
+            viewModel.onAction(AddressActions.ChangeCity(""))
+            viewModel.onAction(AddressActions.ChangeState(""))
+            viewModel.onAction(AddressActions.ChangePinCode(""))
+
+            viewModel.state.test {
+                skipItems(1)
+
+                // When the location is saved
+                viewModel.onAction(AddressActions.SaveLocation)
+
+                // Then, after initial loading
+                skipItems(1)
+
+                // Addresses are filled in
+                val state = awaitItem()
+                assertEquals(geocodedAddress.address?.address, state.buildingName)
+                assertEquals(geocodedAddress.address?.streetAddress, state.streetAddress)
+                assertEquals(geocodedAddress.address?.state, state.state)
+                assertEquals(geocodedAddress.address?.city, state.city)
+                assertEquals(geocodedAddress.address?.state, state.state)
+                assertEquals(geocodedAddress.address?.pinCode, state.pinCode)
+            }
+        }
+
+
+        @Test
+        fun success_doesNotUpdateNonEmptyFields() = runTest {
+            // Given some non-empty fields
+            val stateName = "state"
+            val buildingName = "building name"
+            coEvery {
+                saveAddressUseCase.invoke(any())
+            } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Success()
+            }
+            viewModel.onAction(AddressActions.ChangeBuildingName(buildingName))
+            viewModel.onAction(AddressActions.ChangeStreetAddress(""))
+            viewModel.onAction(AddressActions.ChangeCity(""))
+            viewModel.onAction(AddressActions.ChangeState(stateName))
+            viewModel.onAction(AddressActions.ChangePinCode(""))
+
+            viewModel.state.test {
+                skipItems(1)
+
+                // When the location is saved
+                viewModel.onAction(AddressActions.SaveLocation)
+
+                // Then, after initial loading
+                skipItems(1)
+
+                val state = awaitItem()
+                // Filled in values are not overridden
+                assertEquals(geocodedAddress.address?.address, buildingName)
+                assertEquals(geocodedAddress.address?.state, stateName)
+
+                // Empty fields are filled
+                assertEquals(geocodedAddress.address?.streetAddress, state.streetAddress)
+                assertEquals(geocodedAddress.address?.city, state.city)
+                assertEquals(geocodedAddress.address?.state, state.state)
+                assertEquals(geocodedAddress.address?.pinCode, state.pinCode)
+            }
+        }
+
+        @Test
+        fun success_triggersSuccessMessageEvent() = runTest {
+            // Given network success
+            coEvery {
+                saveAddressUseCase.invoke(any())
+            } coAnswers {
+                Resource.Success()
+            }
+            viewModel.onAction(AddressActions.ChangeBuildingName(""))
+            viewModel.onAction(AddressActions.ChangeStreetAddress(""))
+            viewModel.onAction(AddressActions.ChangeCity(""))
+            viewModel.onAction(AddressActions.ChangeState(""))
+            viewModel.onAction(AddressActions.ChangePinCode(""))
+
+            viewModel.addressEvents.test {
+                // When the location is saved
+                viewModel.onAction(AddressActions.SaveLocation)
+
+                // Then, show info event is triggered
+                assertIs<AddressEvents.ShowInfo>(awaitItem())
+            }
+        }
+
+        @Test
+        fun failure_triggersErrorMessageEvent() = runTest {
+            // Given network failure
+            coEvery {
+                saveAddressUseCase.invoke(any())
+            } coAnswers {
+                Resource.Failure()
+            }
+            viewModel.onAction(AddressActions.ChangeBuildingName(""))
+            viewModel.onAction(AddressActions.ChangeStreetAddress(""))
+            viewModel.onAction(AddressActions.ChangeCity(""))
+            viewModel.onAction(AddressActions.ChangeState(""))
+            viewModel.onAction(AddressActions.ChangePinCode(""))
+
+            viewModel.addressEvents.test {
+                // When the location is saved
+                viewModel.onAction(AddressActions.SaveLocation)
+
+                // Then, show error event is triggered
+                assertIs<AddressEvents.ShowError>(awaitItem())
+            }
+        }
+
+        @Test
+        fun whileLoading_loadingIsTrueAndFalseAfterwards() = runTest {
+            // Given network failure
+            coEvery {
+                saveAddressUseCase.invoke(any())
+            } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Failure()
+            }
+
+            viewModel.state.test {
+                skipItems(1)
+                // When address is saved
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Loading is first true
+                assertTrue(awaitItem().isLoading)
+
+                // And then false
+                assertFalse(awaitItem().isLoading)
             }
         }
     }

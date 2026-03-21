@@ -97,7 +97,7 @@ fun LocationPermissionScreen(
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.addressEvents.collect { event ->
                 when (event) {
-                    AddressEvents.AddressSaved -> {
+                    AddressEvents.AddressSaveSuccess -> {
                         Toast.makeText(
                             context,
                             "Address Saved!",
@@ -119,7 +119,7 @@ fun LocationPermissionScreen(
                     ).show()
 
                     AddressEvents.ShowLocationEntryPopup -> showLocationEntryDialog = true
-                    AddressEvents.LocationRetrieved -> {
+                    AddressEvents.LocationRetrievalSuccess -> {
                         // TODO: Geocoding add
                         Toast.makeText(
                             context,
@@ -128,6 +128,9 @@ fun LocationPermissionScreen(
                         ).show()
                         viewModel.onAction(AddressActions.SaveAddress)
                     }
+
+                    AddressEvents.GeocodeSuccess -> TODO()
+                    AddressEvents.ReverseGeocodeSuccess -> TODO()
                 }
             }
         }
