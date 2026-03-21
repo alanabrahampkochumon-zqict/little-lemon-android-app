@@ -123,6 +123,7 @@ class AddressViewModel(
 
             is AddressActions.SaveAddress -> viewModelScope.launch {
                 if (!validateAddress()) return@launch
+                var showDialog = true
                 _state.update { it.copy(isLoading = true) }
                 val address = LocalAddress(
                     label = state.value.label,
@@ -149,6 +150,7 @@ class AddressViewModel(
                                 ) else StringResource(R.string.generic_error_message)
                             )
                         )
+                        showDialog = true
                     }
 
                     is Resource.Loading -> Unit // Already Handled
@@ -157,9 +159,10 @@ class AddressViewModel(
                             ShowInfo(StringResource(R.string.location_saved_success_message))
                         )
                         events.add(AddressEvents.AddressSaved)
+                        showDialog = false
                     }
                 }
-                _state.update { it.copy(isLoading = false) }
+                _state.update { it.copy(isLoading = false, showLocationDialog = showDialog) }
                 for (evt in events) {
                     _addressChannel.send(evt)
                 }

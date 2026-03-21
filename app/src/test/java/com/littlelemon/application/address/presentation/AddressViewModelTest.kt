@@ -407,6 +407,72 @@ class AddressViewModelTest {
         }
 
         @Test
+        fun saveAddressSuccess_dismissesDialog() = runTest {
+            // Given the location dialog is displayed
+            viewModel.onAction(AddressActions.ShowLocationDialog)
+            viewModel.onAction(AddressActions.ChangeBuildingName("address"))
+            viewModel.onAction(AddressActions.ChangeStreetAddress("street"))
+            viewModel.onAction(AddressActions.ChangeCity("city"))
+            viewModel.onAction(AddressActions.ChangeState("state"))
+            viewModel.onAction(AddressActions.ChangePinCode("123456"))
+
+            // and network request succeeds
+            coEvery { saveAddressUseCase.invoke(any()) } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Success()
+            }
+
+            viewModel.state.test {
+                skipItems(1)
+
+                // When address is saved
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Then, it shows the dialog initially
+                val initialState = awaitItem()
+                assertTrue(initialState.showLocationDialog)
+
+                // And then dismisses it
+                val finalState = awaitItem()
+                assertFalse(finalState.showLocationDialog)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+        @Test
+        fun saveAddressFailures_doesNotDismissDialog() = runTest {
+            // Given the location dialog is displayed
+            viewModel.onAction(AddressActions.ShowLocationDialog)
+            viewModel.onAction(AddressActions.ChangeBuildingName("address"))
+            viewModel.onAction(AddressActions.ChangeStreetAddress("street"))
+            viewModel.onAction(AddressActions.ChangeCity("city"))
+            viewModel.onAction(AddressActions.ChangeState("state"))
+            viewModel.onAction(AddressActions.ChangePinCode("123456"))
+
+            // and network request fails
+            coEvery { saveAddressUseCase.invoke(any()) } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Failure()
+            }
+
+            viewModel.state.test {
+                skipItems(1)
+
+                // When address is saved
+                viewModel.onAction(AddressActions.SaveAddress)
+
+                // Then, it shows the dialog initially
+                val initialState = awaitItem()
+                assertTrue(initialState.showLocationDialog)
+
+                // And doesn't dismiss it
+                val finalState = awaitItem()
+                assertTrue(finalState.showLocationDialog)
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+        @Test
         fun onSaveAddress_failure_showError() = runTest {
             // Given a viewmodel with valid fields
             viewModel.onAction(AddressActions.ChangeBuildingName("address"))
