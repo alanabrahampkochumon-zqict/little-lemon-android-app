@@ -3,6 +3,7 @@ package com.littlelemon.application.address.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.R
+import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.usecase.GeocodeAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
@@ -84,9 +85,9 @@ class AddressViewModel(
             AddressActions.GetLocation -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true) }
                 val events = mutableListOf<AddressEvents>()
-
                 when (val result = getLocation()) {
                     is Resource.Failure -> {
+                        _state.update { it.copy(isLoading = false) }
                         events.add(
                             ShowError(
                                 if (result.errorMessage != null) DynamicString(
@@ -102,6 +103,7 @@ class AddressViewModel(
                         result.data?.let { data ->
                             _state.update {
                                 it.copy(
+                                    isLoading = false,
                                     latitude = data.latitude,
                                     longitude = data.longitude
                                 )
@@ -114,7 +116,6 @@ class AddressViewModel(
 
                 for (evt in events)
                     _addressChannel.send(evt)
-                _state.update { it.copy(isLoading = false) }
             }
 
             AddressActions.EnterLocationManually -> viewModelScope.launch {
@@ -188,8 +189,64 @@ class AddressViewModel(
 //                when(val result = geocodeAddress())
             }
 
-            AddressActions.ReverseGeocodeLocation -> TODO()
+            AddressActions.ReverseGeocodeLocation -> viewModelScope.launch {
+                if (state.value.latitude == null || state.value.longitude == null)
+                    return@launch _addressChannel.send(ShowError(StringResource(R.string.invalid_location_error)))
+                _state.update { it.copy(isLoading = true) }
+                val events = mutableListOf<AddressEvents>()
+                when (val result = reverseGeocodedLocation(
+                    location = LocalLocation(
+                        state.value.latitude!!,
+                        state.value.longitude!!
+                    )
+                )) {
+                    is Resource.Failure -> {
+                        _state.update { it.copy(isLoading = false) }
+                        val errorMessage =
+                            if (result.errorMessage != null) DynamicString(result.errorMessage) else StringResource(
+                                R.string.reverse_geocoding_error_message
+                            )
+                        events.add(ShowError(errorMessage))
+                    }
+
+                    is Resource.Loading -> Unit
+                    is Resource.Success -> {
+                        result.data?.let { (_, _, _, address, _) ->
+                            _state.update {
+                                // TODO: Convert to mapper
+                                it.copy(
+                                    isLoading = false,
+                                    buildingName = coalesceEmpty(
+                                        it.buildingName,
+                                        address?.address ?: ""
+                                    ),
+                                    streetAddress = coalesceEmpty(
+                                        it.streetAddress,
+                                        address?.streetAddress ?: ""
+                                    ),
+                                    city = coalesceEmpty(it.city, address?.city ?: ""),
+                                    state = coalesceEmpty(it.state, address?.state ?: ""),
+                                    pinCode = coalesceEmpty(it.pinCode, address?.pinCode ?: ""),
+                                    stateError = null,
+                                    streetAddressError = null,
+                                    cityError = null,
+                                )
+                            }
+                            events.add(ShowInfo(StringResource(R.string.geocoding_success_message)))
+                            events.add(AddressEvents.GeocodeSuccess)
+                        }
+                    }
+                }
+                for (evt in events)
+                    _addressChannel.send(evt)
+            }
         }
+    }
+
+    private fun coalesceEmpty(value: String, default: String): String {
+        if (value.isBlank() || value.isEmpty())
+            return default
+        return value
     }
 
     //    is Resource.Success -> {

@@ -1,6 +1,7 @@
 package com.littlelemon.application.address.presentation
 
 import app.cash.turbine.test
+import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.usecase.GeocodeAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
@@ -14,7 +15,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -188,18 +189,15 @@ class AddressViewModelTest {
 
             viewModel.state.test {
                 skipItems(1)
+
                 // Act
                 viewModel.onAction(AddressActions.GetLocation)
-                runCurrent()
-                println(awaitItem()) // Skip the loading state
+                skipItems(1) // Skip the loading state
 
                 // Assert
                 val state = awaitItem()
-                println(state)
                 assertEquals(location.longitude, state.longitude)
                 assertEquals(location.latitude, state.latitude)
-
-                cancelAndIgnoreRemainingEvents()
             }
         }
 
@@ -216,10 +214,8 @@ class AddressViewModelTest {
 
                 // Assert I
                 assertIs<AddressEvents.ShowInfo>(awaitItem())
-//                val job = launch { viewModel.addressEvent.collect { } }
                 // Assert II
                 assertIs<AddressEvents.LocationRetrievalSuccess>(awaitItem())
-//                job.cancel()
             }
 
 
@@ -247,7 +243,7 @@ class AddressViewModelTest {
         fun onRequestLocation_whileRequesting_showsLoader() = runTest {
             coEvery { getLocationUseCase.invoke() } coAnswers {
                 delay(NETWORK_LATENCY)
-                Resource.Success()
+                Resource.Success(AddressGenerator.generateLocalLocation())
             }
 
             viewModel.state.test {
@@ -255,12 +251,9 @@ class AddressViewModelTest {
                 assertFalse(awaitItem().isLoading)
 
                 viewModel.onAction(AddressActions.GetLocation)
-                runCurrent()
-
                 // Assert that loader is shown
                 assertTrue(awaitItem().isLoading)
-
-                advanceTimeBy(NETWORK_LATENCY + 1)
+                advanceUntilIdle()
 
                 // Assert that loading is reset in the end
                 assertFalse(awaitItem().isLoading)
@@ -738,15 +731,23 @@ class AddressViewModelTest {
             viewModel.onAction(AddressActions.ChangeCity(""))
             viewModel.onAction(AddressActions.ChangeState(""))
             viewModel.onAction(AddressActions.ChangePinCode(""))
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success(
+                LocalLocation(
+                    1.234,
+                    4.568
+                )
+            )
 
             viewModel.state.test {
                 skipItems(1)
+                viewModel.onAction(AddressActions.GetLocation)
+                advanceUntilIdle()
+                skipItems(2) // Skip the loading and success state
 
                 // When location is reverse geocoded
                 viewModel.onAction(AddressActions.ReverseGeocodeLocation)
-
-                // Then, after initial loading
-                skipItems(1)
+                advanceUntilIdle()
+                skipItems(1) // Skip the loading state
 
                 // Addresses are filled in
                 val state = awaitItem()
@@ -754,7 +755,6 @@ class AddressViewModelTest {
                 assertEquals(geocodedAddress.address?.streetAddress, state.streetAddress)
                 assertEquals(geocodedAddress.address?.state, state.state)
                 assertEquals(geocodedAddress.address?.city, state.city)
-                assertEquals(geocodedAddress.address?.state, state.state)
                 assertEquals(geocodedAddress.address?.pinCode, state.pinCode)
             }
         }
@@ -770,25 +770,33 @@ class AddressViewModelTest {
             viewModel.onAction(AddressActions.ChangeCity(""))
             viewModel.onAction(AddressActions.ChangeState(stateName))
             viewModel.onAction(AddressActions.ChangePinCode(""))
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success(
+                LocalLocation(
+                    1.234,
+                    4.568
+                )
+            )
 
             viewModel.state.test {
                 skipItems(1)
+                viewModel.onAction(AddressActions.GetLocation)
+                advanceUntilIdle()
+                skipItems(2) // Skip the loading and success state
 
                 // When location is reverse geocoded
                 viewModel.onAction(AddressActions.ReverseGeocodeLocation)
+                advanceUntilIdle()
+                skipItems(1) // Skip the loading state
 
-                // Then, after initial loading
-                skipItems(1)
 
                 val state = awaitItem()
                 // Filled in values are not overridden
-                assertEquals(geocodedAddress.address?.address, buildingName)
-                assertEquals(geocodedAddress.address?.state, stateName)
+                assertEquals(buildingName, state.buildingName)
+                assertEquals(stateName, state.state)
 
                 // Empty fields are filled
                 assertEquals(geocodedAddress.address?.streetAddress, state.streetAddress)
                 assertEquals(geocodedAddress.address?.city, state.city)
-                assertEquals(geocodedAddress.address?.state, state.state)
                 assertEquals(geocodedAddress.address?.pinCode, state.pinCode)
             }
         }
@@ -802,6 +810,12 @@ class AddressViewModelTest {
             viewModel.onAction(AddressActions.ChangeState(""))
             viewModel.onAction(AddressActions.ChangePinCode(""))
 
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success(
+                LocalLocation(
+                    1.234,
+                    4.568
+                )
+            )
             viewModel.addressEvents.test {
                 // When location is reverse geocoded
                 viewModel.onAction(AddressActions.ReverseGeocodeLocation)
@@ -824,7 +838,12 @@ class AddressViewModelTest {
             viewModel.onAction(AddressActions.ChangeCity(""))
             viewModel.onAction(AddressActions.ChangeState(""))
             viewModel.onAction(AddressActions.ChangePinCode(""))
-
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success(
+                LocalLocation(
+                    1.234,
+                    4.568
+                )
+            )
             viewModel.addressEvents.test {
                 // When location is reverse geocoded
                 viewModel.onAction(AddressActions.ReverseGeocodeLocation)
