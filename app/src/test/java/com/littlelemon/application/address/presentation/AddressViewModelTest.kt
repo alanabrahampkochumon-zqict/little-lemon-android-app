@@ -817,11 +817,15 @@ class AddressViewModelTest {
                 )
             )
             viewModel.addressEvents.test {
+                viewModel.onAction(AddressActions.GetLocation)
+                skipItems(2) // Skip the success event from get location + show info event
+
                 // When location is reverse geocoded
                 viewModel.onAction(AddressActions.ReverseGeocodeLocation)
 
                 // Then, show info event is triggered
                 assertIs<AddressEvents.ShowInfo>(awaitItem())
+                cancelAndConsumeRemainingEvents() // Consume geocoding success event
             }
         }
 
@@ -863,16 +867,28 @@ class AddressViewModelTest {
                 Resource.Failure()
             }
 
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success(
+                LocalLocation(
+                    1.234,
+                    4.568
+                )
+            )
+
             viewModel.state.test {
-                skipItems(1)
+                skipItems(1) // Skip the initial state
+                viewModel.onAction(AddressActions.GetLocation)
+                advanceUntilIdle()
+                skipItems(2) // Skip the loading and success state
+
                 // When location is reverse geocoded
                 viewModel.onAction(AddressActions.ReverseGeocodeLocation)
 
                 // Loading is first true
-                assertTrue(awaitItem().isLoading)
+                assertTrue(awaitItem().isLoading) // Loading state
+                advanceUntilIdle()
 
                 // And then false
-                assertFalse(awaitItem().isLoading)
+                assertFalse(awaitItem().isLoading) // Stop loading (Error)
             }
         }
     }
