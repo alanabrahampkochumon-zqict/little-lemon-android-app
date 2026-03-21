@@ -47,6 +47,8 @@ class AddressViewModelTest {
 
     private lateinit var viewModel: AddressViewModel
 
+    private val geocodedAddress = AddressGenerator.generateGeocodedAddress()
+
     @BeforeEach
     fun setUp() {
         getLocationUseCase = mockk()
@@ -61,6 +63,11 @@ class AddressViewModelTest {
             geocodeAddressUseCase,
             reverseGeocodeLocationUseCase,
             saveAddressUseCase
+        )
+
+        coEvery { geocodeAddressUseCase.invoke(any()) } returns Resource.Success(geocodedAddress)
+        coEvery { reverseGeocodeLocationUseCase.invoke(any()) } returns Resource.Success(
+            geocodedAddress
         )
     }
 
@@ -658,5 +665,98 @@ class AddressViewModelTest {
                 assertNotNull(state.pinCodeError)
             }
         }
+
+
+        // TODO: Delegate to separate function
+//        @Test
+//        fun saveLocation_emptyAddressFields_fillAddressFields() = runTest {
+//            coEvery {
+//                saveAddressUseCase.invoke(any())
+//            } coAnswers {
+//                delay(NETWORK_LATENCY)
+//                Resource.Success()
+//            }
+//            viewModel.onAction(AddressActions.ChangeBuildingName(""))
+//            viewModel.onAction(AddressActions.ChangeStreetAddress(""))
+//            viewModel.onAction(AddressActions.ChangeCity(""))
+//            viewModel.onAction(AddressActions.ChangeState(""))
+//            viewModel.onAction(AddressActions.ChangePinCode(""))
+//
+//            viewModel.state.test {
+//                skipItems(1)
+//
+//                // When the location is saved
+//                viewModel.onAction(AddressActions.SaveLocation)
+//
+//                // Then, after initial loading
+//                skipItems(1)
+//
+//                // Addresses are filled in
+//                val state = awaitItem()
+//                assertEquals(geocodedAddress.address?.address, state.buildingName)
+//                assertEquals(geocodedAddress.address?.streetAddress, state.streetAddress)
+//                assertEquals(geocodedAddress.address?.state, state.state)
+//                assertEquals(geocodedAddress.address?.city, state.city)
+//                assertEquals(geocodedAddress.address?.state, state.state)
+//                assertEquals(geocodedAddress.address?.pinCode, state.pinCode)
+//
+//            }
+
+        @Test
+        fun saveLocation_setLoadingToTrueWhileSavingAndToFalseAfterwards() = runTest {
+            coEvery {
+                saveAddressUseCase.invoke(any())
+            } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Success()
+            }
+
+            viewModel.state.test {
+                skipItems(1)
+
+                // When the location is saved
+                viewModel.onAction(AddressActions.SaveLocation)
+
+                // Then, state is set to loading initially
+                assertTrue(awaitItem().isLoading)
+
+                // And, set to false afterward
+                assertFalse(awaitItem().isLoading)
+
+            }
+        }
+
+        @Test
+        fun saveLocationSuccess_triggerAddressSavedEvent() = runTest {
+            // Given network success
+            coEvery {
+                saveAddressUseCase.invoke(any())
+            } returns Resource.Success()
+
+            viewModel.addressEvents.test {
+                // When address is saved
+                viewModel.onAction(AddressActions.SaveLocation)
+
+                // Then, address saved event is triggered
+                assertIs<AddressEvents.AddressSaved>(awaitItem())
+            }
+        }
+
+        @Test
+        fun saveLocationFailure_triggersShowErrorEvent() = runTest {
+            // Given network failure
+            coEvery {
+                saveAddressUseCase.invoke(any())
+            } returns Resource.Failure()
+
+            viewModel.addressEvents.test {
+                // When address is saved
+                viewModel.onAction(AddressActions.SaveLocation)
+
+                // Then, address saved event is triggered
+                assertIs<AddressEvents.ShowError>(awaitItem())
+            }
+        }
     }
+
 }

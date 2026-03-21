@@ -80,6 +80,8 @@ class AddressViewModel(
                 )
             }
 
+            is AddressActions.ChangeToDefaultAddress -> _state.update { it.copy(isDefaultAddress = action.value) }
+
             // Actions
             AddressActions.GetLocation -> viewModelScope.launch {
                 _state.update { it.copy(isLoading = true) }
@@ -175,7 +177,7 @@ class AddressViewModel(
             }
 
             AddressActions.DismissLocationDialog -> _state.update { it.copy(showLocationDialog = false) }
-            is AddressActions.ChangeToDefaultAddress -> _state.update { it.copy(isDefaultAddress = action.value) }
+
             is AddressActions.SaveLocation -> {
                 _state.update { it.copy(isLoading = true) }
 //                val geocodedResult = reverseGeocodedLocation(
