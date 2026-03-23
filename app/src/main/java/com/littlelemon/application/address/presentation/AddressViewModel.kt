@@ -266,9 +266,9 @@ class AddressViewModel(
                                     cityError = null,
                                 )
                             }
-                            events.add(ShowInfo(StringResource(R.string.reverse_geocoding_success_message)))
-                            events.add(AddressEvents.GeocodeSuccess)
                         }
+                        events.add(ShowInfo(StringResource(R.string.reverse_geocoding_success_message)))
+                        events.add(AddressEvents.ReverseGeocodeSuccess)
                         if (result.data == null) {
                             _state.update { it.copy(isLoading = false) }
                         }

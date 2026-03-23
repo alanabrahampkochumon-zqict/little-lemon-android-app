@@ -1,6 +1,7 @@
 package com.littlelemon.application.address.presentation.screens
 
 import android.Manifest
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
@@ -106,11 +107,14 @@ fun LocationPermissionScreen(
                         onNavigate()
                     }
 
-                    is AddressEvents.ShowError -> Toast.makeText(
-                        context,
-                        event.errorMessage.asString(context),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    is AddressEvents.ShowError -> {
+                        Toast.makeText(
+                            context,
+                            event.errorMessage.asString(context),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.d("Error", event.errorMessage.asString(context))
+                    }
 
                     is AddressEvents.ShowInfo -> Toast.makeText(
                         context,
@@ -119,18 +123,12 @@ fun LocationPermissionScreen(
                     ).show()
 
                     AddressEvents.ShowLocationEntryPopup -> showLocationEntryDialog = true
-                    AddressEvents.LocationRetrievalSuccess -> {
-                        // TODO: Geocoding add
-                        Toast.makeText(
-                            context,
-                            "Location retrieved!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        viewModel.onAction(AddressActions.SaveAddress)
-                    }
+                    AddressEvents.LocationRetrievalSuccess ->
+                        viewModel.onAction(AddressActions.ReverseGeocodeLocation)
 
-                    AddressEvents.GeocodeSuccess -> TODO()
-                    AddressEvents.ReverseGeocodeSuccess -> TODO()
+
+                    AddressEvents.GeocodeSuccess -> viewModel.onAction(AddressActions.SaveLocation)
+                    AddressEvents.ReverseGeocodeSuccess -> viewModel.onAction(AddressActions.SaveLocation)
                 }
             }
         }
