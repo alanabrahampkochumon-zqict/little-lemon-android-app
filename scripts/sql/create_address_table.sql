@@ -11,7 +11,7 @@ CREATE TABLE
         state VARCHAR(50),
         pin_code VARCHAR(20),
         location geography (POINT),
-        created_at TIMESTAMP DEFAULT now (),
+        created_at TIMESTAMPTZ DEFAULT now (),
         is_default boolean default(false)
     );
 
