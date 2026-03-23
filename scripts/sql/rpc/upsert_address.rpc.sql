@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION upsert_address(
   arg_state text DEFAULT NULL,
   arg_pin_code text DEFAULT NULL
 )
-RETURNS SETOF user_address AS $$
+RETURNS SETOF user_addresses_view AS $$
 DECLARE
   final_default_state boolean;
   existing_count int;

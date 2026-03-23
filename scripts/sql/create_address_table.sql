@@ -43,7 +43,7 @@ SELECT
   user_address.street_address,
   user_address.city,
   user_address.pin_code,
-  -- Extract Lat/Long from the PostGIS 'location' column
+  user_address.state,
   st_y(location::geometry) as latitude,
   st_x(location::geometry) as longitude,
   user_address.created_at,

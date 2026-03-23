@@ -1,6 +1,5 @@
 package com.littlelemon.application.address.data.remote
 
-import com.littlelemon.application.address.data.mappers.toResponse
 import com.littlelemon.application.address.data.remote.models.AddressDTO
 import com.littlelemon.application.address.data.remote.models.AddressRequestDTO
 import com.littlelemon.application.core.data.remote.SupabaseTables
@@ -46,7 +45,7 @@ class SupabaseAddressRemoteDataSource(
                 put("arg_state", address.state)
                 put("arg_pin_code", address.pinCode)
             }
-        ).decodeSingle<AddressRequestDTO>().toResponse()
+        ).decodeSingle<AddressDTO>()
     }
 
     @Throws(
