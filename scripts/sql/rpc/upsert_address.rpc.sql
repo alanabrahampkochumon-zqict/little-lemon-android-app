@@ -82,6 +82,6 @@ BEGIN
         location = EXCLUDED.location,
         created_at = EXCLUDED.created_at;
     
-    RETURN QUERY SELECT * FROM user_address WHERE id = final_id;
+    RETURN QUERY SELECT * FROM user_addresses_view WHERE id = final_id;
 END;
 $$ LANGUAGE plpgsql;
