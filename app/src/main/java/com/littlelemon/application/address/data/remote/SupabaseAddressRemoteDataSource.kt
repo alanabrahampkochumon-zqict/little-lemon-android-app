@@ -38,6 +38,7 @@ class SupabaseAddressRemoteDataSource(
             "upsert_address",
             buildJsonObject {
                 put("arg_location", address.location)
+                put("arg_created_at", address.createdAt)
                 put("arg_is_default", address.isDefault)
                 put("arg_id", address.id)
                 put("arg_label", address.label)
@@ -46,7 +47,6 @@ class SupabaseAddressRemoteDataSource(
                 put("arg_city", address.city)
                 put("arg_state", address.state)
                 put("arg_pin_code", address.pinCode)
-                put("arg_created_at", address.createdAt)
             }
         ).decodeSingle<AddressRequestDTO>().toResponse()
     }

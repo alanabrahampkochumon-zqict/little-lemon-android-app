@@ -9,8 +9,12 @@ import io.ktor.client.plugins.HttpRequestTimeoutException
 // NOTE: This mapper is coupled to supabase, modify when the internal implementation changes
 internal fun Exception.mapToDomainError(): Error {
     return when (this) {
-        is PostgrestRestException -> this.code?.toInt()?.toNetworkError()
-            ?: Error.NetworkError.Unknown()
+        is PostgrestRestException -> try {
+            return this.code?.toInt()?.toNetworkError() ?: Error.NetworkError.Unknown()
+        } catch (_: Exception) {
+            Error.NetworkError.Unknown()
+
+        }
 
         is HttpRequestTimeoutException -> Error.NetworkError.Timeout()
         is HttpRequestException -> Error.NetworkError.Unknown()

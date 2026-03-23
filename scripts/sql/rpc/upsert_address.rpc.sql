@@ -1,5 +1,14 @@
+CREATE OR REPLACE FUNCTION get_time_millis()
+RETURNS bigint
+LANGUAGE sql
+STABLE
+AS $$
+  SELECT (EXTRACT(EPOCH FROM NOW()) * 1000)::bigint;
+$$;
+
 CREATE OR REPLACE FUNCTION upsert_address(
   arg_location geography (POINT),
+  arg_created_at timestamptz,
   arg_is_default boolean DEFAULT false,
   arg_id uuid DEFAULT NULL,
   arg_label text DEFAULT NULL,
@@ -7,10 +16,8 @@ CREATE OR REPLACE FUNCTION upsert_address(
   arg_street_address text DEFAULT NULL,
   arg_city text DEFAULT NULL,
   arg_state text DEFAULT NULL,
-  arg_pin_code text DEFAULT NULL,
-  arg_created_at TIMESTAMP DEFAULT now()
+  arg_pin_code text DEFAULT NULL
 )
-
 RETURNS SETOF user_address AS $$
 DECLARE
   final_default_state boolean;
@@ -41,7 +48,7 @@ BEGIN
         id,
         user_id,
         label,
-        building_name,
+        address,
         street_address,
         city,
         state,
@@ -66,7 +73,7 @@ BEGIN
     )
     ON CONFLICT (id) DO UPDATE SET
         label = EXCLUDED.label,
-        building_name = EXCLUDED.building_name,
+        address = EXCLUDED.address,
         street_address = EXCLUDED.street_address,
         city = EXCLUDED.city,
         state = EXCLUDED.state,
