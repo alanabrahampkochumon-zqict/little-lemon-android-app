@@ -1,5 +1,6 @@
 package com.littlelemon.application.address.presentation.mappers
 
+import com.littlelemon.application.address.presentation.AddressState
 import com.littlelemon.application.utils.AddressGenerator
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertNull
@@ -43,6 +44,54 @@ class UIAddressMapperTests {
             assertNull(lLocation.location)
         }
 
+    }
+
+    @Nested
+    inner class UIStateToFullAddressTests {
+
+        private val buildingName = "Building name"
+        private val streetAddress = "Street address"
+        private val city = "City"
+        private val state = "State"
+        private val pinCode = "123456"
+
+        private val fullAddress = "$buildingName, $streetAddress, $city, $state $pinCode"
+        private val noStatePinCodeAddress = "$buildingName, $streetAddress, $city"
+
+        @Test
+        fun correctlyMapsAddress() {
+            // Given a UI state
+            val uiState = AddressState(
+                buildingName = buildingName,
+                streetAddress = streetAddress,
+                city = city,
+                state = state,
+                pinCode = pinCode
+            )
+
+            // When mapped to full address
+            val address = uiState.toFullAddress()
+
+            // Then the address produces the expected result
+            assertEquals(fullAddress, address)
+        }
+
+
+        @Test
+        fun emptyFieldsLeavesNotTrailingCommas() {
+            // Given a UI state
+            val uiState = AddressState(
+                buildingName = buildingName,
+                streetAddress = streetAddress,
+                city = city,
+            )
+
+            // When mapped to full address
+            val address = uiState.toFullAddress()
+
+            // Then the address produces the expected result
+            assertEquals(noStatePinCodeAddress, address)
+        }
     }
 
 }
