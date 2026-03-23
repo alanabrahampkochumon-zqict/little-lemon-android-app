@@ -1007,15 +1007,11 @@ class AddressViewModelTest {
         fun whileLoading_loadingIsTrueAndFalseAfterwards() = runTest {
             // Given network failure
             viewModel.onAction(AddressActions.ChangeBuildingName("building name"))
-            viewModel.onAction(AddressActions.ChangeStreetAddress("street address"))
-            viewModel.onAction(AddressActions.ChangeCity("city"))
-            viewModel.onAction(AddressActions.ChangeState("state"))
-            viewModel.onAction(AddressActions.ChangePinCode("123456"))
             coEvery {
                 geocodeAddressUseCase.invoke(any())
             } coAnswers {
                 delay(NETWORK_LATENCY)
-                Resource.Failure()
+                Resource.Success()
             }
 
             viewModel.state.test {

@@ -212,6 +212,9 @@ class AddressViewModel(
                                 )
                             }
                         }
+                        if (result.data == null) {
+                            _state.update { it.copy(isLoading = false) }
+                        }
                         events.add(ShowInfo(StringResource(R.string.geocoding_success_message)))
                         events.add(AddressEvents.GeocodeSuccess)
                     }
@@ -265,6 +268,9 @@ class AddressViewModel(
                             }
                             events.add(ShowInfo(StringResource(R.string.reverse_geocoding_success_message)))
                             events.add(AddressEvents.GeocodeSuccess)
+                        }
+                        if (result.data == null) {
+                            _state.update { it.copy(isLoading = false) }
                         }
                     }
                 }
