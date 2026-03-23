@@ -57,6 +57,7 @@ class UIAddressMapperTests {
 
         private val fullAddress = "$buildingName, $streetAddress, $city, $state $pinCode"
         private val noStatePinCodeAddress = "$buildingName, $streetAddress, $city"
+        private val noBuildingNameAddress = "$streetAddress, $city, $state $pinCode"
 
         @Test
         fun correctlyMapsAddress() {
@@ -78,7 +79,7 @@ class UIAddressMapperTests {
 
 
         @Test
-        fun emptyFieldsLeavesNotTrailingCommas() {
+        fun emptyLastFields_leavesNotTrailingCommas() {
             // Given a UI state
             val uiState = AddressState(
                 buildingName = buildingName,
@@ -91,6 +92,23 @@ class UIAddressMapperTests {
 
             // Then the address produces the expected result
             assertEquals(noStatePinCodeAddress, address)
+        }
+
+        @Test
+        fun emptyFirstField_leavesNoLeadingComma() {
+            // Given a UI state
+            val uiState = AddressState(
+                streetAddress = streetAddress,
+                city = city,
+                state = state,
+                pinCode = pinCode
+            )
+
+            // When mapped to full address
+            val address = uiState.toFullAddress()
+
+            // Then the address produces the expected result
+            assertEquals(noBuildingNameAddress, address)
         }
     }
 
