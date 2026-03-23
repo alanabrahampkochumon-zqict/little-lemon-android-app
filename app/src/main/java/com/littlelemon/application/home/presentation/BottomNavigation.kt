@@ -13,12 +13,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import com.littlelemon.application.home.HomeTestTags
 
 @Composable
 fun BottomNavigation(modifier: Modifier = Modifier) {
@@ -27,7 +29,8 @@ fun BottomNavigation(modifier: Modifier = Modifier) {
 
 @Composable
 fun BottomNavigationItem(
-    @DrawableRes icon: Int,
+    @DrawableRes defaultIcon: Int,
+    @DrawableRes selectedIcon: Int,
     label: String,
     selected: Boolean,
     onSelect: () -> Unit,
@@ -45,11 +48,21 @@ fun BottomNavigationItem(
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Image(
-            painterResource(icon),
-            contentDescription = label,
-            colorFilter = ColorFilter.tint(contentColor)
-        )
+        if(selected) {
+            Image(
+                painterResource(selectedIcon),
+                contentDescription = label,
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.contentAccentSecondary),
+                modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON_SELECTED)
+            )
+        } else {
+            Image(
+                painterResource(defaultIcon),
+                contentDescription = label,
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.contentPlaceholder),
+                modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON_UNSELECTED)
+            )
+        }
         Text(
             label,
             style = MaterialTheme.typeStyle.bodyXSmall,

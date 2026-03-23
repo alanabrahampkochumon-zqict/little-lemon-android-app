@@ -1,0 +1,7 @@
+package com.littlelemon.application.home
+
+object HomeTestTags {
+
+    const val BOTTOM_NAVIGATION_ICON_UNSELECTED = "TEST_TAG_BOTTOM_NAVIGATION_ITEM_UNSELECTED"
+    const val BOTTOM_NAVIGATION_ICON_SELECTED = "TEST_TAG_BOTTOM_NAVIGATION_ITEM_SELECTED"
+}
