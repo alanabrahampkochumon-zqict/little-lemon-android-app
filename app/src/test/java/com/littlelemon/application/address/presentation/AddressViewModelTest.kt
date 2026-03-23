@@ -890,18 +890,19 @@ class AddressViewModelTest {
         @Test
         fun success_updatesLocationIfEmpty() = runTest {
             // Given empty lat lng
-            coEvery { getLocationUseCase.invoke() } returns Resource.Success(null)
+            viewModel.onAction(AddressActions.ChangeBuildingName("building name"))
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success()
 
             viewModel.state.test {
                 skipItems(1)
                 viewModel.onAction(AddressActions.GetLocation)
-                advanceUntilIdle()
-                skipItems(2) // Skip the loading and success state
+                println(awaitItem())
+                println(awaitItem())
+//                skipItems(2) // Skip the loading and success state
 
                 // When address is geocoded
                 viewModel.onAction(AddressActions.GeocodeAddress)
-                advanceUntilIdle()
-                skipItems(1) // Skip the loading state
+                print(awaitItem()) // Skip the loading state
 
                 // Latitude and Longitude is filled in
                 val state = awaitItem()
@@ -916,6 +917,7 @@ class AddressViewModelTest {
             // Given non empty lat lng
             val latitude = 1.234
             val longitude = 2.352
+            viewModel.onAction(AddressActions.ChangeBuildingName("building name"))
             coEvery { getLocationUseCase.invoke() } returns Resource.Success(
                 LocalLocation(
                     latitude,
@@ -931,8 +933,8 @@ class AddressViewModelTest {
 
                 // When address is geocoded
                 viewModel.onAction(AddressActions.GeocodeAddress)
-                advanceUntilIdle()
                 skipItems(1) // Skip the loading state
+                advanceUntilIdle()
 
                 // Latitude and Longitude is filled in
                 val state = awaitItem()
@@ -951,13 +953,30 @@ class AddressViewModelTest {
             viewModel.onAction(AddressActions.ChangePinCode("123456"))
 
             viewModel.addressEvents.test {
-                skipItems(1) // Skip the initial state
                 // When an address is geocoded
                 viewModel.onAction(AddressActions.GeocodeAddress)
 
                 // Then, show info event is triggered
                 assertIs<AddressEvents.ShowInfo>(awaitItem())
                 cancelAndConsumeRemainingEvents() // Consume geocoding success event
+            }
+        }
+
+        @Test
+        fun success_triggersSuccessEventAfterMessageEvent() = runTest {
+            // Given network success
+            viewModel.onAction(AddressActions.ChangeBuildingName("building name"))
+            viewModel.onAction(AddressActions.ChangeStreetAddress("street address"))
+            viewModel.onAction(AddressActions.ChangeCity("city"))
+            viewModel.onAction(AddressActions.ChangeState("state"))
+            viewModel.onAction(AddressActions.ChangePinCode("123456"))
+
+            viewModel.addressEvents.test {
+                // When an address is geocoded
+                viewModel.onAction(AddressActions.GeocodeAddress)
+                skipItems(1) // Message event
+                // Then, show info event is triggered
+                assertIs<AddressEvents.GeocodeSuccess>(awaitItem())
             }
         }
 
@@ -976,7 +995,6 @@ class AddressViewModelTest {
             viewModel.onAction(AddressActions.ChangePinCode("123456"))
 
             viewModel.addressEvents.test {
-                skipItems(1) // Skip the initial state
                 // When address is geocoded
                 viewModel.onAction(AddressActions.GeocodeAddress)
 
@@ -1002,7 +1020,7 @@ class AddressViewModelTest {
 
             viewModel.state.test {
                 assertFalse(awaitItem().isLoading) // Not loading before action is invoked
-                
+
                 // When an address is geocoded
                 viewModel.onAction(AddressActions.GeocodeAddress)
 

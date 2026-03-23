@@ -81,11 +81,17 @@
     <string name="city_required_error">City is required</string>
     <string name="state_required_error">State is required</string>
     <string name="pin_code_required_error">Pin code is required</string>
+    <string name="location_saving_unknown_error">Oops! There was an error saving your location. Please try again!</string>
+    <string name="invalid_location_error">There was an error geocoding your address. Make sure your location is enabled!</string>
+    <string name="reverse_geocoding_error_message">There was an error while retrieving your address. Please try again!</string>
+    <string name="geocoding_error_message">There was an error while retrieving your location. Please try again!</string>
 
     <!--  Info Messages  -->
     <string name="otp_resend_message">OTP resend successfully!</string>
     <string name="location_granted_success_message">Location granted successfully!</string>
     <string name="location_saved_success_message">Location granted successfully!</string>
+    <string name="reverse_geocoding_success_message">Successfully retrieved your address!</string>
+    <string name="geocoding_success_message">Successfully retrieved your location!</string>
 
     <!--  Loading Texts  -->
     <string name="generic_loading_message">Loading…</string>
@@ -118,10 +124,6 @@
     <!--  Internal error messages  -->
     <string name="no_gmap_api_key_header">API Key not found!</string>
     <string name="no_gmap_api_key_body">Make sure you have your Google Maps API configured in local.properties file</string>
-    <string name="location_saving_unknown_error">Oops! There was an error saving your location. Please try again!</string>
-    <string name="invalid_location_error">There was an error geocoding your address. Make sure your location is enabled!</string>
-    <string name="reverse_geocoding_error_message">There was an error while retrieving your address. Please try again!</string>
-    <string name="geocoding_success_message">Successfully retrived your address!</string>
 
 
 </resources>

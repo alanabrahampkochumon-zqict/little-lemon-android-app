@@ -11,6 +11,7 @@ import com.littlelemon.application.address.domain.usecase.ReverseGeocodeLocation
 import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
 import com.littlelemon.application.address.presentation.AddressEvents.ShowError
 import com.littlelemon.application.address.presentation.AddressEvents.ShowInfo
+import com.littlelemon.application.address.presentation.mappers.toFullAddress
 import com.littlelemon.application.address.presentation.mappers.toLocalAddress
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.validators.RequiredFieldValidator
@@ -100,14 +101,16 @@ class AddressViewModel(
 
                     is Resource.Loading -> Unit
                     is Resource.Success -> {
-                        result.data?.let { data ->
+                        if (result.data != null) {
                             _state.update {
                                 it.copy(
                                     isLoading = false,
-                                    latitude = data.latitude,
-                                    longitude = data.longitude
+                                    latitude = result.data.latitude,
+                                    longitude = result.data.longitude
                                 )
                             }
+                        } else {
+                            _state.update { it.copy(isLoading = false) }
                         }
                         events.add(ShowInfo(StringResource(R.string.location_granted_success_message)))
                         events.add(AddressEvents.LocationRetrievalSuccess)
@@ -183,10 +186,38 @@ class AddressViewModel(
                 }
             }
 
-            AddressActions.GeocodeAddress -> {
+            AddressActions.GeocodeAddress -> viewModelScope.launch {
+                if (state.value.buildingName.isBlank() && state.value.streetAddress.isBlank() && state.value.city.isBlank() && state.value.state.isBlank() && state.value.pinCode.isBlank())
+                    return@launch
                 _state.update { it.copy(isLoading = true) }
-                TODO()
-//                when(val result = geocodeAddress())
+                val events = mutableListOf<AddressEvents>()
+                when (val result = geocodeAddress(state.value.toFullAddress())) {
+                    is Resource.Failure -> {
+                        _state.update { it.copy(isLoading = false) }
+                        val errorMessage =
+                            if (result.errorMessage != null) DynamicString(result.errorMessage) else StringResource(
+                                R.string.geocoding_error_message
+                            )
+                        events.add(ShowError(errorMessage))
+                    }
+
+                    is Resource.Loading -> Unit
+                    is Resource.Success -> {
+                        result.data?.let { (_, _, _, _, location) ->
+                            _state.update {
+                                it.copy(
+                                    latitude = it.latitude ?: location?.latitude,
+                                    longitude = it.longitude ?: location?.longitude,
+                                    isLoading = false
+                                )
+                            }
+                        }
+                        events.add(ShowInfo(StringResource(R.string.geocoding_success_message)))
+                        events.add(AddressEvents.GeocodeSuccess)
+                    }
+                }
+                for (evt in events)
+                    _addressChannel.send(evt)
             }
 
             AddressActions.ReverseGeocodeLocation -> viewModelScope.launch {
@@ -232,7 +263,7 @@ class AddressViewModel(
                                     cityError = null,
                                 )
                             }
-                            events.add(ShowInfo(StringResource(R.string.geocoding_success_message)))
+                            events.add(ShowInfo(StringResource(R.string.reverse_geocoding_success_message)))
                             events.add(AddressEvents.GeocodeSuccess)
                         }
                     }
@@ -248,7 +279,7 @@ class AddressViewModel(
             return default
         return value
     }
-    
+
     // TODO: Refactor to map
     private fun validateAddress(): Boolean {
         val validate = RequiredFieldValidator()
