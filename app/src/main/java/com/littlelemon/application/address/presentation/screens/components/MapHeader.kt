@@ -53,16 +53,18 @@ fun MapHeader(
     onClose: () -> Unit,
     onFetchCurrentLocation: () -> Unit,
     modifier: Modifier = Modifier,
+    myLatitude: Double? = null,
+    myLongitude: Double? = null,
     isMyLocationEnabled: Boolean = false,
 ) {
 
     val buttonShape = MaterialTheme.shapes.xLarge
     val density = LocalDensity.current.density
-
-    val singapore = LatLng(1.35, 103.87)
-    val singaporeMarkerState = rememberUpdatedMarkerState(position = singapore)
+    // TODO: For non location render a arbitrary pin
+    val myLocation = LatLng(myLatitude ?: 10.1234, myLongitude ?: 103.123)
+    val singaporeMarkerState = rememberUpdatedMarkerState(position = myLocation)
     val cameraPositionState = rememberCameraPositionState {
-        CameraPosition.fromLatLngZoom(singapore, 10f).also { position = it }
+        CameraPosition.fromLatLngZoom(myLocation, 10f).also { position = it }
     }
     val uiSetting =
         remember { MapUiSettings(zoomControlsEnabled = false, zoomGesturesEnabled = true) }

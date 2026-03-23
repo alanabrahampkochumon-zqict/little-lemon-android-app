@@ -232,6 +232,8 @@ fun LocationEntryContentRoot(
         }
         else Row {
             MapHeader(
+                myLatitude = state.latitude,
+                myLongitude = state.longitude,
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)

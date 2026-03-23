@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-// TODO: Add geocoding
+// TODO: search for address and add an id
 class AddressViewModel(
     private val getLocation: GetLocationUseCase,
     private val getAddress: GetAddressUseCase,
