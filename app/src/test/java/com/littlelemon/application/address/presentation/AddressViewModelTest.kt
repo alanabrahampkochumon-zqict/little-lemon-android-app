@@ -884,6 +884,139 @@ class AddressViewModelTest {
         }
     }
 
+    @Nested
+    inner class GeocodingTests {
+
+        @Test
+        fun success_updatesLocationIfEmpty() = runTest {
+            // Given empty lat lng
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success(null)
+
+            viewModel.state.test {
+                skipItems(1)
+                viewModel.onAction(AddressActions.GetLocation)
+                advanceUntilIdle()
+                skipItems(2) // Skip the loading and success state
+
+                // When address is geocoded
+                viewModel.onAction(AddressActions.GeocodeAddress)
+                advanceUntilIdle()
+                skipItems(1) // Skip the loading state
+
+                // Latitude and Longitude is filled in
+                val state = awaitItem()
+                assertEquals(geocodedAddress.location?.latitude, state.latitude)
+                assertEquals(geocodedAddress.location?.longitude, state.longitude)
+            }
+        }
+
+
+        @Test
+        fun success_doesNotUpdateIfLatLngAreNonNull() = runTest {
+            // Given non empty lat lng
+            val latitude = 1.234
+            val longitude = 2.352
+            coEvery { getLocationUseCase.invoke() } returns Resource.Success(
+                LocalLocation(
+                    latitude,
+                    longitude
+                )
+            )
+
+            viewModel.state.test {
+                skipItems(1)
+                viewModel.onAction(AddressActions.GetLocation)
+                advanceUntilIdle()
+                skipItems(2) // Skip the loading and success state
+
+                // When address is geocoded
+                viewModel.onAction(AddressActions.GeocodeAddress)
+                advanceUntilIdle()
+                skipItems(1) // Skip the loading state
+
+                // Latitude and Longitude is filled in
+                val state = awaitItem()
+                assertEquals(latitude, state.latitude)
+                assertEquals(longitude, state.longitude)
+            }
+        }
+
+        @Test
+        fun success_triggersSuccessMessageEvent() = runTest {
+            // Given network success
+            viewModel.onAction(AddressActions.ChangeBuildingName("building name"))
+            viewModel.onAction(AddressActions.ChangeStreetAddress("street address"))
+            viewModel.onAction(AddressActions.ChangeCity("city"))
+            viewModel.onAction(AddressActions.ChangeState("state"))
+            viewModel.onAction(AddressActions.ChangePinCode("123456"))
+
+            viewModel.addressEvents.test {
+                skipItems(1) // Skip the initial state
+                // When an address is geocoded
+                viewModel.onAction(AddressActions.GeocodeAddress)
+
+                // Then, show info event is triggered
+                assertIs<AddressEvents.ShowInfo>(awaitItem())
+                cancelAndConsumeRemainingEvents() // Consume geocoding success event
+            }
+        }
+
+        @Test
+        fun failure_triggersErrorMessageEvent() = runTest {
+            // Given network failure
+            coEvery {
+                geocodeAddressUseCase.invoke(any())
+            } coAnswers {
+                Resource.Failure()
+            }
+            viewModel.onAction(AddressActions.ChangeBuildingName("building name"))
+            viewModel.onAction(AddressActions.ChangeStreetAddress("street address"))
+            viewModel.onAction(AddressActions.ChangeCity("city"))
+            viewModel.onAction(AddressActions.ChangeState("state"))
+            viewModel.onAction(AddressActions.ChangePinCode("123456"))
+
+            viewModel.addressEvents.test {
+                skipItems(1) // Skip the initial state
+                // When address is geocoded
+                viewModel.onAction(AddressActions.GeocodeAddress)
+
+                // Then, show error event is triggered
+                assertIs<AddressEvents.ShowError>(awaitItem())
+            }
+        }
+
+        @Test
+        fun whileLoading_loadingIsTrueAndFalseAfterwards() = runTest {
+            // Given network failure
+            viewModel.onAction(AddressActions.ChangeBuildingName("building name"))
+            viewModel.onAction(AddressActions.ChangeStreetAddress("street address"))
+            viewModel.onAction(AddressActions.ChangeCity("city"))
+            viewModel.onAction(AddressActions.ChangeState("state"))
+            viewModel.onAction(AddressActions.ChangePinCode("123456"))
+            coEvery {
+                geocodeAddressUseCase.invoke(any())
+            } coAnswers {
+                delay(NETWORK_LATENCY)
+                Resource.Failure()
+            }
+
+            viewModel.state.test {
+                assertFalse(awaitItem().isLoading) // Not loading before action is invoked
+                
+                // When an address is geocoded
+                viewModel.onAction(AddressActions.GeocodeAddress)
+
+                // Loading is first true
+                assertTrue(awaitItem().isLoading) // Loading state
+                advanceUntilIdle()
+
+                // And then false
+                assertFalse(awaitItem().isLoading) // Stop loading (Error)
+            }
+        }
+    }
+
+
     @Test
     fun onEnterLocationManually_triggerLocationEntryPopup() = runTest {
         viewModel.addressEvents.test {

@@ -12,7 +12,6 @@ sealed interface AddressActions {
     data object GetLocation : AddressActions
     data object EnterLocationManually : AddressActions
 
-
     data object SaveLocation : AddressActions
     data object ShowLocationDialog : AddressActions
     data object DismissLocationDialog : AddressActions
@@ -20,9 +19,8 @@ sealed interface AddressActions {
     data object GeocodeAddress : AddressActions
 
     data object ReverseGeocodeLocation : AddressActions
-
     data object SaveAddress :
-        AddressActions // For Saving manual location //TODO: Modify to use LocalAddress
+        AddressActions // For Saving manual location
 
 
 }

@@ -248,24 +248,7 @@ class AddressViewModel(
             return default
         return value
     }
-
-    //    is Resource.Success -> {
-//        val address = LocalAddress(
-//            label = if (state.value.label.isBlank()) "Unnamed Location" else state.value.label,
-//            address = PhysicalAddress(
-//                address = state.value.buildingName,
-//                streetAddress = state.value.streetAddress,
-//                city = state.value.city,
-//                state = state.value.state,
-//                pinCode = state.value.pinCode
-//            ),
-//            location = if (state.value.latitude != null && state.value.longitude != null) LocalLocation(
-//                latitude = state.value.latitude!!,
-//                longitude = state.value.longitude!!
-//            ) else null,
-//            isDefault = state.value.isDefaultAddress
-//        )
-//    }
+    
     // TODO: Refactor to map
     private fun validateAddress(): Boolean {
         val validate = RequiredFieldValidator()
