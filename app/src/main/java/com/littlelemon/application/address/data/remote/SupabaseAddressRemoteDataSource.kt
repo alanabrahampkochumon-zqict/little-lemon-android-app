@@ -1,6 +1,5 @@
 package com.littlelemon.application.address.data.remote
 
-import android.util.Log
 import com.littlelemon.application.address.data.mappers.toResponse
 import com.littlelemon.application.address.data.remote.models.AddressDTO
 import com.littlelemon.application.address.data.remote.models.AddressRequestDTO
@@ -33,12 +32,11 @@ class SupabaseAddressRemoteDataSource(
         HttpRequestException::class
     )
     override suspend fun saveAddress(address: AddressRequestDTO): AddressDTO {
-        Log.d("SUPA", "Saving address...")
         return client.postgrest.rpc(
             "upsert_address",
             buildJsonObject {
                 put("arg_location", address.location)
-                put("arg_created_at", address.createdAt)
+                put("arg_created_at", address.createdAt.toString())
                 put("arg_is_default", address.isDefault)
                 put("arg_id", address.id)
                 put("arg_label", address.label)

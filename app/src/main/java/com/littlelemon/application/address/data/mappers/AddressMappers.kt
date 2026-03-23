@@ -7,6 +7,7 @@ import com.littlelemon.application.address.data.remote.models.AddressRequestDTO
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.models.PhysicalAddress
+import kotlin.time.Instant
 
 fun Location.toLocalLocation(): LocalLocation = LocalLocation(this.latitude, this.longitude)
 
@@ -82,6 +83,6 @@ fun LocalAddress.toRequestDTO(): AddressRequestDTO = AddressRequestDTO(
     state = address?.state,
     pinCode = address?.pinCode,
     location = if (location?.longitude != null) "POINT(${location.longitude} ${location.latitude})" else null,
-    createdAt = System.currentTimeMillis(),
+    createdAt = Instant.fromEpochMilliseconds(System.currentTimeMillis()),
     isDefault = isDefault
 )

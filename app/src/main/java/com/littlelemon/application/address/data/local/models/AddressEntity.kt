@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.littlelemon.application.address.data.local.converters.InstantConverter
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -20,6 +21,6 @@ data class AddressEntity(
     val pinCode: String?,
     val latitude: Double?,
     val longitude: Double?,
-    val createdAt: Long,
+    val createdAt: Instant,
     val isDefault: Boolean = false,
 )

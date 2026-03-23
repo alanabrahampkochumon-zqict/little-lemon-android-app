@@ -9,6 +9,7 @@ import com.littlelemon.application.address.domain.models.PhysicalAddress
 import com.littlelemon.application.address.presentation.AddressState
 import io.github.serpro69.kfaker.faker
 import kotlin.math.roundToLong
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -66,7 +67,7 @@ object AddressGenerator {
             pinCode = faker.address.postcode(),
             latitude = Math.random() * LATITUDE_LIMIT - (LATITUDE_LIMIT / 2),
             longitude = Math.random() * LONGITUDE_LIMIT - (LONGITUDE_LIMIT / 2),
-            createdAt = (Math.random() * 1000000).roundToLong(),
+            createdAt = Instant.fromEpochMilliseconds((Math.random() * 1000000).roundToLong()),
             isDefault = Math.random() > 0.5
         )
     }
@@ -82,7 +83,7 @@ object AddressGenerator {
             pinCode = faker.address.postcode(),
             latitude = Math.random() * LATITUDE_LIMIT - (LATITUDE_LIMIT / 2),
             longitude = Math.random() * LONGITUDE_LIMIT - (LONGITUDE_LIMIT / 2),
-            createdAt = (Math.random() * 1000000).roundToLong(),
+            createdAt = Instant.fromEpochMilliseconds((Math.random() * 1000000).roundToLong()),
             isDefault = Math.random() > 0.5
         )
     }
