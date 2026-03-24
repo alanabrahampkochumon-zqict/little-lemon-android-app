@@ -1,13 +1,9 @@
-package com.littlelemon.application.home.presentation
+package com.littlelemon.application.home.presentation.screens
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,6 +28,14 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
+import com.littlelemon.application.home.presentation.CartRoute
+import com.littlelemon.application.home.presentation.HomeRoute
+import com.littlelemon.application.home.presentation.MenuRoute
+import com.littlelemon.application.home.presentation.OrdersRoute
+import com.littlelemon.application.home.presentation.ProfileRoute
+import com.littlelemon.application.home.presentation.components.BottomNavigation
+import com.littlelemon.application.home.presentation.components.NavigationOption
+import com.littlelemon.application.home.presentation.components.TopAppBar
 
 
 // TODO: Add cardinality to animation

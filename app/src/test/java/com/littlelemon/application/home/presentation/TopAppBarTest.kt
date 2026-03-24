@@ -5,6 +5,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import com.littlelemon.application.home.HomeTestTags
+import com.littlelemon.application.home.presentation.components.TopAppBar
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.littlelemon.application.R
 import com.littlelemon.application.home.HomeTestTags
+import com.littlelemon.application.home.presentation.components.BottomNavigationItem
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -6,6 +6,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.google.testing.junit.testparameterinjector.TestParameter
+import com.littlelemon.application.home.presentation.components.BottomNavigation
+import com.littlelemon.application.home.presentation.components.NavigationOption
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

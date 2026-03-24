@@ -13,7 +13,7 @@ import com.littlelemon.application.address.presentation.screens.LocationPermissi
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.screens.AuthScreen
 import com.littlelemon.application.core.domain.model.SessionStatus
-import com.littlelemon.application.home.presentation.HomeScreen
+import com.littlelemon.application.home.presentation.screens.HomeScreen
 import org.koin.androidx.compose.koinViewModel
 
 

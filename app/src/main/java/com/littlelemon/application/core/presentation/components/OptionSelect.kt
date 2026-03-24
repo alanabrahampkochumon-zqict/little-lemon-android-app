@@ -14,11 +14,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.draw.innerShadow
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +32,7 @@ import com.littlelemon.application.core.presentation.utils.toComposeShadow
 fun OptionSelect(
     options: List<String>,
     selectedOption: String,
-    onOptionChange: (option: String) -> Unit,
+    onSelectionChange: (option: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val shape = MaterialTheme.shapes.xLarge
@@ -49,7 +46,7 @@ fun OptionSelect(
                 value = option,
                 selected = selectedOption == option,
                 enabled = true,
-                onClick = { onOptionChange(option) },
+                onClick = { onSelectionChange(option) },
                 modifier = Modifier
                     .innerShadow(
                         shape,
