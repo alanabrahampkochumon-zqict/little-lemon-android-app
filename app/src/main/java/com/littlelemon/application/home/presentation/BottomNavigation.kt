@@ -36,7 +36,8 @@ import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.home.HomeTestTags
 
 
-enum class BottomNavigationContent(
+// TODO: Add ripple
+enum class NavigationOption(
     @field:DrawableRes val selectedIcon: Int,
     @field:DrawableRes val defaultIcon: Int,
     @field:StringRes val label: Int,
@@ -54,9 +55,9 @@ enum class BottomNavigationContent(
 
 @Composable
 fun BottomNavigation(
-    onNavigationClick: (item: BottomNavigationContent) -> Unit,
+    onNavigationClick: (item: NavigationOption) -> Unit,
     modifier: Modifier = Modifier,
-    selected: BottomNavigationContent = BottomNavigationContent.HOME,
+    selected: NavigationOption = NavigationOption.HOME,
 ) {
     Row(
         modifier = modifier
@@ -69,7 +70,7 @@ fun BottomNavigation(
             ), verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXL)
     ) {
-        BottomNavigationContent.entries.forEach { item ->
+        NavigationOption.entries.forEach { item ->
             BottomNavigationItem(
                 item.defaultIcon,
                 item.selectedIcon,
