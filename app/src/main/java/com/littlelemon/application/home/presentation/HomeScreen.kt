@@ -27,22 +27,29 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     var currentDestination: NavigationOption by remember { mutableStateOf(NavigationOption.HOME) }
     val backStack = rememberNavBackStack(HomeRoute)
 
-    Scaffold(bottomBar = {
-        BottomNavigation(
-            { newDestination ->
-                currentDestination = newDestination
-                backStack.clear()
-                when (newDestination) {
-                    NavigationOption.HOME -> backStack.add(HomeRoute)
-                    NavigationOption.MENU -> backStack.add(MenuRoute)
-                    NavigationOption.ORDER -> backStack.add(OrdersRoute)
-                    NavigationOption.CART -> backStack.add(CartRoute)
-                    NavigationOption.PROFILE -> backStack.add(ProfileRoute)
-                }
-            },
-            selected = currentDestination
-        )
-    }, modifier = Modifier.fillMaxWidth()) { innerPadding ->
+    Scaffold(
+        bottomBar = {
+            BottomNavigation(
+                { newDestination ->
+                    currentDestination = newDestination
+                    backStack.clear()
+                    when (newDestination) {
+                        NavigationOption.HOME -> backStack.add(HomeRoute)
+                        NavigationOption.MENU -> backStack.add(MenuRoute)
+                        NavigationOption.ORDER -> backStack.add(OrdersRoute)
+                        NavigationOption.CART -> backStack.add(CartRoute)
+                        NavigationOption.PROFILE -> backStack.add(ProfileRoute)
+                    }
+                },
+                selected = currentDestination
+            )
+        },
+        topBar = {
+            TopAppBar({/* TODO(Implementation) */ })
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+    ) { innerPadding ->
         NavDisplay(
             backStack = backStack,
             modifier = Modifier.padding(innerPadding),
