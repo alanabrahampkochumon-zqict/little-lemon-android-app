@@ -1,29 +1,28 @@
 package com.littlelemon.application.home.presentation
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
+import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import kotlinx.serialization.Serializable
 
-// TODO: Remove playground code
-
-@Serializable
-data object Route1 : NavKey
-
-@Serializable
-data object Route2 : NavKey
-
-@Serializable
-data object Route3 : NavKey
 
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
-    Scaffold(bottomBar = { BottomNavigation({}) }) { innerPadding ->
+    var currentDestination: NavigationOption by remember { mutableStateOf(NavigationOption.HOME) }
+
+    Scaffold(bottomBar = { BottomNavigation({ currentDestination = it}, selected = currentDestination) }, modifier = Modifier.fillMaxWidth()) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             Text("Home")
         }
@@ -152,4 +151,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 //            )
 //        }
 //    )
+}
+
+@Preview
+@Composable
+private fun HomeScreenPreview() {
+    LittleLemonTheme() {
+        HomeScreen()
+    }
 }

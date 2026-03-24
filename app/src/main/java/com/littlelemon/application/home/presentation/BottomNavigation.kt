@@ -11,8 +11,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -67,17 +70,20 @@ fun BottomNavigation(
             .padding(
                 horizontal = MaterialTheme.dimens.sizeXL,
                 vertical = MaterialTheme.dimens.sizeMD
-            ), verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXL)
-    ) {
-        NavigationOption.entries.forEach { item ->
-            BottomNavigationItem(
-                item.defaultIcon,
-                item.selectedIcon,
-                label = stringResource(item.label),
-                selected = item == selected,
-                onSelect = { onNavigationClick(item) },
             )
+            .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        NavigationOption.entries.forEachIndexed { index, option ->
+            BottomNavigationItem(
+                option.defaultIcon,
+                option.selectedIcon,
+                label = stringResource(option.label),
+                selected = option == selected,
+                onSelect = { onNavigationClick(option) },
+            )
+            if(index < NavigationOption.entries.size - 1)
+                Spacer(modifier.width(MaterialTheme.dimens.sizeXL))
         }
     }
 }
