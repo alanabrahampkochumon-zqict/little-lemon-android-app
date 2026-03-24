@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -28,12 +28,15 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
+import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.home.HomeTestTags
 
 @Composable
 fun BottomNavigation(modifier: Modifier = Modifier) {
-    Row(modifier = modifier) { }
+    Row(modifier = modifier) {
+//        BottomNavigationItem()
+    }
 }
 
 @Composable
@@ -54,18 +57,21 @@ fun BottomNavigationItem(
     }
 
     Column(
-        modifier = modifier.selectable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null,
-            onClick = onSelect,
-            role = Role.Tab,
-            selected = selected
-        ),
+        modifier = modifier
+            .size(48.dp)
+            .selectable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onSelect,
+                role = Role.Tab,
+                selected = selected
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)
     ) {
         Crossfade(selected) { state ->
             Image(
-                painterResource(if(state) selectedIcon else defaultIcon),
+                painterResource(if (state) selectedIcon else defaultIcon),
                 contentDescription = label,
                 colorFilter = ColorFilter.tint(currentColor),
                 modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON)
