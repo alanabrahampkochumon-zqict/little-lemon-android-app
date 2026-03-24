@@ -16,7 +16,7 @@ class FoodDeliveryScreenTest {
     @get:Rule
     val testRule = createComposeRule()
 
-    val application = RuntimeEnvironment.getApplication()
+    private val application = RuntimeEnvironment.getApplication()
 
 
     @Test
