@@ -23,7 +23,7 @@ data object Route3 : NavKey
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
-    Scaffold(bottomBar = { BottomNavigation() }) { innerPadding ->
+    Scaffold(bottomBar = { BottomNavigation({}) }) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             Text("Home")
         }

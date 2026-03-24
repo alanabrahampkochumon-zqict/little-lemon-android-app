@@ -1,10 +1,12 @@
 package com.littlelemon.application.home.presentation
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,10 +35,49 @@ import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.home.HomeTestTags
 
+
+enum class BottomNavigationContent(
+    @field:DrawableRes val selectedIcon: Int,
+    @field:DrawableRes val defaultIcon: Int,
+    @field:StringRes val label: Int,
+) {
+    HOME(R.drawable.ic_home_filled, R.drawable.ic_home_outline, R.string.navigation_home),
+    MENU(R.drawable.ic_hat_filled, R.drawable.ic_hat_outline, R.string.navigation_menu),
+    ORDER(R.drawable.ic_bill_filled, R.drawable.ic_bill_outline, R.string.navigation_order),
+    CART(R.drawable.ic_bag_filled, R.drawable.ic_bag_outline, R.string.navigation_cart),
+    PROFILE(
+        R.drawable.ic_profile_filled,
+        R.drawable.ic_profile_outline,
+        R.string.navigation_profile
+    )
+}
+
 @Composable
-fun BottomNavigation(modifier: Modifier = Modifier) {
-    Row(modifier = modifier) {
-//        BottomNavigationItem()
+fun BottomNavigation(
+    onNavigationClick: (item: BottomNavigationContent) -> Unit,
+    modifier: Modifier = Modifier,
+    selected: BottomNavigationContent = BottomNavigationContent.HOME,
+) {
+    Row(
+        modifier = modifier
+            .background(
+                MaterialTheme.colors.primary
+            )
+            .padding(
+                horizontal = MaterialTheme.dimens.sizeXL,
+                vertical = MaterialTheme.dimens.sizeMD
+            ), verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXL)
+    ) {
+        BottomNavigationContent.entries.forEach { item ->
+            BottomNavigationItem(
+                item.defaultIcon,
+                item.selectedIcon,
+                label = stringResource(item.label),
+                selected = item == selected,
+                onSelect = { onNavigationClick(item) },
+            )
+        }
     }
 }
 
@@ -114,6 +156,6 @@ private fun BottomNavigationItemPreview() {
 @Composable
 private fun BottomNavigationPreview() {
     LittleLemonTheme {
-        BottomNavigation()
+        BottomNavigation({})
     }
 }

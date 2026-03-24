@@ -124,6 +124,11 @@
     <!--  Internal error messages  -->
     <string name="no_gmap_api_key_header">API Key not found!</string>
     <string name="no_gmap_api_key_body">Make sure you have your Google Maps API configured in local.properties file</string>
+    <string name="navigation_home">Home</string>
+    <string name="navigation_menu">Menu</string>
+    <string name="navigation_order">Orders</string>
+    <string name="navigation_cart">Cart</string>
+    <string name="navigation_profile">Profile</string>
 
 
 </resources>
