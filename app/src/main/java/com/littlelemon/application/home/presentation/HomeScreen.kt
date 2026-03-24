@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
+import com.littlelemon.application.core.presentation.designsystem.colors
 
 
 @Composable
@@ -47,6 +49,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         topBar = {
             TopAppBar({/* TODO(Implementation) */ })
         },
+        containerColor = MaterialTheme.colors.secondary,
         modifier = Modifier
             .fillMaxWidth()
     ) { innerPadding ->
