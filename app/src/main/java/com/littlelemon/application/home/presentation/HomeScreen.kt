@@ -1,6 +1,8 @@
 package com.littlelemon.application.home.presentation
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -10,23 +12,98 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import kotlinx.serialization.Serializable
-
 
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
     var currentDestination: NavigationOption by remember { mutableStateOf(NavigationOption.HOME) }
+    val backStack = rememberNavBackStack(HomeRoute)
 
-    Scaffold(bottomBar = { BottomNavigation({ currentDestination = it}, selected = currentDestination) }, modifier = Modifier.fillMaxWidth()) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            Text("Home")
-        }
+    Scaffold(bottomBar = {
+        BottomNavigation(
+            { newDestination ->
+                currentDestination = newDestination
+                backStack.clear()
+                when (newDestination) {
+                    NavigationOption.HOME -> backStack.add(HomeRoute)
+                    NavigationOption.MENU -> backStack.add(MenuRoute)
+                    NavigationOption.ORDER -> backStack.add(OrdersRoute)
+                    NavigationOption.CART -> backStack.add(CartRoute)
+                    NavigationOption.PROFILE -> backStack.add(ProfileRoute)
+                }
+            },
+            selected = currentDestination
+        )
+    }, modifier = Modifier.fillMaxWidth()) { innerPadding ->
+        NavDisplay(
+            backStack = backStack,
+            modifier = Modifier.padding(innerPadding),
+            entryProvider = { entry ->
+                when (entry) {
+                    is HomeRoute -> NavEntry(entry) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .background(Color.LightGray)
+                                .fillMaxSize()
+                        ) {
+                            Text("Home")
+                        }
+                    }
+
+                    is MenuRoute -> NavEntry(entry) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Text("Menu")
+                        }
+                    }
+
+                    is OrdersRoute -> NavEntry(entry) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .background(Color.LightGray)
+                                .fillMaxSize()
+                        ) {
+                            Text("Orders")
+                        }
+                    }
+
+                    is CartRoute -> NavEntry(entry) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Text("Cart")
+                        }
+                    }
+
+                    is ProfileRoute -> NavEntry(entry) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .background(Color.LightGray)
+                                .fillMaxSize()
+                        ) {
+                            Text("Profile")
+                        }
+                    }
+
+                    else -> NavEntry(entry) { Text("UnknownRoute") }
+                }
+            })
     }
+
 //    Text("Home Screen")
 //
 //    val backStack = rememberNavBackStack(Route1)
