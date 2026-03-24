@@ -12,10 +12,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -71,6 +79,7 @@ fun BottomNavigation(
                 horizontal = MaterialTheme.dimens.sizeXL,
                 vertical = MaterialTheme.dimens.sizeMD
             )
+            .navigationBarsPadding()
             .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -82,7 +91,7 @@ fun BottomNavigation(
                 selected = option == selected,
                 onSelect = { onNavigationClick(option) },
             )
-            if(index < NavigationOption.entries.size - 1)
+            if (index < NavigationOption.entries.size - 1)
                 Spacer(modifier.width(MaterialTheme.dimens.sizeXL))
         }
     }
@@ -116,7 +125,7 @@ fun BottomNavigationItem(
                 selected = selected
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)
+        verticalArrangement = Arrangement.Center
     ) {
         Crossfade(selected) { state ->
             Image(
@@ -126,6 +135,7 @@ fun BottomNavigationItem(
                 modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON)
             )
         }
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXS))
         Text(
             label,
             style = MaterialTheme.typeStyle.bodyXSmall,
