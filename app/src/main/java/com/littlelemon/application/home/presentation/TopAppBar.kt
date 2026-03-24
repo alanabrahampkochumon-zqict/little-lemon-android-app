@@ -5,15 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.MaterialTheme
@@ -58,7 +54,13 @@ fun TopAppBar(onSearchClick: () -> Unit, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Image(painterResource(R.drawable.logo_full), null, modifier = Modifier.height(40.dp))
+        Image(
+            painterResource(R.drawable.logo_full), null, modifier = Modifier
+                .height(40.dp)
+                .testTag(
+                    HomeTestTags.LOGO
+                )
+        )
         Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
         Row {
             Text("TODO: Replace with address view comp")
