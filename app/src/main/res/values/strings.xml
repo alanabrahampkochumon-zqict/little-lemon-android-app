@@ -25,6 +25,8 @@
     <string name="heading_login">What\'s your email?</string>
     <string name="heading_personalize">Let\'s get to know you</string>
     <string name="heading_location_permission">Where are we delivering?</string>
+    <string name="heading_order_for_delivery">Order for Delivery</string>
+    <string name="heading_popular_orders">Popular Orders</string>
 
     <!--    Navigation Headings    -->
     <string name="nav_verify_email">Verify Email Address</string>
@@ -124,6 +126,8 @@
     <!--  Internal error messages  -->
     <string name="no_gmap_api_key_header">API Key not found!</string>
     <string name="no_gmap_api_key_body">Make sure you have your Google Maps API configured in local.properties file</string>
+
+    <!--  Navigation Item Labels  -->
     <string name="navigation_home">Home</string>
     <string name="navigation_menu">Menu</string>
     <string name="navigation_order">Orders</string>
