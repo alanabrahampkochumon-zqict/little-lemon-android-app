@@ -61,21 +61,12 @@ fun BottomNavigationItem(
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (selected) {
-            Image(
-                painterResource(selectedIcon),
-                contentDescription = label,
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.contentAccentSecondary),
-                modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON_SELECTED)
-            )
-        } else {
-            Image(
-                painterResource(defaultIcon),
-                contentDescription = label,
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.contentPlaceholder),
-                modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON_UNSELECTED)
-            )
-        }
+        Image(
+            painterResource(selectedIcon),
+            contentDescription = label,
+            colorFilter = ColorFilter.tint(currentColor),
+            modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON)
+        )
         Text(
             label,
             style = MaterialTheme.typeStyle.bodyXSmall,

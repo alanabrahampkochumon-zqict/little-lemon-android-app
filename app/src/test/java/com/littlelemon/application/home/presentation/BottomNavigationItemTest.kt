@@ -33,28 +33,19 @@ class BottomNavigationItemTest {
         testRule.onNodeWithText(label).assertIsDisplayed()
     }
 
+
     @Test
-    fun selected_displaysSelectedIcon() {
+    fun displaysIcon() {
         // Given a bottom navigation item with selected = true
         testRule.setContent {
             BottomNavigationItem(drawable, drawable, label, true, {})
         }
 
         // Then, selected icon is displayed
-        testRule.onNodeWithTag(HomeTestTags.BOTTOM_NAVIGATION_ICON_SELECTED).assertIsDisplayed()
+        testRule.onNodeWithTag(HomeTestTags.BOTTOM_NAVIGATION_ICON, useUnmergedTree = true)
+            .assertIsDisplayed()
     }
 
-
-    @Test
-    fun unselected_displaysUnselectedIcon() {
-        // Given a bottom navigation item with selected = true
-        testRule.setContent {
-            BottomNavigationItem(drawable, drawable, label, false, {})
-        }
-
-        // Then, unselected icon is displayed
-        testRule.onNodeWithTag(HomeTestTags.BOTTOM_NAVIGATION_ICON_UNSELECTED).assertIsDisplayed()
-    }
 
     @Test
     fun onSelect_triggersCallback() {
