@@ -1,6 +1,7 @@
 package com.littlelemon.application.home.presentation
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -61,12 +63,14 @@ fun BottomNavigationItem(
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Image(
-            painterResource(selectedIcon),
-            contentDescription = label,
-            colorFilter = ColorFilter.tint(currentColor),
-            modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON)
-        )
+        Crossfade(selected) { state ->
+            Image(
+                painterResource(if(state) selectedIcon else defaultIcon),
+                contentDescription = label,
+                colorFilter = ColorFilter.tint(currentColor),
+                modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON)
+            )
+        }
         Text(
             label,
             style = MaterialTheme.typeStyle.bodyXSmall,
