@@ -1,6 +1,9 @@
 package com.littlelemon.application.home.presentation
 
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsSelectable
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -44,6 +47,26 @@ class BottomNavigationItemTest {
         // Then, selected icon is displayed
         testRule.onNodeWithTag(HomeTestTags.BOTTOM_NAVIGATION_ICON, useUnmergedTree = true)
             .assertIsDisplayed()
+    }
+
+    @Test
+    fun isSelectable() {
+        // Given a bottom navigation item
+        val testTag = "BOTTOM_NAVIGATION"
+        testRule.setContent {
+            BottomNavigationItem(
+                drawable,
+                drawable,
+                label,
+                true,
+                {},
+                modifier = Modifier.testTag(testTag)
+            )
+        }
+
+        // Then, selected icon is displayed
+        testRule.onNodeWithTag(testTag)
+            .assertIsSelectable()
     }
 
 
