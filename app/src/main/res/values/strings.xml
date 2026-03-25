@@ -133,6 +133,8 @@
     <string name="navigation_order">Orders</string>
     <string name="navigation_cart">Cart</string>
     <string name="navigation_profile">Profile</string>
+    <string name="label_not_delivering">Not deliverable to</string>
+    <string name="label_delivering">Delivering to</string>
 
 
 </resources>
