@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.address.presentation.screens.components.AddressPicker
 import com.littlelemon.application.core.presentation.components.PrimaryIconButton
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
@@ -63,13 +66,13 @@ fun TopAppBar(onSearchClick: () -> Unit, modifier: Modifier = Modifier) {
         )
         Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
         Row {
-            Text("TODO: Replace with address view comp")
+            AddressPicker("TODO: Replace Address", modifier = Modifier.weight(1f))
             Spacer(Modifier.width(MaterialTheme.dimens.sizeMD))
             PrimaryIconButton(
                 R.drawable.ic_search,
                 onClick = onSearchClick,
                 modifier
-                    .size(56.dp)
+                    .size(52.dp)
                     .testTag(HomeTestTags.SEARCH_BUTTON)
             )
         }
