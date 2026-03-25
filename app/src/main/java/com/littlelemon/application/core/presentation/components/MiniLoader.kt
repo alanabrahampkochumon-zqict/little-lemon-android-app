@@ -19,8 +19,10 @@ import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
@@ -63,7 +65,10 @@ fun MiniLoader(
             .dropShadow(shape, firstShadow)
             .dropShadow(shape, secondShadow)
             .background(backgroundColor, shape)
-            .padding(vertical = MaterialTheme.dimens.sizeMD, horizontal = MaterialTheme.dimens.sizeLG),
+            .padding(
+                vertical = MaterialTheme.dimens.sizeMD,
+                horizontal = MaterialTheme.dimens.sizeLG
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         CircularProgressIndicator(
@@ -71,7 +76,9 @@ fun MiniLoader(
             color = spinnerColor,
             strokeCap = StrokeCap.Round,
             strokeWidth = 2.dp,
-            modifier = Modifier.size(MaterialTheme.dimens.size2XL)
+            modifier = Modifier
+                .size(MaterialTheme.dimens.size2XL)
+                .testTag(CoreTestTags.PROGRESS_INDICATOR)
         )
         Spacer(modifier = Modifier.width(MaterialTheme.dimens.sizeLG))
         Text(label, style = MaterialTheme.typeStyle.labelMedium, color = contentColor)
@@ -84,7 +91,9 @@ fun MiniLoader(
 private fun MiniLoaderPreview() {
     LittleLemonTheme {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             MiniLoader(
