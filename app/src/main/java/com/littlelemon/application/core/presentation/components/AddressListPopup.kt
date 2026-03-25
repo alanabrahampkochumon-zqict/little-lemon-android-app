@@ -3,6 +3,7 @@ package com.littlelemon.application.core.presentation.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,17 +18,20 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
@@ -72,7 +76,13 @@ fun AddressListItem(
                 horizontal = MaterialTheme.dimens.sizeLG,
                 vertical = MaterialTheme.dimens.sizeMD
             )
-            .selectable(selected, role = Role.DropdownList, onClick = onSelectionChange)
+            .selectable(
+                selected = selected,
+                role = Role.Tab,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onSelectionChange
+            )
     ) {
         Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -87,7 +97,7 @@ fun AddressListItem(
                     painterResource(R.drawable.ic_checkcircle_filled),
                     null,
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.contentAccentSecondary),
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp).testTag(CoreTestTags.ADDRESS_ITEM_CHECK_ICON)
                 )
             }
         }

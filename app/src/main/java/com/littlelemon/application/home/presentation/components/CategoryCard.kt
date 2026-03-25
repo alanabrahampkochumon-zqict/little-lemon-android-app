@@ -67,7 +67,7 @@ fun CategoryCard(
             .selectable(
                 selected = selected,
                 enabled = enabled,
-                role = Role.Tab,
+                role = Role.DropdownList,
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = onSelectionChange

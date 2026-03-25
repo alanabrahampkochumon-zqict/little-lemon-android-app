@@ -2,11 +2,10 @@ package com.littlelemon.application.core
 
 object CoreTestTags {
 
-    const val TEST_TAG_BOTTOM_SHEET = "TestTagBottomSheet"
-    const val TEST_TAG_BOTTOM_SHEET_BACKGROUND = "TestTagBottomSheetBackground"
-
-    const val ACTION_SCREEN_ILLUSTRATION = "TestTagActionScreenIllustration"
-
-    const val STEPPER_INCREASE = "TestTagStepperIncrease"
-    const val STEPPER_DECREASE = "TestTagStepperDecrease"
+    const val TEST_TAG_BOTTOM_SHEET = "BOTTOM_SHEET_TEST_TAG"
+    const val TEST_TAG_BOTTOM_SHEET_BACKGROUND = "BOTTOM_SHEET_BACKGROUND_TEST_TAG"
+    const val ACTION_SCREEN_ILLUSTRATION = "ACTION_SCREEN_ILLUSTRATION_TEST_TAG"
+    const val STEPPER_INCREASE = "STEPPER_INCREASE_TEST_TAG"
+    const val STEPPER_DECREASE = "STEPPER_DECREASE_TEST_TAG"
+    const val ADDRESS_ITEM_CHECK_ICON = "ADDRESS_ITEM_CHECK_ICON_TEST_TAG"
 }
