@@ -37,7 +37,6 @@ import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.PhysicalAddress
 import com.littlelemon.application.address.presentation.AddressTestTags
 import com.littlelemon.application.address.presentation.mappers.toFullAddress
-import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
@@ -49,7 +48,7 @@ import com.littlelemon.application.core.presentation.designsystem.xSmall
 import com.littlelemon.application.core.presentation.utils.toComposeShadow
 import kotlin.math.min
 
-
+// TODO: Convert to dismissable menu
 @Composable
 fun AddressList(
     addressList: List<LocalAddress>,
@@ -88,7 +87,8 @@ fun AddressList(
             selected = true,
             onSelectionChange = {
                 onSelectionChange(selected)
-            }, modifier = Modifier.testTag(AddressTestTags.ADDRESS_ITEM))
+            }, modifier = Modifier.testTag(AddressTestTags.ADDRESS_ITEM)
+        )
         addressList.filter { address -> address != selected }.take(min(addressList.size - 1, 2))
             .forEach { address ->
                 AddressListItem(
@@ -101,7 +101,8 @@ fun AddressList(
                     selected = false,
                     onSelectionChange = {
                         onSelectionChange(address)
-                    }, modifier = Modifier.testTag(AddressTestTags.ADDRESS_ITEM))
+                    }, modifier = Modifier.testTag(AddressTestTags.ADDRESS_ITEM)
+                )
             }
         Button(
             stringResource(R.string.view_all),

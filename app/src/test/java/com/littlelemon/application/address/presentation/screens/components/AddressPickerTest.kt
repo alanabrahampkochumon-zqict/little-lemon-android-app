@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.presentation.components
+package com.littlelemon.application.address.presentation.screens.components
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule

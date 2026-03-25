@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.presentation.components
+package com.littlelemon.application.address.presentation.screens.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -109,7 +109,7 @@ private fun AddressPickerPreview() {
             AddressPicker("Work (Lincoln Park) ", deliverable = true, elevated = false)
             AddressPicker("Work (Lincoln Park) ", deliverable = false, elevated = false)
             AddressPicker(
-                "Work (Very Long Adddress that will overflow) ",
+                "Work (Very Long Address that will overflow) ",
                 deliverable = false,
                 elevated = false
             )
