@@ -9,7 +9,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.littlelemon.application.core.CoreTestTags
+import com.littlelemon.application.address.presentation.AddressTestTags
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,7 +55,7 @@ class AddressListItemTest {
         }
 
         // Then, checkmark is displayed
-        testRule.onNodeWithTag(CoreTestTags.ADDRESS_ITEM_CHECK_ICON, useUnmergedTree = true)
+        testRule.onNodeWithTag(AddressTestTags.ADDRESS_ITEM_CHECK_ICON, useUnmergedTree = true)
             .assertIsDisplayed()
     }
 

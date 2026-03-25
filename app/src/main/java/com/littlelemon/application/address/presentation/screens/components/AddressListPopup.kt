@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.PhysicalAddress
+import com.littlelemon.application.address.presentation.AddressTestTags
 import com.littlelemon.application.address.presentation.mappers.toFullAddress
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.components.Button
@@ -87,7 +88,7 @@ fun AddressList(
             selected = true,
             onSelectionChange = {
                 onSelectionChange(selected)
-            })
+            }, modifier = Modifier.testTag(AddressTestTags.ADDRESS_ITEM))
         addressList.filter { address -> address != selected }.take(min(addressList.size - 1, 2))
             .forEach { address ->
                 AddressListItem(
@@ -100,7 +101,7 @@ fun AddressList(
                     selected = false,
                     onSelectionChange = {
                         onSelectionChange(address)
-                    })
+                    }, modifier = Modifier.testTag(AddressTestTags.ADDRESS_ITEM))
             }
         Button(
             stringResource(R.string.view_all),
@@ -161,7 +162,7 @@ fun AddressListItem(
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.contentAccentSecondary),
                     modifier = Modifier
                         .size(20.dp)
-                        .testTag(CoreTestTags.ADDRESS_ITEM_CHECK_ICON)
+                        .testTag(AddressTestTags.ADDRESS_ITEM_CHECK_ICON)
                 )
             }
         }
