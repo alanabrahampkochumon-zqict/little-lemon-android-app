@@ -31,6 +31,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.address.domain.models.LocalAddress
+import com.littlelemon.application.address.domain.models.PhysicalAddress
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
@@ -42,8 +44,23 @@ import com.littlelemon.application.core.presentation.utils.toComposeShadow
 
 
 @Composable
-fun AddressList(modifier: Modifier = Modifier) {
+fun AddressList(
+    addressList: List<LocalAddress>,
+    selected: LocalAddress,
+    onSelectionChange: (address: LocalAddress) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.primary)
+            .padding(
+                MaterialTheme.dimens.sizeMD
+            )
+        , verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM)
+    ) {
 
+    }
 }
 
 
@@ -66,15 +83,12 @@ fun AddressListItem(
             .dropShadow(shape, shadow)
             .then(
                 if (selected) Modifier.border(
-                    1.dp,
-                    MaterialTheme.colors.contentAccentSecondary,
-                    shape
+                    1.dp, MaterialTheme.colors.contentAccentSecondary, shape
                 ) else Modifier
             )
             .background(MaterialTheme.colors.primary, shape)
             .padding(
-                horizontal = MaterialTheme.dimens.sizeLG,
-                vertical = MaterialTheme.dimens.sizeMD
+                horizontal = MaterialTheme.dimens.sizeLG, vertical = MaterialTheme.dimens.sizeMD
             )
             .selectable(
                 selected = selected,
@@ -123,14 +137,68 @@ fun AddressListItem(
 @Preview(showBackground = true)
 @Composable
 private fun AddressListPreview() {
-
+    val address = listOf(
+        LocalAddress(
+            id = "id1",
+            label = "Label",
+            address = PhysicalAddress(
+                address = "Address 1",
+                streetAddress = "Street Address 1",
+                city = "City 1",
+                state = "State 1",
+                pinCode = "123456"
+            ),
+            location = null,
+            isDefault = true
+        ),
+        LocalAddress(
+            id = "id2",
+            label = "Label",
+            address = PhysicalAddress(
+                address = "Address 2",
+                streetAddress = "Street Address 2",
+                city = "City 2",
+                state = "State 2",
+                pinCode = "123456"
+            ),
+            location = null,
+            isDefault = true
+        ),
+        LocalAddress(
+            id = "id3",
+            label = "Label",
+            address = PhysicalAddress(
+                address = "Address 3",
+                streetAddress = "Street Address 3",
+                city = "City 3",
+                state = "State 3",
+                pinCode = "123456"
+            ),
+            location = null,
+            isDefault = true
+        ),
+        LocalAddress(
+            id = "id4",
+            label = "Label",
+            address = PhysicalAddress(
+                address = "Address 4",
+                streetAddress = "Street Address 4",
+                city = "City 4",
+                state = "State 4",
+                pinCode = "123456"
+            ),
+            location = null,
+            isDefault = true
+        )
+    )
     Column(
         modifier = Modifier
             .padding(12.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        AddressList()
+        AddressList(address, address[0], {})
+        AddressList(address.subList(0, 1), address[0], {})
     }
 }
 
@@ -145,15 +213,9 @@ private fun AddressListItemPreview() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             AddressListItem(
-                "Work",
-                "16281 Washington Avenue, Lincoln Park, Chicago - 60614",
-                true,
-                {})
+                "Work", "16281 Washington Avenue, Lincoln Park, Chicago - 60614", true, {})
             AddressListItem(
-                "Work",
-                "16281 Washington Avenue, Lincoln Park, Chicago - 60614",
-                false,
-                {})
+                "Work", "16281 Washington Avenue, Lincoln Park, Chicago - 60614", false, {})
         }
     }
 }
