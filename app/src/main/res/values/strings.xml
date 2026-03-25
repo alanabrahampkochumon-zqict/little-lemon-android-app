@@ -135,6 +135,10 @@
     <string name="navigation_profile">Profile</string>
     <string name="label_not_delivering">Not deliverable to</string>
     <string name="label_delivering">Delivering to</string>
+    <string name="unnamed_address_label">Unnamed Address</string>
+    <string name="location_string">Location: (%.4f, %.4f)</string>
+    <string name="not_found_cap">NOT FOUND</string>
+    <string name="view_all">View All</string>
 
 
 </resources>
