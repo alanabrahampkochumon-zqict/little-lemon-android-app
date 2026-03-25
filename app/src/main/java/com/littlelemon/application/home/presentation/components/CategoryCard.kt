@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +34,7 @@ import com.littlelemon.application.core.presentation.designsystem.shadows
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.core.presentation.designsystem.xSmall
 import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.home.HomeTestTags
 
 @Composable
 fun CategoryCard(
@@ -75,7 +77,7 @@ fun CategoryCard(
             Image(
                 painterResource(R.drawable.ic_checkcircle_filled), null, modifier = Modifier.size(
                     MaterialTheme.dimens.sizeXL
-                ), colorFilter = ColorFilter.tint(contentColor)
+                ).testTag(HomeTestTags.CATEGORY_CARD_CHECK_MARK), colorFilter = ColorFilter.tint(contentColor)
             )
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.sizeMD))
         }
