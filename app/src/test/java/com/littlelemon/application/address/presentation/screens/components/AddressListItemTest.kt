@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.presentation.components
+package com.littlelemon.application.address.presentation.screens.components
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -64,7 +64,13 @@ class AddressListItemTest {
         // Given a selected address label
         val tag = "AddressListTag"
         testRule.setContent {
-            AddressListItem(addressLabel, address, true, {}, modifier = Modifier.testTag(tag))
+            AddressListItem(
+                addressLabel,
+                address,
+                true,
+                {},
+                modifier = Modifier.Companion.testTag(tag)
+            )
         }
 
         // Then, address list item is selected
@@ -76,7 +82,13 @@ class AddressListItemTest {
         // Given an unselected address label
         val tag = "AddressListTag"
         testRule.setContent {
-            AddressListItem(addressLabel, address, false, {}, modifier = Modifier.testTag(tag))
+            AddressListItem(
+                addressLabel,
+                address,
+                false,
+                {},
+                modifier = Modifier.Companion.testTag(tag)
+            )
         }
 
         // Then, address list item is unselected
@@ -94,7 +106,7 @@ class AddressListItemTest {
                 address,
                 false,
                 { callbackTriggered = true },
-                modifier = Modifier.testTag(tag)
+                modifier = Modifier.Companion.testTag(tag)
             )
         }
 

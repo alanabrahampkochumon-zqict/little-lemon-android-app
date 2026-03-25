@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.presentation.components
+package com.littlelemon.application.address.presentation.screens.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -97,7 +97,9 @@ fun AddressListItem(
                     painterResource(R.drawable.ic_checkcircle_filled),
                     null,
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.contentAccentSecondary),
-                    modifier = Modifier.size(20.dp).testTag(CoreTestTags.ADDRESS_ITEM_CHECK_ICON)
+                    modifier = Modifier
+                        .size(20.dp)
+                        .testTag(CoreTestTags.ADDRESS_ITEM_CHECK_ICON)
                 )
             }
         }
