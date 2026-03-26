@@ -73,7 +73,7 @@ fun FilterListItem(
             MaterialTheme.colors.outlineSecondary
     )
 
-    val contentColor = animateColorAsState(
+    val contentColor by animateColorAsState(
         if (selected)
             MaterialTheme.colors.contentOnColor
         else
