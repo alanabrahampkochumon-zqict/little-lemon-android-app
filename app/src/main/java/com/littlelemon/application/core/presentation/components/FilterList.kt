@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -65,7 +66,7 @@ fun FilterListItem(
             MaterialTheme.colors.primary
     )
 
-    val borderColor = animateColorAsState(
+    val borderColor: Color by animateColorAsState(
         if (selected)
             MaterialTheme.colors.transparent
         else
