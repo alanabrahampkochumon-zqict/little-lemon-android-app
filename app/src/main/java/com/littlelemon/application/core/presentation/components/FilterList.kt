@@ -2,14 +2,17 @@ package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -48,7 +52,19 @@ fun FilterList(
     onSelect: (filter: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
+    val shape = MaterialTheme.shapes.medium
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colors.primary, shape)
+            .border(
+                1.dp,
+                MaterialTheme.colors.outlineSecondary,shape
+            ).clip(shape)
+    ) {
+        filters.forEach { filter ->
+            FilterListItem(filter, selected = filter == selected, { onSelect(filter) })
+        }
+    }
 }
 
 
@@ -107,7 +123,7 @@ fun FilterListItem(
             color = contentColor,
             modifier = Modifier.weight(1f)
         )
-        AnimatedVisibility(selected, enter = scaleIn(), exit = scaleOut()) {
+        AnimatedVisibility(selected, enter = fadeIn(), exit = fadeOut()) {
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.sizeLG))
             Image(
                 painterResource(R.drawable.ic_checkcircle), null, colorFilter = ColorFilter.tint(
@@ -141,10 +157,14 @@ private fun FilterListItemPreview() {
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun FilterListPreview() {
+    val filters = listOf("Filter 1", "Filter 2", "Filter 3", "Filter 4", "Filter 5")
+    var currentFilter by remember { mutableStateOf(filters[0]) }
     LittleLemonTheme {
-//        FilterList()
+        Box(Modifier.fillMaxSize().padding(12.dp)) {
+            FilterList(filters, currentFilter, { currentFilter = it })
+        }
     }
 }
