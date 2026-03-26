@@ -1,6 +1,8 @@
 package com.littlelemon.application.address.presentation
 
 import app.cash.turbine.test
+import app.cash.turbine.turbineScope
+import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.usecase.GeocodeAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
@@ -15,6 +17,8 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -33,11 +37,13 @@ import kotlin.test.assertIs
 @ExtendWith(StandardTestDispatcherRule::class)
 class AddressViewModelTest {
 
-    companion object {
+    private companion object {
         //        private const val DEBOUNCE_DELAY_MS = 1000L
-        private const val NETWORK_LATENCY = 500L
-        private const val ERROR_MESSAGE = "Something went wrong!"
-        private val EXPECTED_ERROR = UiText.DynamicString(ERROR_MESSAGE)
+        const val NETWORK_LATENCY = 500L
+        const val ERROR_MESSAGE = "Something went wrong!"
+        val EXPECTED_ERROR = UiText.DynamicString(ERROR_MESSAGE)
+
+        val address = List(10) { AddressGenerator.generateLocalAddress() }
     }
 
     private lateinit var getLocationUseCase: GetLocationUseCase
@@ -54,9 +60,19 @@ class AddressViewModelTest {
     fun setUp() {
         getLocationUseCase = mockk()
         saveAddressUseCase = mockk()
-        getAddressUseCase = mockk()
+        getAddressUseCase = mockk<GetAddressUseCase>()
         geocodeAddressUseCase = mockk()
         reverseGeocodeLocationUseCase = mockk()
+
+        coEvery { geocodeAddressUseCase.invoke(any()) } returns Resource.Success(geocodedAddress)
+        coEvery { reverseGeocodeLocationUseCase.invoke(any()) } returns Resource.Success(
+            geocodedAddress
+        )
+        coEvery { getAddressUseCase.invoke() } returns flow {
+            emit(Resource.Loading())
+            delay(NETWORK_LATENCY)
+            emit(Resource.Success(address))
+        }
 
         viewModel = AddressViewModel(
             getLocationUseCase,
@@ -64,11 +80,6 @@ class AddressViewModelTest {
             geocodeAddressUseCase,
             reverseGeocodeLocationUseCase,
             saveAddressUseCase
-        )
-
-        coEvery { geocodeAddressUseCase.invoke(any()) } returns Resource.Success(geocodedAddress)
-        coEvery { reverseGeocodeLocationUseCase.invoke(any()) } returns Resource.Success(
-            geocodedAddress
         )
     }
 
@@ -1030,7 +1041,6 @@ class AddressViewModelTest {
         }
     }
 
-
     @Test
     fun onEnterLocationManually_triggerLocationEntryPopup() = runTest {
         viewModel.addressEvents.test {
@@ -1040,6 +1050,84 @@ class AddressViewModelTest {
 
             // Assert that popup event is triggered
             assertIs<AddressEvents.ShowLocationEntryPopup>(awaitItem())
+        }
+    }
+
+    @Nested
+    inner class GetAddressTests {
+        private lateinit var viewModel: AddressViewModel
+
+        @Test
+        fun isLoadingFirst() = runTest {
+            turbineScope {
+                // When an address viewmodel is created
+                viewModel = AddressViewModel(
+                    getLocationUseCase,
+                    getAddressUseCase,
+                    geocodeAddressUseCase,
+                    reverseGeocodeLocationUseCase,
+                    saveAddressUseCase
+                )
+                // Then loading state is emitted
+                viewModel.addresses.test {
+                    val loadingState = awaitItem() // Loading state
+                    assertIs<Resource.Loading<List<LocalAddress>>>(loadingState)
+                    assertNull(loadingState.data)
+                }
+            }
+        }
+
+        @Test
+        fun onUseCaseSuccess_returnsSuccessWithResults() = runTest {
+            turbineScope {
+                // When an address viewmodel is created
+                // And use case returns success
+                viewModel = AddressViewModel(
+                    getLocationUseCase,
+                    getAddressUseCase,
+                    geocodeAddressUseCase,
+                    reverseGeocodeLocationUseCase,
+                    saveAddressUseCase
+                )
+                viewModel.addresses.test {
+                    skipItems(1) // Loading state
+                    advanceTimeBy(NETWORK_LATENCY + 1L)
+
+                    // Then success with data is returned
+                    val addressResource = awaitItem()
+                    assertIs<Resource.Success<List<LocalAddress>>>(addressResource)
+                    assertEquals(address, addressResource.data)
+                }
+            }
+        }
+
+
+        @Test
+        fun onUseCaseFailure_returnsFailure() = runTest {
+            turbineScope {
+                // When an address viewmodel is created
+                // And use case returns failure
+                coEvery { getAddressUseCase.invoke() } returns flow {
+                    emit(Resource.Loading())
+                    delay(NETWORK_LATENCY)
+                    emit(Resource.Failure(address))
+                }
+                viewModel = AddressViewModel(
+                    getLocationUseCase,
+                    getAddressUseCase,
+                    geocodeAddressUseCase,
+                    reverseGeocodeLocationUseCase,
+                    saveAddressUseCase
+                )
+                viewModel.addresses.test {
+                    skipItems(1) // Loading state
+                    advanceTimeBy(NETWORK_LATENCY + 1L)
+                    val addressResource = awaitItem()
+
+                    // Then failure is returned
+                    assertIs<Resource.Failure<List<LocalAddress>>>(addressResource)
+                }
+            }
         }
 
     }

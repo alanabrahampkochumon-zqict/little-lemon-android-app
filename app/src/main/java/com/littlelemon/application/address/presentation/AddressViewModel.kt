@@ -19,15 +19,17 @@ import com.littlelemon.application.core.presentation.UiText.DynamicString
 import com.littlelemon.application.core.presentation.UiText.StringResource
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 // TODO: search for address and add an id
 class AddressViewModel(
     private val getLocation: GetLocationUseCase,
-    private val getAddress: GetAddressUseCase,
+    getAddress: GetAddressUseCase,
     private val geocodeAddress: GeocodeAddressUseCase,
     private val reverseGeocodedLocation: ReverseGeocodeLocationUseCase,
     private val saveAddress: SaveAddressUseCase
@@ -35,6 +37,12 @@ class AddressViewModel(
 
     private val _state = MutableStateFlow(AddressState())
     val state = _state.asStateFlow()
+
+    val addresses = getAddress().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = Resource.Loading(null)
+    )
 
     private val _addressChannel = Channel<AddressEvents>(Channel.BUFFERED)
     val addressEvents = _addressChannel.receiveAsFlow()
