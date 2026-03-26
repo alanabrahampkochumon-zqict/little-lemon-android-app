@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class DateFormatters {
+class DateFormattersTest {
 
     @Test
     fun correctlyFormatAMTime() {
