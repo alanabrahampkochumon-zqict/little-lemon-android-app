@@ -21,11 +21,13 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
@@ -90,7 +92,7 @@ fun FilterListItem(
             Image(
                 painterResource(R.drawable.ic_checkcircle), null, colorFilter = ColorFilter.tint(
                     MaterialTheme.colors.contentAccent
-                ), modifier = Modifier.size(24.dp)
+                ), modifier = Modifier.size(24.dp).testTag(CoreTestTags.FILTER_ITEM_CHECK)
             )
         }
     }

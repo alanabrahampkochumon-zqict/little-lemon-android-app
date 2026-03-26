@@ -10,4 +10,6 @@ object CoreTestTags {
 
     const val PROGRESS_INDICATOR = "PROGRESS_INDICATOR_TEST_TAG"
 
+    const val FILTER_ITEM_CHECK = "FILTER_ITEM_CHECK_TEST_TAG"
+
 }
