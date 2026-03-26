@@ -1,22 +1,27 @@
 package com.littlelemon.application.reservation.presentation.screens.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
+import com.littlelemon.application.core.presentation.designsystem.colors
+import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import com.littlelemon.application.core.presentation.designsystem.xSmall
 import com.littlelemon.application.reservation.domain.models.Reservation
-import kotlinx.datetime.DateTimeUnit
+import com.littlelemon.application.reservation.presentation.screens.formatters.formatTimeAsTwelveHourClock
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.yearMonth
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Instant
 
@@ -26,11 +31,36 @@ fun ReservationCard(
     onGetRoute: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val dateTimeSize = 100.dp
+    val contentColor =
+        if (reservation.reservationStatus == Reservation.ReservationStatus.Upcoming) MaterialTheme.colors.contentOnColor else MaterialTheme.colors.contentDisabled
+    val backgroundColor =
+        if (reservation.reservationStatus == Reservation.ReservationStatus.Upcoming) MaterialTheme.colors.success else MaterialTheme.colors.disabled
+    val innerCardShape = MaterialTheme.shapes.small
+    val cardShape = MaterialTheme.shapes.medium
     Row {
-        Column {
-            Text(reservation.reservedDate.date.month.name)
-//            Text(reservation.reservedDate.date.day)
-//            Text(reservation.reservedDate.time.)
+        Column(
+            modifier = Modifier
+                .size(dateTimeSize)
+                .background(backgroundColor, innerCardShape),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                reservation.reservedDate.date.month.name,
+                color = contentColor,
+                style = MaterialTheme.typeStyle.headlineSmall
+            )
+            Text(
+                reservation.reservedDate.date.day.toString(),
+                color = contentColor,
+                style = MaterialTheme.typeStyle.displayLarge
+            )
+            Text(
+                reservation.reservedDate.formatTimeAsTwelveHourClock(),
+                color = contentColor,
+                style = MaterialTheme.typeStyle.bodyXSmall
+            )
         }
     }
 }
