@@ -5,9 +5,11 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.Arguments.arguments
@@ -31,7 +33,10 @@ class DateFormattersTest {
 
         @JvmStatic
         fun dateTimeProvider(): Stream<Arguments> = Stream.of(
-            arguments(currentTime.minus(5, DateTimeUnit.SECOND).toLocalDateTime(timezone), "now"),
+            arguments(
+                currentTime.minus(30, DateTimeUnit.SECOND).toLocalDateTime(timezone),
+                "now"
+            ), // NOTE: This test might be flaky due to execution times
             arguments(
                 currentTime.minus(1, DateTimeUnit.MINUTE).toLocalDateTime(timezone),
                 "1 minute ago"
@@ -76,6 +81,13 @@ class DateFormattersTest {
                 currentTime.minus(2, DateTimeUnit.YEAR, timezone).toLocalDateTime(timezone),
                 "on $currentMonth/$currentDay/${currentYear - 2}"
             ),
+        )
+
+        @JvmStatic
+        fun futureDateTimeProvider(): Stream<Arguments> = Stream.of(
+            arguments(currentTime.plus(1, DateTimeUnit.MINUTE).toLocalDateTime(timezone)),
+            arguments(currentTime.plus(1, DateTimeUnit.DAY, timezone).toLocalDateTime(timezone)),
+            arguments(currentTime.plus(1, DateTimeUnit.YEAR, timezone).toLocalDateTime(timezone)),
         )
     }
 
@@ -126,6 +138,12 @@ class DateFormattersTest {
         expected: String
     ) {
         assertEquals(expected, dateTime.toTimeDistance(timezone))
+    }
+
+    @ParameterizedTest
+    @MethodSource("futureDateTimeProvider")
+    fun futureDateTime_throwsException(dateTime: LocalDateTime) {
+        assertThrows<IllegalArgumentException> { dateTime.toTimeDistance(timezone) }
     }
 
 }
