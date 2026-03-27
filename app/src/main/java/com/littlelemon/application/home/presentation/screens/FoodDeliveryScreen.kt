@@ -1,20 +1,23 @@
 package com.littlelemon.application.home.presentation.screens
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.littlelemon.application.R
@@ -38,12 +41,25 @@ fun FoodDeliveryScreen(modifier: Modifier = Modifier) {
     val currentInstant = LocalDateTime(2025, Month.MAY, 12, 14, 30).toInstant(TimeZone.UTC)
     val futureInstant = currentInstant + 5.days
     val pastInstant = currentInstant - 5.days
-    val reservation = Reservation(
+    val reservation1 = Reservation(
         futureInstant.toLocalDateTime(TimeZone.currentSystemDefault()),
         reservedDate = pastInstant.toLocalDateTime(TimeZone.currentSystemDefault()),
         reservationStatus = Reservation.ReservationStatus.Upcoming,
         reservedFor = 5,
     )
+    val reservation2 = Reservation(
+        futureInstant.toLocalDateTime(TimeZone.currentSystemDefault()),
+        reservedDate = pastInstant.toLocalDateTime(TimeZone.currentSystemDefault()),
+        reservationStatus = Reservation.ReservationStatus.Cancelled,
+        reservedFor = 5,
+    )
+    val reservation3 = Reservation(
+        pastInstant.toLocalDateTime(TimeZone.currentSystemDefault()),
+        reservedDate = (pastInstant - 30.days).toLocalDateTime(TimeZone.currentSystemDefault()),
+        reservationStatus = Reservation.ReservationStatus.Expired,
+        reservedFor = 5,
+    )
+    val reservations = listOf(reservation1, reservation2, reservation3)
 
     val categories = listOf("Lunch", "Mains", "Dessert", "La Casa", "Specials", "Chef Specials")
 
@@ -55,14 +71,30 @@ fun FoodDeliveryScreen(modifier: Modifier = Modifier) {
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = MaterialTheme.dimens.sizeXL)
         ) {
+            // TODO: Pluralize Header
             Header(
                 label = stringResource(R.string.heading_upcoming_reservation),
                 typeStyle = HeaderTypeStyle.Secondary,
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
-            ReservationCard(reservation = reservation, {/* TODO */ })
+            // Fixme: Change to LazyRow
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(
+                    MaterialTheme.dimens.sizeMD
+                ),
+                modifier = Modifier.fillMaxWidth(),
+//                contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.sizeXL)
+            ) {
+                reservations.forEach { reservation ->
+                    ReservationCard(
+                        reservation = reservation,
+                        {/* TODO */ },
+                        modifier = Modifier.wrapContentWidth()
+                    )
+                }
+            }
         }
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.size3XL))
 
