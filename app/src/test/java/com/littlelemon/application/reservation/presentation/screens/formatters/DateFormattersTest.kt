@@ -1,5 +1,6 @@
 package com.littlelemon.application.reservation.presentation.screens.formatters
 
+import com.littlelemon.application.core.presentation.utils.toTitleCase
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -22,7 +23,7 @@ class DateFormattersTest {
         private val timezone = TimeZone.UTC
         private val currentTime = Clock.System.now()
         private val currentMonth =
-            currentTime.toLocalDateTime(timezone).month.toString().substring(0, 3)
+            currentTime.toLocalDateTime(timezone).month.toString().substring(0, 3).toTitleCase()
         private val currentDay =
             currentTime.toLocalDateTime(timezone).day
         private val currentYear =
@@ -33,7 +34,7 @@ class DateFormattersTest {
             arguments(currentTime.minus(5, DateTimeUnit.SECOND).toLocalDateTime(timezone), "now"),
             arguments(
                 currentTime.minus(1, DateTimeUnit.MINUTE).toLocalDateTime(timezone),
-                "1 minutes ago"
+                "1 minute ago"
             ),
             arguments(
                 currentTime.minus(5, DateTimeUnit.MINUTE).toLocalDateTime(timezone),
@@ -41,7 +42,7 @@ class DateFormattersTest {
             ),
             arguments(
                 currentTime.minus(1, DateTimeUnit.HOUR).toLocalDateTime(timezone),
-                "1 hours ago"
+                "1 hour ago"
             ),
             arguments(
                 currentTime.minus(5, DateTimeUnit.HOUR).toLocalDateTime(timezone),
@@ -49,7 +50,7 @@ class DateFormattersTest {
             ),
             arguments(
                 currentTime.minus(1, DateTimeUnit.DAY, timezone).toLocalDateTime(timezone),
-                "1 days ago"
+                "1 day ago"
             ),
             arguments(
                 currentTime.minus(5, DateTimeUnit.DAY, timezone).toLocalDateTime(timezone),
@@ -57,7 +58,7 @@ class DateFormattersTest {
             ),
             arguments(
                 currentTime.minus(8, DateTimeUnit.DAY, timezone).toLocalDateTime(timezone),
-                "1 weeks ago"
+                "1 week ago"
             ),
             arguments(
                 currentTime.minus(3, DateTimeUnit.WEEK, timezone).toLocalDateTime(timezone),
@@ -65,7 +66,7 @@ class DateFormattersTest {
             ),
             arguments(
                 currentTime.minus(5, DateTimeUnit.WEEK, timezone).toLocalDateTime(timezone),
-                "1 months ago"
+                "1 month ago"
             ),
             arguments(
                 currentTime.minus(6, DateTimeUnit.MONTH, timezone).toLocalDateTime(timezone),

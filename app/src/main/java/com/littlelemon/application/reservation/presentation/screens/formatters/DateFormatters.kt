@@ -1,5 +1,7 @@
 package com.littlelemon.application.reservation.presentation.screens.formatters
 
+import com.littlelemon.application.core.presentation.utils.pluralize
+import com.littlelemon.application.core.presentation.utils.toTitleCase
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
@@ -30,19 +32,20 @@ fun LocalDateTime.toTimeDistance(timezone: TimeZone = TimeZone.currentSystemDefa
         if (hours < 1) {
             val minutes =
                 currentInstant.toLocalDateTime(timezone).minute - instant.toLocalDateTime(timezone).minute
-            if (minutes < 1)
-                return "now"
+            return if (minutes < 1)
+                "now"
             else
-                return "$minutes minutes ago"
-        } else {
-            return "$hours hours ago"
-        }
-    } else if (days < 8) {
-        return "$days days ago"
-    } else if (days < 31) {
-        return "${days / 7} weeks ago"
+                "${pluralize(minutes, "minute", "minutes")} ago"
+        } else
+            return "${pluralize(hours, "hour", "hours")} ago"
+    } else if (days < 8)
+        return "${pluralize(days, "day", "days")} ago"
+    else if (days < 31) {
+        val weeks = days / 7
+        return "${pluralize(weeks, "week", "weeks")} ago"
     } else if (days < 365) {
-        return "${days / 30} months ago"
+        val months = days / 30
+        return "${pluralize(months, "month", "months")} ago"
     }
-    return "on ${month.toString().substring(0, 3)}/${day}/$year"
+    return "on ${month.toString().substring(0, 3).toTitleCase()}/${day}/$year"
 }
