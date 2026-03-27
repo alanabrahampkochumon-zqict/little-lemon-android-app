@@ -1,7 +1,9 @@
 package com.littlelemon.application.home.presentation.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -31,10 +33,10 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
 
     Column(
         modifier = modifier
-            .fillMaxSize()
-            .padding(MaterialTheme.dimens.sizeXL),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
         OptionSelect(
             homeOptions,
             selectedOption = currentSelection,
