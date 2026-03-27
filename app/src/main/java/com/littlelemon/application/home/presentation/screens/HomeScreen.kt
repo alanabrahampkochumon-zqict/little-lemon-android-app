@@ -96,7 +96,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             entryProvider = { entry ->
                 when (entry) {
                     is HomeRoute -> NavEntry(entry) {
-//                        HomeScreenContent(koinViewModel<HomeViewModel>())
+                        HomeScreenContent(koinViewModel<HomeViewModel>())
                     }
 
                     is MenuRoute -> NavEntry(entry) {

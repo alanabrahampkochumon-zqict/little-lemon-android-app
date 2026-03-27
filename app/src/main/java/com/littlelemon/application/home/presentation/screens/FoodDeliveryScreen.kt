@@ -31,7 +31,7 @@ import kotlin.time.Duration.Companion.days
 @Composable
 fun FoodDeliveryScreen(modifier: Modifier = Modifier) {
     // TODO: Replace with state
-    val currentInstant = LocalDateTime(2026, Month.MAY, 12, 14, 30).toInstant(TimeZone.UTC)
+    val currentInstant = LocalDateTime(2025, Month.MAY, 12, 14, 30).toInstant(TimeZone.UTC)
     val futureInstant = currentInstant + 5.days
     val pastInstant = currentInstant - 5.days
     val reservation = Reservation(
