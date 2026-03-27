@@ -1,5 +1,6 @@
 package com.littlelemon.application.home.presentation.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,10 +58,10 @@ fun FoodDeliveryScreen(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .padding(vertical = MaterialTheme.dimens.sizeXL)
     ) {
-        Column(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)) {
+        Column(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL).background(Color.Red)) {
             Header(
                 label = stringResource(R.string.heading_upcoming_reservation),
-                typeStyle = HeaderTypeStyle.Secondary
+                typeStyle = HeaderTypeStyle.Secondary, modifier = Modifier.background(Color.Yellow)
             )
 //            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
             ReservationCard(reservation = reservation, {/* TODO */ })
