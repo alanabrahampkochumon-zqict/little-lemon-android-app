@@ -1,18 +1,15 @@
 package com.littlelemon.application.home.presentation.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
@@ -56,25 +52,36 @@ fun FoodDeliveryScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(vertical = MaterialTheme.dimens.sizeXL)
     ) {
-        Column(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL).background(Color.Red)) {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = MaterialTheme.dimens.sizeXL)
+        ) {
             Header(
                 label = stringResource(R.string.heading_upcoming_reservation),
-                typeStyle = HeaderTypeStyle.Secondary, modifier = Modifier.background(Color.Yellow)
+                typeStyle = HeaderTypeStyle.Secondary,
             )
-//            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
             ReservationCard(reservation = reservation, {/* TODO */ })
         }
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.size3XL))
+
+
+        // Order for delivery
         Header(
             label = stringResource(R.string.heading_order_for_delivery),
             typeStyle = HeaderTypeStyle.Secondary,
             modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)
         )
-        LazyRow(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(
-            MaterialTheme.dimens.sizeMD), modifier = Modifier,
-            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.sizeXL)) {
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
+        LazyRow(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(
+                MaterialTheme.dimens.sizeMD
+            ),
+            modifier = Modifier,
+            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.sizeXL)
+        ) {
             items(categories) { category ->
                 CategoryCard(
                     category,

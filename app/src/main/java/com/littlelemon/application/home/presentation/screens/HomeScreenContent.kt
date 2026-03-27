@@ -44,6 +44,7 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
             selectedOption = currentSelection,
             onSelectionChange = { currentSelection = it },
         )
+        Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
         FoodDeliveryScreen()
     }
 }
