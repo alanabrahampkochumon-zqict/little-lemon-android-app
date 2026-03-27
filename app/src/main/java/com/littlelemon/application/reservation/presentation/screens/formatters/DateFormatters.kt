@@ -42,7 +42,7 @@ fun LocalDateTime.toTimeDistance(timezone: TimeZone = TimeZone.currentSystemDefa
     } else if (days < 31) {
         return "${days / 7} weeks ago"
     } else if (days < 365) {
-        return "${days / 12} month(s) ago"
+        return "${days / 30} months ago"
     }
-    return "on ${month}-${day}-$year"
+    return "on ${month.toString().substring(0, 3)}/${day}/$year"
 }
