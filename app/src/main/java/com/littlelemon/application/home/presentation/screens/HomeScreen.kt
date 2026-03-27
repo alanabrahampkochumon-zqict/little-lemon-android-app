@@ -30,12 +30,14 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.home.presentation.CartRoute
 import com.littlelemon.application.home.presentation.HomeRoute
+import com.littlelemon.application.home.presentation.HomeViewModel
 import com.littlelemon.application.home.presentation.MenuRoute
 import com.littlelemon.application.home.presentation.OrdersRoute
 import com.littlelemon.application.home.presentation.ProfileRoute
 import com.littlelemon.application.home.presentation.components.BottomNavigation
 import com.littlelemon.application.home.presentation.components.NavigationOption
 import com.littlelemon.application.home.presentation.components.TopAppBar
+import org.koin.androidx.compose.koinViewModel
 
 
 // TODO: Add cardinality to animation
@@ -94,14 +96,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             entryProvider = { entry ->
                 when (entry) {
                     is HomeRoute -> NavEntry(entry) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .background(Color.LightGray)
-                                .fillMaxSize()
-                        ) {
-                            Text("Home")
-                        }
+//                        HomeScreenContent(koinViewModel<HomeViewModel>())
                     }
 
                     is MenuRoute -> NavEntry(entry) {

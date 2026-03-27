@@ -26,7 +26,7 @@ fun HomeScreenContent(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
 @Composable
 fun HomeScreenRoot(modifier: Modifier = Modifier) {
     val homeOptions = listOf("Food Delivery", "Reserve a Table")
-
+    // TODO: Add navigation switch using navgraphs
     var currentSelection by remember { mutableStateOf(homeOptions[0]) }
 
     Column(
@@ -40,6 +40,7 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
             selectedOption = currentSelection,
             onSelectionChange = { currentSelection = it },
         )
+        FoodDeliveryScreen()
     }
 }
 
