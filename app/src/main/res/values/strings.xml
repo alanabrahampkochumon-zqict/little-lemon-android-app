@@ -139,6 +139,7 @@
     <string name="location_string">Location: (%.4f, %.4f)</string>
     <string name="not_found_cap">NOT FOUND</string>
     <string name="view_all">View All</string>
+    <string name="reservation_card_title">Table for %d</string>
 
 
 </resources>
