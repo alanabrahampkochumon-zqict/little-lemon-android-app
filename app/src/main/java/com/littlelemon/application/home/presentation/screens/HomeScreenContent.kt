@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -74,11 +75,13 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
     )
     val reservations = listOf(reservation1, reservation2, reservation3)
     // TODO: Remove content padding and apply padding to children.
+
+    val contentPadding = MaterialTheme.dimens.sizeXL
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(MaterialTheme.dimens.sizeXL),
     ) {
         item {
 
@@ -97,6 +100,7 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
                     reservations.size
                 ),
                 typeStyle = HeaderTypeStyle.Secondary,
+                modifier = Modifier.padding(horizontal = contentPadding)
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
             LazyRow(
@@ -104,6 +108,7 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
                     MaterialTheme.dimens.sizeLG
                 ),
                 modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = contentPadding)
             ) {
                 items(reservations) { reservation ->
                     ReservationCard(
@@ -116,7 +121,7 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size3XL))
         }
-        foodDeliveryContent()
+        foodDeliveryContent(contentPadding)
     }
 }
 

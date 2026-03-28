@@ -3,10 +3,12 @@ package com.littlelemon.application.home.presentation.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
@@ -21,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
@@ -59,7 +63,7 @@ fun generateDish(): Dish {
     )
 }
 
-fun LazyListScope.foodDeliveryContent() {
+fun LazyListScope.foodDeliveryContent(contentPadding: Dp) {
     // TODO: Replace with state
     val categories = listOf("Lunch", "Mains", "Dessert", "La Casa", "Specials", "Chef Specials")
 
@@ -72,6 +76,7 @@ fun LazyListScope.foodDeliveryContent() {
         Header(
             label = stringResource(R.string.heading_order_for_delivery),
             typeStyle = HeaderTypeStyle.Secondary,
+            modifier = Modifier.padding(horizontal = contentPadding)
         )
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
         LazyRow(
@@ -79,7 +84,7 @@ fun LazyListScope.foodDeliveryContent() {
             horizontalArrangement = Arrangement.spacedBy(
                 MaterialTheme.dimens.sizeMD
             ),
-            modifier = Modifier,
+            contentPadding = PaddingValues(horizontal = contentPadding)
         ) {
             items(categories) { category ->
                 CategoryCard(
@@ -95,6 +100,7 @@ fun LazyListScope.foodDeliveryContent() {
             typeStyle = HeaderTypeStyle.Primary,
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = contentPadding)
         ) {
             Text(
                 text = stringResource(R.string.view_all),
@@ -117,7 +123,13 @@ fun LazyListScope.foodDeliveryContent() {
 
     // TODO: add id to dish and key
     items(dishes) { dish ->
-        MenuCard(dish, Random.nextInt(5), {}, {})
+        MenuCard(
+            dish,
+            Random.nextInt(5),
+            {},
+            {},
+            modifier = Modifier.padding(horizontal = contentPadding)
+        )
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
     }
 
@@ -129,7 +141,7 @@ fun LazyListScope.foodDeliveryContent() {
 private fun FoodDeliveryScreenPreview() {
     LittleLemonTheme {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            foodDeliveryContent()
+            foodDeliveryContent(16.dp)
         }
     }
 }
