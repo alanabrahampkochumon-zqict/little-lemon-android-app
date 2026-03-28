@@ -142,6 +142,8 @@
     <string name="reservation_card_title">Table for %d</string>
     <string name="reserved_time_ago">Reserved %s</string>
     <string name="act_get_route">Get Route</string>
+    <string name="heading_explore_our_cuisines">Explore our cuisines</string>
+    <string name="act_filter">Filter</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>
