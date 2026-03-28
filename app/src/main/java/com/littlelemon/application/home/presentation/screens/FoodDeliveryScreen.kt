@@ -60,7 +60,7 @@ fun generateDish(): Dish {
     )
 }
 
-fun LazyListScope.FoodDeliveryScreen(modifier: Modifier = Modifier) {
+fun LazyListScope.foodDeliveryContent() {
     // TODO: Replace with state
     val categories = listOf("Lunch", "Mains", "Dessert", "La Casa", "Specials", "Chef Specials")
 
@@ -73,7 +73,6 @@ fun LazyListScope.FoodDeliveryScreen(modifier: Modifier = Modifier) {
         Header(
             label = stringResource(R.string.heading_order_for_delivery),
             typeStyle = HeaderTypeStyle.Secondary,
-            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)
         )
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
         LazyRow(
@@ -82,7 +81,6 @@ fun LazyListScope.FoodDeliveryScreen(modifier: Modifier = Modifier) {
                 MaterialTheme.dimens.sizeMD
             ),
             modifier = Modifier,
-            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.sizeXL)
         ) {
             items(categories) { category ->
                 CategoryCard(
@@ -97,7 +95,6 @@ fun LazyListScope.FoodDeliveryScreen(modifier: Modifier = Modifier) {
             label = stringResource(R.string.heading_popular_orders),
             typeStyle = HeaderTypeStyle.Primary,
             modifier = Modifier
-                .padding(horizontal = MaterialTheme.dimens.sizeXL)
                 .fillMaxWidth()
         ) {
             Text(
@@ -133,7 +130,7 @@ fun LazyListScope.FoodDeliveryScreen(modifier: Modifier = Modifier) {
 private fun FoodDeliveryScreenPreview() {
     LittleLemonTheme {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            FoodDeliveryScreen()
+            foodDeliveryContent()
         }
     }
 }

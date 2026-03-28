@@ -78,7 +78,8 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(MaterialTheme.dimens.sizeXL)
     ) {
         item {
 
@@ -97,7 +98,6 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
                     reservations.size
                 ),
                 typeStyle = HeaderTypeStyle.Secondary,
-                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
             LazyRow(
@@ -105,7 +105,6 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
                     MaterialTheme.dimens.sizeLG
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.sizeXL)
             ) {
                 items(reservations) { reservation ->
                     ReservationCard(
@@ -118,7 +117,7 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size3XL))
         }
-        FoodDeliveryScreen()
+        foodDeliveryContent()
     }
 }
 
