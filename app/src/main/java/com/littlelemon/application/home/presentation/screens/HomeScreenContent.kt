@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -74,12 +73,12 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
         reservedFor = 5,
     )
     val reservations = listOf(reservation1, reservation2, reservation3)
-
+    // TODO: Remove content padding and apply padding to children.
     LazyColumn(
         modifier = modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(MaterialTheme.dimens.sizeXL)
+        contentPadding = PaddingValues(MaterialTheme.dimens.sizeXL),
     ) {
         item {
 

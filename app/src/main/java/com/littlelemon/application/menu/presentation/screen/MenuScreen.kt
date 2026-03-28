@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -37,15 +38,17 @@ fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
 
 @Composable
 fun MenuScreenRoot(modifier: Modifier = Modifier) {
+    val contentPadding = MaterialTheme.dimens.sizeXL
     val categories =
         listOf("All", "Lunch", "Mains", "Dessert", "La Casa", "Specials", "Chef Specials")
     val currentCategory = categories[0]
-    LazyColumn(modifier = modifier, contentPadding = PaddingValues(MaterialTheme.dimens.sizeXL)) {
+    LazyColumn(modifier = modifier,) {
         item {
             Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
             Header(
                 label = stringResource(R.string.heading_explore_our_cuisines),
                 typeStyle = HeaderTypeStyle.Primary,
+                modifier = Modifier.padding(horizontal = contentPadding)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -73,7 +76,7 @@ fun MenuScreenRoot(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(
                     MaterialTheme.dimens.sizeMD
-                ),
+                ),contentPadding = PaddingValues(horizontal = contentPadding),
                 modifier = Modifier,
             ) {
                 items(categories) { category ->
