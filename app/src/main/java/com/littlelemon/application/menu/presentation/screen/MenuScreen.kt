@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
@@ -66,6 +65,7 @@ fun generateDish(): Dish {
     )
 }
 
+// TODO: Add test
 @Composable
 fun MenuScreenRoot(modifier: Modifier = Modifier) {
     val contentPadding = MaterialTheme.dimens.sizeXL
@@ -122,7 +122,13 @@ fun MenuScreenRoot(modifier: Modifier = Modifier) {
         }
         item { Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL)) }
         items(dishes) { dish ->
-            MenuCard(dish, Random.nextInt(5), {}, {}, modifier = Modifier.padding(horizontal = contentPadding))
+            MenuCard(
+                dish,
+                Random.nextInt(5),
+                {},
+                {},
+                modifier = Modifier.padding(horizontal = contentPadding)
+            )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
         }
     }
