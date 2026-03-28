@@ -1,6 +1,7 @@
 package com.littlelemon.application.menu.presentation.screen.components
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -133,10 +134,7 @@ fun MenuCard(
                     .data(dish.imageURL)
                     .crossfade(true).build(),
                 placeholder = painterResource(R.drawable.illustration_image_loading),
-                onError = {
-                    // TODO:
-                    Log.d("Coil", "Error $it")
-                },
+                error = painterResource(R.drawable.illustration_image_loading),
                 contentDescription = dish.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.clip(imageShape),
