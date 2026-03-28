@@ -1,7 +1,5 @@
 package com.littlelemon.application.menu.presentation.screen.components
 
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -221,14 +219,14 @@ fun MenuCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeSM))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
 
             dish.description?.let {
                 Text(
                     it,
                     style = MaterialTheme.typeStyle.bodyMedium,
                     color = if (outOfStock) MaterialTheme.colors.contentDisabled else MaterialTheme.colors.contentSecondary,
-                    maxLines = 3,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }
@@ -306,7 +304,7 @@ fun MenuCard(
 }
 
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, heightDp = 1000)
 @Composable
 private fun MenuCardPreview() {
     LittleLemonTheme {
