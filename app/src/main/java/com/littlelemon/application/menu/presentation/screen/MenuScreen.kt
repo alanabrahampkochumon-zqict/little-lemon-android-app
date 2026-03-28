@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
@@ -28,21 +29,54 @@ import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.home.presentation.components.CategoryCard
+import com.littlelemon.application.home.presentation.screens.generateDish
+import com.littlelemon.application.menu.domain.models.Dish
+import com.littlelemon.application.menu.domain.models.NutritionInfo
 import com.littlelemon.application.menu.presentation.MenuViewModel
+import com.littlelemon.application.menu.presentation.screen.components.MenuCard
+import kotlinx.datetime.LocalDateTime
+import kotlin.math.roundToInt
+import kotlin.random.Random
 
 @Composable
 fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
     MenuScreenRoot(modifier)
 }
 
+// TODO: Remove
+// TODO: Add tests
+fun generateDish(): Dish {
+    val nutritionInfo = NutritionInfo(
+        calories = (Math.random() * 1000).roundToInt(),
+        protein = (Math.random() * 1000).roundToInt(),
+        carbs = (Math.random() * 1000).roundToInt(),
+        fats = (Math.random() * 1000).roundToInt(),
+    )
+    return Dish(
+        title = "Greek Salad",
+        description = "The famous greek salad of crispy lettuce, peppers, olives and our Chicago style feta cheese, garnished with crunchy garlic and rosemary croutons",
+        price = Math.random() * 1000,
+        imageURL = "",
+        stock = (Math.random() * 1000).roundToInt(),
+        nutritionInfo = nutritionInfo,
+        discountedPrice = Math.random() * 1000,
+        popularityIndex = (0..100).random(),
+        dateAdded = LocalDateTime(2024, 5, 5, 10, 12, 0),
+        category = listOf()
+    )
+}
 
 @Composable
 fun MenuScreenRoot(modifier: Modifier = Modifier) {
     val contentPadding = MaterialTheme.dimens.sizeXL
-    val categories =
-        listOf("All", "Lunch", "Mains", "Dessert", "La Casa", "Specials", "Chef Specials")
+
+    // TODO: Replace with state
+    val categories = listOf("Lunch", "Mains", "Dessert", "La Casa", "Specials", "Chef Specials")
+    val dishes = List(10) { generateDish() }
     val currentCategory = categories[0]
-    LazyColumn(modifier = modifier,) {
+    // TODO: EndReplace
+
+    LazyColumn(modifier = modifier) {
         item {
             Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
             Header(
@@ -76,7 +110,8 @@ fun MenuScreenRoot(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(
                     MaterialTheme.dimens.sizeMD
-                ),contentPadding = PaddingValues(horizontal = contentPadding),
+                ),
+                contentPadding = PaddingValues(horizontal = contentPadding),
                 modifier = Modifier,
             ) {
                 items(categories) { category ->
@@ -84,6 +119,11 @@ fun MenuScreenRoot(modifier: Modifier = Modifier) {
                         category, selected = category == currentCategory, {/* TODO */ })
                 }
             }
+        }
+        item { Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL)) }
+        items(dishes) { dish ->
+            MenuCard(dish, Random.nextInt(5), {}, {}, modifier = Modifier.padding(horizontal = contentPadding))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
         }
     }
 }

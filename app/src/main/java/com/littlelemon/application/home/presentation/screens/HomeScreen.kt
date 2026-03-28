@@ -37,6 +37,8 @@ import com.littlelemon.application.home.presentation.ProfileRoute
 import com.littlelemon.application.home.presentation.components.BottomNavigation
 import com.littlelemon.application.home.presentation.components.NavigationOption
 import com.littlelemon.application.home.presentation.components.TopAppBar
+import com.littlelemon.application.menu.presentation.MenuViewModel
+import com.littlelemon.application.menu.presentation.screen.MenuScreen
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -104,7 +106,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             contentAlignment = Alignment.Center,
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            Text("Menu")
+                            MenuScreen(koinViewModel<MenuViewModel>())
                         }
                     }
 
