@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,6 +77,7 @@ fun ReservationCard(
                     MaterialTheme.shadows.dropSM.firstShadow.toComposeShadow(density)
                 ) else Modifier
             )
+            .widthIn(max = 440.dp, min = 300.dp)
             .background(MaterialTheme.colors.primary, cardShape)
             .border(1.dp, borderColor, cardShape)
             .clip(cardShape)
@@ -108,7 +110,6 @@ fun ReservationCard(
 
         Column(
             modifier = Modifier
-                .weight(1f)
                 .padding(
                     top = MaterialTheme.dimens.sizeMD,
                     start = MaterialTheme.dimens.sizeLG,
@@ -134,8 +135,12 @@ fun ReservationCard(
                 style = MaterialTheme.typeStyle.bodyXSmall,
                 color = MaterialTheme.colors.contentDisabled
             )
-            if(upcomingReservation)
-                Button(stringResource(R.string.act_get_route), variant = ButtonVariant.GHOST_HIGHLIGHT, onClick = onGetRoute)
+            if (upcomingReservation)
+                Button(
+                    stringResource(R.string.act_get_route),
+                    variant = ButtonVariant.GHOST_HIGHLIGHT,
+                    onClick = onGetRoute
+                )
 
         }
     }
