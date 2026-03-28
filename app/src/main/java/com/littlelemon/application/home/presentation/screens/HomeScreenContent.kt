@@ -88,7 +88,7 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
         )
         Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
 
-        // TODO: Pluralize Header
+        // Upcoming reservations | Conditionally render
         Header(
             label = pluralStringResource(R.plurals.heading_upcoming_reservation, reservations.size),
             typeStyle = HeaderTypeStyle.Secondary,
