@@ -75,9 +75,14 @@ fun CategoryCard(
     ) {
         if (selected) {
             Image(
-                painterResource(R.drawable.ic_checkcircle_filled), null, modifier = Modifier.size(
-                    MaterialTheme.dimens.sizeXL
-                ).testTag(HomeTestTags.CATEGORY_CARD_CHECK_MARK), colorFilter = ColorFilter.tint(contentColor)
+                painterResource(R.drawable.ic_checkcircle_filled),
+                null,
+                modifier = Modifier
+                    .size(
+                        MaterialTheme.dimens.sizeXL
+                    )
+                    .testTag(HomeTestTags.CATEGORY_CARD_CHECK_MARK),
+                colorFilter = ColorFilter.tint(contentColor)
             )
             Spacer(modifier = Modifier.width(MaterialTheme.dimens.sizeMD))
         }
