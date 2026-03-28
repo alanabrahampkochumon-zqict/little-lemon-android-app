@@ -3,7 +3,6 @@ package com.littlelemon.application.home.presentation.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -60,18 +60,14 @@ fun generateDish(): Dish {
     )
 }
 
-@Composable
-fun FoodDeliveryScreen(modifier: Modifier = Modifier) {
+fun LazyListScope.FoodDeliveryScreen(modifier: Modifier = Modifier) {
     // TODO: Replace with state
     val categories = listOf("Lunch", "Mains", "Dessert", "La Casa", "Specials", "Chef Specials")
 
     val dishes = List(10) { generateDish() }
     // TODO: EndReplace
 
-    Column (
-        modifier = modifier
-            .fillMaxSize()
-    ) {
+    item {
 
         // Order for delivery
         Header(
@@ -90,14 +86,13 @@ fun FoodDeliveryScreen(modifier: Modifier = Modifier) {
         ) {
             items(categories) { category ->
                 CategoryCard(
-                    category,
-                    selected = false,
-                    {/* TODO */ })
+                    category, selected = false, {/* TODO */ })
             }
         }
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
 
-
+    }
+    item {
         Header(
             label = stringResource(R.string.heading_popular_orders),
             typeStyle = HeaderTypeStyle.Primary,
@@ -110,7 +105,9 @@ fun FoodDeliveryScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .minimumInteractiveComponentSize()
                     .clickable(
-                        role = Role.Button, indication = null, onClick = { /* TODO */ },
+                        role = Role.Button,
+                        indication = null,
+                        onClick = { /* TODO */ },
                         interactionSource = remember { MutableInteractionSource() },
                         enabled = true,
                         onClickLabel = stringResource(R.string.view_all)
@@ -120,26 +117,23 @@ fun FoodDeliveryScreen(modifier: Modifier = Modifier) {
             )
         }
         Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXS))
+    }
 
-        LazyColumn(
-            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL),
-            verticalArrangement = Arrangement.spacedBy(
-                MaterialTheme.dimens.size2XL
-            )
-        ) {
-            items(dishes) { dish ->
-                MenuCard(dish, Random.nextInt(5), {}, {})
-            }
-
-        }
+    // TODO: add id to dish and key
+    items(dishes) { dish ->
+        MenuCard(dish, Random.nextInt(5), {}, {})
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
     }
 
 }
+
 
 @Preview(showBackground = true, backgroundColor = 0xF5F5F6)
 @Composable
 private fun FoodDeliveryScreenPreview() {
     LittleLemonTheme {
-        FoodDeliveryScreen()
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            FoodDeliveryScreen()
+        }
     }
 }

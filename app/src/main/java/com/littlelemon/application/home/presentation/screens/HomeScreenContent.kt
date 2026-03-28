@@ -1,7 +1,6 @@
 package com.littlelemon.application.home.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -75,43 +75,49 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
     )
     val reservations = listOf(reservation1, reservation2, reservation3)
 
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
-        OptionSelect(
-            homeOptions,
-            selectedOption = currentSelection,
-            onSelectionChange = { currentSelection = it },
-        )
-        Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+        item {
 
-        // Upcoming reservations | Conditionally render
-        Header(
-            label = pluralStringResource(R.plurals.heading_upcoming_reservation, reservations.size),
-            typeStyle = HeaderTypeStyle.Secondary,
-            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)
-        )
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(
-                MaterialTheme.dimens.sizeLG
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.sizeXL)
-        ) {
-            items(reservations) { reservation ->
-                ReservationCard(
-                    reservation = reservation,
-                    {/* TODO */ },
-                    modifier = Modifier.width(cardWidth)
-                )
+            Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
+            OptionSelect(
+                homeOptions,
+                selectedOption = currentSelection,
+                onSelectionChange = { currentSelection = it },
+            )
+            Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+
+            // Upcoming reservations | Conditionally render
+            Header(
+                label = pluralStringResource(
+                    R.plurals.heading_upcoming_reservation,
+                    reservations.size
+                ),
+                typeStyle = HeaderTypeStyle.Secondary,
+                modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)
+            )
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(
+                    MaterialTheme.dimens.sizeLG
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = MaterialTheme.dimens.sizeXL)
+            ) {
+                items(reservations) { reservation ->
+                    ReservationCard(
+                        reservation = reservation,
+                        {/* TODO */ },
+                        modifier = Modifier.width(cardWidth)
+                    )
+                }
             }
-        }
 
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.size3XL))
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size3XL))
+        }
         FoodDeliveryScreen()
     }
 }
