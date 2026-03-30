@@ -52,7 +52,7 @@ fun DishImageCard(
             modifier = Modifier
                 .height(56.dp)
                 .width(88.dp)
-                .background(MaterialTheme.colors.secondary, innerCardShape)
+                .background(MaterialTheme.colors.tertiary, innerCardShape)
                 .clip(innerCardShape),
             contentAlignment = Alignment.Center
         ) {
