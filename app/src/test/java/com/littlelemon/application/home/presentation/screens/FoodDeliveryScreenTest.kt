@@ -23,15 +23,25 @@ class FoodDeliveryScreenTest {
 
     @Test
     fun categoryHeaderIsDisplayed() {
-        // When Food Delivery Screen is rendered
         testRule.setContent {
             LazyColumn {
                 foodDeliveryContent(12.dp)
             }
         }
 
-        // Then, order for delivery is displayed
         testRule.onNodeWithText(application.getString(R.string.heading_order_for_delivery))
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun popularOrderHeaderIsDisplayed() {
+        testRule.setContent {
+            LazyColumn {
+                foodDeliveryContent(12.dp)
+            }
+        }
+
+        testRule.onNodeWithText(application.getString(R.string.heading_popular_orders))
             .assertIsDisplayed()
     }
 }
