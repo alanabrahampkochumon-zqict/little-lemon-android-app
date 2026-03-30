@@ -12,4 +12,6 @@ object CoreTestTags {
 
     const val FILTER_ITEM_CHECK = "FILTER_ITEM_CHECK_TEST_TAG"
 
+    const val BADGE_ICON = "BADGE_ICON_TEST_TAG"
+
 }

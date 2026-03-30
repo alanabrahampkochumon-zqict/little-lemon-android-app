@@ -1,8 +1,10 @@
 package com.littlelemon.application.home.presentation.screens
 
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import org.junit.Rule
 import org.junit.Test
@@ -23,7 +25,9 @@ class FoodDeliveryScreenTest {
     fun categoryHeaderIsDisplayed() {
         // When Food Delivery Screen is rendered
         testRule.setContent {
-            FoodDeliveryScreen()
+            LazyColumn {
+                foodDeliveryContent(12.dp)
+            }
         }
 
         // Then, order for delivery is displayed

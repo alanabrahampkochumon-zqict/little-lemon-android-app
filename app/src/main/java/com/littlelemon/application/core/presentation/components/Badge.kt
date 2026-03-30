@@ -7,7 +7,6 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,15 +23,16 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
@@ -52,10 +52,16 @@ fun BasicBadge(
         animateColorAsState(if (selected) MaterialTheme.colors.action else MaterialTheme.colors.secondary)
     val borderColor =
         animateColorAsState(if (selected) MaterialTheme.colors.transparent else MaterialTheme.colors.action)
-    val shape =MaterialTheme.shapes.large
+    val shape = MaterialTheme.shapes.large
     val density = LocalDensity.current.density
     val strokeWidth = 1 * density
-    val stroke = remember { Stroke(strokeWidth, pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f * density, 4f * density), 0f), cap = StrokeCap.Round) }
+    val stroke = remember {
+        Stroke(
+            strokeWidth,
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f * density, 4f * density), 0f),
+            cap = StrokeCap.Round
+        )
+    }
 
     Row(
         modifier = modifier
@@ -63,12 +69,18 @@ fun BasicBadge(
             .background(
                 backgroundColor.value,
                 shape = shape
-            ).drawBehind {
-                drawRoundRect(borderColor.value, style = stroke, cornerRadius = CornerRadius(999f, 999f))
+            )
+            .drawBehind {
+                drawRoundRect(
+                    borderColor.value,
+                    style = stroke,
+                    cornerRadius = CornerRadius(999f, 999f)
+                )
             }
             .padding(
                 vertical = MaterialTheme.dimens.sizeSM, horizontal = MaterialTheme.dimens.sizeXL
-            ).animateContentSize(),
+            )
+            .animateContentSize(),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -76,7 +88,11 @@ fun BasicBadge(
             Image(
                 painterResource(R.drawable.ic_check),
                 null,
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier
+                    .size(16.dp)
+                    .testTag(
+                        CoreTestTags.BADGE_ICON
+                    ),
                 colorFilter = ColorFilter.tint(contentColor)
             )
         }
