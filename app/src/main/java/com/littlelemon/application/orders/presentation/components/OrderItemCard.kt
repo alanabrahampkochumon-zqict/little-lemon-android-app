@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -121,18 +123,22 @@ fun OrderCardItem(orderItem: OrderItem, modifier: Modifier = Modifier, expanded:
                 }
             }
             if (expanded) {
-                Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
                 DashedDivider()
-                Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
                 orderItem.specialInstructions?.let { specialInstruction ->
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(MaterialTheme.colors.secondary, shape = MaterialTheme.shapes.small)
+                            .background(
+                                MaterialTheme.colors.secondary,
+                                shape = MaterialTheme.shapes.small
+                            )
                             .padding(
                                 horizontal = MaterialTheme.dimens.sizeLG,
                                 vertical = MaterialTheme.dimens.sizeMD
-                            )
+                            ),
+                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM)
                     ) {
                         Text(
                             stringResource(R.string.special_instructions),
@@ -146,10 +152,119 @@ fun OrderCardItem(orderItem: OrderItem, modifier: Modifier = Modifier, expanded:
                             maxLines = 1,
                         )
                     }
-                    Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+                    Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
                     DashedDivider()
+                    Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            MaterialTheme.colors.secondary,
+                            shape = MaterialTheme.shapes.small
+                        )
+                        .padding(
+                            horizontal = MaterialTheme.dimens.sizeLG,
+                            vertical = MaterialTheme.dimens.sizeMD
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM)
+                ) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                        Text(
+                            stringResource(R.string.payment_mode),
+                            style = MaterialTheme.typeStyle.bodySmall,
+                            color = MaterialTheme.colors.contentTertiary
+                        )
+                        Text(
+                            orderItem.paymentMode,
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
+                            color = MaterialTheme.colors.contentTertiary,
+                            maxLines = 1,
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                        Text(
+                            stringResource(R.string.delivered_to),
+                            style = MaterialTheme.typeStyle.bodySmall,
+                            color = MaterialTheme.colors.contentTertiary
+                        )
+                        Text(
+                            orderItem.deliveryAddressLabel,
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
+                            color = MaterialTheme.colors.contentTertiary,
+                            maxLines = 1,
+                        )
+                    }
+                }
+                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            MaterialTheme.colors.secondary,
+                            shape = MaterialTheme.shapes.small
+                        )
+                        .padding(
+                            horizontal = MaterialTheme.dimens.sizeLG,
+                            vertical = MaterialTheme.dimens.sizeMD
+                        ),
+                ) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                        Text(
+                            stringResource(R.string.bill_amount),
+                            style = MaterialTheme.typeStyle.bodySmall,
+                            color = MaterialTheme.colors.contentTertiary
+                        )
+                        Text(
+                            stringResource(R.string.currency_symbol) +
+                            stringResource(R.string.price_format, orderItem.billAmount),
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
+                            color = MaterialTheme.colors.contentTertiary,
+                            maxLines = 1,
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeSM))
+                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                        Text(
+                            stringResource(R.string.delivered_to),
+                            style = MaterialTheme.typeStyle.bodySmall,
+                            color = MaterialTheme.colors.contentTertiary
+                        )
+                        Text(
+                            stringResource(R.string.currency_symbol) +
+                                    stringResource(R.string.price_format, orderItem.deliveryCharge),
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
+                            color = MaterialTheme.colors.contentTertiary,
+                            maxLines = 1,
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
+                    HorizontalDivider(color = MaterialTheme.colors.outlineSecondary)
+                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
+                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                        Text(
+                            stringResource(R.string.total_amount),
+                            style = MaterialTheme.typeStyle.bodySmall,
+                            color = MaterialTheme.colors.contentTertiary
+                        )
+                        Text(
+                            stringResource(R.string.currency_symbol) +
+                                    stringResource(R.string.price_format, orderItem.totalAmount),
+                            modifier = Modifier.weight(1f),
+                            style = MaterialTheme.typeStyle.labelLarge.copy(textAlign = TextAlign.End),
+                            color = MaterialTheme.colors.contentPrimary,
+                            maxLines = 1,
+                        )
+                    }
                 }
             }
+
+
         }
     }
 }

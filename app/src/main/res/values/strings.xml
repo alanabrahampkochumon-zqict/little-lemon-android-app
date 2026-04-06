@@ -147,6 +147,10 @@
     <string name="heading_your_orders">Your orders</string>
     <string name="act_most_recent">Most Recent</string>
     <string name="special_instructions">Special instructions</string>
+    <string name="payment_mode">Payment mode</string>
+    <string name="delivered_to">Delivered to</string>
+    <string name="bill_amount">Bill amount</string>
+    <string name="total_amount">Total amount</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>
