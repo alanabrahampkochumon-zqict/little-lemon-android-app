@@ -7,6 +7,7 @@ data class OrderItem(
     val orderStatus: OrderStatus,
     val menuItems: List<MenuItem>,
     val orderDate: LocalDateTime,
+    val refundDate: LocalDateTime? = null,
     val specialInstructions: String?,
     val paymentMode: String,
     val deliveryAddressLabel: String,

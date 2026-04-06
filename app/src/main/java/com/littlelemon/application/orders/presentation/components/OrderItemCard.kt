@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -62,7 +61,7 @@ fun OrderCardItem(
     val tagVariant = if (expanded) {
         when (orderItem.orderStatus) {
             OrderItem.OrderStatus.Delivered -> TagVariant.SuccessFilled
-            OrderItem.OrderStatus.Cancelled -> TagVariant.DisabledFilled
+            OrderItem.OrderStatus.Cancelled -> TagVariant.ErrorLight
         }
     } else {
         TagVariant.SuccessLight
@@ -95,7 +94,15 @@ fun OrderCardItem(
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(Modifier.width(MaterialTheme.dimens.sizeMD))
-                Tag(orderItem.orderStatus.name, variant = tagVariant)
+                if (expanded) {
+                    Tag(orderItem.orderStatus.name, variant = tagVariant)
+                } else {
+                    Tag(
+                        stringResource(R.string.currency_symbol) +
+                                stringResource(R.string.price_format, orderItem.billAmount),
+                        variant = tagVariant
+                    )
+                }
             }
             Spacer(Modifier.height(MaterialTheme.dimens.size2XS))
             Text(
@@ -193,19 +200,36 @@ fun OrderCardItem(
                             maxLines = 1,
                         )
                     }
-                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
-                        Text(
-                            stringResource(R.string.delivered_to),
-                            style = MaterialTheme.typeStyle.bodySmall,
-                            color = MaterialTheme.colors.contentTertiary
-                        )
-                        Text(
-                            orderItem.deliveryAddressLabel,
-                            modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
-                            color = MaterialTheme.colors.contentTertiary,
-                            maxLines = 1,
-                        )
+                    if (orderItem.orderStatus == OrderItem.OrderStatus.Delivered) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                            Text(
+                                stringResource(R.string.delivered_to),
+                                style = MaterialTheme.typeStyle.bodySmall,
+                                color = MaterialTheme.colors.contentTertiary
+                            )
+                            Text(
+                                orderItem.deliveryAddressLabel,
+                                modifier = Modifier.weight(1f),
+                                style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
+                                color = MaterialTheme.colors.contentTertiary,
+                                maxLines = 1,
+                            )
+                        }
+                    } else {
+                        Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                            Text(
+                                stringResource(R.string.refund_made_on),
+                                style = MaterialTheme.typeStyle.bodySmall,
+                                color = MaterialTheme.colors.contentTertiary
+                            )
+                            Text(
+                                orderItem.refundDate!!.format(dateFormat),
+                                modifier = Modifier.weight(1f),
+                                style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
+                                color = MaterialTheme.colors.contentTertiary,
+                                maxLines = 1,
+                            )
+                        }
                     }
                 }
                 Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
@@ -294,7 +318,7 @@ fun OrderCardItem(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xf5f5f6)
+@Preview(showBackground = true, backgroundColor = 0xf5f5f6, heightDp = 1200)
 @Composable
 private fun OrderCardItemPreview() {
     val orderItem = OrderItem(
@@ -362,7 +386,8 @@ private fun OrderCardItemPreview() {
         deliveryAddressLabel = "Work Address",
         billAmount = 55.45,
         deliveryCharge = 0.0,
-        totalAmount = 55.45
+        totalAmount = 55.45,
+        refundDate = null
     )
     LittleLemonTheme {
         Column(
@@ -371,6 +396,12 @@ private fun OrderCardItemPreview() {
         ) {
             OrderCardItem(orderItem, {}, expanded = true)
             OrderCardItem(orderItem, {}, expanded = false)
+            OrderCardItem(
+                orderItem.copy(
+                    orderStatus = OrderItem.OrderStatus.Cancelled,
+                    refundDate = LocalDateTime(2025, 12, 30, 13, 0)
+                ), {}, expanded = true
+            )
         }
     }
 }
