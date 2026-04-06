@@ -18,12 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.littlelemon.application.R
+import com.littlelemon.application.core.presentation.components.DashedDivider
 import com.littlelemon.application.core.presentation.components.Tag
 import com.littlelemon.application.core.presentation.components.TagVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
@@ -78,7 +80,8 @@ fun OrderCardItem(orderItem: OrderItem, modifier: Modifier = Modifier, expanded:
                     style = MaterialTheme.typeStyle.headlineSmall,
                     color = MaterialTheme.colors.contentPrimary,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
                 )
                 Spacer(Modifier.width(MaterialTheme.dimens.sizeMD))
                 Tag(orderItem.orderStatus.name, variant = tagVariant)
@@ -119,9 +122,33 @@ fun OrderCardItem(orderItem: OrderItem, modifier: Modifier = Modifier, expanded:
             }
             if (expanded) {
                 Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
-
-
+                DashedDivider()
                 Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+                orderItem.specialInstructions?.let { specialInstruction ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.secondary, shape = MaterialTheme.shapes.small)
+                            .padding(
+                                horizontal = MaterialTheme.dimens.sizeLG,
+                                vertical = MaterialTheme.dimens.sizeMD
+                            )
+                    ) {
+                        Text(
+                            stringResource(R.string.special_instructions),
+                            style = MaterialTheme.typeStyle.labelSmall,
+                            color = MaterialTheme.colors.contentTertiary
+                        )
+                        Text(
+                            specialInstruction,
+                            style = MaterialTheme.typeStyle.bodySmall,
+                            color = MaterialTheme.colors.contentTertiary,
+                            maxLines = 1,
+                        )
+                    }
+                    Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+                    DashedDivider()
+                }
             }
         }
     }

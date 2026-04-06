@@ -146,6 +146,7 @@
     <string name="act_filter">Filter</string>
     <string name="heading_your_orders">Your orders</string>
     <string name="act_most_recent">Most Recent</string>
+    <string name="special_instructions">Special instructions</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>
