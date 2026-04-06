@@ -1,7 +1,9 @@
 package com.littlelemon.application.orders.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -18,7 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -44,9 +48,13 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 
-// TODO: Order
 @Composable
-fun OrderCardItem(orderItem: OrderItem, modifier: Modifier = Modifier, expanded: Boolean = false) {
+fun OrderCardItem(
+    orderItem: OrderItem,
+    onReorder: () -> Unit,
+    modifier: Modifier = Modifier,
+    expanded: Boolean = false
+) {
 
     val shape = MaterialTheme.shapes.large
     val shadow = MaterialTheme.shadows.dropMD
@@ -74,6 +82,7 @@ fun OrderCardItem(orderItem: OrderItem, modifier: Modifier = Modifier, expanded:
             .dropShadow(shape, shadow.secondShadow?.toComposeShadow(density) ?: Shadow(0.dp))
             .background(MaterialTheme.colors.primary, shape = shape)
             .padding(top = MaterialTheme.dimens.sizeXL)
+            .clip(shape)
     ) {
         Column(Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -220,7 +229,7 @@ fun OrderCardItem(orderItem: OrderItem, modifier: Modifier = Modifier, expanded:
                         )
                         Text(
                             stringResource(R.string.currency_symbol) +
-                            stringResource(R.string.price_format, orderItem.billAmount),
+                                    stringResource(R.string.price_format, orderItem.billAmount),
                             modifier = Modifier.weight(1f),
                             style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
                             color = MaterialTheme.colors.contentTertiary,
@@ -263,8 +272,24 @@ fun OrderCardItem(orderItem: OrderItem, modifier: Modifier = Modifier, expanded:
                     }
                 }
             }
-
-
+        }
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeLG))
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colors.highlight)
+                .padding(
+                    horizontal = MaterialTheme.dimens.sizeXL,
+                    vertical = MaterialTheme.dimens.sizeLG
+                )
+                .fillMaxWidth()
+                .clickable(onClick = onReorder),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.reorder),
+                color = MaterialTheme.colors.contentOnColor,
+                style = MaterialTheme.typeStyle.labelMedium
+            )
         }
     }
 }
@@ -344,8 +369,8 @@ private fun OrderCardItemPreview() {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            OrderCardItem(orderItem, expanded = true)
-            OrderCardItem(orderItem, expanded = false)
+            OrderCardItem(orderItem, {}, expanded = true)
+            OrderCardItem(orderItem, {}, expanded = false)
         }
     }
 }
