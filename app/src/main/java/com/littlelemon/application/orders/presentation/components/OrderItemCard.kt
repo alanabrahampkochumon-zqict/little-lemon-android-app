@@ -3,17 +3,22 @@ package com.littlelemon.application.orders.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,6 +32,8 @@ import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.shadows
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.menu.domain.models.Dish
+import com.littlelemon.application.orders.domain.models.MenuItem
 import com.littlelemon.application.orders.domain.models.OrderItem
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format
@@ -77,7 +84,45 @@ fun OrderCardItem(orderItem: OrderItem, modifier: Modifier = Modifier, expanded:
                 Tag(orderItem.orderStatus.name, variant = tagVariant)
             }
             Spacer(Modifier.height(MaterialTheme.dimens.size2XS))
-            Text(orderItem.orderDate.format(dateFormat), style = MaterialTheme.typeStyle.bodyXSmall, color = MaterialTheme.colors.contentPlaceholder)
+            Text(
+                orderItem.orderDate.format(dateFormat),
+                style = MaterialTheme.typeStyle.bodyXSmall,
+                color = MaterialTheme.colors.contentPlaceholder
+            )
+        }
+        Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+        Column(
+            Modifier.padding(
+                start = MaterialTheme.dimens.sizeXL,
+                end = MaterialTheme.dimens.sizeXL,
+                bottom = MaterialTheme.dimens.sizeSM
+            )
+        ) {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colors.secondary, shape = MaterialTheme.shapes.small),
+                contentPadding = PaddingValues(
+                    MaterialTheme.dimens.sizeMD
+                ),
+                horizontalArrangement = Arrangement.spacedBy(
+                    MaterialTheme.dimens.sizeMD
+                )
+            ) {
+                items(orderItem.menuItems) { menuItem ->
+                    DishImageCard(
+                        imageURL = menuItem.dish.imageURL,
+                        dishName = menuItem.dish.title,
+                        quantity = menuItem.quantity,
+                    )
+                }
+            }
+            if (expanded) {
+                Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+
+
+                Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+            }
         }
     }
 }
@@ -88,7 +133,62 @@ private fun OrderCardItemPreview() {
     val orderItem = OrderItem(
         orderName = "Greek Salad & Bruschetta",
         orderStatus = OrderItem.OrderStatus.Delivered,
-        menuItems = listOf(),
+        menuItems = listOf(
+            MenuItem(
+                Dish(
+                    title = "Dish 1",
+                    description = "Long Description",
+                    price = 2.2,
+                    imageURL = "",
+                    stock = 12,
+                    nutritionInfo = null,
+                    discountedPrice = 2.2,
+                    category = listOf(),
+                    dateAdded = LocalDateTime(2025, 12, 20, 12, 30),
+                    popularityIndex = 123
+                ), quantity = 5
+            ),
+            MenuItem(
+                Dish(
+                    title = "Dish 2",
+                    description = "Long Description",
+                    price = 2.2,
+                    imageURL = "",
+                    stock = 12,
+                    nutritionInfo = null,
+                    discountedPrice = 2.2,
+                    category = listOf(),
+                    dateAdded = LocalDateTime(2025, 12, 20, 12, 30),
+                    popularityIndex = 123
+                ), quantity = 10
+            ), MenuItem(
+                Dish(
+                    title = "Dish 3",
+                    description = "Long Description",
+                    price = 2.2,
+                    imageURL = "",
+                    stock = 12,
+                    nutritionInfo = null,
+                    discountedPrice = 2.2,
+                    category = listOf(),
+                    dateAdded = LocalDateTime(2025, 12, 20, 12, 30),
+                    popularityIndex = 123
+                ), quantity = 1
+            ), MenuItem(
+                Dish(
+                    title = "Dish 4",
+                    description = "Long Description",
+                    price = 2.2,
+                    imageURL = "",
+                    stock = 12,
+                    nutritionInfo = null,
+                    discountedPrice = 2.2,
+                    category = listOf(),
+                    dateAdded = LocalDateTime(2025, 12, 20, 12, 30),
+                    popularityIndex = 123
+                ), quantity = 1
+            )
+        ),
         orderDate = LocalDateTime(2025, 12, 30, 12, 30),
         specialInstructions = "Avoid using coconut milk",
         paymentMode = "Card ending in 3521",
