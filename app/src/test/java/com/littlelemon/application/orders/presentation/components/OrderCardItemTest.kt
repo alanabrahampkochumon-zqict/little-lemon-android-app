@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import com.littlelemon.application.R
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
@@ -16,6 +17,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
+import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 @Config(qualifiers = "w1000dp-h1000dp-480dpi")
@@ -219,6 +221,38 @@ class OrderCardItemTest {
             application.getString(R.string.price_format, orderItem.deliveryCharge),
             substring = true
         ).assertIsNotDisplayed()
+    }
+
+    val cancelledOrder = orderItem.copy(
+        orderStatus = OrderItem.OrderStatus.Cancelled,
+        refundDate = LocalDateTime(2025, 12, 29, 13, 30)
+    )
+    val cancelledDate = "December 29, 2025"
+
+    @Test
+    fun cancelledOrder_displaysCancelledDate() {
+        testRule.setContent {
+            OrderCardItem(cancelledOrder, {}, expanded = true)
+        }
+        testRule.onNodeWithText(
+            cancelledDate,
+            substring = true
+        ).assertIsDisplayed()
+    }
+
+    @Test
+    fun onReorderClick_triggersCallback() {
+        // Given an order card item
+        var callbackTriggered = false
+        testRule.setContent {
+            OrderCardItem(orderItem, { callbackTriggered = true }, expanded = false)
+        }
+
+        // When reorder button is clicked
+        testRule.onNodeWithText(application.getString(R.string.reorder)).performClick()
+
+        // Then it triggers a callback
+        assertTrue { callbackTriggered }
     }
 
 }
