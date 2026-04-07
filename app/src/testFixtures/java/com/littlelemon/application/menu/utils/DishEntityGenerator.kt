@@ -7,7 +7,6 @@ import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import io.github.serpro69.kfaker.faker
 import java.util.UUID
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 import kotlin.time.Clock
 
 private const val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
@@ -46,8 +45,7 @@ object DishEntityGenerator {
             nutritionInfo = nutritionInfo,
             discountedPrice = Math.random() * 1000,
             popularityIndex = (0..100).random(),
-            dateAdded = (timeNowMillis - Math.random() * FOUR_YEARS_IN_MILLIS).roundToLong()
-                .toString()
+            dateAdded = "2024-04-07T16:54:00" // TODO: Replace with random
         )
     }
 
