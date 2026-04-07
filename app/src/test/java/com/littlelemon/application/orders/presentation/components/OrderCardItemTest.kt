@@ -1,8 +1,10 @@
 package com.littlelemon.application.orders.presentation.components
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import com.littlelemon.application.R
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.orders.domain.models.MenuItem
@@ -12,13 +14,17 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
+@Config(qualifiers = "w1000dp-h1000dp-480dpi")
 class OrderCardItemTest {
 
     @get:Rule
     val testRule = createComposeRule()
 
+    private val application = RuntimeEnvironment.getApplication()
     val orderItem = OrderItem(
         orderName = "Greek Salad & Bruschetta",
         orderStatus = OrderItem.OrderStatus.Delivered,
@@ -83,8 +89,8 @@ class OrderCardItemTest {
         paymentMode = "Card ending in 3521",
         deliveryAddressLabel = "Work Address",
         billAmount = 55.45,
-        deliveryCharge = 0.0,
-        totalAmount = 55.45,
+        deliveryCharge = 1.25,
+        totalAmount = 56.70,
         refundDate = null
     )
 
@@ -114,13 +120,105 @@ class OrderCardItemTest {
         testRule.onNodeWithText(orderItem.orderStatus.name)
             .assertIsDisplayed()
     }
-    
+
     @Test
     fun expandedCard_displaysSpecialInstructions() {
         testRule.setContent {
             OrderCardItem(orderItem, {}, expanded = true)
         }
         testRule.onNodeWithText(orderItem.specialInstructions!!).assertIsDisplayed()
+    }
+
+    @Test
+    fun expandedCard_displaysPaymentMode() {
+        testRule.setContent {
+            OrderCardItem(orderItem, {}, expanded = true)
+        }
+        testRule.onNodeWithText(orderItem.paymentMode).assertIsDisplayed()
+    }
+
+    @Test
+    fun expandedCard_displaysBillAmount() {
+        testRule.setContent {
+            OrderCardItem(orderItem, {}, expanded = true)
+        }
+        testRule.onNodeWithText(
+            application.getString(R.string.price_format, orderItem.billAmount),
+            substring = true
+        ).assertIsDisplayed()
+    }
+
+    @Test
+    fun expandedCard_displaysDeliveryCharge() {
+        testRule.setContent {
+            OrderCardItem(orderItem, {}, expanded = true)
+        }
+        testRule.onNodeWithText(
+            application.getString(R.string.price_format, orderItem.deliveryCharge),
+            substring = true
+        ).assertIsDisplayed()
+    }
+
+    @Test
+    fun expandedCard_displaysTotalAmount() {
+        testRule.setContent {
+            OrderCardItem(orderItem, {}, expanded = true)
+        }
+        testRule.onNodeWithText(
+            application.getString(
+                R.string.price_format,
+                orderItem.totalAmount
+            ),
+            substring = true
+        ).assertIsDisplayed()
+    }
+
+
+    @Test
+    fun nonExpandedCard_doesNotDisplayOrderStatus() {
+        testRule.setContent {
+            OrderCardItem(orderItem, {}, expanded = false)
+        }
+        testRule.onNodeWithText(orderItem.orderStatus.name)
+            .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun nonExpandedCard_doesNotDisplaySpecialInstructions() {
+        testRule.setContent {
+            OrderCardItem(orderItem, {}, expanded = false)
+        }
+        testRule.onNodeWithText(orderItem.specialInstructions!!).assertIsNotDisplayed()
+    }
+
+    @Test
+    fun nonExpandedCard_doesNotDisplayPaymentMode() {
+        testRule.setContent {
+            OrderCardItem(orderItem, {}, expanded = false)
+        }
+        testRule.onNodeWithText(orderItem.paymentMode).assertIsNotDisplayed()
+    }
+
+    @Test
+    fun nonExpandedCard_doesNotDisplayBillAmount() {
+        testRule.setContent {
+            OrderCardItem(orderItem, {}, expanded = false)
+        }
+        testRule.onNodeWithText(
+            application.getString(R.string.price_format, orderItem.billAmount),
+            substring = true
+        ).assertIsNotDisplayed()
+    }
+
+    @Test
+    fun nonExpandedCard_doesNotDisplayDeliveryCharge() {
+        testRule.setContent {
+            OrderCardItem(orderItem, {}, expanded = false)
+        }
+        testRule.onNodeWithText(
+            application.getString(R.string.price_format, orderItem.deliveryCharge),
+            substring = true
+        ).assertIsNotDisplayed()
     }
 
 }

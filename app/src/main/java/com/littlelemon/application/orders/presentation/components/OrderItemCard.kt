@@ -99,7 +99,7 @@ fun OrderCardItem(
                 } else {
                     Tag(
                         stringResource(R.string.currency_symbol) +
-                                stringResource(R.string.price_format, orderItem.billAmount),
+                                stringResource(R.string.price_format, orderItem.totalAmount),
                         variant = tagVariant
                     )
                 }
@@ -385,8 +385,8 @@ private fun OrderCardItemPreview() {
         paymentMode = "Card ending in 3521",
         deliveryAddressLabel = "Work Address",
         billAmount = 55.45,
-        deliveryCharge = 0.0,
-        totalAmount = 55.45,
+        deliveryCharge = 1.25,
+        totalAmount = 56.70,
         refundDate = null
     )
     LittleLemonTheme {
