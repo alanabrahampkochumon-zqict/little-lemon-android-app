@@ -4,6 +4,8 @@ CREATE OR REPLACE FUNCTION add_to_cart(
 )
 RETURNS VOID LANGUAGE plpgsql AS $$
 BEGIN
+  IF p_quantity <= 0 THEN RETURN; END IF;
+  
   INSERT INTO cart_item (user_id, dish_id, quantity)
   VALUES (auth.uid(), p_dish_id, p_quantity)
   ON CONFLICT (user_id, dish_id) 
@@ -18,6 +20,8 @@ CREATE OR REPLACE FUNCTION remove_from_cart(
 )
 RETURNS VOID LANGUAGE plpgsql AS $$
 BEGIN
+  IF p_quantity <= 0 THEN RETURN; END IF;
+
   UPDATE cart_item 
   SET quantity = quantity - p_quantity
   WHERE user_id = auth.uid() AND dish_id = p_dish_id;
