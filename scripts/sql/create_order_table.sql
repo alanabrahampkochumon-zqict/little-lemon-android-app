@@ -1,4 +1,11 @@
-CREATE TYPE ORDER_STATUS as ENUM ('ordered', 'delivered', 'cancelled');
+CREATE TYPE ORDER_STATUS as ENUM (
+    'pending',
+    'confirmed',
+    'preparing',
+    'out_for_delivery',
+    'delivered',
+    'cancelled'
+);
 
 CREATE TABLE
     IF NOT EXISTS user_orders (
@@ -7,7 +14,7 @@ CREATE TABLE
         label TEXT NOT NULL,
         order_date TIMESTAMP DEFAULT now (),
         updated_at TIMESTAMP DEFAULT now (),
-        status ORDER_STATUS DEFAULT 'ordered',
+        status ORDER_STATUS DEFAULT 'pending',
         payment_mode VARCHAR(50) NOT NULL,
         deliver_to UUID NOT NULL REFERENCES public.user_address (id) ON DELETE CASCADE,
         bill_amount BIGINT NOT NULL,
