@@ -1,12 +1,12 @@
 package com.littlelemon.application.menu.data.mappers
 
-import com.littlelemon.application.core.domain.utils.toLocalDateTime
 import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishEntity
 import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
+import kotlinx.datetime.LocalDateTime
 
 fun DishWithCategories.toDish(): Dish {
     return Dish(
@@ -18,7 +18,7 @@ fun DishWithCategories.toDish(): Dish {
         nutritionInfo = dish.nutritionInfo?.toDomainNutritionInfo(),
         discountedPrice = dish.discountedPrice,
         popularityIndex = dish.popularityIndex,
-        dateAdded = dish.dateAdded.toLocalDateTime(),
+        dateAdded = LocalDateTime.parse(dish.dateAdded),
         category = categories.toDomainCategories()
     )
 }

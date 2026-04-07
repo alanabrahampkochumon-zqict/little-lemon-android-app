@@ -20,11 +20,12 @@ class MenuRemoteDataSourceImpl(
         HttpRequestException::class
     )
     override suspend fun fetchDishes(): List<DishDTO> {
-        Log.d("data", "REMOTE CALL")
+        val d1 = client.from(SupabaseTables.DISH)
+            .select(Columns.raw("id, title, description, price, discounted_price, stock, popularity_index, date_added, ${SupabaseTables.DISH_CATEGORY}(id, category_name), ${SupabaseTables.NUTRITION_INFO}(calories, protein, carbs, fats), image")).data
+        Log.d("DATA", d1)
         val data = client.from(SupabaseTables.DISH)
-            .select(Columns.raw("id, title, description, ${SupabaseTables.DISH_CATEGORY}(category_name), ${SupabaseTables.NUTRITION_INFO}(calories, protein, carbs, fats)")) //
+            .select(Columns.raw("id, title, description, price, discounted_price, stock, popularity_index, date_added, ${SupabaseTables.DISH_CATEGORY}(id, category_name), ${SupabaseTables.NUTRITION_INFO}(calories, protein, carbs, fats), image"))
             .decodeList<DishDTO>()
-        Log.d("data", data.toString())
         return data;
     }
 }

@@ -1,5 +1,6 @@
 package com.littlelemon.application.menu.data
 
+import android.util.Log
 import com.littlelemon.application.core.domain.utils.Error
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.toNetworkError
@@ -44,6 +45,7 @@ class MenuRepositoryImpl(
                     localDataSource.insertDishes(dishes, categories, crossRefs)
                 }
             } catch (e: Exception) {
+                Log.d("ERROR", e.message!!)
                 val errorType = when (e) {
                     is PostgrestRestException -> e.code?.toIntOrNull()?.toNetworkError()
                         ?: Error.NetworkError.Unknown()
@@ -62,6 +64,7 @@ class MenuRepositoryImpl(
             }
             emitAll(dbFlow)
         } else {
+            Log.d("ERROR", dishesCount.toString())
             emit(
                 Resource.Failure(
                     data = null,

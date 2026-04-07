@@ -17,7 +17,8 @@ data class DishDTO(
     val discountedPrice: Long,
     @SerialName("popularity_index")
     val popularityIndex: Int,
-    val dateAdded: Long,
-    @SerialName("categories")
+    @SerialName("date_added")
+    val dateAdded: String,
+    @SerialName("category")
     val categories: List<CategoryDTO>
 )

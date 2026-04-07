@@ -1,11 +1,11 @@
 package com.littlelemon.application.menu.data.mappers
 
-import com.littlelemon.application.core.domain.utils.toLocalDateTime
 import com.littlelemon.application.menu.data.local.models.DishEntity
 import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
 import com.littlelemon.application.menu.utils.DishEntityGenerator
+import kotlinx.datetime.LocalDateTime
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -59,7 +59,7 @@ class DishEntityMapperTest {
             assertEquals(dish.stock, dishes[index].stock)
             assertEquals(dish.discountedPrice, dishes[index].discountedPrice)
             assertEquals(dish.popularityIndex, dishes[index].popularityIndex)
-            assertEquals(dish.dateAdded.toLocalDateTime(), dishes[index].dateAdded)
+            assertEquals(LocalDateTime.parse(dish.dateAdded), dishes[index].dateAdded)
 
             assertNutritionInfoEquals(dish.nutritionInfo, dishes[index].nutritionInfo)
 

@@ -47,6 +47,7 @@ object DishEntityGenerator {
             discountedPrice = Math.random() * 1000,
             popularityIndex = (0..100).random(),
             dateAdded = (timeNowMillis - Math.random() * FOUR_YEARS_IN_MILLIS).roundToLong()
+                .toString()
         )
     }
 
