@@ -18,15 +18,15 @@ class DishEntityMapperTest {
         // Given
         val numCategories = 5
         val numDishes = 2
-        val dishWithCategories =
+        val dishWithCategoriesAndDateTime =
             DishEntityGenerator.generateDishWithCategories(numDishes, numCategories)
 
         // Act
-        val dishes = dishWithCategories.map { it.toDish() }
+        val dishes = dishWithCategoriesAndDateTime.map { (dishEntity, _) -> dishEntity.toDish() }
 
         // Assert
         assertEquals(numDishes, dishes.size)
-        assertDishesEqual(dishWithCategories, dishes)
+        assertDishesEqual(dishWithCategoriesAndDateTime, dishes)
     }
 
 
@@ -35,23 +35,24 @@ class DishEntityMapperTest {
         // Given
         val numCategories = 0
         val numDishes = 2
-        val dishWithCategories =
+        val dishWithCategoriesAndDateTime =
             DishEntityGenerator.generateDishWithCategories(numDishes, numCategories)
 
         // Act
-        val dishes = dishWithCategories.map { it.toDish() }
+        val dishes = dishWithCategoriesAndDateTime.map { (dishEntity, _) -> dishEntity.toDish() }
 
         // Assert
         assertEquals(numDishes, dishes.size)
-        assertDishesEqual(dishWithCategories, dishes)
+        assertDishesEqual(dishWithCategoriesAndDateTime, dishes)
     }
 
     private fun assertDishesEqual(
-        dishWithCategories: List<DishWithCategories>,
+        dishWithCategories: List<Pair<DishWithCategories, LocalDateTime>>,
         dishes: List<Dish>
     ) {
 
-        dishWithCategories.forEachIndexed { index, (dish, category) ->
+        dishWithCategories.forEachIndexed { index, (dishWithCat, dateTime) ->
+            val (dish, category) = dishWithCat
             assertEquals(dish.title, dishes[index].title)
             assertEquals(dish.description, dishes[index].description)
             assertEquals(dish.price, dishes[index].price)
@@ -59,7 +60,7 @@ class DishEntityMapperTest {
             assertEquals(dish.stock, dishes[index].stock)
             assertEquals(dish.discountedPrice, dishes[index].discountedPrice)
             assertEquals(dish.popularityIndex, dishes[index].popularityIndex)
-            assertEquals(LocalDateTime.parse(dish.dateAdded), dishes[index].dateAdded)
+            assertEquals(dateTime, dishes[index].dateAdded)
 
             assertNutritionInfoEquals(dish.nutritionInfo, dishes[index].nutritionInfo)
 

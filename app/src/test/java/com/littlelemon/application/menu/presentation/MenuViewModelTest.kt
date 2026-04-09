@@ -34,11 +34,14 @@ class MenuViewModelTest {
 
     private val testDispatcher = coroutineRule.testDispatcher
 
-    private val dishes = DishEntityGenerator.generateDishWithCategories(10).map { it.toDish() }
+    private val dishes = DishEntityGenerator.generateDishWithCategories(10)
+        .map { (dishEntity, _) -> dishEntity.toDish() }
     private val outOfStockDishes =
-        DishEntityGenerator.generateDishWithCategories(5).map { it.toDish().copy(stock = 0) }
+        DishEntityGenerator.generateDishWithCategories(5)
+            .map { (dishEntity, _) -> dishEntity.toDish().copy(stock = 0) }
     private val remoteDishes =
-        DishEntityGenerator.generateDishWithCategories(15).map { it.toDish() }
+        DishEntityGenerator.generateDishWithCategories(15)
+            .map { (dishEntity, _) -> dishEntity.toDish() }
 
     private lateinit var useCase: GetDishesUseCase
     private lateinit var viewModel: MenuViewModel

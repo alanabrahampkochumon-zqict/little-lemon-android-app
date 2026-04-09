@@ -23,7 +23,7 @@ import kotlin.test.assertTrue
 @SmallTest
 class GetDishesUseCaseTest {
 
-    val dishes = DishEntityGenerator.generateDishWithCategories(5)
+    val dishes = DishEntityGenerator.generateDishWithCategories(5).map { it.first }
 
     private lateinit var repository: MenuRepository
     private lateinit var useCase: GetDishesUseCase
@@ -107,7 +107,8 @@ class GetDishesUseCaseTest {
 
     @Test
     fun getDishes_forceFetch_getsNewDishes() = runTest {
-        val newDishes = DishEntityGenerator.generateDishWithCategories(10).map { it.toDish() }
+        val newDishes = DishEntityGenerator.generateDishWithCategories(10)
+            .map { (dishEntity, _) -> dishEntity.toDish() }
         coEvery { repository.getDishes(fetchFromRemote = true) } returns flow {
             emit(
                 Resource.Success(

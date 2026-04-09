@@ -6,6 +6,7 @@ import com.littlelemon.application.menu.data.remote.models.NutritionInfoDTO
 import io.github.serpro69.kfaker.faker
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.offsetAt
 import kotlinx.datetime.toLocalDateTime
 import java.util.UUID
 import kotlin.math.roundToInt
@@ -32,7 +33,9 @@ class MenuDTOGenerator {
         val instant = Instant.fromEpochMilliseconds(
             Clock.System.now().toEpochMilliseconds() - randomSeconds * 1000L
         )
-        val localDateTime = instant.toLocalDateTime(TimeZone.UTC)
+        val localTimeZone = TimeZone.currentSystemDefault()
+        val localDateTime = instant.toLocalDateTime(localTimeZone)
+        val offset = localTimeZone.offsetAt(instant)
 
         return DishDTO(
             id = UUID.randomUUID().toString(),
@@ -44,7 +47,7 @@ class MenuDTOGenerator {
             nutritionInfo = nutrition,
             discountedPrice = (Math.random() * 10000).roundToLong(),
             popularityIndex = (0..100).random(),
-            dateAdded = "$localDateTime+00:00", // TODO: Replace with random
+            dateAdded = "$localDateTime$offset",
             categories = generateCategories(numCategories),
         ) to localDateTime
     }
