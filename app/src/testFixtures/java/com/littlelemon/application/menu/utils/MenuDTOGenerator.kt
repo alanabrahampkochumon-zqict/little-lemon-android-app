@@ -35,7 +35,7 @@ class MenuDTOGenerator {
             nutritionInfo = nutrition,
             discountedPrice = (Math.random() * 10000).roundToLong(),
             popularityIndex = (0..100).random(),
-            dateAdded = "2024-03-24T12:00:00", // TODO: Replace with random
+            dateAdded = "2023-10-27T10:15:30Z", // TODO: Replace with random
             categories = generateCategories(numCategories),
         )
     }

@@ -6,9 +6,13 @@ import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 fun DishWithCategories.toDish(): Dish {
+    val instant = Instant.parse(dish.dateAdded)
+    val timezone = TimeZone.currentSystemDefault()
     return Dish(
         title = dish.title,
         description = dish.description,
@@ -18,7 +22,7 @@ fun DishWithCategories.toDish(): Dish {
         nutritionInfo = dish.nutritionInfo?.toDomainNutritionInfo(),
         discountedPrice = dish.discountedPrice,
         popularityIndex = dish.popularityIndex,
-        dateAdded = LocalDateTime.parse(dish.dateAdded),
+        dateAdded = instant.toLocalDateTime(timezone),
         category = categories.toDomainCategories()
     )
 }

@@ -45,7 +45,7 @@ object DishEntityGenerator {
             nutritionInfo = nutritionInfo,
             discountedPrice = Math.random() * 1000,
             popularityIndex = (0..100).random(),
-            dateAdded = "2024-04-07T16:54:00" // TODO: Replace with random
+            dateAdded = "2023-10-27T10:15:30Z" // TODO: Replace with random
         )
     }
 

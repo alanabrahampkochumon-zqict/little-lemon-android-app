@@ -74,7 +74,7 @@ class SupabaseAddressRemoteDataSourceTest {
         // Arrange
         val address = AddressGenerator.generateAddressDTO()
         val request =
-            Json.encodeToString(listOf(address.toRequestDTO())) // FIXME: Fields [latitude, longitude] are required for type with serial name 'com.littlelemon.application.address.data.remote.models.AddressDTO', but they were missing at path: $[0]
+            Json.encodeToString(listOf(address)) // FIXME: Fields [latitude, longitude] are required for type with serial name 'com.littlelemon.application.address.data.remote.models.AddressDTO', but they were missing at path: $[0]
         client = createFakeSupabaseClient {
             respond(
                 request,
