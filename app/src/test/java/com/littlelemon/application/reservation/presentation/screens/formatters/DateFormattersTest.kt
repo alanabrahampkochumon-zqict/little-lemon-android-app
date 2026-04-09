@@ -22,7 +22,7 @@ class DateFormattersTest {
 
     companion object {
 
-        private val timezone = TimeZone.UTC
+        private val timezone = TimeZone.currentSystemDefault()
         private val currentTime = Clock.System.now()
         private val currentMonth =
             currentTime.toLocalDateTime(timezone).month.toString().substring(0, 3).toTitleCase()
