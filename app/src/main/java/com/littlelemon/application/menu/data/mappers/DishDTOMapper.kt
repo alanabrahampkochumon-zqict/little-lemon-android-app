@@ -21,6 +21,7 @@ fun List<DishDTO>.toDishWithCategories(): MenuDataBundle {
     this.forEach { dishDTO ->
         dishes.add(
             DishEntity(
+                dishId = dishDTO.id,
                 title = dishDTO.title,
                 description = dishDTO.description ?: "",
                 price = convertCentsToDollars(dishDTO.price),

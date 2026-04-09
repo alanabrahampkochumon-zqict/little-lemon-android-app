@@ -41,6 +41,9 @@ class MenuRepositoryImpl(
                 if (dishDTOs.isNotEmpty()) {
                     val (dishes, categories, crossRefs) = dishDTOs.toDishWithCategories()
 
+                    Log.d("DISH DTO Dish", dishes.toString())
+                    Log.d("DISH DTO Categories", categories.toString())
+                    Log.d("DISH DTO CrossRef", crossRefs.toString())
                     localDataSource.deleteAllDishes()
                     localDataSource.insertDishes(dishes, categories, crossRefs)
                 }

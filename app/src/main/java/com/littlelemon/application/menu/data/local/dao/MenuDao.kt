@@ -35,8 +35,8 @@ interface MenuDao {
         categories: List<CategoryEntity>,
         crossRefs: List<DishCategoryCrossRef>
     ) {
-        insertDishes(dishes)
         insertCategories(categories)
+        insertDishes(dishes)
         insertDishCategoryCrossRefs(crossRefs)
     }
 
