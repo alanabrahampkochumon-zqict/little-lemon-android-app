@@ -20,7 +20,7 @@ class MenuRemoteDataSourceTest {
     fun fetchDishes_remoteSuccessWithCorrectJson_returnsCorrectDTOObject() = runTest {
         // Arrange
         val generator = MenuDTOGenerator()
-        val dishes = List(5) { generator.generateDishDTO() }
+        val dishes = List(5) { generator.generateDishDTO().first }
         val responseData = Json.encodeToString(dishes)
         val client = createFakeSupabaseClient(requestHandler = { request ->
             respond(
