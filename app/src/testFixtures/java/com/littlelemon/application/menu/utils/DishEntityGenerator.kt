@@ -5,9 +5,14 @@ import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity
 import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import io.github.serpro69.kfaker.faker
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import java.util.UUID
 import kotlin.math.roundToInt
+import kotlin.random.Random
 import kotlin.time.Clock
+import kotlin.time.Instant
 
 private const val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
 
@@ -19,13 +24,13 @@ object DishEntityGenerator {
     ): List<DishWithCategories> {
         return List(numDishes) {
             DishWithCategories(
-                dish = generateDishEntity(),
+                dish = generateDishEntity().first,
                 categories = generateCategoryEntities(numCategories)
             )
         }
     }
 
-    fun generateDishEntity(): DishEntity {
+    fun generateDishEntity(): Pair<DishEntity, LocalDateTime> {
         val nutritionInfo = DishEntity.NutritionInfo(
             calories = (Math.random() * 1000).roundToInt(),
             protein = (Math.random() * 1000).roundToInt(),
@@ -33,7 +38,12 @@ object DishEntityGenerator {
             fats = (Math.random() * 1000).roundToInt(),
         )
 
-        val timeNowMillis = Clock.System.now().toEpochMilliseconds()
+        val randomSeconds = Random.nextLong(365L * 24 * 60 * 60)
+        val instant = Instant.fromEpochMilliseconds(
+            Clock.System.now().toEpochMilliseconds() - randomSeconds * 1000L
+        )
+        val localDateTime = instant.toLocalDateTime(TimeZone.UTC)
+
 
         return DishEntity(
             dishId = UUID.randomUUID().toString(),
@@ -45,8 +55,8 @@ object DishEntityGenerator {
             nutritionInfo = nutritionInfo,
             discountedPrice = Math.random() * 1000,
             popularityIndex = (0..100).random(),
-            dateAdded = "2023-10-27T10:15:30Z" // TODO: Replace with random
-        )
+            dateAdded = localDateTime.toString() + "+00:00" // TODO: Replace with random
+        ) to localDateTime
     }
 
     fun generateCategoryEntities(numCategories: Int = 1): List<CategoryEntity> {
@@ -62,7 +72,7 @@ object DishEntityGenerator {
         return categories
     }
 
-    // Add Random Number of category associations to dish and create a cross reference.
+    // Add Random Number of category associations to dish and create a cross-reference.
     fun generateDishCategoryCrossRef(
         dish: DishEntity,
         categories: List<CategoryEntity>

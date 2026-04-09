@@ -25,7 +25,7 @@ class FakeDishRemoteDataSource(
 
             val generator = MenuDTOGenerator()
             repeat(20) {
-                dishes.add(generator.generateDishDTO())
+                dishes.add(generator.generateDishDTO().first)
             }
         }
     }

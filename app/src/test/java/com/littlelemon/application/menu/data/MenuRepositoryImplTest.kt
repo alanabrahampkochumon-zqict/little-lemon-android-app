@@ -252,7 +252,7 @@ class MenuRepositoryImplTest() {
             menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
 
             localDataSource.insertDishes(List(outOfStockDishCount) {
-                DishEntityGenerator.generateDishEntity().copy(stock = 0)
+                DishEntityGenerator.generateDishEntity().first.copy(stock = 0)
             })
         }
 
@@ -324,7 +324,7 @@ class MenuRepositoryImplTest() {
                 // Populate the data sources
                 val numDishEntities = 2
                 val dishEntities =
-                    List(numDishEntities) { entityGenerator.generateDishEntity() }.map { dish ->
+                    List(numDishEntities) { entityGenerator.generateDishEntity().first }.map { dish ->
                         dish.copy(
                             title = "$ENTITY_TITLE_PREDICATE: ${dish.title}"
                         )
@@ -333,7 +333,7 @@ class MenuRepositoryImplTest() {
 
                 val numDishDTO = 4
                 val dishDTO =
-                    List(numDishDTO) { dtoGenerator.generateDishDTO() }.map { dish ->
+                    List(numDishDTO) { dtoGenerator.generateDishDTO().first }.map { dish ->
                         dish.copy(
                             title = "$DTO_TITLE_PREDICATE: ${dish.title}"
                         )
@@ -358,7 +358,11 @@ class MenuRepositoryImplTest() {
             // Populate the data sources
             val numDishDTO = 5
             val dishDTO =
-                List(numDishDTO) { dtoGenerator.generateDishDTO() }.map { dish -> dish.copy(title = "$DTO_TITLE_PREDICATE: ${dish.title}") }
+                List(numDishDTO) { dtoGenerator.generateDishDTO().first }.map { dish ->
+                    dish.copy(
+                        title = "$DTO_TITLE_PREDICATE: ${dish.title}"
+                    )
+                }
             remoteDataSource = FakeDishRemoteDataSource(dishDTO)
             menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
 
@@ -381,7 +385,7 @@ class MenuRepositoryImplTest() {
                 // Populate the data sources
                 val numDishEntities = 3
                 val dishEntities =
-                    List(numDishEntities) { entityGenerator.generateDishEntity() }.map { dish ->
+                    List(numDishEntities) { entityGenerator.generateDishEntity().first }.map { dish ->
                         dish.copy(
                             title = "$ENTITY_TITLE_PREDICATE: ${dish.title}"
                         )

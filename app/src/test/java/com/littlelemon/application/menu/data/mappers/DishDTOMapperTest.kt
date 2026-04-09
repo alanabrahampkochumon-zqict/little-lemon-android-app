@@ -19,7 +19,7 @@ class DishDTOMapperTest {
         val numCategories = 5
         val numDishes = 2
         val dtoGenerator = MenuDTOGenerator()
-        val dishDTOs = List(numDishes) { dtoGenerator.generateDishDTO(numCategories) }
+        val dishDTOs = List(numDishes) { dtoGenerator.generateDishDTO(numCategories).first }
 
         // Act
         val (dishes, categories, crossRef) = dishDTOs.toDishWithCategories()
@@ -47,7 +47,7 @@ class DishDTOMapperTest {
         val numCategories = 0
         val numDishes = 2
         val dtoGenerator = MenuDTOGenerator()
-        val dishDTOs = List(numDishes) { dtoGenerator.generateDishDTO(numCategories) }
+        val dishDTOs = List(numDishes) { dtoGenerator.generateDishDTO(numCategories).first }
 
         // Act
         val (dishes, categories, crossRef) = dishDTOs.toDishWithCategories()
@@ -69,7 +69,7 @@ class DishDTOMapperTest {
             listOf(CategoryDTO("2", "category2"), CategoryDTO("1", "category1"))
         val numDishes = 2
         val dtoGenerator = MenuDTOGenerator()
-        val dishDTOs = MutableList(numDishes) { dtoGenerator.generateDishDTO(0) }
+        val dishDTOs = MutableList(numDishes) { dtoGenerator.generateDishDTO(0).first }
         dishDTOs[0] = dishDTOs[0].copy(categories = categoriesDTO1)
         dishDTOs[1] = dishDTOs[1].copy(categories = categoriesDTO2)
 

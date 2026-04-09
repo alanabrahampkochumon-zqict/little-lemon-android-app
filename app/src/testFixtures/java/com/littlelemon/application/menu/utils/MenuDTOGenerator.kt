@@ -4,17 +4,22 @@ import com.littlelemon.application.menu.data.remote.models.CategoryDTO
 import com.littlelemon.application.menu.data.remote.models.DishDTO
 import com.littlelemon.application.menu.data.remote.models.NutritionInfoDTO
 import io.github.serpro69.kfaker.faker
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import java.util.UUID
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
+import kotlin.random.Random
 import kotlin.time.Clock
+import kotlin.time.Instant
 
 class MenuDTOGenerator {
     private companion object {
         const val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
     }
 
-    fun generateDishDTO(numCategories: Int = 5): DishDTO {
+    fun generateDishDTO(numCategories: Int = 5): Pair<DishDTO, LocalDateTime> {
         val faker = faker {}
         val nutrition = NutritionInfoDTO(
             calories = (Math.random() * 1000).roundToInt(),
@@ -23,7 +28,11 @@ class MenuDTOGenerator {
             fats = (Math.random() * 1000).roundToInt(),
         )
 
-        val timeNowMillis = Clock.System.now().toEpochMilliseconds()
+        val randomSeconds = Random.nextLong(365L * 24 * 60 * 60)
+        val instant = Instant.fromEpochMilliseconds(
+            Clock.System.now().toEpochMilliseconds() - randomSeconds * 1000L
+        )
+        val localDateTime = instant.toLocalDateTime(TimeZone.UTC)
 
         return DishDTO(
             id = UUID.randomUUID().toString(),
@@ -35,9 +44,9 @@ class MenuDTOGenerator {
             nutritionInfo = nutrition,
             discountedPrice = (Math.random() * 10000).roundToLong(),
             popularityIndex = (0..100).random(),
-            dateAdded = "2023-10-27T10:15:30Z", // TODO: Replace with random
+            dateAdded = "$localDateTime+00:00", // TODO: Replace with random
             categories = generateCategories(numCategories),
-        )
+        ) to localDateTime
     }
 
     private fun generateCategories(numCategories: Int = 1): List<CategoryDTO> {

@@ -23,7 +23,7 @@ class FakeMenuDao(
 
             categoryEntities.addAll(DishEntityGenerator.generateCategoryEntities(categoryCount))
             repeat(dishCount) {
-                val dish = DishEntityGenerator.generateDishEntity()
+                val dish = DishEntityGenerator.generateDishEntity().first
                 dishEntities.add(dish)
                 dishCategoryCrossRefs.addAll(
                     DishEntityGenerator.generateDishCategoryCrossRef(
