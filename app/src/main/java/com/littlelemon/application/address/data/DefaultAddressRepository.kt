@@ -1,7 +1,6 @@
 package com.littlelemon.application.address.data
 
 import android.Manifest
-import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.local.dao.GeocodingDao
@@ -156,14 +155,11 @@ class DefaultAddressRepository(
 
     override suspend fun getAddressCount(): Int {
         try {
-            Log.d("Address Data", "Hitting getAddressCount")
             val remoteResponse =
                 addressRemoteDataSource.getAddress().map { it.toAddressEntity() }
-            Log.d("Address Data", remoteResponse.toString())
             addressLocalDataSource.saveAddresses(remoteResponse)
             return addressLocalDataSource.getAddressCount()
         } catch (e: Exception) {
-            Log.d("Address error", e.message.toString())
             currentCoroutineContext().ensureActive()
             return -1
         }
