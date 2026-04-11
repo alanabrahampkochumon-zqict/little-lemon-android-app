@@ -20,7 +20,7 @@ fun DishWithCategories.toDish(): Dish {
         imageURL = dish.image,
         stock = dish.stock,
         nutritionInfo = dish.nutritionInfo?.toDomainNutritionInfo(),
-        discountedPrice = dish.discountedPrice,
+        discountedPrice = if (dish.discountedPrice < 0.001) null else dish.discountedPrice,
         popularityIndex = dish.popularityIndex,
         dateAdded = instant.toLocalDateTime(timezone),
         category = categories.toDomainCategories()

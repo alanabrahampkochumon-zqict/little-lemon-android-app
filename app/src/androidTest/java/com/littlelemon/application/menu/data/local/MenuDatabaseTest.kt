@@ -44,7 +44,7 @@ class MenuDatabaseTest {
     fun dishWithNoCategoriesInserted_whenQueried_returnsCorrectDish() = runTest {
         // Arrange
         val numCategories = 0
-        val dish = DishEntityGenerator.generateDishEntity()
+        val dish = DishEntityGenerator.generateDishEntity().first
         val categories = DishEntityGenerator.generateCategoryEntities(numCategories)
         val crossRef = categories.map { (categoryId, _) ->
             DishCategoryCrossRef(
@@ -67,7 +67,7 @@ class MenuDatabaseTest {
     fun dishWithOneCategoriesInserted_whenQueried_returnsCorrectDishWithOneCategory() = runTest {
         // Arrange
         val numCategories = 1
-        val dish = DishEntityGenerator.generateDishEntity()
+        val dish = DishEntityGenerator.generateDishEntity().first
         val categories = DishEntityGenerator.generateCategoryEntities(numCategories)
         val crossRef = categories.map { (categoryId, _) ->
             DishCategoryCrossRef(
@@ -91,7 +91,7 @@ class MenuDatabaseTest {
     fun dishWithTwoCategoriesInserted_whenQueried_returnsCorrectDishWithTwoCategories() = runTest {
         // Arrange
         val numCategories = 2
-        val dish = DishEntityGenerator.generateDishEntity()
+        val dish = DishEntityGenerator.generateDishEntity().first
         val categories = DishEntityGenerator.generateCategoryEntities(numCategories)
         val crossRef = categories.map { (categoryId, _) ->
             DishCategoryCrossRef(
@@ -338,7 +338,7 @@ class MenuDatabaseTest {
         }
 
     private suspend fun insertDishes(numDishes: Int = 7) {
-        val dishes = List(numDishes) { DishEntityGenerator.generateDishEntity() }
+        val dishes = List(numDishes) { DishEntityGenerator.generateDishEntity().first }
         val categories = mutableListOf<CategoryEntity>()
         val crossRefs = mutableListOf<DishCategoryCrossRef>()
         dishes.forEach { dish ->

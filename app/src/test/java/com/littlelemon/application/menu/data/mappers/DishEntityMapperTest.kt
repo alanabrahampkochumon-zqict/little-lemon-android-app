@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertNull
 
 class DishEntityMapperTest {
 
@@ -27,6 +28,22 @@ class DishEntityMapperTest {
         // Assert
         assertEquals(numDishes, dishes.size)
         assertDishesEqual(dishWithCategoriesAndDateTime, dishes)
+    }
+
+    @Test
+    fun givenDishesWithCategories_whenConvertedToDomainObject_zeroDiscountedPriceReturnsNullDiscount() {
+        // Given
+        val numCategories = 3
+        val numDishes = 1
+        var dishEntity =
+            DishEntityGenerator.generateDishWithCategories(numDishes, numCategories).first().first
+        dishEntity = dishEntity.copy(dish = dishEntity.dish.copy(discountedPrice = 0.0))
+
+        // Act
+        val dish = dishEntity.toDish()
+
+        // Assert
+        assertNull(dish.discountedPrice)
     }
 
 
