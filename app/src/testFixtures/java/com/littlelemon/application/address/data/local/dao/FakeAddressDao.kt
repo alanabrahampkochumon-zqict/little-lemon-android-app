@@ -28,9 +28,9 @@ class FakeAddressDao(entriesCount: Int? = null, private val throwError: Boolean 
         addressList.add(address)
     }
 
-    override suspend fun getAddressCount(): Long {
+    override suspend fun getAddressCount(): Int {
         if (throwError) throw IllegalArgumentException()
-        return addressList.size.toLong()
+        return addressList.size
     }
 
     override fun getAllAddress(): Flow<List<AddressEntity>> = flow {

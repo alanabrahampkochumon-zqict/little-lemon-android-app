@@ -55,5 +55,5 @@ class AddressLocalDataSourceImpl(
         dao.insertAddress(addresses)
     }
 
-    override suspend fun getAddressCount(): Long = dao.getAddressCount()
+    override suspend fun getAddressCount(): Int = dao.getAddressCount()
 }

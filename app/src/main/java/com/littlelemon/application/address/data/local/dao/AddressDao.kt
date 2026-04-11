@@ -17,7 +17,7 @@ interface AddressDao {
     suspend fun insertAddress(address: AddressEntity)
 
     @Query("SELECT COUNT(*) FROM ADDRESSENTITY")
-    suspend fun getAddressCount(): Long
+    suspend fun getAddressCount(): Int
 
     @Query("SELECT * FROM ADDRESSENTITY ORDER BY createdAt DESC")
     fun getAllAddress(): Flow<List<AddressEntity>>

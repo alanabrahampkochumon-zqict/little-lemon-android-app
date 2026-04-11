@@ -364,6 +364,14 @@ class DefaultAddressRepositoryTest {
     }
 
     @Test
+    fun getAddressCount_removeDataSourceReturnsCount_returnsCount() = runTest {
+        val expectedCount = addressRemoteDataSource.getAddress().size
+
+        val addressCount = repository.getAddressCount()
+        assertEquals(expectedCount, addressCount)
+    }
+
+    @Test
     fun getAddressCount_localDatasourceReturnsZero_returnsZero() = runTest {
         // Given local data source contains zero addresses
 

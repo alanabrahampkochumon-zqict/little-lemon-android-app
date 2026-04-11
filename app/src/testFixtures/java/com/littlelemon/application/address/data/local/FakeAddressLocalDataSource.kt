@@ -40,8 +40,8 @@ class FakeAddressLocalDataSource(
         _address.addAll(addresses)
     }
 
-    override suspend fun getAddressCount(): Long {
+    override suspend fun getAddressCount(): Int {
         if (throwError) throw IllegalArgumentException()
-        return _address.size.toLong()
+        return _address.size
     }
 }

@@ -16,5 +16,5 @@ interface AddressRepository {
     suspend fun geocodeAddress(fullAddress: String): Resource<GeocodedAddress>
 
     fun getAddress(): Flow<Resource<List<LocalAddress>>>
-    suspend fun getAddressCount(): Long
+    suspend fun getAddressCount(): Int
 }

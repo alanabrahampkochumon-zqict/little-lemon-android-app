@@ -21,7 +21,7 @@ import org.koin.androidx.compose.koinViewModel
 fun NavigationRoot(rootViewModel: RootViewModel = koinViewModel()) {
     val sessionStatus by rootViewModel.sessionStatus.collectAsStateWithLifecycle()
     val userHasAddress by rootViewModel.userHasAddress.collectAsStateWithLifecycle()
-
+    Log.d("USER ADDRESS", userHasAddress.toString())
     // Update system bars to be dark color
     val view = LocalView.current
     if (!view.isInEditMode) {
