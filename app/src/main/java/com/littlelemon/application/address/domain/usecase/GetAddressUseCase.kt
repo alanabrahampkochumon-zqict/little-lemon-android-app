@@ -8,6 +8,5 @@ import kotlinx.coroutines.flow.Flow
 class GetAddressUseCase(
     private val repository: AddressRepository
 ) {
-
     operator fun invoke(): Flow<Resource<List<LocalAddress>>> = repository.getAddress()
 }
