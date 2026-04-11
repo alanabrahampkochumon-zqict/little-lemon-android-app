@@ -12,8 +12,8 @@ CREATE TABLE
         id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
         user_id UUID NOT NULL REFERENCES auth.users (id) ON DELETE CASCADE DEFAULT auth.uid (),
         label TEXT NOT NULL,
-        order_date TIMESTAMP DEFAULT now (),
-        updated_at TIMESTAMP DEFAULT now (),
+        order_date TIMESTAMPTZ DEFAULT now (),
+        updated_at TIMESTAMPTZ DEFAULT now (),
         status ORDER_STATUS DEFAULT 'pending',
         payment_mode VARCHAR(50) NOT NULL,
         deliver_to UUID NOT NULL REFERENCES public.user_address (id) ON DELETE CASCADE,
@@ -21,7 +21,7 @@ CREATE TABLE
         delivery_charge BIGINT NOT NULL,
         discount BIGINT NOT NULL,
         total_payable BIGINT NOT NULL,
-        refunded_on TIMESTAMP DEFAULT NULL,
+        refunded_on TIMESTAMPTZ DEFAULT NULL,
         special_instructions TEXT
     );
 

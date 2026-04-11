@@ -34,7 +34,7 @@ CREATE TABLE
             popularity_index > 0
             AND popularity_index <= 100
         ) DEFAULT 1,
-        date_added TIMESTAMP NOT NULL DEFAULT NOW (),
+        date_added TIMESTAMPTZ NOT NULL DEFAULT NOW (),
         nutrition_info_id UUID REFERENCES nutrition_info (id),
         image TEXT
     );

@@ -3,7 +3,7 @@ import supabase from "../supabase.js";
 const { error, data } = await supabase
     .from("dish")
     .select(
-        "id, title, description, category(category_name), nutrition_info(calories, protein, carbs, fats)",
+        "id, title, description, price, discounted_price, stock, popularity_index, date_added, category(id, category_name), nutrition_info(calories, protein, carbs, fats), image",
     );
 
 if (error) {
