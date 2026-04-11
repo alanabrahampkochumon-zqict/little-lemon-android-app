@@ -365,10 +365,18 @@ class DefaultAddressRepositoryTest {
 
     @Test
     fun getAddressCount_removeDataSourceReturnsCount_returnsCount() = runTest {
-        val expectedCount = addressRemoteDataSource.getAddress().size
+        val expectedAddressCount = 3
+        val addresses = List(expectedAddressCount) { AddressGenerator.generateAddressDTO() }
+        addressRemoteDataSource = FakeAddressRemoteDataSource(addresses)
+        repository = DefaultAddressRepository(
+            addressLocalDataSource,
+            addressRemoteDataSource,
+            geocodingLocalDataSource,
+            geocodingRemoteDataSource
+        )
 
         val addressCount = repository.getAddressCount()
-        assertEquals(expectedCount, addressCount)
+        assertEquals(expectedAddressCount, addressCount)
     }
 
     @Test
