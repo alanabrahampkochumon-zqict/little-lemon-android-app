@@ -6,5 +6,5 @@ object SupabaseTables {
     const val DISH = "dish"
     const val NUTRITION_INFO = "nutrition_info"
     const val USER_ADDRESS = "user_address"
-    const val USER_ADDRESS_VIEW = "user_address_view"
+    const val USER_ADDRESS_VIEW = "user_addresses_view"
 }
