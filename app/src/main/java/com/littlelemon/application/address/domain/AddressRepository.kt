@@ -17,4 +17,8 @@ interface AddressRepository {
 
     fun getAddress(): Flow<Resource<List<LocalAddress>>>
     suspend fun getAddressCount(): Int
+
+    fun getCurrentAddress(): Flow<Resource<LocalAddress>>
+
+    fun setCurrentAddress(address: LocalAddress): Flow<Resource<Unit>>
 }

@@ -8,12 +8,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
 class HomeViewModel(
-    private val getAddressUseCase: GetAddressUseCase
+    getAddressUseCase: GetAddressUseCase
 ) : ViewModel() {
+
     val addresses =
-        getAddressUseCase().stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            Resource.Loading(null)
-        )
+        getAddressUseCase()
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                Resource.Loading(null)
+            )
 }

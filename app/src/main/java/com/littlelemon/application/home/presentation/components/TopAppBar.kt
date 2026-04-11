@@ -23,6 +23,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.address.domain.models.LocalAddress
+import com.littlelemon.application.address.domain.models.LocalLocation
+import com.littlelemon.application.address.domain.models.PhysicalAddress
 import com.littlelemon.application.address.presentation.screens.components.AddressPicker
 import com.littlelemon.application.core.presentation.components.PrimaryIconButton
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
@@ -35,9 +38,15 @@ import com.littlelemon.application.home.HomeTestTags
 // TODO: Add address to address picker
 // TODO: Add address picker tests
 @Composable
-fun TopAppBar(onSearchClick: () -> Unit, modifier: Modifier = Modifier) {
+fun TopAppBar(
+    defaultAddress: LocalAddress,
+    onSearchClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val shape =
         MaterialTheme.shapes.large.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp))
+
+    val address = defaultAddress.label + " (" +if(defaultAddress.address?.address?.isNotBlank() == true) defaultAddress.address.address else defaultAddress.address?.streetAddress + ")"
 
     Column(
         modifier = modifier
@@ -65,7 +74,7 @@ fun TopAppBar(onSearchClick: () -> Unit, modifier: Modifier = Modifier) {
         )
         Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
         Row {
-            AddressPicker("TODO: Replace Address", modifier = Modifier.weight(1f))
+            AddressPicker(address, modifier = Modifier.weight(1f))
             Spacer(Modifier.width(MaterialTheme.dimens.sizeMD))
             PrimaryIconButton(
                 R.drawable.ic_search,
@@ -83,6 +92,18 @@ fun TopAppBar(onSearchClick: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 private fun TopAppBarPreview() {
     LittleLemonTheme {
-        TopAppBar({})
+        TopAppBar(LocalAddress(
+            id = "1234",
+            label = "Home",
+            address = PhysicalAddress(
+                address = "1234 Building Name",
+                streetAddress = "Javier's Street",
+                city = "Chicago",
+                state = "Illinois",
+                pinCode = "123485"
+            ),
+            location = LocalLocation(1.234, 12.343),
+            isDefault = true
+        ), {})
     }
 }

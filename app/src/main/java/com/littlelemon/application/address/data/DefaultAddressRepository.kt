@@ -165,4 +165,22 @@ class DefaultAddressRepository(
         }
     }
 
+    override fun getCurrentAddress(): Flow<Resource<LocalAddress>> {
+        return addressLocalDataSource.getAddress().map { addressEntities ->
+            // Get the default address if any
+            var entity = addressEntities.firstOrNull { entity -> entity.isDefault }
+            // If it fails get the first address
+            if (entity == null)
+                entity = addressEntities.firstOrNull()
+            if (entity != null)
+                Resource.Success(entity.toLocalAddress())
+            // No address entity exists in the cache.
+            Resource.Success(null)
+        }
+    }
+
+    override fun setCurrentAddress(address: LocalAddress): Flow<Resource<Unit>> {
+        TODO("Not yet implemented")
+    }
+
 }

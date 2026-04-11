@@ -23,9 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.littlelemon.application.address.domain.models.LocalAddress
+import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.home.presentation.CartRoute
@@ -45,6 +48,10 @@ import org.koin.androidx.compose.koinViewModel
 // TODO: Add cardinality to animation
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
+
+    val addressViewModel = koinViewModel<AddressViewModel>()
+    val addresses by addressViewModel.addresses.collectAsStateWithLifecycle()
+
     var currentDestination: NavigationOption by remember { mutableStateOf(NavigationOption.HOME) }
     val backStack = rememberNavBackStack(HomeRoute)
 
@@ -71,7 +78,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             )
         },
         topBar = {
-            TopAppBar({/* TODO(Implementation) */ })
+            TopAppBar(LocalAddress(), {/* TODO(Implementation) */ })
         },
         containerColor = MaterialTheme.colors.secondary,
         modifier = Modifier
