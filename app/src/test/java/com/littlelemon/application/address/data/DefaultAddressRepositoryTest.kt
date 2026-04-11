@@ -15,6 +15,7 @@ import com.littlelemon.application.address.data.remote.FakeGeocodingRemoteDataSo
 import com.littlelemon.application.address.data.remote.geocoding.GeocodingRemoteDataSource
 import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.models.GeocodedAddress
+import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.utils.GeocodingGenerator
 import com.littlelemon.application.core.domain.utils.Resource
@@ -728,5 +729,110 @@ class DefaultAddressRepositoryTest {
             kotlin.test.assertNull(actualGeocodedResult.data)
         }
 
+    }
+
+    @Nested
+    inner class GetCurrentAddress {
+
+        @Test
+        fun defaultAddressPresent_returnsDefaultAddress() = runTest {
+            // Given an address repository with a default address.
+            val nonDefaultAddresses =
+                List(3) { AddressGenerator.generateAddressEntity().copy(isDefault = false) }
+            val expectedDefaultAddress =
+                AddressGenerator.generateAddressEntity().copy(isDefault = true)
+            addressLocalDataSource =
+                FakeAddressLocalDataSource(
+                    initialData = nonDefaultAddresses + listOf(
+                        expectedDefaultAddress
+                    )
+                )
+            repository = DefaultAddressRepository(
+                addressLocalDataSource,
+                addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When getDefaultAddressIsCalled
+            val defaultAddress = repository.getCurrentAddress().first()
+
+            // Then, it returns the default address with success
+            assertIs<Resource.Success<LocalAddress>>(defaultAddress)
+            assertEquals(expectedDefaultAddress.toLocalAddress(), defaultAddress.data)
+        }
+
+
+        @Test
+        fun multipleDefault_returnsFirstDefaultAddress() = runTest {
+            // Given an address repository with more than one default addresses.
+            val defaultAddresses =
+                List(3) { AddressGenerator.generateAddressEntity().copy(isDefault = true) }
+            addressLocalDataSource =
+                FakeAddressLocalDataSource(
+                    initialData = defaultAddresses
+                )
+            repository = DefaultAddressRepository(
+                addressLocalDataSource,
+                addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When getDefaultAddressIsCalled
+            val defaultAddress = repository.getCurrentAddress().first()
+
+            // Then, it returns the default address with success
+            assertIs<Resource.Success<LocalAddress>>(defaultAddress)
+            assertEquals(defaultAddresses.first().toLocalAddress(), defaultAddress.data)
+        }
+
+        @Test
+        fun nonEmptyCacheWithNoDefault_returnsFirstAddress() = runTest {
+            // Given a non-empty address repository with no default address.
+            val nonDefaultAddresses =
+                List(3) { AddressGenerator.generateAddressEntity().copy(isDefault = false) }
+            addressLocalDataSource =
+                FakeAddressLocalDataSource(
+                    initialData = nonDefaultAddresses
+                )
+            repository = DefaultAddressRepository(
+                addressLocalDataSource,
+                addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When getDefaultAddressIsCalled
+            val defaultAddress = repository.getCurrentAddress().first()
+            print(repository.getAddress().first())
+            print(defaultAddress)
+
+            // Then, it returns the default address with success
+            assertIs<Resource.Success<LocalAddress>>(defaultAddress)
+            assertEquals(nonDefaultAddresses.first().toLocalAddress(), defaultAddress.data)
+        }
+
+        @Test
+        fun emptyCache_returnSuccessWithNull() = runTest {
+            // Given an empty address repository with no default address.
+            addressLocalDataSource =
+                FakeAddressLocalDataSource(
+                    initialData = emptyList()
+                )
+            repository = DefaultAddressRepository(
+                addressLocalDataSource,
+                addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When getDefaultAddressIsCalled
+            val defaultAddress = repository.getCurrentAddress().first()
+
+            // Then, it returns the null with success
+            assertIs<Resource.Success<LocalAddress>>(defaultAddress)
+            assertNull(defaultAddress.data)
+        }
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.home.HomeTestTags
 import com.littlelemon.application.home.presentation.components.TopAppBar
 import org.junit.Rule
@@ -22,7 +23,7 @@ class TopAppBarTest {
     fun displaysLogo() {
         // When a top app bar is displayed
         testRule.setContent {
-            TopAppBar({})
+            TopAppBar(LocalAddress(), {})
         }
 
         // Then, the logo is displayed
@@ -33,7 +34,7 @@ class TopAppBarTest {
     fun displaysSearchButton() {
         // When a top app bar is displayed
         testRule.setContent {
-            TopAppBar({})
+            TopAppBar(LocalAddress(), {})
         }
 
         // Then, the search button is displayed
@@ -46,7 +47,7 @@ class TopAppBarTest {
         // Given a top app bar
         var callbackTriggered = false
         testRule.setContent {
-            TopAppBar({ callbackTriggered = true })
+            TopAppBar(LocalAddress(), { callbackTriggered = true })
         }
 
         // When, the search button is pressed
