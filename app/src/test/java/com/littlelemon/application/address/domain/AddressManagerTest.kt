@@ -11,7 +11,7 @@ import kotlin.test.assertTrue
 class AddressManagerTest {
 
     private val useCase = mockk<GetAddressCountUseCase>()
-    private val addressManager = AddressManagerImpl(useCase)
+    private val addressManager = DefaultAddressManager(useCase)
 
     @Test
     fun userHasAddress_useCaseReturnsNegativeOne_returnsFalse() = runTest {

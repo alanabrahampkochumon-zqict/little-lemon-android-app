@@ -17,8 +17,8 @@ import com.littlelemon.application.address.data.remote.geocoding.GeocodingEngine
 import com.littlelemon.application.address.data.remote.geocoding.GeocodingRemoteDataSource
 import com.littlelemon.application.address.data.remote.geocoding.GoogleGeocodingEngine
 import com.littlelemon.application.address.data.remote.geocoding.GoogleGeocodingRemoteDataSource
-import com.littlelemon.application.address.domain.AddressManagerImpl
 import com.littlelemon.application.address.domain.AddressRepository
+import com.littlelemon.application.address.domain.DefaultAddressManager
 import com.littlelemon.application.address.domain.usecase.GeocodeAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetAddressCountUseCase
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
@@ -36,7 +36,7 @@ val addressModule = module {
         AddressViewModel(get(), get(), get(), get(), get())
     }
 
-    single<AddressManager> { AddressManagerImpl(get()) }
+    single<AddressManager> { DefaultAddressManager(get()) }
 
     single<GetLocationUseCase> { GetLocationUseCase(get()) }
     single<GetAddressCountUseCase> { GetAddressCountUseCase(get()) }
