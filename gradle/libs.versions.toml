@@ -120,6 +120,7 @@ google-maps-service = { group = "com.google.maps", name = "google-maps-services"
 supbase-bom = { group = "io.github.jan-tennert.supabase", name = "bom", version.ref = "supabase" }
 supbase-postgres = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt" }
 supbase-auth = { group = "io.github.jan-tennert.supabase", name = "auth-kt" }
+supbase-storage = { group = "io.github.jan-tennert.supabase", name = "storage-kt" }
 supbase-realtime = { group = "io.github.jan-tennert.supabase", name = "realtime-kt" }
 
 # Junit

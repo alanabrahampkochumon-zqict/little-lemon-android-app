@@ -47,7 +47,7 @@ export async function insertDishes() {
     for (let i = 0; i < menuData.dish.length; i++) {
         const imageName = menuData.dish[i].image;
         const { fullPath } = (await readAndUploadImage(imageName)) || {
-            fullPath: `dishes/${imageName}`,
+            fullPath: `${imageName}`,
         };
         dishes.push({ ...menuData.dish[i], image: fullPath });
         dishesUploaded++;

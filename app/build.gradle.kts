@@ -105,6 +105,7 @@ dependencies {
     implementation(platform(libs.supbase.bom))
     implementation(libs.supbase.auth)
     implementation(libs.supbase.postgres)
+    implementation(libs.supbase.storage)
 
     implementation(libs.kotlinx.datetime)
 

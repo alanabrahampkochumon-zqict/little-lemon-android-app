@@ -7,6 +7,7 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.serializer.KotlinXSerializer
+import io.github.jan.supabase.storage.Storage
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -21,6 +22,7 @@ val coreModule = module {
         ) {
             install(Auth) {}
             install(Postgrest) {}
+            install(Storage) {}
             defaultSerializer = KotlinXSerializer(Json { ignoreUnknownKeys = true })
         }
     }
