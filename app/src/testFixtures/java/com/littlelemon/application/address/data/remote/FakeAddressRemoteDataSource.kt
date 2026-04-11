@@ -39,5 +39,4 @@ class FakeAddressRemoteDataSource(
         if (throwError) throw IllegalArgumentException()
         _address.remove(address.toResponse())
     }
-
 }

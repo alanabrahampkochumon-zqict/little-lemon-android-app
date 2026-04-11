@@ -180,8 +180,37 @@ class DefaultAddressRepository(
         }
     }
 
-    override fun setCurrentAddress(address: LocalAddress): Flow<Resource<Unit>> {
-        TODO("Not yet implemented")
+    override fun setCurrentAddress(address: LocalAddress): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            addressRemoteDataSource.saveAddress(address.copy(isDefault = true).toRequestDTO())
+            refreshCache()
+        } catch (e: Exception) {
+            currentCoroutineContext().ensureActive()
+            emit(
+                Resource.Failure(
+                    data = Unit,
+                    errorMessage = e.message,
+                    error = e.mapToDomainError()
+                )
+            )
+        }
+
     }
 
+    override suspend fun refreshCache(): Resource<Unit> {
+        try {
+            val addressEntities =
+                addressRemoteDataSource.getAddress().map { it.toAddressEntity() }
+            addressLocalDataSource.saveAddresses(addressEntities)
+            return Resource.Success()
+        } catch (e: Exception) {
+            currentCoroutineContext().ensureActive()
+            return Resource.Failure(
+                data = Unit,
+                errorMessage = e.message,
+                error = e.mapToDomainError()
+            )
+        }
+    }
 }

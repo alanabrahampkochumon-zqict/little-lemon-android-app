@@ -21,4 +21,6 @@ interface AddressRepository {
     fun getCurrentAddress(): Flow<Resource<LocalAddress>>
 
     fun setCurrentAddress(address: LocalAddress): Flow<Resource<Unit>>
+
+    suspend fun refreshCache(): Resource<Unit>
 }

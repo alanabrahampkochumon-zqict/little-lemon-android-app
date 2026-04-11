@@ -835,4 +835,107 @@ class DefaultAddressRepositoryTest {
             assertNull(defaultAddress.data)
         }
     }
+
+
+    @Nested
+    inner class RefreshCacheTests {
+
+        @Test
+        fun remoteSuccess_returnsSuccess() = runTest {
+            // Given remote success
+            val addresses =
+                List(3) { AddressGenerator.generateAddressDTO() }
+            addressLocalDataSource =
+                FakeAddressLocalDataSource(
+                    initialData = emptyList()
+                )
+            addressRemoteDataSource = FakeAddressRemoteDataSource(initialData = addresses)
+
+            repository = DefaultAddressRepository(
+                addressLocalDataSource,
+                addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When repository cache is refreshed.
+            val result = repository.refreshCache()
+
+            // Then, it returns resource success
+            assertIs<Resource.Success<Unit>>(result)
+        }
+
+
+        @Test
+        fun remoteFailure_returnsFailure() = runTest {
+            // Given remote failure
+            addressLocalDataSource =
+                FakeAddressLocalDataSource(
+                    initialData = emptyList()
+                )
+            addressRemoteDataSource = FakeAddressRemoteDataSource(throwError = true)
+
+            repository = DefaultAddressRepository(
+                addressLocalDataSource,
+                addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When repository cache is refreshed.
+            val result = repository.refreshCache()
+
+            // Then, it returns resource failure
+            assertIs<Resource.Failure<Unit>>(result)
+        }
+
+        @Test
+        fun deleteOldDataAndPopulatesWithNewData() = runTest {
+            // Given remote success and non-empty cache
+            val remoteAddresses =
+                List(3) { AddressGenerator.generateAddressDTO() }
+            val localAddresses =
+                List(3) { AddressGenerator.generateAddressEntity() }
+            addressLocalDataSource =
+                FakeAddressLocalDataSource(
+                    initialData = localAddresses
+                )
+            addressRemoteDataSource = FakeAddressRemoteDataSource(initialData = remoteAddresses)
+
+            repository = DefaultAddressRepository(
+                addressLocalDataSource,
+                addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            // When repository cache is refreshed.
+            val result = repository.refreshCache()
+
+            // NOTE: First state is loading.
+            // And addresses are queried
+            repository.getAddress().test {
+                skipItems(2) // TODO: Update after refactoring getAddress to only return cached data.
+
+                val addressResource = awaitItem()
+
+                assertIs<Resource.Success<List<LocalAddress>>>(addressResource)
+                // Then old cache data is removed
+                assertTrue(remoteAddresses.all { addressDTO ->
+                    addressResource.data?.contains(
+                        addressDTO.toAddressEntity().toLocalAddress()
+                    ) != true
+                })
+                // And new data is present
+                assertTrue(localAddresses.all { addressEntity ->
+                    addressResource.data?.contains(
+                        addressEntity.toLocalAddress()
+                    ) == true
+                })
+                cancelAndConsumeRemainingEvents()
+            }
+        }
+
+
+    }
 }

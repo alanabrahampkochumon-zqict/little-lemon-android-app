@@ -58,5 +58,4 @@ class SupabaseAddressRemoteDataSource(
         client.from(SupabaseTables.USER_ADDRESS).delete { filter { eq("id", address.id) } }
     }
 
-
 }
