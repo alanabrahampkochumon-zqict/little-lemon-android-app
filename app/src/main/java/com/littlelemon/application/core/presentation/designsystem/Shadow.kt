@@ -1,46 +1,89 @@
 package com.littlelemon.application.core.presentation.designsystem
 
-import androidx.compose.runtime.staticCompositionLocalOf
 
-data class ShadowSpec(
-    val radius: Float,
-    val offsetX: Float,
-    val offsetY: Float,
-    val color: Long = 0xff000000,
-    val spread: Float = 0f,
-    val alpha: Float = 1.0f,
-    // FIXME: Add Blendmode
+data class ShadowLayer(
+    val xOffset: Int,
+    val yOffset: Int,
+    val blurRadius: Int,
+    val spread: Int,
+    val opacity: Float,
+    val color: Int = 0x000000,
 )
 
-data class CustomShadow(
-    val firstShadow: ShadowSpec,
-    val secondShadow: ShadowSpec? = null
-)
-
-data class Shadows(
-    val upperXL: CustomShadow = CustomShadow(
-        ShadowSpec(radius = 48f, offsetX = 0f, offsetY = -8f, color = 0xff000000, alpha = 0.04f),
-        ShadowSpec(radius = 24f, offsetX = 0f, offsetY = -12f, color = 0xff000000, alpha = 0.08f)
-    ),
-    val dropSM: CustomShadow = CustomShadow(
-        ShadowSpec(radius = 4f, offsetX = 0f, offsetY = 2f, color = 0xff000000, alpha = 0.12f)
-    ),
-    val dropMD: CustomShadow = CustomShadow(
-        ShadowSpec(radius = 20f, offsetX = 0f, offsetY = 20f, color = 0xff000000, alpha = 0.04f),
-        ShadowSpec(radius = 8f, offsetX = 0f, offsetY = 4f, color = 0xff000000, alpha = 0.08f),
-    ),
-    val dropLG: CustomShadow = CustomShadow(
-        ShadowSpec(radius = 32f, offsetX = 0f, offsetY = 4f, color = 0xff000000, alpha = 0.12f),
-        ShadowSpec(radius = 6f, offsetX = 0f, offsetY = 12f, color = 0xff000000, alpha = 0.08f),
-    ),
-    val dropXL: CustomShadow = CustomShadow(
-        ShadowSpec(radius = 40f, offsetX = 0f, offsetY = 8f, color = 0xff000000, alpha = 0.08f),
-        ShadowSpec(radius = 20f, offsetX = 0f, offsetY = 12f, color = 0xff000000, alpha = 0.12f),
-    ),
-    val innerSM: CustomShadow = CustomShadow(
-        ShadowSpec(radius = 3f, offsetX = 0f, offsetY = 1f, color = 0xff000000, alpha = 0.12f)
+data class Shadow(val layers: List<ShadowLayer>) {
+    val dropXS: Shadow = Shadow(
+        listOf(
+            ShadowLayer(0, 13, 4, 0, 0.0f),
+            ShadowLayer(0, 8, 3, 0, 0.01f),
+            ShadowLayer(0, 5, 3, 0, 0.03f),
+            ShadowLayer(0, 2, 2, 0, 0.04f),
+            ShadowLayer(0, 1, 1, 0, 0.05f),
+        )
     )
-)
+    val dropSM: Shadow = Shadow(
+        listOf(
+            ShadowLayer(0, 27, 7, 0, 0.0f),
+            ShadowLayer(0, 17, 7, 0, 0.01f),
+            ShadowLayer(0, 10, 6, 0, 0.03f),
+            ShadowLayer(0, 4, 4, 0, 0.04f),
+            ShadowLayer(0, 1, 2, 0, 0.05f),
+        )
+    )
+    val dropMD: Shadow = Shadow(
+        listOf(
+            ShadowLayer(0, 40, 11, 0, 0.0f),
+            ShadowLayer(0, 25, 10, 0, 0.01f),
+            ShadowLayer(0, 14, 9, 0, 0.03f),
+            ShadowLayer(0, 6, 6, 0, 0.04f),
+            ShadowLayer(0, 2, 4, 0, 0.05f),
+        )
+    )
+    val dropLG: Shadow = Shadow(
+        listOf(
+            ShadowLayer(0, 53, 15, 0, 0.0f),
+            ShadowLayer(0, 34, 14, 0, 0.01f),
+            ShadowLayer(0, 19, 11, 0, 0.03f),
+            ShadowLayer(0, 8, 8, 0, 0.04f),
+            ShadowLayer(0, 2, 5, 0, 0.05f),
+        )
+    )
+    val dropXL: Shadow = Shadow(
+        listOf(
+            ShadowLayer(0, 72, 20, 0, 0.0f),
+            ShadowLayer(0, 46, 18, 0, 0.01f),
+            ShadowLayer(0, 26, 16, 0, 0.04f),
+            ShadowLayer(0, 12, 12, 0, 0.06f),
+            ShadowLayer(0, 3, 6, 0, 0.07f),
+        )
+    )
 
+    val upperMD: Shadow = Shadow(
+        listOf(
+            ShadowLayer(0, -92, 26, 0, 0.0f),
+            ShadowLayer(0, -59, 24, 0, 0.0f),
+            ShadowLayer(0, -33, 20, 0, 0.02f),
+            ShadowLayer(0, -15, 15, 0, 0.03f),
+            ShadowLayer(0, -4, 8, 0, 0.03f),
+        )
+    )
 
-val LocalShadows = staticCompositionLocalOf { Shadows() }
+    val upperLG: Shadow = Shadow(
+        listOf(
+            ShadowLayer(0, -188, 53, 0, 0.0f),
+            ShadowLayer(0, -120, 48, 0, 0.01f),
+            ShadowLayer(0, -68, 41, 0, 0.03f),
+            ShadowLayer(0, -30, 30, 0, 0.04f),
+            ShadowLayer(0, -8, 17, 0, 0.05f),
+        )
+    )
+
+    val upperXL: Shadow = Shadow(
+        listOf(
+            ShadowLayer(0, -207, 58, 0, 0.0f),
+            ShadowLayer(0, -133, 53, 0, 0.01f),
+            ShadowLayer(0, -75, 45, 0, 0.03f),
+            ShadowLayer(0, -33, 33, 0, 0.04f),
+            ShadowLayer(0, -8, 18, 0, 0.05f),
+        )
+    )
+}
