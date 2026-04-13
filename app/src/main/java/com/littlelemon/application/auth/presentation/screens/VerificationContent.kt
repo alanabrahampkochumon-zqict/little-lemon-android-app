@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -35,9 +34,6 @@ import com.littlelemon.application.auth.presentation.components.ResendTimer
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.TopNavigationBar
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,29 +58,37 @@ fun VerificationContent(
             onNavigate = onNavigateBack,
             modifier = Modifier.heightIn(max = 48.dp)
         )
-        Spacer(Modifier.height(MaterialTheme.dimens.sizeXL))
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
         Column(
             modifier = Modifier
                 .padding(
-                    start = MaterialTheme.dimens.size2XL,
-                    end = MaterialTheme.dimens.size2XL,
-                    bottom = MaterialTheme.dimens.sizeXL
+                    start = LittleLemonTheme.dimens.size2XL,
+                    end = LittleLemonTheme.dimens.size2XL,
+                    bottom = LittleLemonTheme.dimens.sizeXL
                 )
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXL)
+            verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeXL + LittleLemonTheme.dimens.sizeXS)
         ) {
             EmailSubsection(emailAddress = authState.email, onClick = onChangeEmail)
-            OTPFields(otp = authState.oneTimePassword, onOTPChange = onOTPChange, keyboardActions = KeyboardActions(onDone = {if(authState.enableVerifyButton) onVerifyOTP()}))
+            OTPFields(
+                otp = authState.oneTimePassword,
+                onOTPChange = onOTPChange,
+                keyboardActions = KeyboardActions(onDone = { if (authState.enableVerifyButton) onVerifyOTP() })
+            )
         }
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
             ResendTimer(onResendCode = onOTPResend)
         }
         if (isScrollable) {
-            Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
         } else {
-            Spacer(Modifier.weight(1f).animateContentSize())
+            Spacer(
+                Modifier
+                    .weight(1f)
+                    .animateContentSize()
+            )
         }
-        Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.size2XL)) {
+        Box(modifier = Modifier.padding(horizontal = LittleLemonTheme.dimens.size2XL)) {
             Button(
                 stringResource(R.string.act_verify),
                 onClick = onVerifyOTP,
@@ -104,15 +108,15 @@ fun EmailSubsection(
         modifier = modifier
             .minimumInteractiveComponentSize()
             .clickable { onClick() },
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)
+        verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeXS)
     ) {
         Text(
             stringResource(R.string.body_verification_code),
-            style = MaterialTheme.typeStyle.bodyMedium,
-            color = MaterialTheme.colors.contentSecondary
+            style = LittleLemonTheme.typography.bodyMedium,
+            color = LittleLemonTheme.colors.contentSecondary
         )
         Row(
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM),
+            horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeSM),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -120,13 +124,13 @@ fun EmailSubsection(
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 modifier = Modifier.weight(1f, fill = false),
-                style = MaterialTheme.typeStyle.labelMedium,
-                color = MaterialTheme.colors.contentOnAction
+                style = LittleLemonTheme.typography.labelMedium,
+                color = LittleLemonTheme.colors.contentOnAction
             )
             Text(
                 stringResource(R.string.act_change_email),
-                style = MaterialTheme.typeStyle.labelMedium,
-                color = MaterialTheme.colors.contentAccentSecondary,
+                style = LittleLemonTheme.typography.labelMedium,
+                color = LittleLemonTheme.colors.contentAccentSecondary,
             )
         }
     }
@@ -148,11 +152,11 @@ private fun OTPFields(
     }
     Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS),
+        verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeXS),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD),
+            horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeMD),
         ) {
             repeat(otpSize) { index ->
                 OTPInputField(
@@ -182,8 +186,8 @@ private fun OTPFields(
         errorMessage?.let { message ->
             Text(
                 text = message,
-                style = MaterialTheme.typeStyle.bodySmall,
-                color = MaterialTheme.colors.contentError,
+                style = LittleLemonTheme.typography.bodySmall,
+                color = LittleLemonTheme.colors.contentError,
                 textAlign = TextAlign.End,
                 modifier = Modifier.fillMaxWidth()
             )
