@@ -39,7 +39,8 @@ fun CardLayout(
 ) {
 
     val scrollState = rememberScrollState()
-    val shadow = if (isFloating) LittleLemonTheme.elevation.dropXL else LittleLemonTheme.elevation.upperMD
+    val shadow =
+        if (isFloating) LittleLemonTheme.shadows.dropXL else LittleLemonTheme.shadows.upperMD
     val cardShape = MaterialTheme.shapes.xLarge.copy(
         bottomStart = if (isFloating) MaterialTheme.shapes.large.bottomStart else CornerSize(0.dp),
         bottomEnd = if (isFloating) MaterialTheme.shapes.large.bottomEnd else CornerSize(0.dp)
@@ -54,19 +55,6 @@ fun CardLayout(
                 .widthIn(max = maxWidth)
                 .fillMaxWidth()
                 .applyShadow(cardShape, shadow)
-//                .dropShadow(
-//                    shape = cardShape,
-//                    shadow = MaterialTheme.shadows.upperXL.firstShadow.toComposeShadow(
-//                        screenDensityRatio
-//                    )
-//                )
-//                .dropShadow(
-//                    shape = cardShape,
-//                    shadow = MaterialTheme.shadows.upperXL.secondShadow?.toComposeShadow(
-//                        screenDensityRatio
-//                    )
-//                        ?: Shadow(radius = 0.dp)
-//                )
                 .background(
                     MaterialTheme.colors.primary,
                     shape = cardShape
