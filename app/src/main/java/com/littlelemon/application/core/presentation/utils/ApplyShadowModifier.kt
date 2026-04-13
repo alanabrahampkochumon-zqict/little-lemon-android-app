@@ -11,19 +11,15 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.presentation.designsystem.ShadowLayers
 
 @Composable
-fun Modifier.applyShadow(shape: Shape, shadows: ShadowLayers) {
-    shadows.layers.forEach { layer ->
-        this.dropShadow(
-            shape,
-            Shadow(
-                radius = layer.blurRadius.dp,
-                spread = layer.spread.dp,
-                offset = DpOffset(
-                    layer.xOffset.dp,
-                    layer.yOffset.dp
-                ),
-                color = Color(layer.color),
-                alpha = layer.opacity
+fun Modifier.applyShadow(shape: Shape, shadows: ShadowLayers): Modifier {
+    return shadows.layers.fold(this) { modifier, shadowLayer ->
+        modifier.dropShadow(
+            shape = shape,
+            shadow = Shadow(
+                radius = shadowLayer.blurRadius.dp,
+                spread = shadowLayer.spread.dp,
+                offset = DpOffset(shadowLayer.xOffset.dp, shadowLayer.yOffset.dp),
+                color = Color(shadowLayer.color).copy(alpha = shadowLayer.opacity)
             )
         )
     }
