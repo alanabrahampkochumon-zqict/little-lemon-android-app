@@ -28,6 +28,7 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.address.domain.models.LocalAddress
+import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
@@ -78,7 +79,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             )
         },
         topBar = {
-            TopAppBar(LocalAddress(), {/* TODO(Implementation) */ })
+            TopAppBar(LocalAddress(location = LocalLocation(1.234, 5.31234)), {/* TODO(Implementation) */ })
         },
         containerColor = MaterialTheme.colors.secondary,
         modifier = Modifier
