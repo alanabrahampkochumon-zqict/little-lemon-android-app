@@ -4,7 +4,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-data class Dimens(
+data class LittleLemonDimens(
     val sizeNone: Dp = 0.dp,
     val size2XS: Dp = 2.dp,
     val sizeXS: Dp = 4.dp,
@@ -20,4 +20,4 @@ data class Dimens(
     val size7XL: Dp = 80.dp,
 )
 
-val LocalDimensions = staticCompositionLocalOf { Dimens() }
+val LocalLittleLemonDimensions = staticCompositionLocalOf { LittleLemonDimens() }

@@ -1,6 +1,9 @@
 package com.littlelemon.application.core.presentation.designsystem
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.compositionLocalOf
 
+@Immutable
 data class ShadowLayer(
     val xOffset: Int,
     val yOffset: Int,
@@ -10,8 +13,12 @@ data class ShadowLayer(
     val color: Int = 0x000000,
 )
 
-data class Shadow(val layers: List<ShadowLayer>) {
-    val dropXS: Shadow = Shadow(
+@Immutable
+data class ShadowLayers(val layers: List<ShadowLayer>)
+
+@Immutable
+data class LittleLemonShadows(
+    val dropXS: ShadowLayers = ShadowLayers(
         listOf(
             ShadowLayer(0, 13, 4, 0, 0.0f),
             ShadowLayer(0, 8, 3, 0, 0.01f),
@@ -19,8 +26,8 @@ data class Shadow(val layers: List<ShadowLayer>) {
             ShadowLayer(0, 2, 2, 0, 0.04f),
             ShadowLayer(0, 1, 1, 0, 0.05f),
         )
-    )
-    val dropSM: Shadow = Shadow(
+    ),
+    val dropSM: ShadowLayers = ShadowLayers(
         listOf(
             ShadowLayer(0, 27, 7, 0, 0.0f),
             ShadowLayer(0, 17, 7, 0, 0.01f),
@@ -28,8 +35,8 @@ data class Shadow(val layers: List<ShadowLayer>) {
             ShadowLayer(0, 4, 4, 0, 0.04f),
             ShadowLayer(0, 1, 2, 0, 0.05f),
         )
-    )
-    val dropMD: Shadow = Shadow(
+    ),
+    val dropMD: ShadowLayers = ShadowLayers(
         listOf(
             ShadowLayer(0, 40, 11, 0, 0.0f),
             ShadowLayer(0, 25, 10, 0, 0.01f),
@@ -37,8 +44,8 @@ data class Shadow(val layers: List<ShadowLayer>) {
             ShadowLayer(0, 6, 6, 0, 0.04f),
             ShadowLayer(0, 2, 4, 0, 0.05f),
         )
-    )
-    val dropLG: Shadow = Shadow(
+    ),
+    val dropLG: ShadowLayers = ShadowLayers(
         listOf(
             ShadowLayer(0, 53, 15, 0, 0.0f),
             ShadowLayer(0, 34, 14, 0, 0.01f),
@@ -46,8 +53,7 @@ data class Shadow(val layers: List<ShadowLayer>) {
             ShadowLayer(0, 8, 8, 0, 0.04f),
             ShadowLayer(0, 2, 5, 0, 0.05f),
         )
-    )
-    val dropXL: Shadow = Shadow(
+    ), val dropXL: ShadowLayers = ShadowLayers(
         listOf(
             ShadowLayer(0, 72, 20, 0, 0.0f),
             ShadowLayer(0, 46, 18, 0, 0.01f),
@@ -55,9 +61,8 @@ data class Shadow(val layers: List<ShadowLayer>) {
             ShadowLayer(0, 12, 12, 0, 0.06f),
             ShadowLayer(0, 3, 6, 0, 0.07f),
         )
-    )
-
-    val upperMD: Shadow = Shadow(
+    ),
+    val upperMD: ShadowLayers = ShadowLayers(
         listOf(
             ShadowLayer(0, -92, 26, 0, 0.0f),
             ShadowLayer(0, -59, 24, 0, 0.0f),
@@ -65,9 +70,8 @@ data class Shadow(val layers: List<ShadowLayer>) {
             ShadowLayer(0, -15, 15, 0, 0.03f),
             ShadowLayer(0, -4, 8, 0, 0.03f),
         )
-    )
-
-    val upperLG: Shadow = Shadow(
+    ),
+    val upperLG: ShadowLayers = ShadowLayers(
         listOf(
             ShadowLayer(0, -188, 53, 0, 0.0f),
             ShadowLayer(0, -120, 48, 0, 0.01f),
@@ -75,9 +79,8 @@ data class Shadow(val layers: List<ShadowLayer>) {
             ShadowLayer(0, -30, 30, 0, 0.04f),
             ShadowLayer(0, -8, 17, 0, 0.05f),
         )
-    )
-
-    val upperXL: Shadow = Shadow(
+    ),
+    val upperXL: ShadowLayers = ShadowLayers(
         listOf(
             ShadowLayer(0, -207, 58, 0, 0.0f),
             ShadowLayer(0, -133, 53, 0, 0.01f),
@@ -86,4 +89,6 @@ data class Shadow(val layers: List<ShadowLayer>) {
             ShadowLayer(0, -8, 18, 0, 0.05f),
         )
     )
-}
+)
+
+val LocalLittleLemonShadows = compositionLocalOf { LittleLemonShadows() }

@@ -16,7 +16,7 @@ import androidx.core.view.WindowCompat
 
 val customColors = LittleLemonColors()
 val customTypography = LittleLemonTypography()
-val customDimension = Dimens()
+val customDimension = LittleLemonDimens()
 val customElevation = ShadowElevation()
 val customShadow = Shadows()
 private val LightColorScheme = lightColorScheme(
@@ -71,8 +71,8 @@ fun LittleLemonTheme(
 
     CompositionLocalProvider(
         LocalLittleLemonColors provides customColors,
-        LocalCustomTypography provides customTypography,
-        LocalDimensions provides customDimension,
+        LocalLittleLemonTypography provides customTypography,
+        LocalLittleLemonDimensions provides customDimension,
         LocalShadowElevation provides customElevation,
         LocalShadows provides customShadow,
     ) {
@@ -92,11 +92,11 @@ val MaterialTheme.colors: LittleLemonColors
 
 val MaterialTheme.typeStyle: LittleLemonTypography
     @Composable
-    get() = LocalCustomTypography.current
+    get() = LocalLittleLemonTypography.current
 
-val MaterialTheme.dimens: Dimens
+val MaterialTheme.dimens: LittleLemonDimens
     @Composable
-    get() = LocalDimensions.current
+    get() = LocalLittleLemonDimensions.current
 
 val MaterialTheme.shadowElevation: ShadowElevation
     @Composable

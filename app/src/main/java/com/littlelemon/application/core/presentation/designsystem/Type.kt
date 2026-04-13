@@ -149,4 +149,4 @@ data class LittleLemonTypography(
     val bodyXSmall: TextStyle = Typography.bodyXSmall,
 )
 
-val LocalCustomTypography = staticCompositionLocalOf { LittleLemonTypography() }
+val LocalLittleLemonTypography = staticCompositionLocalOf { LittleLemonTypography() }
