@@ -29,23 +29,23 @@ private val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = MarkaziTextFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 40.sp,
-        lineHeight = 36.sp,
-        letterSpacing = (-0.21).sp
+        fontSize = 32.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
     ),
     displayMedium = TextStyle(
         fontFamily = MarkaziTextFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 36.sp,
-        lineHeight = 32.sp,
-        letterSpacing = (-0.21).sp
+        fontSize = 28.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.sp
     ),
     displaySmall = TextStyle(
         fontFamily = MarkaziTextFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 32.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
+        fontSize = 24.sp,
+        lineHeight = 20.sp,
+        letterSpacing = (0.21).sp
     ),
 
     // Heading Font
