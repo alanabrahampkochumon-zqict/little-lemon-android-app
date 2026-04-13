@@ -1,7 +1,6 @@
 package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -22,19 +21,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 
 
 @Composable
@@ -56,17 +50,23 @@ fun Loader(
                 .fillMaxSize()
                 .then(
                     if (showLoader) Modifier
-                        .blur(MaterialTheme.dimens.sizeMD)
+                        .blur(LittleLemonTheme.dimens.sizeLG)
                         .disableTouch() else Modifier
                 ),
             contentAlignment = Alignment.Center
         ) {
             screenContent()
         }
-        AnimatedVisibility(showLoader, enter = fadeIn(animationSpec = tween(200)), exit = fadeOut(animationSpec = tween(200))) {
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.darkOverlay24))
+        AnimatedVisibility(
+            showLoader,
+            enter = fadeIn(animationSpec = tween(200)),
+            exit = fadeOut(animationSpec = tween(200))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(LittleLemonTheme.colors.darkOverlay24)
+            )
         }
         AnimatedVisibility(
             showLoader,
@@ -82,32 +82,22 @@ fun Loader(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    MaterialTheme.dimens.sizeXL
+                    LittleLemonTheme.dimens.sizeXL
                 ),
                 modifier = Modifier
-                    .dropShadow(
-                        MaterialTheme.shapes.medium,
-                        MaterialTheme.shadows.dropXL.firstShadow.toComposeShadow(screenDensityRatio)
-                    )
-                    .dropShadow(
-                        MaterialTheme.shapes.medium,
-                        MaterialTheme.shadows.dropXL.secondShadow?.toComposeShadow(
-                            screenDensityRatio
-                        )
-                            ?: Shadow(0.dp)
-                    )
+                    .applyShadow(LittleLemonTheme.shapes.md, LittleLemonTheme.shadows.dropLG)
                     .background(
-                        MaterialTheme.colors.primary, shape = MaterialTheme.shapes.medium
+                        LittleLemonTheme.colors.primary, shape = LittleLemonTheme.shapes.md
                     )
-                    .padding(MaterialTheme.dimens.sizeXL)
+                    .padding(LittleLemonTheme.dimens.sizeXL)
                     .testTag(stringResource(R.string.test_tag_loader))
             ) {
                 CircularProgressIndicator(
-                    trackColor = MaterialTheme.colors.transparent,
-                    color = MaterialTheme.colors.action,
+                    trackColor = LittleLemonTheme.colors.transparent,
+                    color = LittleLemonTheme.colors.action,
                     strokeCap = StrokeCap.Round,
                     strokeWidth = 3.dp,
-                    modifier = Modifier.size(MaterialTheme.dimens.size4XL)
+                    modifier = Modifier.size(LittleLemonTheme.dimens.size4XL)
                 )
                 loaderContent()
             }
@@ -140,7 +130,7 @@ private fun LoaderPreview() {
                     Box(
                         Modifier
                             .size(200.dp)
-                            .background(MaterialTheme.colors.action)
+                            .background(LittleLemonTheme.colors.action)
                     )
                 }
             }
