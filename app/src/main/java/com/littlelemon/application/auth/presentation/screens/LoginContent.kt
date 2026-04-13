@@ -46,7 +46,7 @@ fun LoginContent(
 
     Column(
         modifier = modifier
-            .padding(horizontal = MaterialTheme.dimens.sizeMD)
+            .padding(horizontal = LittleLemonTheme.dimens.sizeMD)
     ) {
         Image(
             modifier = modifier
@@ -55,19 +55,19 @@ fun LoginContent(
             painter = painterResource(R.drawable.logo_full),
             contentDescription = null
         )
-        Spacer(Modifier.height(MaterialTheme.dimens.size3XL - AuthScreenConfig.FONT_OFFSET))
+        Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL - AuthScreenConfig.FONT_OFFSET))
         Text(
             stringResource(R.string.heading_login),
-            style = MaterialTheme.typeStyle.displaySmall,
-            color = MaterialTheme.colors.contentPrimary,
+            style = LittleLemonTheme.typography.displayLarge,
+            color = LittleLemonTheme.colors.contentPrimary,
         )
-        Spacer(Modifier.height(MaterialTheme.dimens.sizeLG - AuthScreenConfig.FONT_OFFSET))
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeXL - AuthScreenConfig.FONT_OFFSET))
 
         Column(
             Modifier
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(
-                MaterialTheme.dimens.sizeSM
+                LittleLemonTheme.dimens.sizeSM
             )
         ) {
             TextInputField(
@@ -86,12 +86,12 @@ fun LoginContent(
             )
             Text(
                 stringResource(R.string.body_email_description),
-                style = MaterialTheme.typeStyle.bodySmall,
-                color = MaterialTheme.colors.contentTertiary
+                style = LittleLemonTheme.typography.bodySmall,
+                color = LittleLemonTheme.colors.contentTertiary
             )
         }
         if (isScrollable) {
-            Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
         } else {
             Spacer(Modifier.weight(1f).animateContentSize())
         }
