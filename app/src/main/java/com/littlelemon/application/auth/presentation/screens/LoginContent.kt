@@ -42,8 +42,6 @@ fun LoginContent(
     onSendOTP: () -> Unit = {},
 ) {
 
-    val keyboardController = LocalSoftwareKeyboardController.current
-
     Column(
         modifier = modifier
             .padding(horizontal = LittleLemonTheme.dimens.sizeMD)

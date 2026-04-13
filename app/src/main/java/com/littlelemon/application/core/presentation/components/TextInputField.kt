@@ -50,27 +50,27 @@ fun TextInputField(
     val interactionSource = remember { MutableInteractionSource() }
 
     val colors = OutlinedTextFieldDefaults.colors(
-        focusedTextColor = MaterialTheme.colors.contentPrimary,
-        unfocusedTextColor = MaterialTheme.colors.contentPrimary,
-        disabledTextColor = MaterialTheme.colors.contentDisabled,
-        focusedPlaceholderColor = MaterialTheme.colors.contentPlaceholder,
-        unfocusedPlaceholderColor = MaterialTheme.colors.contentPlaceholder,
+        focusedTextColor = LittleLemonTheme.colors.contentPrimary,
+        unfocusedTextColor = LittleLemonTheme.colors.contentPrimary,
+        disabledTextColor = LittleLemonTheme.colors.contentDisabled,
+        focusedPlaceholderColor = LittleLemonTheme.colors.contentPlaceholder,
+        unfocusedPlaceholderColor = LittleLemonTheme.colors.contentPlaceholder,
 
-        focusedContainerColor = MaterialTheme.colors.primary,
-        unfocusedContainerColor = MaterialTheme.colors.secondary,
-        disabledContainerColor = MaterialTheme.colors.disabled,
+        focusedContainerColor = LittleLemonTheme.colors.primary,
+        unfocusedContainerColor = LittleLemonTheme.colors.secondary,
+        disabledContainerColor = LittleLemonTheme.colors.disabled,
 
-        focusedBorderColor = MaterialTheme.colors.outlineActive,
-        unfocusedBorderColor = MaterialTheme.colors.transparent,
-        errorBorderColor = MaterialTheme.colors.outlineError,
-        disabledBorderColor = MaterialTheme.colors.transparent,
+        focusedBorderColor = LittleLemonTheme.colors.outlineActive,
+        unfocusedBorderColor = LittleLemonTheme.colors.transparent,
+        errorBorderColor = LittleLemonTheme.colors.outlineError,
+        disabledBorderColor = LittleLemonTheme.colors.transparent,
 
-        cursorColor = MaterialTheme.colors.contentAccentSecondary
+        cursorColor = LittleLemonTheme.colors.contentAccentSecondary
     )
 
     val iconSize = 20.dp
 
-    Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
+    Column(verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeXS)) {
 
         BasicTextField(
             value = value,
@@ -81,7 +81,7 @@ fun TextInputField(
                 .then(modifier),
             enabled = enabled,
             singleLine = true,
-            textStyle = MaterialTheme.typeStyle.labelMedium,
+            textStyle = LittleLemonTheme.typography.bodyMedium,
             keyboardActions = keyboardActions,
             keyboardOptions = keyboardOptions,
             interactionSource = interactionSource,
@@ -90,7 +90,7 @@ fun TextInputField(
             OutlinedTextFieldDefaults.DecorationBox(
                 value = value,
                 placeholder = {
-                    Text(text = placeholder, style = MaterialTheme.typeStyle.labelMedium)
+                    Text(text = placeholder, style = LittleLemonTheme.typography.bodyMedium)
                 },
                 colors = colors,
                 enabled = enabled,
@@ -120,7 +120,7 @@ fun TextInputField(
                         enabled,
                         errorMessage != null,
                         interactionSource,
-                        focusedBorderThickness = MaterialTheme.dimens.size2XS,
+                        focusedBorderThickness = LittleLemonTheme.dimens.size3XS,
                         colors = colors,
                         shape = MaterialTheme.shapes.small,
                         modifier = Modifier.fillMaxWidth(),
@@ -128,8 +128,8 @@ fun TextInputField(
 
                 },
                 contentPadding = PaddingValues(
-                    horizontal = MaterialTheme.dimens.sizeXL,
-                    vertical = MaterialTheme.dimens.sizeLG
+                    horizontal = LittleLemonTheme.dimens.sizeXL,
+                    vertical = LittleLemonTheme.dimens.sizeLG
                 ),
                 innerTextField = innerTextField,
                 interactionSource = interactionSource,
@@ -142,8 +142,8 @@ fun TextInputField(
         errorMessage?.let { message ->
             Text(
                 text = message,
-                style = MaterialTheme.typeStyle.bodySmall,
-                color = MaterialTheme.colors.contentError,
+                style = LittleLemonTheme.typography.bodyXSmall,
+                color = LittleLemonTheme.colors.contentError,
                 textAlign = TextAlign.End,
                 modifier = Modifier.fillMaxWidth()
             )

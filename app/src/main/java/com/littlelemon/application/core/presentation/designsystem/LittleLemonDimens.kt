@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.dp
 
 data class LittleLemonDimens(
     val sizeNone: Dp = 0.dp,
+    val size3XS: Dp = 1.dp,
     val size2XS: Dp = 2.dp,
     val sizeXS: Dp = 4.dp,
     val sizeSM: Dp = 6.dp,
