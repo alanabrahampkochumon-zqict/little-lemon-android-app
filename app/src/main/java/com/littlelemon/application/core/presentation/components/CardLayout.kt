@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.xLarge
 import com.littlelemon.application.core.presentation.utils.applyShadow
 
 @Composable
@@ -34,17 +32,14 @@ fun CardLayout(
     isScrollable: Boolean = false,
     maxHeight: Dp = 700.dp,
     maxWidth: Dp = 700.dp,
-    screenDensityRatio: Float = 2.0f,
     content: @Composable () -> Unit = {}
 ) {
 
     val scrollState = rememberScrollState()
-    val shadow =
+
+    val cardShadow =
         if (isFloating) LittleLemonTheme.shadows.dropXL else LittleLemonTheme.shadows.upperMD
-    val cardShape = MaterialTheme.shapes.xLarge.copy(
-        bottomStart = if (isFloating) MaterialTheme.shapes.large.bottomStart else CornerSize(0.dp),
-        bottomEnd = if (isFloating) MaterialTheme.shapes.large.bottomEnd else CornerSize(0.dp)
-    )
+    val cardShape = if(isFloating) LittleLemonTheme.shapes.lg else LittleLemonTheme.shapes.attachedCardShape
     Column(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,7 +49,7 @@ fun CardLayout(
             Modifier
                 .widthIn(max = maxWidth)
                 .fillMaxWidth()
-                .applyShadow(cardShape, shadow)
+                .applyShadow(cardShape, cardShadow)
                 .background(
                     MaterialTheme.colors.primary,
                     shape = cardShape

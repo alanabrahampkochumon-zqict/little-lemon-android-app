@@ -235,7 +235,6 @@ fun AuthScreenRoot(
                             isScrollable = isScrollable,
                             maxHeight = maxHeight,
                             maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
-                            screenDensityRatio = screenDensityRatio
                         ) {
                             LoginContent(
                                 authState = state,
@@ -261,7 +260,6 @@ fun AuthScreenRoot(
                             isScrollable = isScrollable,
                             maxHeight = maxHeight,
                             maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
-                            screenDensityRatio = screenDensityRatio
                         ) {
                             VerificationContent(
                                 authState = state,
@@ -284,7 +282,6 @@ fun AuthScreenRoot(
                             isScrollable = isScrollable,
                             maxHeight = maxHeight,
                             maxWidth = AuthScreenConfig.MAX_CARD_WIDTH,
-                            screenDensityRatio = screenDensityRatio
                         ) {
                             PersonalInformationContent(
                                 state,
