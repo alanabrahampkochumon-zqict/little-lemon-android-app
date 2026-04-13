@@ -13,6 +13,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.vectorResource
@@ -42,6 +43,7 @@ fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
 
     // TODO: Update to cache all the calculated values
     val painters = drawables.map { rememberVectorPainter(ImageVector.vectorResource(it)) }
+//    var graphicsLayer = rememberGraphicsLayer()
     Canvas(
         modifier
             .fillMaxWidth()
@@ -49,6 +51,7 @@ fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
             .background(MaterialTheme.colors.secondary)
     ) {
         val (width, height) = size
+        val spacing = Random.nextFloat() * 5 + 10
         var remainingWidth = width
         while (remainingWidth > 0) {
             var offset = 0.0f
@@ -59,9 +62,9 @@ fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
                 val (pWidth, pHeight) = painter.intrinsicSize
                 val x = width - remainingWidth
                 val y = height - remainingH
-                val scale = Random.nextDouble(0.75, 0.95).toFloat()
+                val scale = Random.nextDouble(0.45, 0.6).toFloat()
                 val drawHeight = pHeight * scale
-                val drawWidth = pHeight * scale
+                val drawWidth = pWidth * scale
                 translate(x, y) {
                     rotate(
                         Random.nextFloat() * 360 - 180,
@@ -76,10 +79,10 @@ fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
                         }
                     }
                 }
-                remainingH -= pHeight
-                offset = max(offset, pWidth)
+                remainingH -= drawHeight + spacing
+                offset = max(offset, drawWidth)
             }
-            remainingWidth -= offset / 1.05f
+            remainingWidth -= (offset / 1.05f) + spacing
         }
     }
 }
