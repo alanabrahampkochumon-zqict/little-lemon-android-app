@@ -67,7 +67,7 @@ fun VerificationContent(
                     bottom = LittleLemonTheme.dimens.sizeXL
                 )
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeXL + LittleLemonTheme.dimens.sizeXS)
+            verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL + LittleLemonTheme.dimens.sizeXS)
         ) {
             EmailSubsection(emailAddress = authState.email, onClick = onChangeEmail)
             OTPFields(
