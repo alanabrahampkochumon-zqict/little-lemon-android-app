@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -45,7 +44,7 @@ fun TopNavigationBar(
     onNavigate: () -> Unit = {},
     scrollBehaviour: TopAppBarScrollBehavior? = null,
 ) {
-
+    // TODO: Custom ripple effect
     TopAppBar(
         modifier = modifier,
         windowInsets = WindowInsets(0.dp),
@@ -78,12 +77,12 @@ fun TopNavigationBar(
                 label?.let {
                     Text(
                         text = it,
-                        style = MaterialTheme.typeStyle.labelLarge,
+                        style = MaterialTheme.typeStyle.displaySmall,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-                Spacer(Modifier.height(2.dp))
                 subText?.let {
+                    Spacer(Modifier.height(2.dp))
                     Text(
                         text = it,
                         style = MaterialTheme.typeStyle.bodyMedium,
