@@ -76,6 +76,7 @@ fun VerificationContent(
                 keyboardActions = KeyboardActions(onDone = { if (authState.enableVerifyButton) onVerifyOTP() })
             )
         }
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
             ResendTimer(onResendCode = onOTPResend)
         }
