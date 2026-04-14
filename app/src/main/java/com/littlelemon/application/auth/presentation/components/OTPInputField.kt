@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,10 +28,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.littlelemon.application.auth.AuthConstants
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.designsystem.xSmall
 
 @Composable
 fun OTPInputField(
@@ -64,34 +61,38 @@ fun OTPInputField(
     }
 
     val borderColor = if (errorMessage != null) {
-        MaterialTheme.colors.outlineError
-    } else if (isFocused) {
-        MaterialTheme.colors.outlineActive
-    } else if (number == null) {
-        MaterialTheme.colors.secondary
+        LittleLemonTheme.colors.outlineError
+    } else if (isFocused && number == null) {
+        LittleLemonTheme.colors.outlineActive
+    } else if (number != null) {
+        LittleLemonTheme.colors.secondary
     } else {
-        MaterialTheme.colors.transparent
+        LittleLemonTheme.colors.transparent
     }
 
     val backgroundColor = if (!enabled) {
-        MaterialTheme.colors.disabled
-    } else if (!isFocused) {
-        MaterialTheme.colors.secondary
+        LittleLemonTheme.colors.disabled
+    } else if (!isFocused && number == null) {
+        LittleLemonTheme.colors.secondary
     } else {
-        MaterialTheme.colors.primary
+        LittleLemonTheme.colors.primary
     }
 
     val textColor = if (!enabled) {
-        MaterialTheme.colors.contentDisabled
+        LittleLemonTheme.colors.contentDisabled
     } else {
-        MaterialTheme.colors.contentPrimary
+        LittleLemonTheme.colors.contentPrimary
     }
 
     Box(
         modifier = modifier
-            .size(44.dp)
-            .background(backgroundColor, shape = MaterialTheme.shapes.xSmall)
-            .border(width = 2.dp, color = borderColor, shape = MaterialTheme.shapes.xSmall),
+            .size(AuthConstants.OTP_INPUT_FIELD_SIZE)
+            .background(backgroundColor, shape = LittleLemonTheme.shapes.xs)
+            .border(
+                width = LittleLemonTheme.dimens.size3XS,
+                color = borderColor,
+                shape = LittleLemonTheme.shapes.xs
+            ),
         contentAlignment = Alignment.Center,
 
         ) {
@@ -103,7 +104,7 @@ fun OTPInputField(
                     onNumberChanged(newNumber?.digitToIntOrNull())
                 }
             },
-            textStyle = MaterialTheme.typeStyle.displaySmall.copy(
+            textStyle = LittleLemonTheme.typography.headlineLarge.copy(
                 textAlign = TextAlign.Center,
                 color = textColor
             ),

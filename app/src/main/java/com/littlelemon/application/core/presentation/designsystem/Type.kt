@@ -51,14 +51,14 @@ private val Typography = Typography(
     // Heading Font
     headlineLarge = TextStyle(
         fontFamily = KarlaFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
         lineHeight = 36.sp,
         letterSpacing = (-1.4).sp
     ),
     headlineMedium = TextStyle(
         fontFamily = KarlaFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
         lineHeight = 32.sp,
         letterSpacing = (-0.96).sp

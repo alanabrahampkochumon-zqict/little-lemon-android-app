@@ -92,7 +92,6 @@ fun LoginContent(
                 .weight(1f)
                 .animateContentSize())
         }
-        IndefiniteCircularProgressIndicator()
         Button(
             stringResource(R.string.act_send_otp),
             onSendOTP,
