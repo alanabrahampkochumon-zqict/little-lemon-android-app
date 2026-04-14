@@ -7,17 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -27,12 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.core.presentation.components.Button
-import com.littlelemon.application.core.presentation.components.CircularProgressBar
+import com.littlelemon.application.core.presentation.components.IndefiniteCircularProgressIndicator
 import com.littlelemon.application.core.presentation.components.TextInputField
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @Composable
 fun LoginContent(
@@ -74,10 +67,13 @@ fun LoginContent(
                 value = authState.email,
                 errorMessage = authState.emailError,
                 onValueChange = onEmailChange,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Send),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Send
+                ),
                 keyboardActions = KeyboardActions(
                     onSend = {
-                        if(authState.enableSendButton) {
+                        if (authState.enableSendButton) {
                             onSendOTP()
                         }
                     }
@@ -92,8 +88,11 @@ fun LoginContent(
         if (isScrollable) {
             Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
         } else {
-            Spacer(Modifier.weight(1f).animateContentSize())
+            Spacer(Modifier
+                .weight(1f)
+                .animateContentSize())
         }
+        IndefiniteCircularProgressIndicator()
         Button(
             stringResource(R.string.act_send_otp),
             onSendOTP,

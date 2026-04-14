@@ -89,7 +89,7 @@ fun Loader(
                     .padding(LittleLemonTheme.dimens.sizeXL)
                     .testTag(stringResource(R.string.test_tag_loader))
             ) {
-                CircularProgressBar(indefinite = true)
+                IndefiniteCircularProgressIndicator()
 //                CircularProgressIndicator(
 //                    trackColor = LittleLemonTheme.colors.transparent,
 //                    color = LittleLemonTheme.colors.action,
