@@ -1,13 +1,13 @@
 package com.littlelemon.application.menu.presentation.screen.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -135,7 +135,9 @@ fun MenuCard(
                 error = painterResource(R.drawable.illustration_image_loading),
                 contentDescription = dish.title,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.clip(imageShape),
+                modifier = Modifier
+                    .clip(imageShape)
+                    .fillMaxSize(),
                 colorFilter = if (outOfStock) ColorFilter.colorMatrix(
                     ColorMatrix().apply { setToSaturation(0f) } // Makes out of stock images black and white
                 ) else null
@@ -167,8 +169,8 @@ fun MenuCard(
                 .padding(
                     start = MaterialTheme.dimens.sizeXL,
                     end = MaterialTheme.dimens.sizeXL,
-                    top = MaterialTheme.dimens.sizeMD,
-                    bottom = MaterialTheme.dimens.sizeLG
+                    top = MaterialTheme.dimens.sizeLG,
+                    bottom = MaterialTheme.dimens.sizeXL
                 )
         ) {
 
@@ -190,7 +192,10 @@ fun MenuCard(
                             variant = TagVariant.NeutralFilled
                         )
                     else
-                        Tag(stringResource(R.string.calories, nutrition.calories))
+                        Tag(
+                            stringResource(R.string.calories, nutrition.calories),
+                            variant = TagVariant.InformationLight
+                        )
                 }
             }
 
@@ -199,22 +204,25 @@ fun MenuCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.sizeXS
+                        MaterialTheme.dimens.sizeSM
                     )
                 ) {
                     Text(
                         stringResource(R.string.protein, nutrition.protein),
-                        style = MaterialTheme.typeStyle.bodyXSmall
+                        style = MaterialTheme.typeStyle.bodyXSmall,
+                        color = LittleLemonTheme.colors.contentTertiary
                     )
                     DotSeparator()
                     Text(
                         stringResource(R.string.carbs, nutrition.carbs),
-                        style = MaterialTheme.typeStyle.bodyXSmall
+                        style = MaterialTheme.typeStyle.bodyXSmall,
+                        color = LittleLemonTheme.colors.contentTertiary
                     )
                     DotSeparator()
                     Text(
                         stringResource(R.string.fats, nutrition.fats),
-                        style = MaterialTheme.typeStyle.bodyXSmall
+                        style = MaterialTheme.typeStyle.bodyXSmall,
+                        color = LittleLemonTheme.colors.contentTertiary
                     )
                 }
             }
@@ -232,10 +240,9 @@ fun MenuCard(
             }
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXL))
             Row(
-                modifier = Modifier.border(
-                    1.dp,
-                    shape = MaterialTheme.shapes.small,
-                    color = MaterialTheme.colors.outlineSecondary
+                modifier = Modifier.background(
+                    LittleLemonTheme.colors.secondary,
+                    shape = LittleLemonTheme.shapes.xs
                 ), verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
@@ -244,10 +251,9 @@ fun MenuCard(
                         MaterialTheme.dimens.size2XS
                     ),
                     modifier = Modifier
-                        .border(
-                            1.dp,
-                            shape = MaterialTheme.shapes.small,
-                            color = MaterialTheme.colors.outlineSecondary
+                        .background(
+                            LittleLemonTheme.colors.highlight,
+                            shape = LittleLemonTheme.shapes.xs
                         )
                         .padding(
                             start = MaterialTheme.dimens.sizeMD,
@@ -261,18 +267,17 @@ fun MenuCard(
                             fontWeight = FontWeight.Normal,
                             fontSize = 28.sp // TODO: Refactor to text style
                         ),
-                        color = MaterialTheme.colors.contentAccentSecondary
+                        color = MaterialTheme.colors.contentOnColor
                     )
                     Text(
                         stringResource(
                             R.string.price_format,
                             dish.discountedPrice ?: dish.price
                         ), // TODO: Add test
-                        style = MaterialTheme.typeStyle.displaySmall,
-                        color = MaterialTheme.colors.contentAccentSecondary
+                        style = MaterialTheme.typeStyle.displayMedium,
+                        color = MaterialTheme.colors.contentOnColor
                     )
                 }
-                //TODO: Make DiscountedPrice Optional
                 dish.discountedPrice?.let {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -304,7 +309,7 @@ fun MenuCard(
 }
 
 
-@Preview(showBackground = true, heightDp = 1000)
+@Preview(showBackground = true, heightDp = 1500)
 @Composable
 private fun MenuCardPreview() {
     LittleLemonTheme {

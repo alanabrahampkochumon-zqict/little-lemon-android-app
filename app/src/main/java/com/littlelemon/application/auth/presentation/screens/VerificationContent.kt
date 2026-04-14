@@ -138,6 +138,7 @@ fun EmailSubsection(
 }
 
 
+//TODO: Request focus to the first OTP field
 @Composable
 private fun OTPFields(
     otp: List<Int?>,
@@ -151,6 +152,7 @@ private fun OTPFields(
     val focusRequesters = remember {
         List(otpSize) { FocusRequester() }
     }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeXS),

@@ -19,7 +19,7 @@ fun DotSeparator(modifier: Modifier = Modifier) {
     Box(
         modifier
             .size(MaterialTheme.dimens.sizeXS)
-            .background(MaterialTheme.colors.contentTertiary, shape = MaterialTheme.shapes.medium)
+            .background(MaterialTheme.colors.contentDisabled, shape = MaterialTheme.shapes.medium)
     )
 }
 
