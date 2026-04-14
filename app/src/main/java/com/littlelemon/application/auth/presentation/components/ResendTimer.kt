@@ -39,7 +39,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun ResendTimer(
     modifier: Modifier = Modifier,
-    initialTime: Int = 10,
+    initialTime: Int = 60,
     totalTime: Int = 60,
     onResendCode: () -> Unit = {}
 ) {

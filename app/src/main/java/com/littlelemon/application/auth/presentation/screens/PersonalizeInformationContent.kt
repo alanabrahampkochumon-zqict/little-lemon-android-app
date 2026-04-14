@@ -50,8 +50,8 @@ fun PersonalInformationContent(
             navigationIconDescription = stringResource(R.string.act_back),
             modifier = Modifier.heightIn(max = 48.dp)
         )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXL))
-        Column(modifier = Modifier.padding(MaterialTheme.dimens.sizeLG)) {
+            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
+        Column(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)) {
             NameInputField(
                 label = stringResource(R.string.label_first_name),
                 value = authState.firstName,

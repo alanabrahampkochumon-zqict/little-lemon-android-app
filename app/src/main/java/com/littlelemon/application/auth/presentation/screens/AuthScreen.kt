@@ -278,6 +278,7 @@ fun AuthScreenRoot(
                         CardLayout(
                             modifier = Modifier
                                 .padding(innerPadding)
+                                .consumeWindowInsets(innerPadding)
                                 .fillMaxSize(),
                             isFloating = isFloating,
                             isScrollable = isScrollable,
@@ -292,9 +293,9 @@ fun AuthScreenRoot(
                                 onComplete = onCompletePersonalization,
                                 modifier = Modifier.padding(
                                     top = MaterialTheme.dimens.sizeMD,
-                                    start = MaterialTheme.dimens.sizeXL,
-                                    end = MaterialTheme.dimens.sizeXL
-                                )
+                                    start = MaterialTheme.dimens.sizeMD,
+                                    end = MaterialTheme.dimens.sizeMD
+                                ).navigationBarsPadding()
                             )
                         }
                     }
