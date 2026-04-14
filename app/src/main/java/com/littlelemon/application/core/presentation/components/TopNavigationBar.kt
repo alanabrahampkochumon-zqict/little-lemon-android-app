@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -30,8 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,25 +46,23 @@ fun TopNavigationBar(
         modifier = modifier,
         windowInsets = WindowInsets(0.dp),
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colors.transparent,
-            titleContentColor = MaterialTheme.colors.contentPrimary,
-            actionIconContentColor = MaterialTheme.colors.contentPrimary
+            containerColor = LittleLemonTheme.colors.transparent,
+            titleContentColor = LittleLemonTheme.colors.contentPrimary,
+            actionIconContentColor = LittleLemonTheme.colors.contentPrimary
         ),
         scrollBehavior = scrollBehaviour,
         navigationIcon = {
             navigationIcon?.let { icon ->
-                Box(
-                    modifier = Modifier
-                        .clip(LittleLemonTheme.shapes.lg)
-                        .clickable { onNavigate() }
-                        .minimumInteractiveComponentSize()
-                        .testTag(stringResource(R.string.test_tag_navigation_action_left)),
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(modifier = Modifier
+                    .clip(LittleLemonTheme.shapes.lg)
+                    .clickable { onNavigate() }
+                    .minimumInteractiveComponentSize()
+                    .testTag(stringResource(R.string.test_tag_navigation_action_left)),
+                    contentAlignment = Alignment.Center) {
                     Icon(
                         painter = painterResource(icon),
                         contentDescription = navigationIconDescription,
-                        tint = MaterialTheme.colors.contentPrimary,
+                        tint = LittleLemonTheme.colors.contentPrimary,
                     )
                 }
             }
@@ -77,7 +72,7 @@ fun TopNavigationBar(
                 label?.let {
                     Text(
                         text = it,
-                        style = MaterialTheme.typeStyle.displaySmall,
+                        style = LittleLemonTheme.typography.displaySmall,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -85,8 +80,8 @@ fun TopNavigationBar(
                     Spacer(Modifier.height(2.dp))
                     Text(
                         text = it,
-                        style = MaterialTheme.typeStyle.bodyMedium,
-                        color = MaterialTheme.colors.contentSecondary
+                        style = LittleLemonTheme.typography.bodyMedium,
+                        color = LittleLemonTheme.colors.contentSecondary
                     )
                 }
             }
