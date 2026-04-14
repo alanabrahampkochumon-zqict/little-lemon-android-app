@@ -1,12 +1,7 @@
 package com.littlelemon.application.auth.presentation.components
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,7 +39,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun ResendTimer(
     modifier: Modifier = Modifier,
-    initialTime: Int = 60,
+    initialTime: Int = 10,
     totalTime: Int = 60,
     onResendCode: () -> Unit = {}
 ) {
@@ -61,7 +56,9 @@ fun ResendTimer(
     val indicatorWidth = 4.dp
     val startAngle = -90f // Since the drawing starts at the x-axis we need to offset it.
     val angleProgress = (timeLeft / totalTime.toFloat()) * 360f
-//    val angleProgress = f
+    val indicatorSize = 36.dp
+
+    val progress by animateFloatAsState(angleProgress)
 
     LaunchedEffect(key1 = timeLeft, key2 = isTimerRunning) {
         if (isTimerRunning) {
@@ -70,20 +67,10 @@ fun ResendTimer(
         }
     }
 
-    if (isTimerRunning) {
+    AnimatedVisibility(isTimerRunning) {
         Box(modifier = Modifier.padding(end = MaterialTheme.dimens.size2XL)) {
             Box(modifier = modifier, contentAlignment = Alignment.Center) {
-//                CircularProgressIndicator(
-//                    progress = { timeLeft / totalTime.toFloat() },
-//                    modifier = Modifier.size(
-//                        MaterialTheme.dimens.size3XL
-//                    ),
-//                    strokeWidth = MaterialTheme.dimens.sizeXS,
-//                    strokeCap = StrokeCap.Round,
-//                    trackColor = MaterialTheme.colors.secondary,
-//                    color = MaterialTheme.colors.contentHighlight
-//                )
-                Canvas(Modifier.size(40.dp)) {
+                Canvas(Modifier.size(indicatorSize)) {
                     // Progress Background
                     drawArc(
                         color = trackColor,
@@ -99,37 +86,28 @@ fun ResendTimer(
                     drawArc(
                         brush = runnerColor,
                         startAngle = startAngle,
-                        sweepAngle = angleProgress - indicatorWidth.toPx() / 2, // Small offset to account for rounded cap.
+                        sweepAngle = progress - indicatorWidth.toPx() / 2, // Small offset to account for rounded cap.
                         useCenter = false,
                         style = Stroke(
                             indicatorWidth.toPx(), cap = StrokeCap.Round
                         )
                     )
                 }
-
-                AnimatedContent(targetState = timeLeft, transitionSpec = {
-                    if (targetState > initialState) {
-                        (slideInVertically { it } + fadeIn()) togetherWith slideOutVertically { -it } + fadeOut()
-                    } else {
-                        (slideInVertically { -it } + fadeIn()) togetherWith slideOutVertically { it } + fadeOut()
-                    }.using(SizeTransform(clip = false))
-                }) { targetValue ->
-                    Text(
-                        targetValue.toString(),
-                        style = MaterialTheme.typeStyle.bodySmall,
-                        color = MaterialTheme.colors.contentSecondary
-                    )
-                }
-
+                Text(
+                    timeLeft.toString(),
+                    style = MaterialTheme.typeStyle.bodySmall,
+                    color = MaterialTheme.colors.contentSecondary
+                )
             }
         }
-    } else {
+    }
+
+    AnimatedVisibility(!isTimerRunning) {
         Box(
             modifier = Modifier
                 .clip(
                     shape = MaterialTheme.shapes.xLarge.copy(
-                        topEnd = CornerSize(0.dp),
-                        bottomEnd = CornerSize(0.dp)
+                        topEnd = CornerSize(0.dp), bottomEnd = CornerSize(0.dp)
                     )
                 )
                 .background(
@@ -154,6 +132,7 @@ fun ResendTimer(
     }
 
 }
+
 
 @Preview(showBackground = true)
 @Composable
