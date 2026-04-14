@@ -11,9 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,20 +25,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,11 +51,7 @@ import com.littlelemon.application.core.presentation.components.Stepper
 import com.littlelemon.application.core.presentation.components.Tag
 import com.littlelemon.application.core.presentation.components.TagVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
 import kotlinx.datetime.TimeZone
@@ -76,14 +70,14 @@ fun MenuCard(
     outOfStock: Boolean = false,
 ) {
 
-    val cardShape = MaterialTheme.shapes.medium
-    val cardShadow = MaterialTheme.shadows.dropMD
+    val cardShape = LittleLemonTheme.shapes.md
+    val cardShadow = LittleLemonTheme.shadows.dropMD
     val screenDensity = LocalDensity.current.density
 
     var stepperSize by remember { mutableStateOf(Size.Zero) }
 
 
-    val imageCornerRadius = MaterialTheme.dimens.sizeXL.value * screenDensity
+    val imageCornerRadius = LittleLemonTheme.dimens.sizeXL.value * screenDensity
     val imageShape = remember(stepperSize, imageCornerRadius) {
         MenuImageShape(
             stepperSize,
@@ -91,17 +85,13 @@ fun MenuCard(
         )
     }
 
-    val cardColor = MaterialTheme.colors.primary
+    val cardColor = LittleLemonTheme.colors.primary
 
     Column(
         modifier = modifier
-            .dropShadow(imageShape, cardShadow.firstShadow.toComposeShadow(screenDensity))
-            .dropShadow(
-                imageShape,
-                cardShadow.secondShadow?.toComposeShadow(screenDensity) ?: Shadow(0.dp)
-            )
+            .applyShadow(imageShape, LittleLemonTheme.shadows.dropSM)
             .background(
-                MaterialTheme.colors.transparent,
+                LittleLemonTheme.colors.transparent,
                 shape = cardShape
             )
             .drawBehind {
@@ -124,7 +114,10 @@ fun MenuCard(
                 .fillMaxWidth()
                 .heightIn(max = 240.dp)
                 .fillMaxHeight()
-                .background(MaterialTheme.colors.transparent, shape = MaterialTheme.shapes.medium),
+                .background(
+                    LittleLemonTheme.colors.transparent,
+                    shape = LittleLemonTheme.shapes.md
+                ),
             contentAlignment = Alignment.TopEnd
         ) {
             AsyncImage(
@@ -152,10 +145,10 @@ fun MenuCard(
                     }
                     .background(
                         Color.Transparent,
-                        MaterialTheme.shapes.small
+                        LittleLemonTheme.shapes.sm
                     )
                     .padding(
-                        MaterialTheme.dimens.sizeSM
+                        LittleLemonTheme.dimens.sizeSM
                     )
 
             )
@@ -167,22 +160,22 @@ fun MenuCard(
                     shape = cardShape.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp))
                 )
                 .padding(
-                    start = MaterialTheme.dimens.sizeXL,
-                    end = MaterialTheme.dimens.sizeXL,
-                    top = MaterialTheme.dimens.sizeLG,
-                    bottom = MaterialTheme.dimens.sizeXL
+                    start = LittleLemonTheme.dimens.sizeXL,
+                    end = LittleLemonTheme.dimens.sizeXL,
+                    top = LittleLemonTheme.dimens.sizeLG,
+                    bottom = LittleLemonTheme.dimens.sizeXL
                 )
         ) {
 
             Row(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG)
+                horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeLG)
             ) {
                 Text(
                     dish.title,
-                    style = MaterialTheme.typeStyle.headlineSmall,
-                    color = MaterialTheme.colors.contentPrimary,
+                    style = LittleLemonTheme.typography.headlineSmall,
+                    color = LittleLemonTheme.colors.contentPrimary,
                     modifier = Modifier.weight(1f)
                 )
                 dish.nutritionInfo?.let { nutrition ->
@@ -200,45 +193,45 @@ fun MenuCard(
             }
 
             dish.nutritionInfo?.let { nutrition ->
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXS))
+                Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXS))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.sizeSM
+                        LittleLemonTheme.dimens.sizeSM
                     )
                 ) {
                     Text(
                         stringResource(R.string.protein, nutrition.protein),
-                        style = MaterialTheme.typeStyle.bodyXSmall,
+                        style = LittleLemonTheme.typography.bodyXSmall,
                         color = LittleLemonTheme.colors.contentTertiary
                     )
                     DotSeparator()
                     Text(
                         stringResource(R.string.carbs, nutrition.carbs),
-                        style = MaterialTheme.typeStyle.bodyXSmall,
+                        style = LittleLemonTheme.typography.bodyXSmall,
                         color = LittleLemonTheme.colors.contentTertiary
                     )
                     DotSeparator()
                     Text(
                         stringResource(R.string.fats, nutrition.fats),
-                        style = MaterialTheme.typeStyle.bodyXSmall,
+                        style = LittleLemonTheme.typography.bodyXSmall,
                         color = LittleLemonTheme.colors.contentTertiary
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
+            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeMD))
 
             dish.description?.let {
                 Text(
                     it,
-                    style = MaterialTheme.typeStyle.bodyMedium,
-                    color = if (outOfStock) MaterialTheme.colors.contentDisabled else MaterialTheme.colors.contentSecondary,
+                    style = LittleLemonTheme.typography.bodyMedium,
+                    color = if (outOfStock) LittleLemonTheme.colors.contentDisabled else LittleLemonTheme.colors.contentSecondary,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXL))
+            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXL))
             Row(
                 modifier = Modifier.background(
                     LittleLemonTheme.colors.secondary,
@@ -248,59 +241,92 @@ fun MenuCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.size2XS
+                        LittleLemonTheme.dimens.size2XS
                     ),
                     modifier = Modifier
                         .background(
-                            LittleLemonTheme.colors.highlight,
+                            if (outOfStock) LittleLemonTheme.colors.tertiary else LittleLemonTheme.colors.highlight,
                             shape = LittleLemonTheme.shapes.xs
                         )
                         .padding(
-                            start = MaterialTheme.dimens.sizeMD,
-                            end = MaterialTheme.dimens.sizeLG
+                            start = LittleLemonTheme.dimens.sizeMD,
+                            end = LittleLemonTheme.dimens.sizeLG
                         ),
                 ) {
                     // TODO: Add discount tag, Add out of stock
-                    Text(
-                        stringResource(R.string.currency_symbol),
-                        style = MaterialTheme.typeStyle.displaySmall.copy(
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 28.sp // TODO: Refactor to text style
-                        ),
-                        color = MaterialTheme.colors.contentOnColor
-                    )
-                    Text(
-                        stringResource(
-                            R.string.price_format,
-                            dish.discountedPrice ?: dish.price
-                        ), // TODO: Add test
-                        style = MaterialTheme.typeStyle.displayMedium,
-                        color = MaterialTheme.colors.contentOnColor
-                    )
+                    if (outOfStock) {
+                        Text(
+                            stringResource(
+                                R.string.out_of_stock,
+                                dish.discountedPrice ?: dish.price
+                            ), // TODO: Add test
+                            style = LittleLemonTheme.typography.headlineSmall,
+                            color = LittleLemonTheme.colors.contentDisabled,
+                            modifier = Modifier.padding(vertical = LittleLemonTheme.dimens.sizeSM)
+                        )
+                    } else {
+                        Text(
+                            stringResource(R.string.currency_symbol),
+                            style = LittleLemonTheme.typography.displaySmall,
+                            color = LittleLemonTheme.colors.contentOnColor,
+                            modifier = Modifier.offset(x = 1.dp) // Offset to closely pack $ and the currency
+                        )
+                        Text(
+                            stringResource(
+                                R.string.price_format,
+                                dish.discountedPrice ?: dish.price
+                            ), // TODO: Add test
+                            style = LittleLemonTheme.typography.displayMedium,
+                            color = LittleLemonTheme.colors.contentOnColor,
+                        )
+                    }
                 }
-                dish.discountedPrice?.let {
+                if (outOfStock) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .padding(
-                                start = MaterialTheme.dimens.sizeSM,
-                                end = MaterialTheme.dimens.sizeMD,
+                                start = LittleLemonTheme.dimens.sizeSM,
+                                end = LittleLemonTheme.dimens.sizeMD,
                             ),
                     ) {
                         Text(
                             stringResource(R.string.currency_symbol),
-                            style = MaterialTheme.typeStyle.bodySmall.copy(
-                                fontSize = 12.sp // TODO: Refactor to text style
-                            ),
-                            color = MaterialTheme.colors.contentPlaceholder,
-                            textDecoration = TextDecoration.LineThrough
+                            style = LittleLemonTheme.typography.bodySmall,
+                            color = LittleLemonTheme.colors.contentPlaceholder,
                         )
+                        Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.size3XS))
                         Text(
                             stringResource(R.string.price_format, dish.price),
-                            style = MaterialTheme.typeStyle.bodySmall,
-                            color = MaterialTheme.colors.contentPlaceholder,
-                            textDecoration = TextDecoration.LineThrough
+                            style = LittleLemonTheme.typography.bodySmall,
+                            color = LittleLemonTheme.colors.contentPlaceholder,
                         )
+                    }
+                } else {
+                    dish.discountedPrice?.let {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(
+                                    start = LittleLemonTheme.dimens.sizeSM,
+                                    end = LittleLemonTheme.dimens.sizeMD,
+                                ),
+                        ) {
+                            Text(
+                                stringResource(R.string.currency_symbol),
+                                style = LittleLemonTheme.typography.bodySmall.copy(
+                                    fontSize = 12.sp // TODO: Refactor to text style
+                                ),
+                                color = LittleLemonTheme.colors.contentPlaceholder,
+                                textDecoration = TextDecoration.LineThrough
+                            )
+                            Text(
+                                stringResource(R.string.price_format, dish.price),
+                                style = LittleLemonTheme.typography.bodySmall,
+                                color = LittleLemonTheme.colors.contentPlaceholder,
+                                textDecoration = TextDecoration.LineThrough
+                            )
+                        }
                     }
                 }
             }
