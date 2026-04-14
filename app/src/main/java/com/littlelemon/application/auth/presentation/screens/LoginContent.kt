@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.core.presentation.components.Button
+import com.littlelemon.application.core.presentation.components.CircularProgressBar
 import com.littlelemon.application.core.presentation.components.TextInputField
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.colors
@@ -93,6 +94,7 @@ fun LoginContent(
         } else {
             Spacer(Modifier.weight(1f).animateContentSize())
         }
+        CircularProgressBar(indefinite = true)
         Button(
             stringResource(R.string.act_send_otp),
             onSendOTP,

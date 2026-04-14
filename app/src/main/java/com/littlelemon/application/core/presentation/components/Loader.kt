@@ -95,7 +95,7 @@ fun Loader(
                     trackColor = LittleLemonTheme.colors.transparent,
                     color = LittleLemonTheme.colors.action,
                     strokeCap = StrokeCap.Round,
-                    strokeWidth = 3.dp,
+                    strokeWidth = 4.dp,
                     modifier = Modifier.size(LittleLemonTheme.dimens.size4XL)
                 )
                 loaderContent()
