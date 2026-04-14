@@ -255,6 +255,7 @@ fun AuthScreenRoot(
                         CardLayout(
                             modifier = Modifier
                                 .padding(innerPadding)
+                                .consumeWindowInsets(innerPadding)
                                 .fillMaxSize(),
                             isFloating = isFloating,
                             isScrollable = isScrollable,
@@ -263,7 +264,7 @@ fun AuthScreenRoot(
                         ) {
                             VerificationContent(
                                 authState = state,
-                                modifier = Modifier,
+                                modifier = Modifier.navigationBarsPadding(),
                                 isScrollable = isScrollable,
                                 onNavigateBack = onNavigateBack,
                                 onOTPChange = onUpdateOTP,
