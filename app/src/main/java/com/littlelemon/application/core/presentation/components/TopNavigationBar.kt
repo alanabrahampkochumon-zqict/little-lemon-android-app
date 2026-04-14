@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,7 @@ import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,8 +59,9 @@ fun TopNavigationBar(
             navigationIcon?.let { icon ->
                 Box(
                     modifier = Modifier
-                        .minimumInteractiveComponentSize()
+                        .clip(LittleLemonTheme.shapes.lg)
                         .clickable { onNavigate() }
+                        .minimumInteractiveComponentSize()
                         .testTag(stringResource(R.string.test_tag_navigation_action_left)),
                     contentAlignment = Alignment.Center
                 ) {
