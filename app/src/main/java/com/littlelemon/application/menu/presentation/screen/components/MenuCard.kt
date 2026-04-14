@@ -40,7 +40,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -71,7 +70,6 @@ fun MenuCard(
 ) {
 
     val cardShape = LittleLemonTheme.shapes.md
-    val cardShadow = LittleLemonTheme.shadows.dropMD
     val screenDensity = LocalDensity.current.density
 
     var stepperSize by remember { mutableStateOf(Size.Zero) }
@@ -86,6 +84,9 @@ fun MenuCard(
     }
 
     val cardColor = LittleLemonTheme.colors.primary
+
+    val discount =
+        if (dish.discountedPrice != null && dish.discountedPrice > 0.0) ((dish.price - dish.discountedPrice) / dish.price * 100).toInt() else null
 
     Column(
         modifier = modifier
@@ -232,78 +233,57 @@ fun MenuCard(
                 )
             }
             Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXL))
-            Row(
-                modifier = Modifier.background(
-                    LittleLemonTheme.colors.secondary,
-                    shape = LittleLemonTheme.shapes.xs
-                ), verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.SpaceBetween) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(
-                        LittleLemonTheme.dimens.size2XS
-                    ),
-                    modifier = Modifier
-                        .background(
-                            if (outOfStock) LittleLemonTheme.colors.tertiary else LittleLemonTheme.colors.highlight,
-                            shape = LittleLemonTheme.shapes.xs
-                        )
-                        .padding(
-                            start = LittleLemonTheme.dimens.sizeMD,
-                            end = LittleLemonTheme.dimens.sizeLG
-                        ),
+                    modifier = Modifier.background(
+                        LittleLemonTheme.colors.secondary,
+                        shape = LittleLemonTheme.shapes.xs
+                    ), verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // TODO: Add discount tag, Add out of stock
-                    if (outOfStock) {
-                        Text(
-                            stringResource(
-                                R.string.out_of_stock,
-                                dish.discountedPrice ?: dish.price
-                            ), // TODO: Add test
-                            style = LittleLemonTheme.typography.headlineSmall,
-                            color = LittleLemonTheme.colors.contentDisabled,
-                            modifier = Modifier.padding(vertical = LittleLemonTheme.dimens.sizeSM)
-                        )
-                    } else {
-                        Text(
-                            stringResource(R.string.currency_symbol),
-                            style = LittleLemonTheme.typography.displaySmall,
-                            color = LittleLemonTheme.colors.contentOnColor,
-                            modifier = Modifier.offset(x = 1.dp) // Offset to closely pack $ and the currency
-                        )
-                        Text(
-                            stringResource(
-                                R.string.price_format,
-                                dish.discountedPrice ?: dish.price
-                            ), // TODO: Add test
-                            style = LittleLemonTheme.typography.displayMedium,
-                            color = LittleLemonTheme.colors.contentOnColor,
-                        )
-                    }
-                }
-                if (outOfStock) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(
+                            LittleLemonTheme.dimens.size2XS
+                        ),
                         modifier = Modifier
+                            .background(
+                                if (outOfStock) LittleLemonTheme.colors.tertiary else LittleLemonTheme.colors.highlight,
+                                shape = LittleLemonTheme.shapes.xs
+                            )
                             .padding(
-                                start = LittleLemonTheme.dimens.sizeSM,
-                                end = LittleLemonTheme.dimens.sizeMD,
+                                start = LittleLemonTheme.dimens.sizeMD,
+                                end = LittleLemonTheme.dimens.sizeLG
                             ),
                     ) {
-                        Text(
-                            stringResource(R.string.currency_symbol),
-                            style = LittleLemonTheme.typography.bodySmall,
-                            color = LittleLemonTheme.colors.contentPlaceholder,
-                        )
-                        Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.size3XS))
-                        Text(
-                            stringResource(R.string.price_format, dish.price),
-                            style = LittleLemonTheme.typography.bodySmall,
-                            color = LittleLemonTheme.colors.contentPlaceholder,
-                        )
+                        // TODO: Add discount tag
+                        if (outOfStock) {
+                            Text(
+                                stringResource(
+                                    R.string.out_of_stock,
+                                    dish.discountedPrice ?: dish.price
+                                ), // TODO: Add test
+                                style = LittleLemonTheme.typography.headlineSmall,
+                                color = LittleLemonTheme.colors.contentDisabled,
+                                modifier = Modifier.padding(vertical = LittleLemonTheme.dimens.sizeSM)
+                            )
+                        } else {
+                            Text(
+                                stringResource(R.string.currency_symbol),
+                                style = LittleLemonTheme.typography.displaySmall,
+                                color = LittleLemonTheme.colors.contentOnColor,
+                                modifier = Modifier.offset(x = 1.dp) // Offset to closely pack $ and the currency
+                            )
+                            Text(
+                                stringResource(
+                                    R.string.price_format,
+                                    dish.discountedPrice ?: dish.price
+                                ), // TODO: Add test
+                                style = LittleLemonTheme.typography.displayMedium,
+                                color = LittleLemonTheme.colors.contentOnColor,
+                            )
+                        }
                     }
-                } else {
-                    dish.discountedPrice?.let {
+                    if (outOfStock) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -314,20 +294,46 @@ fun MenuCard(
                         ) {
                             Text(
                                 stringResource(R.string.currency_symbol),
-                                style = LittleLemonTheme.typography.bodySmall.copy(
-                                    fontSize = 12.sp // TODO: Refactor to text style
-                                ),
+                                style = LittleLemonTheme.typography.bodySmall,
                                 color = LittleLemonTheme.colors.contentPlaceholder,
-                                textDecoration = TextDecoration.LineThrough
                             )
+                            Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.size3XS))
                             Text(
                                 stringResource(R.string.price_format, dish.price),
                                 style = LittleLemonTheme.typography.bodySmall,
                                 color = LittleLemonTheme.colors.contentPlaceholder,
-                                textDecoration = TextDecoration.LineThrough
                             )
                         }
+                    } else {
+                        dish.discountedPrice?.let {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .padding(
+                                        start = LittleLemonTheme.dimens.sizeSM,
+                                        end = LittleLemonTheme.dimens.sizeMD,
+                                    ),
+                            ) {
+                                Text(
+                                    stringResource(R.string.currency_symbol),
+                                    style = LittleLemonTheme.typography.bodySmall,
+                                    color = LittleLemonTheme.colors.contentPlaceholder,
+                                    textDecoration = TextDecoration.LineThrough
+                                )
+                                Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.size3XS))
+                                Text(
+                                    stringResource(R.string.price_format, dish.price),
+                                    style = LittleLemonTheme.typography.bodySmall,
+                                    color = LittleLemonTheme.colors.contentPlaceholder,
+                                    textDecoration = TextDecoration.LineThrough
+                                )
+                            }
+                        }
                     }
+                }
+
+                if(discount != null && !outOfStock) {
+                    Tag(stringResource(R.string.discount_format, discount.toFloat()), variant = TagVariant.SuccessLight)
                 }
             }
         }
