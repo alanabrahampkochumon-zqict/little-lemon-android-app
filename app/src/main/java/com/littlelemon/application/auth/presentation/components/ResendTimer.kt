@@ -1,5 +1,12 @@
 package com.littlelemon.application.auth.presentation.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -99,17 +106,26 @@ fun ResendTimer(
                         )
                     )
                 }
-                Text(
-                    timeLeft.toString(),
-                    style = MaterialTheme.typeStyle.bodyXSmall,
-                    color = MaterialTheme.colors.contentSecondary
-                )
+
+                AnimatedContent(targetState = timeLeft, transitionSpec = {
+                    if (targetState > initialState) {
+                        (slideInVertically { it } + fadeIn()) togetherWith slideOutVertically { -it } + fadeOut()
+                    } else {
+                        (slideInVertically { -it } + fadeIn()) togetherWith slideOutVertically { it } + fadeOut()
+                    }.using(SizeTransform(clip = false))
+                }) { targetValue ->
+                    Text(
+                        targetValue.toString(),
+                        style = MaterialTheme.typeStyle.bodySmall,
+                        color = MaterialTheme.colors.contentSecondary
+                    )
+                }
+
             }
         }
     } else {
         Box(
             modifier = Modifier
-                .minimumInteractiveComponentSize()
                 .clip(
                     shape = MaterialTheme.shapes.xLarge.copy(
                         topEnd = CornerSize(0.dp),
@@ -119,12 +135,13 @@ fun ResendTimer(
                 .background(
                     MaterialTheme.colors.secondary,
                 )
+                .minimumInteractiveComponentSize()
                 .clickable { onResendCode() }
                 .padding(
                     top = MaterialTheme.dimens.sizeLG,
                     bottom = MaterialTheme.dimens.sizeLG,
                     start = MaterialTheme.dimens.size2XL,
-                    end = MaterialTheme.dimens.size3XL
+                    end = MaterialTheme.dimens.size2XL
                 )
 
         ) {
