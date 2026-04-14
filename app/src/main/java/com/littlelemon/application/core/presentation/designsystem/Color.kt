@@ -2,6 +2,7 @@ package com.littlelemon.application.core.presentation.designsystem
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 // -------------------------------------------------------------------
@@ -298,4 +299,15 @@ data class LittleLemonColors(
     val darkOverlay24: Color = AliasColors.DarkOverlay24
 )
 
+@Immutable
+data class LittleLemonGradients(
+    val primaryBrand: Brush = Brush.linearGradient(
+        listOf(
+            AliasColors.Secondary500, AliasColors.Error500,
+            AliasColors.Primary500
+        )
+    )
+)
+
 val LocalLittleLemonColors = staticCompositionLocalOf { LittleLemonColors() }
+val LocalLittleLemonGradients = staticCompositionLocalOf { LittleLemonGradients() }

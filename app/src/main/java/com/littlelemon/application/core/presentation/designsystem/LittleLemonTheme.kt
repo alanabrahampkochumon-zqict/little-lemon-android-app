@@ -14,12 +14,15 @@ fun LittleLemonTheme(
     val customShadows = LittleLemonShadows()
     val customDimensions = LittleLemonDimens()
     val customShapes = LittleLemonShapes()
+    val customGradients = LittleLemonGradients()
+
     CompositionLocalProvider(
         LocalLittleLemonColors provides customColors,
         LocalLittleLemonTypography provides customTypography,
         LocalLittleLemonShadows provides customShadows,
         LocalLittleLemonDimensions provides customDimensions,
         LocalLittleLemonShapes provides customShapes,
+        LocalLittleLemonGradients provides customGradients,
         content = content
     )
 }
@@ -41,4 +44,7 @@ object LittleLemonTheme {
     val shapes: LittleLemonShapes
         @Composable
         get() = LocalLittleLemonShapes.current
+    val gradients: LittleLemonGradients
+        @Composable
+        get() = LocalLittleLemonGradients.current
 }
