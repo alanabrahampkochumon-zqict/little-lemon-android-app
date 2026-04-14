@@ -94,7 +94,6 @@ fun LoginContent(
         } else {
             Spacer(Modifier.weight(1f).animateContentSize())
         }
-        CircularProgressBar(indefinite = true)
         Button(
             stringResource(R.string.act_send_otp),
             onSendOTP,

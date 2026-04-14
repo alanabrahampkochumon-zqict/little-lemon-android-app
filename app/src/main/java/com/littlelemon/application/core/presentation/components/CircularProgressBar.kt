@@ -1,7 +1,5 @@
 package com.littlelemon.application.core.presentation.components
 
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -20,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -37,6 +34,8 @@ fun CircularProgressBar(
 ) {
     val targetAngle = 240f
     val startAngle = 60f
+    val animationDuration = 2400
+    // Sweep angle for animating the progress
     val progress = if (indefinite) {
         val infiniteTransition = rememberInfiniteTransition(label = "progress transition")
 
@@ -44,7 +43,7 @@ fun CircularProgressBar(
             initialValue = startAngle,
             targetValue = targetAngle,
             animationSpec = infiniteRepeatable(
-                tween(2500, easing = LinearEasing),
+                tween(animationDuration, easing = LinearEasing),
                 repeatMode = RepeatMode.Reverse
             ), label = "progress"
         )
@@ -52,6 +51,7 @@ fun CircularProgressBar(
         remember { mutableFloatStateOf(endAngle) }
     }
 
+    // Start angle for rotating the progress bar
     val start = if (indefinite) {
         val infiniteTransition = rememberInfiniteTransition(label = "progress transition")
 
@@ -59,7 +59,7 @@ fun CircularProgressBar(
             initialValue = 0f,
             targetValue = 360f,
             animationSpec = infiniteRepeatable(
-                tween(2500, easing = LinearEasing),
+                tween(animationDuration, easing = LinearEasing),
                 repeatMode = RepeatMode.Restart
             ), label = "progress"
         )

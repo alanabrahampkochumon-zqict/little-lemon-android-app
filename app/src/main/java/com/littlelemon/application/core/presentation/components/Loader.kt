@@ -14,13 +14,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -91,13 +89,14 @@ fun Loader(
                     .padding(LittleLemonTheme.dimens.sizeXL)
                     .testTag(stringResource(R.string.test_tag_loader))
             ) {
-                CircularProgressIndicator(
-                    trackColor = LittleLemonTheme.colors.transparent,
-                    color = LittleLemonTheme.colors.action,
-                    strokeCap = StrokeCap.Round,
-                    strokeWidth = 4.dp,
-                    modifier = Modifier.size(LittleLemonTheme.dimens.size4XL)
-                )
+                CircularProgressBar(indefinite = true)
+//                CircularProgressIndicator(
+//                    trackColor = LittleLemonTheme.colors.transparent,
+//                    color = LittleLemonTheme.colors.action,
+//                    strokeCap = StrokeCap.Round,
+//                    strokeWidth = 4.dp,
+//                    modifier = Modifier.size(LittleLemonTheme.dimens.size4XL)
+//                )
                 loaderContent()
             }
         }
