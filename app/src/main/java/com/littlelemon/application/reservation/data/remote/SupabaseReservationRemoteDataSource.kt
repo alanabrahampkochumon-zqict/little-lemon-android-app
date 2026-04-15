@@ -24,11 +24,11 @@ class SupabaseReservationRemoteDataSource(
             .decodeList<ReservationDTO>()
     }
 
-    override suspend fun makeReservation(reservation: ReservationDTO) {
+    override suspend fun makeReservation(reservation: ReservationDTO): ReservationDTO {
         TODO("Not yet implemented")
     }
 
-    override suspend fun cancelReservation(reservation: ReservationDTO) {
+    override suspend fun cancelReservation(reservation: ReservationDTO): ReservationDTO {
         TODO("Not yet implemented")
     }
 }

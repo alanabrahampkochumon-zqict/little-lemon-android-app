@@ -6,8 +6,8 @@ interface ReservationRemoteDataSource {
 
     suspend fun getReservations(): List<ReservationDTO>
 
-    suspend fun makeReservation(reservation: ReservationDTO)
+    suspend fun makeReservation(reservation: ReservationDTO): ReservationDTO
 
-    suspend fun cancelReservation(reservation: ReservationDTO)
+    suspend fun cancelReservation(reservation: ReservationDTO): ReservationDTO
 
 }

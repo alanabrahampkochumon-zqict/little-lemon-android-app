@@ -84,4 +84,46 @@ class SupabaseReservationRemoteDataSourceTest {
             assertThrows<PostgrestRestException> { remoteDataSource.getReservations() }
         }
     }
+
+    @Nested
+    inner class MakeReservationTests {
+
+        @Test
+        fun remoteSuccess_returnsNewReservation() = runTest {
+            val expectedReservation = ReservationGenerator.generateReservationDTO()
+            val response = Json.encodeToString(expectedReservation)
+            client = createFakeSupabaseClient {
+                respond(
+                    response,
+                    HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }
+            remoteDataSource = SupabaseReservationRemoteDataSource(client)
+
+            val reservation = remoteDataSource.makeReservation(expectedReservation)
+
+            assertEquals(expectedReservation, reservation)
+        }
+
+
+        @Test
+        fun remoteError_throwsException() = runTest {
+            val expectedReservation = ReservationGenerator.generateReservationDTO()
+            client = createFakeSupabaseClient {
+                respond(
+                    errorResponse,
+                    errorCode,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }
+            remoteDataSource = SupabaseReservationRemoteDataSource(client)
+
+            assertThrows<PostgrestRestException> {
+                remoteDataSource.makeReservation(
+                    expectedReservation
+                )
+            }
+        }
+    }
 }
