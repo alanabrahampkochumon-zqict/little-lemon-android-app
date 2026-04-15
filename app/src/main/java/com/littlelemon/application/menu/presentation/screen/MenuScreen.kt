@@ -46,8 +46,6 @@ import kotlin.random.Random
 @Composable
 fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
     val menuState by viewModel.state.collectAsStateWithLifecycle()
-    Log.d("State", menuState.dishes.toString())
-    Log.d("State", menuState.toString())
     MenuScreenRoot(menuState, modifier)
 }
 
