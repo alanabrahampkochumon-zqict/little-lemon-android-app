@@ -219,4 +219,55 @@ class MenuCardTest {
     }
 
 
+    @Test
+    fun inStockMenuItem_doesNotDisplaysOutOfStock() {
+        // Given a menu item with more than 0 stock
+        // And menu card with no out-of-stock flag
+        composeTestRule.setContent {
+            MenuCard(
+                dish,
+                orderQuantity = 10,
+                onDecreaseQuantity = {},
+                onIncreaseQuantity = {})
+        }
+
+        // Then, sold out is not displayed
+        composeTestRule.onNodeWithText(application.getString(R.string.out_of_stock))
+            .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun outOfStock_displaysOutOfStock() {
+        // Given a menu card with explicit out-of-stock flag
+        composeTestRule.setContent {
+            MenuCard(
+                dish,
+                orderQuantity = 10,
+                outOfStock = true,
+                onDecreaseQuantity = {},
+                onIncreaseQuantity = {})
+        }
+
+        // Then, sold out is displayed
+        composeTestRule.onNodeWithText(application.getString(R.string.out_of_stock))
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun outOfStockMenuItem_displaysOutOfStock() {
+        // Given a menu item with less 1 quantity
+        composeTestRule.setContent {
+            MenuCard(
+                dish.copy(stock = 0),
+                orderQuantity = 10,
+                onDecreaseQuantity = {},
+                onIncreaseQuantity = {})
+        }
+
+        // Then, sold out is displayed
+        composeTestRule.onNodeWithText(application.getString(R.string.out_of_stock))
+            .assertIsDisplayed()
+    }
+
+
 }
