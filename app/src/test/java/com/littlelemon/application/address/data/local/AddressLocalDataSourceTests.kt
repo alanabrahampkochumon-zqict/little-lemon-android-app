@@ -6,7 +6,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Tasks
 import com.littlelemon.application.address.data.local.dao.AddressDao
 import com.littlelemon.application.address.data.local.dao.FakeAddressDao
-import com.littlelemon.application.utils.AddressGenerator
+import com.littlelemon.application.address.utils.AddressGenerator
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first

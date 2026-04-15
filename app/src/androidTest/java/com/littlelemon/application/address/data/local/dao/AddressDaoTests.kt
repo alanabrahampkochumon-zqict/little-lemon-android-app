@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.littlelemon.application.address.data.local.AddressDatabase
-import com.littlelemon.application.utils.AddressGenerator
+import com.littlelemon.application.address.utils.AddressGenerator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After

@@ -1,7 +1,7 @@
 package com.littlelemon.application.address.domain.mappers
 
 import com.littlelemon.application.address.domain.DEFAULT_ADDRESS_LABEL
-import com.littlelemon.application.utils.AddressGenerator
+import com.littlelemon.application.address.utils.AddressGenerator
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

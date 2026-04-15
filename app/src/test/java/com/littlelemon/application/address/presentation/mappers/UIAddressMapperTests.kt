@@ -1,7 +1,7 @@
 package com.littlelemon.application.address.presentation.mappers
 
 import com.littlelemon.application.address.presentation.AddressState
-import com.littlelemon.application.utils.AddressGenerator
+import com.littlelemon.application.address.utils.AddressGenerator
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertNull
 import kotlin.test.Test

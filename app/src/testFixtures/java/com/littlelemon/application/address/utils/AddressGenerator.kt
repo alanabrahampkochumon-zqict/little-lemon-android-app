@@ -1,4 +1,4 @@
-package com.littlelemon.application.utils
+package com.littlelemon.application.address.utils
 
 import com.littlelemon.application.address.data.local.models.AddressEntity
 import com.littlelemon.application.address.data.remote.models.AddressDTO
@@ -24,8 +24,8 @@ object AddressGenerator {
 
     fun generateLocalAddress(): LocalAddress {
         return LocalAddress(
-            id = Uuid.random().toString(),
-            label = Uuid.random().toString(),
+            id = Uuid.Companion.random().toString(),
+            label = Uuid.Companion.random().toString(),
             address = generatePhysicalAddress(),
             location = generateLocalLocation(),
             isDefault = Math.random() > 0.5
@@ -34,7 +34,7 @@ object AddressGenerator {
 
     fun generateGeocodedAddress(): GeocodedAddress {
         return GeocodedAddress(
-            id = Uuid.random().toString(),
+            id = Uuid.Companion.random().toString(),
             partialMatch = Math.random() > 0.5,
             fullAddress = faker.address.fullAddress(),
             address = generatePhysicalAddress(),
@@ -44,7 +44,7 @@ object AddressGenerator {
 
     fun generateUIState(): AddressState {
         return AddressState(
-            addressId = Uuid.random().toString(),
+            addressId = Uuid.Companion.random().toString(),
             label = faker.name.name(),
             buildingName = faker.address.secondaryAddress(),
             streetAddress = faker.address.streetAddress(),
@@ -58,7 +58,7 @@ object AddressGenerator {
 
     fun generateAddressDTO(): AddressDTO {
         return AddressDTO(
-            id = Uuid.random().toString(),
+            id = Uuid.Companion.random().toString(),
             label = faker.name.name(),
             address = faker.address.secondaryAddress(),
             streetAddress = faker.address.streetAddress(),
@@ -67,14 +67,14 @@ object AddressGenerator {
             pinCode = faker.address.postcode(),
             latitude = Math.random() * LATITUDE_LIMIT - (LATITUDE_LIMIT / 2),
             longitude = Math.random() * LONGITUDE_LIMIT - (LONGITUDE_LIMIT / 2),
-            createdAt = Instant.fromEpochMilliseconds((Math.random() * 1000000).roundToLong()),
+            createdAt = Instant.Companion.fromEpochMilliseconds((Math.random() * 1000000).roundToLong()),
             isDefault = Math.random() > 0.5
         )
     }
 
     fun generateAddressEntity(): AddressEntity {
         return AddressEntity(
-            id = Uuid.random().toString(),
+            id = Uuid.Companion.random().toString(),
             label = faker.name.name(),
             address = faker.address.secondaryAddress(),
             streetAddress = faker.address.streetAddress(),
@@ -83,7 +83,7 @@ object AddressGenerator {
             pinCode = faker.address.postcode(),
             latitude = Math.random() * LATITUDE_LIMIT - (LATITUDE_LIMIT / 2),
             longitude = Math.random() * LONGITUDE_LIMIT - (LONGITUDE_LIMIT / 2),
-            createdAt = Instant.fromEpochMilliseconds((Math.random() * 1000000).roundToLong()),
+            createdAt = Instant.Companion.fromEpochMilliseconds((Math.random() * 1000000).roundToLong()),
             isDefault = Math.random() > 0.5
         )
     }

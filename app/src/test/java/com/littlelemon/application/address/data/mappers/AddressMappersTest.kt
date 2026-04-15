@@ -1,7 +1,7 @@
 package com.littlelemon.application.address.data.mappers
 
 import android.location.Location
-import com.littlelemon.application.utils.AddressGenerator
+import com.littlelemon.application.address.utils.AddressGenerator
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals

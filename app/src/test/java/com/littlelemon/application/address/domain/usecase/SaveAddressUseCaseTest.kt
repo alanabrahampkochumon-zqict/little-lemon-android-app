@@ -1,8 +1,8 @@
 package com.littlelemon.application.address.domain.usecase
 
 import com.littlelemon.application.address.domain.AddressRepository
+import com.littlelemon.application.address.utils.AddressGenerator
 import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.utils.AddressGenerator
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

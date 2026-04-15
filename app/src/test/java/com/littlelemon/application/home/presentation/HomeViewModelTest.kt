@@ -3,8 +3,8 @@ package com.littlelemon.application.home.presentation
 import app.cash.turbine.test
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
+import com.littlelemon.application.address.utils.AddressGenerator
 import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.utils.AddressGenerator
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
@@ -65,7 +65,7 @@ class HomeViewModelTest {
 
             viewModel.addresses.test {
                 skipItems(1)
-                
+
                 // Then a failure state is emitted.
                 val failureState = awaitItem()
                 assertIs<Resource.Failure<List<LocalAddress>>>(failureState)

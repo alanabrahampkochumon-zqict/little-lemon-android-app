@@ -10,7 +10,7 @@ import com.littlelemon.application.R
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.presentation.AddressTestTags
 import com.littlelemon.application.address.presentation.mappers.toFullAddress
-import com.littlelemon.application.utils.AddressGenerator
+import com.littlelemon.application.address.utils.AddressGenerator
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

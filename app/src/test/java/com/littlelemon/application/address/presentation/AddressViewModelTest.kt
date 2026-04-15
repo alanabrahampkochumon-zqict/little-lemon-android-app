@@ -9,9 +9,9 @@ import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.address.domain.usecase.ReverseGeocodeLocationUseCase
 import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
+import com.littlelemon.application.address.utils.AddressGenerator
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
-import com.littlelemon.application.utils.AddressGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk

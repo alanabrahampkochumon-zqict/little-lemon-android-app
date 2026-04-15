@@ -17,9 +17,9 @@ import com.littlelemon.application.address.domain.AddressRepository
 import com.littlelemon.application.address.domain.models.GeocodedAddress
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
+import com.littlelemon.application.address.utils.AddressGenerator
 import com.littlelemon.application.address.utils.GeocodingGenerator
 import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.utils.AddressGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.every
 import io.mockk.mockk

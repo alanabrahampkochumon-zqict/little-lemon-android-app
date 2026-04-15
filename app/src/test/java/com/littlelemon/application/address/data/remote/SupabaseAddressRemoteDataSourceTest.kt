@@ -1,7 +1,7 @@
 package com.littlelemon.application.address.data.remote
 
 import com.littlelemon.application.address.data.mappers.toRequestDTO
-import com.littlelemon.application.utils.AddressGenerator
+import com.littlelemon.application.address.utils.AddressGenerator
 import com.littlelemon.application.utils.createFakeSupabaseClient
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.exception.PostgrestRestException
