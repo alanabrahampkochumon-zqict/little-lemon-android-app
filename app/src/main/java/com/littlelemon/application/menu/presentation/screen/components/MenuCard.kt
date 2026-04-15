@@ -55,7 +55,6 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 
 
-// TODO: Out of stock and unavailable
 @Composable
 fun MenuCard(
     dish: Dish,
