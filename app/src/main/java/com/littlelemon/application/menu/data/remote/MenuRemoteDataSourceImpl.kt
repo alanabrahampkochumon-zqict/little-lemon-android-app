@@ -1,6 +1,5 @@
 package com.littlelemon.application.menu.data.remote
 
-import android.util.Log
 import com.littlelemon.application.BuildConfig
 import com.littlelemon.application.core.data.remote.SupabaseTables
 import com.littlelemon.application.menu.data.remote.models.DishDTO
@@ -27,7 +26,6 @@ class MenuRemoteDataSourceImpl(
             .decodeList<DishDTO>().map { dishDTO ->
                 val fullURL =
                     client.storage.from(BuildConfig.SUPABASE_BUCKET_NAME).publicUrl(dishDTO.image)
-                Log.d("Image", fullURL)
                 dishDTO.copy(image = fullURL)
             }
     }

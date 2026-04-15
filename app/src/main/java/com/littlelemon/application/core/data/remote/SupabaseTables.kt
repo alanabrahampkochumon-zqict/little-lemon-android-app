@@ -7,4 +7,6 @@ object SupabaseTables {
     const val NUTRITION_INFO = "nutrition_info"
     const val USER_ADDRESS = "user_address"
     const val USER_ADDRESS_VIEW = "user_addresses_view"
+
+    const val RESERVATIONS = "reservations"
 }
