@@ -20,7 +20,7 @@ import kotlin.time.Instant
 
 private const val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
 
-object DishEntityGenerator {
+object DishGenerator {
     private val faker = faker {}
     fun generateDishWithCategories(
         numDishes: Int = 2,
