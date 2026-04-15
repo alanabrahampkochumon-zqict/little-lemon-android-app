@@ -46,8 +46,6 @@ import coil3.request.crossfade
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.DotSeparator
 import com.littlelemon.application.core.presentation.components.Stepper
-import com.littlelemon.application.core.presentation.components.Tag
-import com.littlelemon.application.core.presentation.components.TagVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.menu.domain.models.Dish
@@ -154,7 +152,7 @@ fun MenuCard(
                 .padding(
                     start = LittleLemonTheme.dimens.sizeXL,
                     end = LittleLemonTheme.dimens.sizeXL,
-                    top = LittleLemonTheme.dimens.sizeLG,
+                    top = LittleLemonTheme.dimens.sizeSM,
                     bottom = LittleLemonTheme.dimens.sizeXL
                 )
         ) {
@@ -169,13 +167,13 @@ fun MenuCard(
                     style = LittleLemonTheme.typography.headlineSmall,
                     color = LittleLemonTheme.colors.contentPrimary,
                     modifier = Modifier
-                        .weight(1f).alignByBaseline(),
+                        .weight(1f)
+                        .alignByBaseline(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
 
                     )
                 // Pricing
-                // TODO: Add discount tag
                 if (outOfStock) {
                     Text(
                         stringResource(R.string.currency_symbol) + stringResource(
@@ -194,7 +192,9 @@ fun MenuCard(
                         ), // TODO: Add test
                         style = LittleLemonTheme.typography.headlineSmall,
                         color = LittleLemonTheme.colors.contentDisabled,
-                        modifier = Modifier.padding(vertical = LittleLemonTheme.dimens.sizeSM).alignByBaseline()
+                        modifier = Modifier
+                            .padding(vertical = LittleLemonTheme.dimens.sizeSM)
+                            .alignByBaseline()
                     )
                 } else {
                     dish.discountedPrice?.let {
@@ -224,78 +224,33 @@ fun MenuCard(
                         color = LittleLemonTheme.colors.contentAccentSecondary,
                         modifier = Modifier.alignByBaseline()
                     )
-
-
-//                    if (outOfStock) {
-//                        Row(
-//                            verticalAlignment = Alignment.CenterVertically,
-//                            modifier = Modifier
-//                                .padding(
-//                                    start = LittleLemonTheme.dimens.sizeSM,
-//                                    end = LittleLemonTheme.dimens.sizeMD,
-//                                ),
-//                        ) {
-//                            Text(
-//                                stringResource(R.string.currency_symbol),
-//                                style = LittleLemonTheme.typography.bodySmall,
-//                                color = LittleLemonTheme.colors.contentPlaceholder,
-//                            )
-//                            Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.size3XS))
-//                            Text(
-//                                stringResource(R.string.price_format, dish.price),
-//                                style = LittleLemonTheme.typography.bodySmall,
-//                                color = LittleLemonTheme.colors.contentPlaceholder,
-//                            )
-//                        }
-//                    } else {
-//                        dish.discountedPrice?.let {
-//                            Row(
-//                                verticalAlignment = Alignment.CenterVertically,
-//                                modifier = Modifier
-//                                    .padding(
-//                                        start = LittleLemonTheme.dimens.sizeSM,
-//                                        end = LittleLemonTheme.dimens.sizeMD,
-//                                    ),
-//                            ) {
-//                                Text(
-//                                    stringResource(R.string.currency_symbol),
-//                                    style = LittleLemonTheme.typography.bodySmall,
-//                                    color = LittleLemonTheme.colors.contentPlaceholder,
-//                                    textDecoration = TextDecoration.LineThrough
-//                                )
-//                                Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.size3XS))
-//                                Text(
-//                                    stringResource(R.string.price_format, dish.price),
-//                                    style = LittleLemonTheme.typography.bodySmall,
-//                                    color = LittleLemonTheme.colors.contentPlaceholder,
-//                                    textDecoration = TextDecoration.LineThrough
-//                                )
-//                            }
-//                        }
-//                    }
                 }
-//                dish.nutritionInfo?.let { nutrition ->
-//                    if (outOfStock)
-//                        Tag(
-//                            stringResource(R.string.calories, nutrition.calories),
-//                            variant = TagVariant.NeutralFilled
-//                        )
-//                    else
-//                        Tag(
-//                            stringResource(R.string.calories, nutrition.calories),
-//                            variant = TagVariant.InformationLight
-//                        )
-//                }
             }
+//            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXS))
 
+            dish.description?.let {
+                Text(
+                    it,
+                    style = LittleLemonTheme.typography.bodyMedium,
+                    color = if (outOfStock) LittleLemonTheme.colors.contentDisabled else LittleLemonTheme.colors.contentSecondary,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeLG))
             dish.nutritionInfo?.let { nutrition ->
-                Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXS))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(
                         LittleLemonTheme.dimens.sizeSM
                     )
                 ) {
+                    Text(
+                        stringResource(R.string.calories, nutrition.calories),
+                        style = LittleLemonTheme.typography.bodyXSmall,
+                        color = LittleLemonTheme.colors.contentTertiary
+                    )
+                    DotSeparator()
                     Text(
                         stringResource(R.string.protein, nutrition.protein),
                         style = LittleLemonTheme.typography.bodyXSmall,
@@ -315,33 +270,20 @@ fun MenuCard(
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeMD))
-
-            dish.description?.let {
-                Text(
-                    it,
-                    style = LittleLemonTheme.typography.bodyMedium,
-                    color = if (outOfStock) LittleLemonTheme.colors.contentDisabled else LittleLemonTheme.colors.contentSecondary,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXL))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-
-                if (discount != null && !outOfStock) {
-                    Tag(
-                        stringResource(R.string.discount_format, discount.toFloat()),
-                        variant = TagVariant.SuccessLight
-                    )
-                }
-            }
+//            Row(
+//                modifier = Modifier.fillMaxWidth(),
+//                verticalAlignment = Alignment.Bottom,
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//
+//
+//                if (discount != null && !outOfStock) {
+//                    Tag(
+//                        stringResource(R.string.discount_format, discount.toFloat()),
+//                        variant = TagVariant.SuccessLight
+//                    )
+//                }
+//            }
         }
     }
 }
