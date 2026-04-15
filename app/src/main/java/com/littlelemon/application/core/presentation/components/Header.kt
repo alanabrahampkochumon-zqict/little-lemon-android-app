@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,9 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 enum class HeaderTypeStyle {
     Primary,
@@ -32,9 +28,9 @@ fun Header(
     actionContent: @Composable () -> Unit = {}
 ) {
     val style = if (typeStyle == HeaderTypeStyle.Primary) {
-        MaterialTheme.typeStyle.displayLarge
+        LittleLemonTheme.typography.displayLarge
     } else {
-        MaterialTheme.typeStyle.headlineSmall
+        LittleLemonTheme.typography.headlineSmall
     }
 
     Row(
@@ -45,10 +41,10 @@ fun Header(
         Text(
             label,
             style = style,
-            color = MaterialTheme.colors.contentPrimary,
+            color = LittleLemonTheme.colors.contentPrimary,
             modifier = Modifier.weight(1f)
         )
-        Spacer(modifier = Modifier.width(MaterialTheme.dimens.sizeLG))
+        Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.sizeLG))
         actionContent()
     }
 }

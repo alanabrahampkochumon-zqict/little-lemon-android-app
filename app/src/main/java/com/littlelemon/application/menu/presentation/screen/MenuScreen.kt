@@ -152,7 +152,12 @@ private fun MenuScreenRootPreview() {
             discountedPrice = Math.random() * 1000,
             popularityIndex = (0..100).random(),
             dateAdded = LocalDateTime(2024, 5, 5, 10, 12, 0),
-            category = listOf()
+            category = listOf(
+                Category("Category 1"),
+                Category("Category 2"),
+                Category("Category 3"),
+                Category("Category 4"),
+            )
         )
     }
 
