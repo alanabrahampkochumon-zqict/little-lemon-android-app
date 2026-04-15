@@ -68,6 +68,7 @@ fun MenuCard(
 
     val cardShape = LittleLemonTheme.shapes.md
     val screenDensity = LocalDensity.current.density
+    val soldOut = outOfStock || dish.stock < 1
 
     var stepperSize by remember { mutableStateOf(Size.Zero) }
 
@@ -122,7 +123,7 @@ fun MenuCard(
                 modifier = Modifier
                     .clip(imageShape)
                     .fillMaxSize(),
-                colorFilter = if (outOfStock) ColorFilter.colorMatrix(ColorMatrix().apply {
+                colorFilter = if (soldOut) ColorFilter.colorMatrix(ColorMatrix().apply {
                     setToSaturation(0f)
                 } // Makes out of stock images black and white
                 ) else null)
@@ -174,7 +175,7 @@ fun MenuCard(
 
                     )
                 // Pricing
-                if (outOfStock) {
+                if (soldOut) {
                     Text(
                         stringResource(R.string.currency_symbol) + stringResource(
                             R.string.price_format,
@@ -226,13 +227,12 @@ fun MenuCard(
                     )
                 }
             }
-//            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXS))
 
             dish.description?.let {
                 Text(
                     it,
                     style = LittleLemonTheme.typography.bodyMedium,
-                    color = if (outOfStock) LittleLemonTheme.colors.contentDisabled else LittleLemonTheme.colors.contentSecondary,
+                    color = if (soldOut) LittleLemonTheme.colors.contentDisabled else LittleLemonTheme.colors.contentSecondary,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -270,26 +270,12 @@ fun MenuCard(
                     )
                 }
             }
-//            Row(
-//                modifier = Modifier.fillMaxWidth(),
-//                verticalAlignment = Alignment.Bottom,
-//                horizontalArrangement = Arrangement.SpaceBetween
-//            ) {
-//
-//
-//                if (discount != null && !outOfStock) {
-//                    Tag(
-//                        stringResource(R.string.discount_format, discount.toFloat()),
-//                        variant = TagVariant.SuccessLight
-//                    )
-//                }
-//            }
         }
     }
 }
 
 
-@Preview(showBackground = true, heightDp = 1500)
+@Preview(showBackground = true, heightDp = 1600)
 @Composable
 private fun MenuCardPreview() {
     LittleLemonTheme {
@@ -334,7 +320,20 @@ private fun MenuCardPreview() {
                     imageURL = "https://images.pexels.com/photos/18698241/pexels-photo-18698241.jpeg",
                     stock = 15,
                     nutritionInfo = NutritionInfo(155, 22, 15, 9),
-                    discountedPrice = 15.83,
+                    discountedPrice = null,
+                    category = listOf(),
+                    dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+                    popularityIndex = 392
+                ), orderQuantity = 0, onDecreaseQuantity = {}, onIncreaseQuantity = {})
+            MenuCard(
+                Dish(
+                    title = "Grilled Whole Fish",
+                    description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
+                    price = 29.85,
+                    imageURL = "https://images.pexels.com/photos/18698241/pexels-photo-18698241.jpeg",
+                    stock = 0,
+                    nutritionInfo = NutritionInfo(155, 22, 15, 9),
+                    discountedPrice = null,
                     category = listOf(),
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
