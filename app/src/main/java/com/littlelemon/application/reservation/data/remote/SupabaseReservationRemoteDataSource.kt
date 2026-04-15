@@ -38,8 +38,13 @@ class SupabaseReservationRemoteDataSource(
         HttpRequestException::class
     )
     override suspend fun makeReservation(reservation: ReservationDTO): ReservationDTO {
-        return client.from(SupabaseTables.RESERVATIONS)
-            .insert(reservation) { select(selectionColumns) }.decodeSingle()
+        return client.postgrest.rpc(SupabaseRPC.MakeReservation.RPC_NAME) {
+            buildJsonObject {
+                put(SupabaseRPC.MakeReservation.P_TIME, reservation.reservationTime)
+                put(SupabaseRPC.MakeReservation.P_SIZE, reservation.people)
+                put(SupabaseRPC.MakeReservation.P_INSTRUCTIONS, reservation.specialInstructions)
+            }
+        }.decodeSingle()
     }
 
 
@@ -49,11 +54,9 @@ class SupabaseReservationRemoteDataSource(
         HttpRequestException::class
     )
     override suspend fun cancelReservation(reservation: ReservationDTO): ReservationDTO {
-        return client.postgrest.rpc(SupabaseRPC.MakeReservation.RPC_NAME) {
+        return client.postgrest.rpc(SupabaseRPC.CancelReservation.RPC_NAME) {
             buildJsonObject {
-                put(SupabaseRPC.MakeReservation.P_TIME, reservation.reservationTime)
-                put(SupabaseRPC.MakeReservation.P_SIZE, reservation.people)
-                put(SupabaseRPC.MakeReservation.P_INSTRUCTIONS, reservation.specialInstructions)
+                put(SupabaseRPC.CancelReservation.P_ID, reservation.id)
             }
         }.decodeSingle()
     }
