@@ -13,6 +13,9 @@ class SupabaseReservationRemoteDataSource(
     private val client: SupabaseClient
 ) : ReservationRemoteDataSource {
 
+    private val selectionColumns =
+        Columns.list("id, reservation_time, party_size, status, special_instructions")
+
     @Throws(
         PostgrestRestException::class,
         HttpRequestTimeoutException::class,
@@ -20,12 +23,13 @@ class SupabaseReservationRemoteDataSource(
     )
     override suspend fun getReservations(): List<ReservationDTO> {
         return client.from(SupabaseTables.RESERVATIONS)
-            .select(columns = Columns.list("id, reservation_time, party_size, status, special_instructions"))
+            .select(columns = selectionColumns)
             .decodeList<ReservationDTO>()
     }
 
     override suspend fun makeReservation(reservation: ReservationDTO): ReservationDTO {
-        TODO("Not yet implemented")
+        return client.from(SupabaseTables.RESERVATIONS)
+            .insert(reservation) { select(selectionColumns) }.decodeSingle()
     }
 
     override suspend fun cancelReservation(reservation: ReservationDTO): ReservationDTO {

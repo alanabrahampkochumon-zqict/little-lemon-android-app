@@ -90,7 +90,7 @@ class SupabaseReservationRemoteDataSourceTest {
 
         @Test
         fun remoteSuccess_returnsNewReservation() = runTest {
-            val expectedReservation = ReservationGenerator.generateReservationDTO()
+            val expectedReservation = List(1) { ReservationGenerator.generateReservationDTO() }
             val response = Json.encodeToString(expectedReservation)
             client = createFakeSupabaseClient {
                 respond(
@@ -101,9 +101,9 @@ class SupabaseReservationRemoteDataSourceTest {
             }
             remoteDataSource = SupabaseReservationRemoteDataSource(client)
 
-            val reservation = remoteDataSource.makeReservation(expectedReservation)
+            val reservation = remoteDataSource.makeReservation(expectedReservation.first())
 
-            assertEquals(expectedReservation, reservation)
+            assertEquals(expectedReservation.first(), reservation)
         }
 
 
