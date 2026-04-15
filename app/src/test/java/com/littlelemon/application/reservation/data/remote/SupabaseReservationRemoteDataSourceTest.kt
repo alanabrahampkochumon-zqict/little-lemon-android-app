@@ -126,4 +126,46 @@ class SupabaseReservationRemoteDataSourceTest {
             }
         }
     }
+
+    @Nested
+    inner class CancelReservationTests {
+
+        @Test
+        fun remoteSuccess_returnsNewReservation() = runTest {
+            val expectedReservation = List(1) { ReservationGenerator.generateReservationDTO() }
+            val response = Json.encodeToString(expectedReservation)
+            client = createFakeSupabaseClient {
+                respond(
+                    response,
+                    HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }
+            remoteDataSource = SupabaseReservationRemoteDataSource(client)
+
+            val reservation = remoteDataSource.cancelReservation(expectedReservation.first())
+
+            assertEquals(expectedReservation.first(), reservation)
+        }
+
+
+        @Test
+        fun remoteError_throwsException() = runTest {
+            val expectedReservation = ReservationGenerator.generateReservationDTO()
+            client = createFakeSupabaseClient {
+                respond(
+                    errorResponse,
+                    errorCode,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }
+            remoteDataSource = SupabaseReservationRemoteDataSource(client)
+
+            assertThrows<PostgrestRestException> {
+                remoteDataSource.cancelReservation(
+                    expectedReservation
+                )
+            }
+        }
+    }
 }
