@@ -2,6 +2,7 @@ package com.littlelemon.application.address.data.remote
 
 import com.littlelemon.application.address.data.remote.models.AddressDTO
 import com.littlelemon.application.address.data.remote.models.AddressRequestDTO
+import com.littlelemon.application.core.data.remote.SupabaseRPC
 import com.littlelemon.application.core.data.remote.SupabaseTables
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.exceptions.HttpRequestException
@@ -32,20 +33,18 @@ class SupabaseAddressRemoteDataSource(
     )
     override suspend fun saveAddress(address: AddressRequestDTO): AddressDTO {
         return client.postgrest.rpc(
-            "upsert_address",
-            buildJsonObject {
-                put("arg_location", address.location)
-                put("arg_created_at", address.createdAt.toString())
-                put("arg_is_default", address.isDefault)
-                put("arg_id", address.id)
-                put("arg_label", address.label)
-                put("arg_building_name", address.address)
-                put("arg_street_address", address.streetAddress)
-                put("arg_city", address.city)
-                put("arg_state", address.state)
-                put("arg_pin_code", address.pinCode)
-            }
-        ).decodeSingle<AddressDTO>()
+            SupabaseRPC.UpsertAddress.RPC_NAME, buildJsonObject {
+                put(SupabaseRPC.UpsertAddress.P_LOCATION, address.location)
+                put(SupabaseRPC.UpsertAddress.P_CREATED_AT, address.createdAt.toString())
+                put(SupabaseRPC.UpsertAddress.P_IS_DEFAULT, address.isDefault)
+                put(SupabaseRPC.UpsertAddress.P_ID, address.id)
+                put(SupabaseRPC.UpsertAddress.P_LABEL, address.label)
+                put(SupabaseRPC.UpsertAddress.P_BUILDING_NAME, address.address)
+                put(SupabaseRPC.UpsertAddress.P_STREET_ADDRESS, address.streetAddress)
+                put(SupabaseRPC.UpsertAddress.P_CITY, address.city)
+                put(SupabaseRPC.UpsertAddress.P_STATE, address.state)
+                put(SupabaseRPC.UpsertAddress.P_PIN_CODE, address.pinCode)
+            }).decodeSingle<AddressDTO>()
     }
 
     @Throws(
