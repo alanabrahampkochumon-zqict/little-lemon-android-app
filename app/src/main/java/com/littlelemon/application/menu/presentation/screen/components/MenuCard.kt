@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerSize
@@ -92,8 +91,7 @@ fun MenuCard(
         modifier = modifier
             .applyShadow(imageShape, LittleLemonTheme.shadows.dropSM)
             .background(
-                LittleLemonTheme.colors.transparent,
-                shape = cardShape
+                LittleLemonTheme.colors.transparent, shape = cardShape
             )
             .drawBehind {
                 // Draw a shape behind the card to mask out the area left by image's rounding
@@ -104,26 +102,20 @@ fun MenuCard(
                 val newHeight =
                     height - (topOffset + imageCornerRadius) // Reduce height by offset, and hte bottom corner radius(which is greater than the rounding)
                 drawRect(
-                    cardColor,
-                    topLeft = Offset(0f, topOffset),
-                    size = Size(width, newHeight)
+                    cardColor, topLeft = Offset(0f, topOffset), size = Size(width, newHeight)
                 )
-            }
-    ) {
+            }) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(max = 240.dp)
                 .fillMaxHeight()
                 .background(
-                    LittleLemonTheme.colors.transparent,
-                    shape = LittleLemonTheme.shapes.md
-                ),
-            contentAlignment = Alignment.TopEnd
+                    LittleLemonTheme.colors.transparent, shape = LittleLemonTheme.shapes.md
+                ), contentAlignment = Alignment.TopEnd
         ) {
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(dish.imageURL)
+                model = ImageRequest.Builder(LocalContext.current).data(dish.imageURL)
                     .crossfade(true).build(),
                 placeholder = painterResource(R.drawable.illustration_image_loading),
                 error = painterResource(R.drawable.illustration_image_loading),
@@ -132,10 +124,10 @@ fun MenuCard(
                 modifier = Modifier
                     .clip(imageShape)
                     .fillMaxSize(),
-                colorFilter = if (outOfStock) ColorFilter.colorMatrix(
-                    ColorMatrix().apply { setToSaturation(0f) } // Makes out of stock images black and white
-                ) else null
-            )
+                colorFilter = if (outOfStock) ColorFilter.colorMatrix(ColorMatrix().apply {
+                    setToSaturation(0f)
+                } // Makes out of stock images black and white
+                ) else null)
             Stepper(
                 orderQuantity,
                 onIncrease = onIncreaseQuantity,
@@ -145,8 +137,7 @@ fun MenuCard(
                         stepperSize = coordinates.size.toSize()
                     }
                     .background(
-                        Color.Transparent,
-                        LittleLemonTheme.shapes.sm
+                        Color.Transparent, LittleLemonTheme.shapes.sm
                     )
                     .padding(
                         LittleLemonTheme.dimens.sizeSM
@@ -171,26 +162,130 @@ fun MenuCard(
             Row(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeLG)
             ) {
+                // Dish Title
                 Text(
                     dish.title,
                     style = LittleLemonTheme.typography.headlineSmall,
                     color = LittleLemonTheme.colors.contentPrimary,
-                    modifier = Modifier.weight(1f)
-                )
-                dish.nutritionInfo?.let { nutrition ->
-                    if (outOfStock)
-                        Tag(
-                            stringResource(R.string.calories, nutrition.calories),
-                            variant = TagVariant.NeutralFilled
+                    modifier = Modifier
+                        .weight(1f).alignByBaseline(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+
+                    )
+                // Pricing
+                // TODO: Add discount tag
+                if (outOfStock) {
+                    Text(
+                        stringResource(R.string.currency_symbol) + stringResource(
+                            R.string.price_format,
+                            dish.price
+                        ),
+                        style = LittleLemonTheme.typography.bodySmall,
+                        color = LittleLemonTheme.colors.contentPlaceholder,
+                        textDecoration = TextDecoration.LineThrough,
+                        modifier = Modifier.alignByBaseline()
+                    )
+                    Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.sizeSM))
+                    Text(
+                        stringResource(
+                            R.string.out_of_stock, dish.discountedPrice ?: dish.price
+                        ), // TODO: Add test
+                        style = LittleLemonTheme.typography.headlineSmall,
+                        color = LittleLemonTheme.colors.contentDisabled,
+                        modifier = Modifier.padding(vertical = LittleLemonTheme.dimens.sizeSM).alignByBaseline()
+                    )
+                } else {
+                    dish.discountedPrice?.let {
+                        Text(
+                            stringResource(R.string.currency_symbol) + stringResource(
+                                R.string.price_format,
+                                dish.price
+                            ),
+                            style = LittleLemonTheme.typography.bodySmall,
+                            color = LittleLemonTheme.colors.contentPlaceholder,
+                            textDecoration = TextDecoration.LineThrough,
+                            modifier = Modifier.alignByBaseline()
                         )
-                    else
-                        Tag(
-                            stringResource(R.string.calories, nutrition.calories),
-                            variant = TagVariant.InformationLight
-                        )
+                    }
+                    Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.sizeSM))
+                    Text(
+                        stringResource(R.string.currency_symbol),
+                        style = LittleLemonTheme.typography.displaySmall,
+                        color = LittleLemonTheme.colors.contentAccentSecondary,
+                        modifier = Modifier.alignByBaseline()
+                    )
+                    Text(
+                        stringResource(
+                            R.string.price_format, dish.discountedPrice ?: dish.price
+                        ), // TODO: Add test
+                        style = LittleLemonTheme.typography.displayLarge,
+                        color = LittleLemonTheme.colors.contentAccentSecondary,
+                        modifier = Modifier.alignByBaseline()
+                    )
+
+
+//                    if (outOfStock) {
+//                        Row(
+//                            verticalAlignment = Alignment.CenterVertically,
+//                            modifier = Modifier
+//                                .padding(
+//                                    start = LittleLemonTheme.dimens.sizeSM,
+//                                    end = LittleLemonTheme.dimens.sizeMD,
+//                                ),
+//                        ) {
+//                            Text(
+//                                stringResource(R.string.currency_symbol),
+//                                style = LittleLemonTheme.typography.bodySmall,
+//                                color = LittleLemonTheme.colors.contentPlaceholder,
+//                            )
+//                            Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.size3XS))
+//                            Text(
+//                                stringResource(R.string.price_format, dish.price),
+//                                style = LittleLemonTheme.typography.bodySmall,
+//                                color = LittleLemonTheme.colors.contentPlaceholder,
+//                            )
+//                        }
+//                    } else {
+//                        dish.discountedPrice?.let {
+//                            Row(
+//                                verticalAlignment = Alignment.CenterVertically,
+//                                modifier = Modifier
+//                                    .padding(
+//                                        start = LittleLemonTheme.dimens.sizeSM,
+//                                        end = LittleLemonTheme.dimens.sizeMD,
+//                                    ),
+//                            ) {
+//                                Text(
+//                                    stringResource(R.string.currency_symbol),
+//                                    style = LittleLemonTheme.typography.bodySmall,
+//                                    color = LittleLemonTheme.colors.contentPlaceholder,
+//                                    textDecoration = TextDecoration.LineThrough
+//                                )
+//                                Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.size3XS))
+//                                Text(
+//                                    stringResource(R.string.price_format, dish.price),
+//                                    style = LittleLemonTheme.typography.bodySmall,
+//                                    color = LittleLemonTheme.colors.contentPlaceholder,
+//                                    textDecoration = TextDecoration.LineThrough
+//                                )
+//                            }
+//                        }
+//                    }
                 }
+//                dish.nutritionInfo?.let { nutrition ->
+//                    if (outOfStock)
+//                        Tag(
+//                            stringResource(R.string.calories, nutrition.calories),
+//                            variant = TagVariant.NeutralFilled
+//                        )
+//                    else
+//                        Tag(
+//                            stringResource(R.string.calories, nutrition.calories),
+//                            variant = TagVariant.InformationLight
+//                        )
+//                }
             }
 
             dish.nutritionInfo?.let { nutrition ->
@@ -233,107 +328,18 @@ fun MenuCard(
                 )
             }
             Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXL))
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.SpaceBetween) {
-                Row(
-                    modifier = Modifier.background(
-                        LittleLemonTheme.colors.secondary,
-                        shape = LittleLemonTheme.shapes.xs
-                    ), verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(
-                            LittleLemonTheme.dimens.size2XS
-                        ),
-                        modifier = Modifier
-                            .background(
-                                if (outOfStock) LittleLemonTheme.colors.tertiary else LittleLemonTheme.colors.highlight,
-                                shape = LittleLemonTheme.shapes.xs
-                            )
-                            .padding(
-                                start = LittleLemonTheme.dimens.sizeMD,
-                                end = LittleLemonTheme.dimens.sizeLG
-                            ),
-                    ) {
-                        // TODO: Add discount tag
-                        if (outOfStock) {
-                            Text(
-                                stringResource(
-                                    R.string.out_of_stock,
-                                    dish.discountedPrice ?: dish.price
-                                ), // TODO: Add test
-                                style = LittleLemonTheme.typography.headlineSmall,
-                                color = LittleLemonTheme.colors.contentDisabled,
-                                modifier = Modifier.padding(vertical = LittleLemonTheme.dimens.sizeSM)
-                            )
-                        } else {
-                            Text(
-                                stringResource(R.string.currency_symbol),
-                                style = LittleLemonTheme.typography.displaySmall,
-                                color = LittleLemonTheme.colors.contentOnColor,
-                                modifier = Modifier.offset(x = 1.dp) // Offset to closely pack $ and the currency
-                            )
-                            Text(
-                                stringResource(
-                                    R.string.price_format,
-                                    dish.discountedPrice ?: dish.price
-                                ), // TODO: Add test
-                                style = LittleLemonTheme.typography.displayMedium,
-                                color = LittleLemonTheme.colors.contentOnColor,
-                            )
-                        }
-                    }
-                    if (outOfStock) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(
-                                    start = LittleLemonTheme.dimens.sizeSM,
-                                    end = LittleLemonTheme.dimens.sizeMD,
-                                ),
-                        ) {
-                            Text(
-                                stringResource(R.string.currency_symbol),
-                                style = LittleLemonTheme.typography.bodySmall,
-                                color = LittleLemonTheme.colors.contentPlaceholder,
-                            )
-                            Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.size3XS))
-                            Text(
-                                stringResource(R.string.price_format, dish.price),
-                                style = LittleLemonTheme.typography.bodySmall,
-                                color = LittleLemonTheme.colors.contentPlaceholder,
-                            )
-                        }
-                    } else {
-                        dish.discountedPrice?.let {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .padding(
-                                        start = LittleLemonTheme.dimens.sizeSM,
-                                        end = LittleLemonTheme.dimens.sizeMD,
-                                    ),
-                            ) {
-                                Text(
-                                    stringResource(R.string.currency_symbol),
-                                    style = LittleLemonTheme.typography.bodySmall,
-                                    color = LittleLemonTheme.colors.contentPlaceholder,
-                                    textDecoration = TextDecoration.LineThrough
-                                )
-                                Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.size3XS))
-                                Text(
-                                    stringResource(R.string.price_format, dish.price),
-                                    style = LittleLemonTheme.typography.bodySmall,
-                                    color = LittleLemonTheme.colors.contentPlaceholder,
-                                    textDecoration = TextDecoration.LineThrough
-                                )
-                            }
-                        }
-                    }
-                }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
 
-                if(discount != null && !outOfStock) {
-                    Tag(stringResource(R.string.discount_format, discount.toFloat()), variant = TagVariant.SuccessLight)
+
+                if (discount != null && !outOfStock) {
+                    Tag(
+                        stringResource(R.string.discount_format, discount.toFloat()),
+                        variant = TagVariant.SuccessLight
+                    )
                 }
             }
         }
@@ -346,8 +352,7 @@ fun MenuCard(
 private fun MenuCardPreview() {
     LittleLemonTheme {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.padding(16.dp)
         ) {
             MenuCard(
                 Dish(
@@ -361,9 +366,7 @@ private fun MenuCardPreview() {
                     category = listOf(),
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
-                ), orderQuantity = 2,
-                onDecreaseQuantity = {}, onIncreaseQuantity = {}
-            )
+                ), orderQuantity = 2, onDecreaseQuantity = {}, onIncreaseQuantity = {})
             MenuCard(
                 Dish(
                     title = "Grilled Whole Fish",
@@ -376,10 +379,11 @@ private fun MenuCardPreview() {
                     category = listOf(),
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
-                ), orderQuantity = 0,
+                ),
+                orderQuantity = 0,
                 outOfStock = true,
-                onDecreaseQuantity = {}, onIncreaseQuantity = {}
-            )
+                onDecreaseQuantity = {},
+                onIncreaseQuantity = {})
             MenuCard(
                 Dish(
                     title = "Grilled Whole Fish",
@@ -392,9 +396,7 @@ private fun MenuCardPreview() {
                     category = listOf(),
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
-                ), orderQuantity = 0,
-                onDecreaseQuantity = {}, onIncreaseQuantity = {}
-            )
+                ), orderQuantity = 0, onDecreaseQuantity = {}, onIncreaseQuantity = {})
         }
     }
 }
