@@ -6,7 +6,7 @@ import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
 import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
-import com.littlelemon.application.menu.utils.DishEntityGenerator
+import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.menu.utils.FakeDishRemoteDataSource
 import com.littlelemon.application.menu.utils.FakeMenuDao
 import com.littlelemon.application.menu.utils.MenuDTOGenerator
@@ -252,7 +252,7 @@ class MenuRepositoryImplTest() {
             menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
 
             localDataSource.insertDishes(List(outOfStockDishCount) {
-                DishEntityGenerator.generateDishEntity().first.copy(stock = 0)
+                DishGenerator.generateDishEntity().first.copy(stock = 0)
             })
         }
 
@@ -302,7 +302,7 @@ class MenuRepositoryImplTest() {
         private lateinit var remoteDataSource: MenuRemoteDataSource
         private lateinit var menuRepository: MenuRepository
 
-        private val entityGenerator = DishEntityGenerator
+        private val entityGenerator = DishGenerator
         private val dtoGenerator = MenuDTOGenerator()
 
         private val ENTITY_TITLE_PREDICATE = "ENTITY: "

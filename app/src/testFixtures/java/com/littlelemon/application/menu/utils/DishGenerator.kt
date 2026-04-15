@@ -4,6 +4,9 @@ import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity
 import com.littlelemon.application.menu.data.local.models.DishWithCategories
+import com.littlelemon.application.menu.domain.models.Category
+import com.littlelemon.application.menu.domain.models.Dish
+import com.littlelemon.application.menu.domain.models.NutritionInfo
 import io.github.serpro69.kfaker.faker
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -89,4 +92,26 @@ object DishEntityGenerator {
             )
         }
     }
+
+    fun generateDish(): Dish {
+        val nutritionInfo = NutritionInfo(
+            calories = (Math.random() * 1000).roundToInt(),
+            protein = (Math.random() * 1000).roundToInt(),
+            carbs = (Math.random() * 1000).roundToInt(),
+            fats = (Math.random() * 1000).roundToInt(),
+        )
+        return Dish(
+            title = faker.dessert.dessert()(),
+            description = faker.lorem.toString(),
+            price = Math.random() * 1000,
+            imageURL = faker.internet.safeDomainSuffix() + "/" + faker.dessert.dessert()() + ".png",
+            stock = (Math.random() * 1000).roundToInt(),
+            nutritionInfo = nutritionInfo,
+            discountedPrice = Math.random() * 1000,
+            popularityIndex = (0..100).random(),
+            dateAdded = LocalDateTime(2024, 5, 5, 10, 12, 0),
+            category = List(Random.nextInt(3)) { Category(faker.adjective.toString()) }
+        )
+    }
+
 }

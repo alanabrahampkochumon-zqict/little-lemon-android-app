@@ -7,7 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
-import com.littlelemon.application.menu.utils.DishEntityGenerator
+import com.littlelemon.application.menu.utils.DishGenerator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import okio.IOException
@@ -44,8 +44,8 @@ class MenuDatabaseTest {
     fun dishWithNoCategoriesInserted_whenQueried_returnsCorrectDish() = runTest {
         // Arrange
         val numCategories = 0
-        val dish = DishEntityGenerator.generateDishEntity().first
-        val categories = DishEntityGenerator.generateCategoryEntities(numCategories)
+        val dish = DishGenerator.generateDishEntity().first
+        val categories = DishGenerator.generateCategoryEntities(numCategories)
         val crossRef = categories.map { (categoryId, _) ->
             DishCategoryCrossRef(
                 dishId = dish.dishId,
@@ -67,7 +67,7 @@ class MenuDatabaseTest {
     fun dishWithOneCategoriesInserted_whenQueried_returnsCorrectDishWithOneCategory() = runTest {
         // Arrange
         val numCategories = 1
-        val dish = DishEntityGenerator.generateDishEntity().first
+        val dish = DishGenerator.generateDishEntity().first
         val categories = DishEntityGenerator.generateCategoryEntities(numCategories)
         val crossRef = categories.map { (categoryId, _) ->
             DishCategoryCrossRef(

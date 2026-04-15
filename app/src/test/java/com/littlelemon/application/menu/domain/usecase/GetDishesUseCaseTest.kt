@@ -7,7 +7,7 @@ import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
-import com.littlelemon.application.menu.utils.DishEntityGenerator
+import com.littlelemon.application.menu.utils.DishGenerator
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first
@@ -23,7 +23,7 @@ import kotlin.test.assertTrue
 @SmallTest
 class GetDishesUseCaseTest {
 
-    val dishes = DishEntityGenerator.generateDishWithCategories(5).map { it.first }
+    val dishes = DishGenerator.generateDishWithCategories(5).map { it.first }
 
     private lateinit var repository: MenuRepository
     private lateinit var useCase: GetDishesUseCase
@@ -107,7 +107,7 @@ class GetDishesUseCaseTest {
 
     @Test
     fun getDishes_forceFetch_getsNewDishes() = runTest {
-        val newDishes = DishEntityGenerator.generateDishWithCategories(10)
+        val newDishes = DishGenerator.generateDishWithCategories(10)
             .map { (dishEntity, _) -> dishEntity.toDish() }
         coEvery { repository.getDishes(fetchFromRemote = true) } returns flow {
             emit(

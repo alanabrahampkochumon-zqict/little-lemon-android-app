@@ -7,7 +7,7 @@ import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
-import com.littlelemon.application.menu.utils.DishEntityGenerator
+import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -34,13 +34,13 @@ class MenuViewModelTest {
 
     private val testDispatcher = coroutineRule.testDispatcher
 
-    private val dishes = DishEntityGenerator.generateDishWithCategories(10)
+    private val dishes = DishGenerator.generateDishWithCategories(10)
         .map { (dishEntity, _) -> dishEntity.toDish() }
     private val outOfStockDishes =
-        DishEntityGenerator.generateDishWithCategories(5)
+        DishGenerator.generateDishWithCategories(5)
             .map { (dishEntity, _) -> dishEntity.toDish().copy(stock = 0) }
     private val remoteDishes =
-        DishEntityGenerator.generateDishWithCategories(15)
+        DishGenerator.generateDishWithCategories(15)
             .map { (dishEntity, _) -> dishEntity.toDish() }
 
     private lateinit var useCase: GetDishesUseCase

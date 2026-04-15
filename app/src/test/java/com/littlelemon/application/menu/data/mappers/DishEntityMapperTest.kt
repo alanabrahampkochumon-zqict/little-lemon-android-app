@@ -4,7 +4,7 @@ import com.littlelemon.application.menu.data.local.models.DishEntity
 import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
-import com.littlelemon.application.menu.utils.DishEntityGenerator
+import com.littlelemon.application.menu.utils.DishGenerator
 import kotlinx.datetime.LocalDateTime
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -20,7 +20,7 @@ class DishEntityMapperTest {
         val numCategories = 5
         val numDishes = 2
         val dishWithCategoriesAndDateTime =
-            DishEntityGenerator.generateDishWithCategories(numDishes, numCategories)
+            DishGenerator.generateDishWithCategories(numDishes, numCategories)
 
         // Act
         val dishes = dishWithCategoriesAndDateTime.map { (dishEntity, _) -> dishEntity.toDish() }
@@ -36,7 +36,7 @@ class DishEntityMapperTest {
         val numCategories = 3
         val numDishes = 1
         var dishEntity =
-            DishEntityGenerator.generateDishWithCategories(numDishes, numCategories).first().first
+            DishGenerator.generateDishWithCategories(numDishes, numCategories).first().first
         dishEntity = dishEntity.copy(dish = dishEntity.dish.copy(discountedPrice = 0.0))
 
         // Act
@@ -53,7 +53,7 @@ class DishEntityMapperTest {
         val numCategories = 0
         val numDishes = 2
         val dishWithCategoriesAndDateTime =
-            DishEntityGenerator.generateDishWithCategories(numDishes, numCategories)
+            DishGenerator.generateDishWithCategories(numDishes, numCategories)
 
         // Act
         val dishes = dishWithCategoriesAndDateTime.map { (dishEntity, _) -> dishEntity.toDish() }
