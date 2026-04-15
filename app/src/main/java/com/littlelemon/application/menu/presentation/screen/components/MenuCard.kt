@@ -82,8 +82,8 @@ fun MenuCard(
 
     val cardColor = LittleLemonTheme.colors.primary
 
-    val discount =
-        if (dish.discountedPrice != null && dish.discountedPrice > 0.0) ((dish.price - dish.discountedPrice) / dish.price * 100).toInt() else null
+//    val discount =
+//        if (dish.discountedPrice != null && dish.discountedPrice > 0.0) ((dish.price - dish.discountedPrice) / dish.price * 100).toInt() else null
 
     Column(
         modifier = modifier
@@ -189,7 +189,7 @@ fun MenuCard(
                     Text(
                         stringResource(
                             R.string.out_of_stock, dish.discountedPrice ?: dish.price
-                        ), // TODO: Add test
+                        ),
                         style = LittleLemonTheme.typography.headlineSmall,
                         color = LittleLemonTheme.colors.contentDisabled,
                         modifier = Modifier
@@ -219,7 +219,7 @@ fun MenuCard(
                     Text(
                         stringResource(
                             R.string.price_format, dish.discountedPrice ?: dish.price
-                        ), // TODO: Add test
+                        ),
                         style = LittleLemonTheme.typography.displayLarge,
                         color = LittleLemonTheme.colors.contentAccentSecondary,
                         modifier = Modifier.alignByBaseline()

@@ -32,7 +32,7 @@ fun Header(
     actionContent: @Composable () -> Unit = {}
 ) {
     val style = if (typeStyle == HeaderTypeStyle.Primary) {
-        MaterialTheme.typeStyle.displaySmall
+        MaterialTheme.typeStyle.displayLarge
     } else {
         MaterialTheme.typeStyle.headlineSmall
     }
