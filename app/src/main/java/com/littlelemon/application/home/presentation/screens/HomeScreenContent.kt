@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
-import com.littlelemon.application.core.presentation.components.OptionSelect
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.home.presentation.HomeViewModel
@@ -86,12 +85,6 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
         item {
 
             Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
-            OptionSelect(
-                homeOptions,
-                selectedOption = currentSelection,
-                onSelectionChange = { currentSelection = it },
-            )
-            Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
 
             // Upcoming reservations | Conditionally render
             Header(
