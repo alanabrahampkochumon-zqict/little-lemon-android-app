@@ -1,6 +1,5 @@
 package com.littlelemon.application.menu.presentation.screen
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -55,7 +54,7 @@ fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
 @Composable
 fun MenuScreenRoot(
     menuState: MenuState,
-    onCategoryChanged: () -> Unit,
+    onCategoryChanged: (String) -> Unit,
     onIncreaseQuantity: (Dish) -> Unit,
     onDecreaseQuantity: (Dish) -> Unit,
     modifier: Modifier = Modifier
@@ -119,7 +118,9 @@ fun MenuScreenRoot(
             ) {
                 items(categories) { category ->
                     CategoryCard(
-                        category, selected = category == currentCategory, onCategoryChanged
+                        category,
+                        selected = category == currentCategory,
+                        { onCategoryChanged(category) }
                     )
                 }
             }

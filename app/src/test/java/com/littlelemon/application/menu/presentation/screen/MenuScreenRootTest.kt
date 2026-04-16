@@ -3,13 +3,17 @@ package com.littlelemon.application.menu.presentation.screen
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import com.littlelemon.application.R
+import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.menu.MenuTestTags
 import com.littlelemon.application.menu.domain.models.Category
+import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.presentation.MenuState
 import com.littlelemon.application.menu.utils.DishGenerator
 import org.junit.Rule
@@ -17,6 +21,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import kotlin.test.assertEquals
 
 @RunWith(RobolectricTestRunner::class)
 class MenuScreenRootTest {
@@ -76,5 +81,45 @@ class MenuScreenRootTest {
         }
     }
 
+
+    @Test
+    fun onIncreaseQuantity_triggersCallbackWithDish() {
+        val dishCardIndex = 0
+        var triggeredDish: Dish? = null
+        composeTestRule.setContent {
+            MenuScreenRoot(state, {}, { triggeredDish = it }, {})
+        }
+
+        composeTestRule.onAllNodesWithTag(CoreTestTags.STEPPER_INCREASE)[dishCardIndex].performClick()
+
+        assertEquals(dishes[dishCardIndex], triggeredDish)
+    }
+
+
+    @Test
+    fun onDecreaseQuantity_triggersCallbackWithDish() {
+        val dishCardIndex = 0
+        var triggeredDish: Dish? = null
+        composeTestRule.setContent {
+            MenuScreenRoot(state, {}, { }, { triggeredDish = it })
+        }
+
+        composeTestRule.onAllNodesWithTag(CoreTestTags.STEPPER_DECREASE)[dishCardIndex].performClick()
+
+        assertEquals(dishes[dishCardIndex], triggeredDish)
+    }
+
+    @Test
+    fun onCategoryChange_triggersCallbackWithCategory() {
+        val categoryIndex = 0
+        var categoryTriggered = ""
+        composeTestRule.setContent {
+            MenuScreenRoot(state, { categoryTriggered = it }, { }, {})
+        }
+
+        composeTestRule.onNodeWithText(categories[categoryIndex].categoryName).performClick()
+
+        assertEquals(categories[categoryIndex].categoryName, categoryTriggered)
+    }
 
 }
