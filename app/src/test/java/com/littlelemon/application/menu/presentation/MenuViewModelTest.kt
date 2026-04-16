@@ -218,9 +218,9 @@ class MenuViewModelTest {
         }
     }
 
+    // TODO: Refactor above tests in subtests
     @Nested
     inner class Actions {
-
 
         @Nested
         inner class UpdateCategoryAction {
