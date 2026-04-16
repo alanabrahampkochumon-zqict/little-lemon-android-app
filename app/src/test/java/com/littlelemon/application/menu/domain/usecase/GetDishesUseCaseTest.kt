@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import kotlin.test.assertEquals
@@ -27,6 +28,7 @@ class GetDishesUseCaseTest {
 
     private lateinit var repository: MenuRepository
     private lateinit var useCase: GetDishesUseCase
+
 
     @BeforeEach
     fun setUp() {
@@ -124,6 +126,47 @@ class GetDishesUseCaseTest {
         assertIs<Resource.Success<List<Dish>>>(result)
         assertNotNull(result.data)
         assertEquals(newDishes, result.data)
+    }
+
+
+    @Nested
+    inner class CategoryFilterTests {
+
+        private val filterCategory = dishes.first().categories.first().categoryName
+        val categoryFilteredDishes =
+            DishGenerator.generateDishWithCategories(5).map { it.first.toDish() }
+
+        @BeforeEach
+        fun setUp() {
+            // Category filtering mock setup
+            coEvery { repository.getDishes(filterCategory = null) } returns flow {
+                emit(Resource.Success(dishes.map { it.toDish() }))
+            }
+            coEvery { repository.getDishes(filterCategory = filterCategory) } returns flow {
+                emit(Resource.Success(categoryFilteredDishes))
+            }
+            useCase = GetDishesUseCase(repository)
+        }
+
+        @Test
+        fun nullFilter_returnsAllDishes() = runTest {
+            // When usecase is invoked with null `filterCategory`
+            val dishesResource = useCase(filterCategory = null).first()
+
+            // Then the result is original dishes
+            assertIs<Resource.Success<List<Dish>>>(dishesResource)
+            assertEquals(dishes.map { it.toDish() }, dishesResource.data)
+        }
+
+        @Test
+        fun validFilter_returnsDishesWithCategories() = runTest {
+            // When usecase is invoked with a `filterCategory`
+            val dishesResource = useCase(filterCategory = filterCategory).first()
+
+            // Then the result is filtered dishes
+            assertIs<Resource.Success<List<Dish>>>(dishesResource)
+            assertEquals(categoryFilteredDishes, dishesResource.data)
+        }
     }
 
 }
