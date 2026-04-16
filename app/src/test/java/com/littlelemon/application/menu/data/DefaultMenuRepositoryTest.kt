@@ -25,7 +25,7 @@ import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 import kotlin.math.roundToInt
 
-class MenuRepositoryImplTest() {
+class DefaultMenuRepositoryTest() {
 
 
     @Nested
@@ -40,7 +40,7 @@ class MenuRepositoryImplTest() {
 
             localDataSource = FakeMenuDao(seedDatabase = true)
             remoteDataSource = FakeDishRemoteDataSource()
-            menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
+            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
 
         }
 
@@ -249,7 +249,7 @@ class MenuRepositoryImplTest() {
 
             localDataSource = FakeMenuDao(seedDatabase = true)
             remoteDataSource = FakeDishRemoteDataSource()
-            menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
+            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
 
             localDataSource.insertDishes(List(outOfStockDishCount) {
                 DishGenerator.generateDishEntity().first.copy(stock = 0)
@@ -313,7 +313,7 @@ class MenuRepositoryImplTest() {
 
             localDataSource = FakeMenuDao(seedDatabase = false)
             remoteDataSource = FakeDishRemoteDataSource(emptyList())
-            menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
+            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
 
         }
 
@@ -339,7 +339,7 @@ class MenuRepositoryImplTest() {
                         )
                     }
                 remoteDataSource = FakeDishRemoteDataSource(dishDTO)
-                menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
+                menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
 
                 //Act
                 val result = menuRepository.getDishes(fetchFromRemote = true)
@@ -364,7 +364,7 @@ class MenuRepositoryImplTest() {
                     )
                 }
             remoteDataSource = FakeDishRemoteDataSource(dishDTO)
-            menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
+            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
 
             //Act
             val result =
@@ -393,7 +393,7 @@ class MenuRepositoryImplTest() {
 
                 localDataSource.insertDishes(dishEntities)
                 remoteDataSource = FakeDishRemoteDataSource(throwError = true)
-                menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
+                menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
 
                 //Act
                 val result =
@@ -412,7 +412,7 @@ class MenuRepositoryImplTest() {
             runTest {
                 // Arrange
                 remoteDataSource = FakeDishRemoteDataSource(throwError = true)
-                menuRepository = MenuRepositoryImpl(localDataSource, remoteDataSource)
+                menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
 
 
                 //Act

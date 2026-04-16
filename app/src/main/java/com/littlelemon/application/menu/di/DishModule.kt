@@ -1,7 +1,7 @@
 package com.littlelemon.application.menu.di
 
 import androidx.room.Room
-import com.littlelemon.application.menu.data.MenuRepositoryImpl
+import com.littlelemon.application.menu.data.DefaultMenuRepository
 import com.littlelemon.application.menu.data.local.MenuDatabase
 import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
@@ -21,7 +21,7 @@ val dishModule = module {
     single<GetDishesUseCase> { GetDishesUseCase(get()) }
 
     single<MenuRepository> {
-        MenuRepositoryImpl(get(), get())
+        DefaultMenuRepository(get(), get())
     }
 
     single<MenuDao> {

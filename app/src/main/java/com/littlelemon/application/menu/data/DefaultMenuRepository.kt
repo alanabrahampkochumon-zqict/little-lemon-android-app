@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-class MenuRepositoryImpl(
+class DefaultMenuRepository(
     private val localDataSource: MenuDao,
     private val remoteDataSource: MenuRemoteDataSource
 ) : MenuRepository {
