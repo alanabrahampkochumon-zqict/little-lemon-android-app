@@ -48,12 +48,18 @@ import kotlin.random.Random
 @Composable
 fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
     val menuState by viewModel.state.collectAsStateWithLifecycle()
-    MenuScreenRoot(menuState, modifier)
+    MenuScreenRoot(menuState, { /** TODO */ }, { /** TODO */ }, { /** TODO */ }, modifier)
 }
 
 // TODO: Add test
 @Composable
-fun MenuScreenRoot(menuState: MenuState, modifier: Modifier = Modifier) {
+fun MenuScreenRoot(
+    menuState: MenuState,
+    onCategoryChanged: () -> Unit,
+    onIncreaseQuantity: (Dish) -> Unit,
+    onDecreaseQuantity: (Dish) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val contentPadding = MaterialTheme.dimens.sizeXL
 
     if (menuState.dishes == null) {
@@ -68,7 +74,7 @@ fun MenuScreenRoot(menuState: MenuState, modifier: Modifier = Modifier) {
         categories.addAll(dish.category)
         categories
     }.map { it.categoryName }
-    Log.d("Cats", categories.toString())
+
     val currentCategory by remember {
         mutableStateOf("")
     }
@@ -113,7 +119,8 @@ fun MenuScreenRoot(menuState: MenuState, modifier: Modifier = Modifier) {
             ) {
                 items(categories) { category ->
                     CategoryCard(
-                        category, selected = category == currentCategory, {/* TODO */ })
+                        category, selected = category == currentCategory, onCategoryChanged
+                    )
                 }
             }
         }
@@ -122,8 +129,8 @@ fun MenuScreenRoot(menuState: MenuState, modifier: Modifier = Modifier) {
             MenuCard(
                 dish,
                 Random.nextInt(5),
-                {},
-                {},
+                { onIncreaseQuantity(dish) },
+                { onDecreaseQuantity(dish) },
                 modifier = Modifier.padding(horizontal = contentPadding)
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
@@ -164,6 +171,6 @@ private fun MenuScreenRootPreview() {
     val dishes = List(10) { generateDish() }
     val state = MenuState(dishes)
     LittleLemonTheme {
-        MenuScreenRoot(state)
+        MenuScreenRoot(state, {}, {}, {})
     }
 }

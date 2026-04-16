@@ -35,7 +35,7 @@ class MenuScreenRootTest {
     @Test
     fun displaysHeader() {
         composeTestRule.setContent {
-            MenuScreenRoot(state)
+            MenuScreenRoot(state, {}, {}, {})
         }
         composeTestRule.onNodeWithText(application.getString(R.string.heading_explore_our_cuisines))
             .assertIsDisplayed()
@@ -44,7 +44,7 @@ class MenuScreenRootTest {
     @Test
     fun displaysFilter() {
         composeTestRule.setContent {
-            MenuScreenRoot(state)
+            MenuScreenRoot(state, {}, {}, {})
         }
         composeTestRule.onNodeWithText(application.getString(R.string.act_filter))
             .assertIsDisplayed()
@@ -53,7 +53,7 @@ class MenuScreenRootTest {
     @Test
     fun displaysCategories() {
         composeTestRule.setContent {
-            MenuScreenRoot(state)
+            MenuScreenRoot(state, {}, {}, {})
         }
         categories.forEach { category ->
             composeTestRule.onNodeWithText(category.categoryName).performScrollTo()
@@ -65,7 +65,7 @@ class MenuScreenRootTest {
     @Test
     fun displaysDish() {
         composeTestRule.setContent {
-            MenuScreenRoot(state)
+            MenuScreenRoot(state, {}, {}, {})
         }
         // Since this is an instrumentation test for menu card, checking that the title is
         // displayed implicitly verifies that the card itself is displayed.
@@ -75,5 +75,6 @@ class MenuScreenRootTest {
                 .assertIsDisplayed()
         }
     }
+
 
 }
