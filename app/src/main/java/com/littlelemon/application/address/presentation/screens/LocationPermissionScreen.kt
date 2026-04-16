@@ -202,13 +202,14 @@ fun LocationPermissionScreenRoot(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painterResource(R.drawable.enable_location_service),
+                    painterResource(R.drawable.illustration_enable_location),
                     contentDescription = null,
                     Modifier
-                        .widthIn(max = 450.dp)
+                        .fillMaxWidth(0.8f)
+                        .widthIn(max = 320.dp)
                         .offset(y = MaterialTheme.dimens.size2XL) // Offset applied to negate image's y height due to shadow
                 )
-                Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeXS)) {
+                Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
                     Text(
                         stringResource(R.string.heading_location_permission),
                         modifier = Modifier.fillMaxWidth(),
@@ -222,7 +223,7 @@ fun LocationPermissionScreenRoot(
                         color = MaterialTheme.colors.contentSecondary
                     )
                 }
-                Spacer(Modifier.height(MaterialTheme.dimens.size4XL))
+                Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
                 Column(
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG),
                     modifier = Modifier.widthIn(max = 480.dp)
