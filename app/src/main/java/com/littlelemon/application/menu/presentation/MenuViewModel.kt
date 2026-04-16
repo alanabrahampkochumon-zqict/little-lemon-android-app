@@ -74,7 +74,7 @@ class MenuViewModel(
             is MenuActions.ApplyFiltering -> _filterFlow.update { action.filter }
             is MenuActions.ApplySorting -> _dishSortingFlow.update { action.sorting }
             is MenuActions.FetchDishes -> _forceFetch.update { action.fromRemote }
-            is MenuActions.UpdateDishCategory -> _currentCategory.update { action.category }
+            is MenuActions.UpdateDishCategory -> _currentCategory.update { action.category } // TODO: Add test
         }
     }
 

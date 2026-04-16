@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
@@ -42,7 +43,6 @@ class MenuViewModelTest {
     private val remoteDishes =
         DishGenerator.generateDishWithCategories(15)
             .map { (dishEntity, _) -> dishEntity.toDish() }
-
     private lateinit var useCase: GetDishesUseCase
     private lateinit var viewModel: MenuViewModel
 
@@ -215,6 +215,63 @@ class MenuViewModelTest {
             val state = awaitItem()
             assertNotNull(state.dishes)
             assertEquals(dishes, state.dishes)
+        }
+    }
+
+    @Nested
+    inner class Actions {
+
+
+        @Nested
+        inner class UpdateCategoryAction {
+            private val filterCategory = "CATEGORY"
+            private val categoryFilteredDishes =
+                DishGenerator.generateDishWithCategories(5)
+                    .map { (dishEntity, _) -> dishEntity.toDish() }
+
+            @BeforeEach
+            fun setUp() {
+                coEvery { useCase.invoke(filterCategory = null) } returns flow {
+                    emit(Resource.Success(dishes))
+                }
+
+                coEvery { useCase.invoke(filterCategory = filterCategory) } returns flow {
+                    emit(Resource.Success(categoryFilteredDishes))
+                }
+
+                viewModel = MenuViewModel(useCase, testDispatcher)
+            }
+
+
+            @Test
+            fun nullCategory_returnsAllDishes() = runTest {
+                viewModel.state.test {
+                    awaitItem() // Skip the initial loading
+
+                    // When UpdateDishCategoryAction is triggered null category
+                    viewModel.onAction(MenuActions.UpdateDishCategory(null))
+
+                    // Then, the original dishes are emitted
+                    val state = awaitItem()
+                    assertNotNull(state.dishes)
+                    assertEquals(dishes, state.dishes)
+                }
+            }
+
+            @Test
+            fun validCategory_returnsFilteredDishes() = runTest {
+                viewModel.state.test {
+                    awaitItem() // Skip the initial loading
+
+                    // When UpdateDishCategoryAction is triggered null category
+                    viewModel.onAction(MenuActions.UpdateDishCategory(filterCategory))
+
+                    // Then, the filtered dishes are emitted
+                    val state = awaitItem()
+                    assertNotNull(state.dishes)
+                    assertEquals(categoryFilteredDishes, state.dishes)
+                }
+            }
         }
     }
 
