@@ -46,7 +46,7 @@ class MenuViewModel(
         )
     }
         .flatMapLatest { (sorting, filter, forceFetch, currentCategory) ->
-            getDishes(sorting, filter, forceFetch)
+            getDishes(sorting, filter, forceFetch, currentCategory)
         }.map { resource ->
             when (resource) {
                 is Resource.Failure -> MenuState(
