@@ -50,7 +50,6 @@ fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
     MenuScreenRoot(menuState, { /** TODO */ }, { /** TODO */ }, { /** TODO */ }, modifier)
 }
 
-// TODO: Add test
 @Composable
 fun MenuScreenRoot(
     menuState: MenuState,

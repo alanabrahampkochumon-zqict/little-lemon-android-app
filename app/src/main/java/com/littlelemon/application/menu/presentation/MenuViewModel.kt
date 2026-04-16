@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.R
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
-import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
@@ -30,13 +29,23 @@ class MenuViewModel(
     private val _dishSortingFlow = MutableStateFlow(DishSorting.POPULARITY)
     private val _forceFetch = MutableStateFlow(false)
 
+    private val _currentCategory = MutableStateFlow<String?>(null)
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val state = combine(
         _dishSortingFlow,
         _filterFlow,
-        _forceFetch
-    ) { sorting, filtering, forceFetch -> Triple(sorting, filtering, forceFetch) }
-        .flatMapLatest { (sorting, filter, forceFetch) ->
+        _forceFetch,
+        _currentCategory
+    ) { sorting, filtering, forceFetch, currentCategory ->
+        DishDataParams(
+            sorting,
+            filtering,
+            forceFetch,
+            currentCategory
+        )
+    }
+        .flatMapLatest { (sorting, filter, forceFetch, currentCategory) ->
             getDishes(sorting, filter, forceFetch)
         }.map { resource ->
             when (resource) {
