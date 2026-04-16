@@ -6,12 +6,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ReservationDTO(
-    val id: String,
+    val id: String?,
     @SerialName("reservation_time")
     val reservationTime: String,
     @SerialName("party_size")
     val people: Int,
-    val status: String,
+    val status: String?,
     @SerialName("special_instructions")
     val specialInstructions: String
 )
