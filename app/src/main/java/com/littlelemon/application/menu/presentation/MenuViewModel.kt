@@ -31,6 +31,7 @@ class MenuViewModel(
 
     private val _currentCategory = MutableStateFlow<String?>(null)
 
+    // TODO: Add current category test
     @OptIn(ExperimentalCoroutinesApi::class)
     val state = combine(
         _dishSortingFlow,
@@ -73,6 +74,7 @@ class MenuViewModel(
             is MenuActions.ApplyFiltering -> _filterFlow.update { action.filter }
             is MenuActions.ApplySorting -> _dishSortingFlow.update { action.sorting }
             is MenuActions.FetchDishes -> _forceFetch.update { action.fromRemote }
+            is MenuActions.UpdateDishCategory -> _currentCategory.update { action.category }
         }
     }
 
