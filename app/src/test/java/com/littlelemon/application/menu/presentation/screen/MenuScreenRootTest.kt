@@ -1,11 +1,14 @@
 package com.littlelemon.application.menu.presentation.screen
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollTo
-import androidx.compose.ui.test.performScrollToIndex
+import androidx.compose.ui.test.performScrollToNode
 import com.littlelemon.application.R
+import com.littlelemon.application.menu.MenuTestTags
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.presentation.MenuState
 import com.littlelemon.application.menu.utils.DishGenerator
@@ -58,7 +61,7 @@ class MenuScreenRootTest {
         }
     }
 
-    // TODO: Fix test
+
     @Test
     fun displaysDish() {
         composeTestRule.setContent {
@@ -66,11 +69,10 @@ class MenuScreenRootTest {
         }
         // Since this is an instrumentation test for menu card, checking that the title is
         // displayed implicitly verifies that the card itself is displayed.
-        // Also since the text is single line and ellipsis terminated when overflown,
-        // scrolling and testing for displayed title will fail, so `assertExists` to ensure that the card exists.
-        dishes.forEachIndexed { index, dish ->
-            composeTestRule.onNodeWithText(dish.title, substring = true).performScrollToIndex(index)
-                .assertExists()
+        dishes.forEach { dish ->
+            composeTestRule.onNodeWithTag(MenuTestTags.MENU_ITEM_LIST)
+                .performScrollToNode(hasText(dish.title))
+                .assertIsDisplayed()
         }
     }
 

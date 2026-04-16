@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +34,7 @@ import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.home.presentation.components.CategoryCard
+import com.littlelemon.application.menu.MenuTestTags
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
@@ -71,7 +73,7 @@ fun MenuScreenRoot(menuState: MenuState, modifier: Modifier = Modifier) {
         mutableStateOf("")
     }
 
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = modifier.testTag(MenuTestTags.MENU_ITEM_LIST)) {
         item {
             Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
             Header(
