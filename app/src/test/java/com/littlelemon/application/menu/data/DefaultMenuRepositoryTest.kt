@@ -2,6 +2,7 @@ package com.littlelemon.application.menu.data
 
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.data.local.dao.MenuDao
+import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
 import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.util.DishFilter
@@ -24,8 +25,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 import kotlin.math.roundToInt
+import kotlin.test.assertContains
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-class DefaultMenuRepositoryTest() {
+class DefaultMenuRepositoryTest {
 
 
     @Nested
@@ -424,5 +428,100 @@ class DefaultMenuRepositoryTest() {
                 result as Resource.Failure
                 assertNull(result.data)
             }
+    }
+
+
+    @Nested
+    inner class FilterCategoryTesting {
+
+        private lateinit var localDataSource: MenuDao
+        private lateinit var remoteDataSource: MenuRemoteDataSource
+        private lateinit var menuRepository: MenuRepository
+
+        @BeforeEach
+        fun setUp() {
+            localDataSource = FakeMenuDao(seedDatabase = true)
+            remoteDataSource = FakeDishRemoteDataSource()
+            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
+
+        }
+
+        @Test
+        fun nullFilterCategory_returnsAllDishes() = runTest {
+            // Given null filterCategory.
+            val filterCategory: String? = null
+            val expectedResult = localDataSource.getAllDishes().first().map { it.toDish() }
+
+            // When getDishes is invoked
+            val result = menuRepository.getDishes(filterCategory = filterCategory)
+                .filter { res -> res is Resource.Success }.first()
+
+            // Then, the result is success with all the dishes.
+            assertTrue(result is Resource.Success)
+            result as Resource.Success
+            assertNotNull(result.data)
+            expectedResult.forEach { dish ->
+                assertContains(result.data, dish)
+            }
+        }
+
+        @Test
+        fun blankFilterCategory_returnsAllDishes() = runTest {
+            // Given null filterCategory.
+            val filterCategory = ""
+            val expectedResult = localDataSource.getAllDishes().first().map { it.toDish() }
+
+            // When getDishes is invoked
+            val result = menuRepository.getDishes(filterCategory = filterCategory)
+                .filter { res -> res is Resource.Success }.first()
+
+            // Then, the result is success with all the dishes.
+            assertTrue(result is Resource.Success)
+            result as Resource.Success
+            assertNotNull(result.data)
+            expectedResult.forEach { dish ->
+                assertContains(result.data, dish)
+            }
+        }
+
+        @Test
+        fun validFilterCategory_returnsDishesWithThatCategory() = runTest {
+            // Given valid filter category.
+            val filterCategory = (localDataSource as FakeMenuDao).getAllCategories().first()
+            val expectedResult =
+                localDataSource.getAllDishes().first().filter { filterCategory in it.categories }
+                    .map { it.toDish() }
+
+            // When getDishes is invoked
+            val result = menuRepository.getDishes(filterCategory = filterCategory.categoryName)
+                .filter { res -> res is Resource.Success }.first()
+
+            // Then, the result is success with only dishes having that category.
+            assertTrue(result is Resource.Success)
+            result as Resource.Success
+            assertNotNull(result.data)
+            expectedResult.forEach { dish ->
+                assertContains(result.data, dish)
+            }
+        }
+
+
+        @OptIn(ExperimentalUuidApi::class)
+        @Test
+        fun invalidFilterCategory_returnsNoDishes() = runTest {
+            // Given invalid filter category.
+            val filterCategory = Uuid.generateV4().toString()
+
+            // When getDishes is invoked
+            val result = menuRepository.getDishes(filterCategory = filterCategory)
+                .filter { res -> res is Resource.Success }.first()
+
+            // Then, the result is success with an empty list.
+            assertTrue(result is Resource.Success)
+            result as Resource.Success
+            assertNotNull(result.data)
+            println(result)
+            assertEquals(0, result.data.size)
+        }
     }
 }

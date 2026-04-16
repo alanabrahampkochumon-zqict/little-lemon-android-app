@@ -20,14 +20,14 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class DefaultMenuRepository(
-    private val localDataSource: MenuDao,
-    private val remoteDataSource: MenuRemoteDataSource
+    private val localDataSource: MenuDao, private val remoteDataSource: MenuRemoteDataSource
 ) : MenuRepository {
 
     override fun getDishes(
         sorting: DishSorting,
         filter: DishFilter?,
-        fetchFromRemote: Boolean
+        fetchFromRemote: Boolean,
+        filterCategory: String?,
     ): Flow<Resource<List<Dish>>> = flow {
 
         emit(Resource.Loading())
@@ -53,11 +53,17 @@ class DefaultMenuRepository(
                 emit(Resource.Failure(data = null, errorMessage = e.message, error = errorType))
             }
         }
-
         dishesCount = localDataSource.getDishCount()
         if (dishesCount > 0) {
-            val dbFlow = getDishesBySortingAndFiltering(sorting, filter).map { entities ->
-                Resource.Success(data = entities.map { it.toDish() })
+            val dbFlow = getDishesBySortingAndFiltering(sorting, filter).map { dishEntities ->
+                if (!filterCategory.isNullOrBlank()) {
+                    val dishes = dishEntities.map { dishWithCategories ->
+                        if (filterCategory in dishWithCategories.categories.map { it.categoryName }) return@map dishWithCategories.toDish()
+                        return@map null
+                    }.filterNotNull()
+                    Resource.Success(data = dishes)
+                } else
+                    Resource.Success(data = dishEntities.map { it.toDish() })
             }
             emitAll(dbFlow)
         } else {
@@ -72,8 +78,7 @@ class DefaultMenuRepository(
     }
 
     private fun getDishesBySortingAndFiltering(
-        sorting: DishSorting,
-        filter: DishFilter?
+        sorting: DishSorting, filter: DishFilter?
     ): Flow<List<DishWithCategories>> {
         return when (sorting) {
             DishSorting.NAME_ASCENDING -> localDataSource.getDishesSortedByName(ascending = true)

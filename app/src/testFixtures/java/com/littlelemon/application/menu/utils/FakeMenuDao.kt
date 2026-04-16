@@ -27,8 +27,7 @@ class FakeMenuDao(
                 dishEntities.add(dish)
                 dishCategoryCrossRefs.addAll(
                     DishGenerator.generateDishCategoryCrossRef(
-                        dish,
-                        categoryEntities
+                        dish, categoryEntities
                     )
                 )
             }
@@ -60,9 +59,8 @@ class FakeMenuDao(
     private fun _getAllDishes(): List<DishWithCategories> {
         val returnedDishes = mutableListOf<DishWithCategories>()
         for (dish in dishEntities) {
-            val categories =
-                dishCategoryCrossRefs.filter { (dishId, _) -> dishId == dish.dishId }
-                    .mapNotNull { (_, categoryId) -> categoryEntities.find { category -> categoryId == category.categoryId } }
+            val categories = dishCategoryCrossRefs.filter { (dishId, _) -> dishId == dish.dishId }
+                .mapNotNull { (_, categoryId) -> categoryEntities.find { category -> categoryId == category.categoryId } }
             returnedDishes.add(DishWithCategories(dish, categories))
         }
         return returnedDishes
@@ -133,5 +131,9 @@ class FakeMenuDao(
         dishEntities.clear()
         categoryEntities.clear()
         dishCategoryCrossRefs.clear()
+    }
+
+    fun getAllCategories(): List<CategoryEntity> {
+        return categoryEntities
     }
 }

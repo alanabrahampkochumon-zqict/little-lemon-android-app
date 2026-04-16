@@ -11,7 +11,8 @@ interface MenuRepository {
     fun getDishes(
         sorting: DishSorting = DishSorting.POPULARITY,
         filter: DishFilter? = null,
-        fetchFromRemote: Boolean = false
+        fetchFromRemote: Boolean = false,
+        filterCategory: String? = null,
     ): Flow<Resource<List<Dish>>>
 
 }
