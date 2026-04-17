@@ -487,7 +487,7 @@ class DefaultMenuRepositoryTest {
         @Test
         fun validFilterCategory_returnsDishesWithThatCategory() = runTest {
             // Given valid filter category.
-            val filterCategory = (localDataSource as FakeMenuDao).getAllCategories().first()
+            val filterCategory = (localDataSource as FakeMenuDao).getAllCategories().first().first()
             val expectedResult =
                 localDataSource.getAllDishes().first().filter { filterCategory in it.categories }
                     .map { it.toDish() }
