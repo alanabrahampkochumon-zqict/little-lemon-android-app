@@ -49,11 +49,9 @@ class MenuViewModelTest {
     @BeforeEach
     fun setUp() {
         useCase = mockk()
-
         coEvery { useCase.invoke() } returns flow {
             emit(Resource.Success(dishes))
         }
-
         viewModel = MenuViewModel(useCase, testDispatcher)
     }
 
@@ -89,22 +87,6 @@ class MenuViewModelTest {
 
     @Nested
     inner class Actions {
-
-        @BeforeEach
-        fun setUp() {
-            coEvery { useCase.invoke(forceFetch = true) } returns flow {
-                emit(
-                    Resource.Success(remoteDishes)
-                )
-            }
-
-            coEvery { useCase.invoke(forceFetch = false) } returns flow {
-                emit(
-                    Resource.Success(dishes)
-                )
-            }
-            viewModel = MenuViewModel(useCase, testDispatcher)
-        }
 
         @Nested
         inner class ApplyFilter {
@@ -207,6 +189,23 @@ class MenuViewModelTest {
 
         @Nested
         inner class FetchDishes {
+
+            @BeforeEach
+            fun setUp() {
+                coEvery { useCase.invoke(forceFetch = true) } returns flow {
+                    emit(
+                        Resource.Success(remoteDishes)
+                    )
+                }
+
+                coEvery { useCase.invoke(forceFetch = false) } returns flow {
+                    emit(
+                        Resource.Success(dishes)
+                    )
+                }
+                viewModel = MenuViewModel(useCase, testDispatcher)
+            }
+
             @Test
             fun withFromRemote_fetchesItemFromRemote() = runTest {
                 viewModel.state.test {
