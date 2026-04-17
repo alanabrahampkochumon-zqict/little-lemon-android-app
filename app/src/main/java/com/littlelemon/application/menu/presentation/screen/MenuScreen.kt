@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -76,21 +75,15 @@ fun MenuScreenRoot(
     onDecreaseQuantity: (Dish) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val contentPadding = MaterialTheme.dimens.sizeXL
+
     val placeholder = painterResource(R.drawable.illustration_image_loading)
 
-    if (menuState.dishes == null) {
-        // TODO: ERROR UI
-        Text("There was an error loading the dishes.")
-        return
-    }
-
-    val categories = menuState.dishes.fold(
+    val categories = menuState.dishes?.fold(
         mutableSetOf<Category>()
     ) { categories, dish ->
         categories.addAll(dish.category)
         categories
-    }.map { it.categoryName }
+    }?.map { it.categoryName } ?: emptyList() // TODO: Replace this with loading state
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 340.dp),
         verticalArrangement = Arrangement.spacedBy(
@@ -102,7 +95,10 @@ fun MenuScreenRoot(
         modifier = modifier
             .fillMaxSize()
             .testTag(MenuTestTags.MENU_ITEM_LIST),
-        contentPadding = PaddingValues(vertical = LittleLemonTheme.dimens.size2XL, horizontal = LittleLemonTheme.dimens.sizeXL)
+        contentPadding = PaddingValues(
+            vertical = LittleLemonTheme.dimens.size2XL,
+            horizontal = LittleLemonTheme.dimens.sizeXL
+        )
     ) {
         item(span = { GridItemSpan(maxLineSpan) }) {
             Column {
@@ -131,7 +127,7 @@ fun MenuScreenRoot(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXS))
                 LazyRow(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(
@@ -145,30 +141,36 @@ fun MenuScreenRoot(
                             selected = currentCategory == null,
                             { onCategoryChanged(null) })
                     }
-                    items(categories) { category ->
+                    this@LazyRow.items(categories) { category -> // TODO: Replace
                         CategoryCard(
                             category,
                             selected = category == currentCategory,
                             { onCategoryChanged(category) })
                     }
+
                 }
             }
         }
 
-        items(menuState.dishes, key = { it.title }) { dish ->
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .background(Color.Red)
-            )
-            MenuCard(
-                dish,
-                Random.nextInt(5),
-                { onIncreaseQuantity(dish) },
-                { onDecreaseQuantity(dish) },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = placeholder
-            )
+        if (menuState.dishes == null) {
+            // TODO: ERROR UI
+            item { Text("There was an error loading the dishes.") }
+        } else {
+            items(menuState.dishes, key = { it.title }) { dish ->
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .background(Color.Red)
+                )
+                MenuCard(
+                    dish,
+                    Random.nextInt(5),
+                    { onIncreaseQuantity(dish) },
+                    { onDecreaseQuantity(dish) },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = placeholder
+                )
+            }
         }
     }
 }
