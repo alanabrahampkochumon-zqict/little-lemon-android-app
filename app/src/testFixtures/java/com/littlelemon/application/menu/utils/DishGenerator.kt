@@ -13,10 +13,7 @@ import kotlinx.datetime.LocalDateTime
 import java.util.UUID
 import kotlin.math.roundToInt
 import kotlin.random.Random
-import kotlin.time.Clock
-import kotlin.time.Instant
 
-private const val FOUR_YEARS_IN_MILLIS = 4 * 365 * 12 * 30 * 24 * 60 * 60 * 1000L
 
 object DishGenerator {
     private val faker = faker {}
@@ -41,10 +38,6 @@ object DishGenerator {
             fats = (Math.random() * 1000).roundToInt(),
         )
 
-        val randomSeconds = Random.nextLong(365L * 24 * 60 * 60)
-        val instant = Instant.fromEpochMilliseconds(
-            Clock.System.now().toEpochMilliseconds() - randomSeconds * 1000L
-        )
         val (localDateTime, dateString) = LocalDateTimeGenerator.generateTimestampTZ()
 
         return DishEntity(
