@@ -136,25 +136,27 @@ fun MenuScreenRoot(
                     horizontalArrangement = Arrangement.spacedBy(
                         MaterialTheme.dimens.sizeMD
                     ),
-                    contentPadding = PaddingValues(horizontal = contentPadding * 2),
+                    contentPadding = PaddingValues(horizontal = contentPadding),
                     modifier = Modifier
                         .layout { measurable, constraint ->
-                        // To prevent the lazy row from cutting off due to content padding of the LazyVerticalGrid(parent)
-                        // we need to force the LazyRow to be larger than it's calculated width
-                        val padding = contentPadding.roundToPx()
+                            // To prevent the lazy row from cutting off due to content padding of the LazyVerticalGrid(parent)
+                            // we need to force the LazyRow to be larger than it's calculated width
+                            val padding = contentPadding.roundToPx()
 
-                        // Manually add the extra padding to already calculated max width
-                        val expandedConstraints =
-                            constraint.copy(maxWidth = constraint.maxWidth + (padding * 2))
+                            // Manually add the extra padding to already calculated max width
+                            val width = constraint.maxWidth + (padding * 2)
 
-                        val placeable = measurable.measure(expandedConstraints)
+                            val expandedConstraints =
+                                constraint.copy(maxWidth = width, minWidth = width)
 
-                        // Shift the entire Lazy to the row the left by padding value.
-                        layout(placeable.width, placeable.height) {
-                            placeable.place(-padding, 0)
-                        }
+                            // Measure the view with new constraints and place it at the origin point
+                            // Since we applied content padding, it will be placed at the correct position
+                            val placeable = measurable.measure(expandedConstraints)
+                            layout(placeable.width, placeable.height) {
+                                placeable.place(0, 0)
+                            }
 
-                    },
+                        },
                 ) {
                     item {
                         CategoryCard(
