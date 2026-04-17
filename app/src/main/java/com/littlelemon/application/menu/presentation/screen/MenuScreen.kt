@@ -102,14 +102,13 @@ fun MenuScreenRoot(
         modifier = modifier
             .fillMaxSize()
             .testTag(MenuTestTags.MENU_ITEM_LIST),
-        contentPadding = PaddingValues(vertical = LittleLemonTheme.dimens.size2XL)
+        contentPadding = PaddingValues(vertical = LittleLemonTheme.dimens.size2XL, horizontal = LittleLemonTheme.dimens.sizeXL)
     ) {
         item(span = { GridItemSpan(maxLineSpan) }) {
             Column {
                 Header(
                     label = stringResource(R.string.heading_explore_our_cuisines),
                     typeStyle = HeaderTypeStyle.Primary,
-                    modifier = Modifier.padding(horizontal = contentPadding)
                 ) {
                     Row(
                         verticalAlignment = Alignment.Top,
@@ -132,13 +131,12 @@ fun MenuScreenRoot(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXL))
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
                 LazyRow(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(
                         MaterialTheme.dimens.sizeMD
                     ),
-                    contentPadding = PaddingValues(horizontal = contentPadding),
                     modifier = Modifier,
                 ) {
                     item {
@@ -154,7 +152,6 @@ fun MenuScreenRoot(
                             { onCategoryChanged(category) })
                     }
                 }
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
             }
         }
 
