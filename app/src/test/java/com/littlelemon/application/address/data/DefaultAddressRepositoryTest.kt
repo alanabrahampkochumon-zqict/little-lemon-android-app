@@ -407,7 +407,7 @@ class DefaultAddressRepositoryTest {
         val addressCount = repository.getAddressCount()
 
         // Then, five is returned
-        assertEquals(expectedAddressCount.toLong(), addressCount)
+        assertEquals(expectedAddressCount, addressCount)
     }
 
     @Test

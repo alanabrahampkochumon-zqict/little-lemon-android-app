@@ -183,7 +183,7 @@ class AddressLocalDataSourceTests {
         val count = datasource.getAddressCount()
 
         // Assert
-        assertEquals(numAddress.toLong(), count)
+        assertEquals(numAddress, count)
     }
 
     @Test
