@@ -29,6 +29,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -62,6 +63,7 @@ fun MenuCard(
     onIncreaseQuantity: () -> Unit,
     onDecreaseQuantity: () -> Unit,
     modifier: Modifier = Modifier,
+    placeholder: Painter? = null,
     outOfStock: Boolean = false,
 ) {
 
@@ -81,7 +83,6 @@ fun MenuCard(
     }
 
     val cardColor = LittleLemonTheme.colors.primary
-
 //    val discount =
 //        if (dish.discountedPrice != null && dish.discountedPrice > 0.0) ((dish.price - dish.discountedPrice) / dish.price * 100).toInt() else null
 
@@ -115,8 +116,8 @@ fun MenuCard(
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current).data(dish.imageURL)
                     .crossfade(true).build(),
-                placeholder = painterResource(R.drawable.illustration_image_loading),
-                error = painterResource(R.drawable.illustration_image_loading),
+                placeholder = placeholder,
+                error = placeholder,
                 contentDescription = dish.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -177,8 +178,7 @@ fun MenuCard(
                 if (soldOut) {
                     Text(
                         stringResource(R.string.currency_symbol) + stringResource(
-                            R.string.price_format,
-                            dish.price
+                            R.string.price_format, dish.price
                         ),
                         style = LittleLemonTheme.typography.bodySmall,
                         color = LittleLemonTheme.colors.contentPlaceholder,
@@ -200,8 +200,7 @@ fun MenuCard(
                     dish.discountedPrice?.let {
                         Text(
                             stringResource(R.string.currency_symbol) + stringResource(
-                                R.string.price_format,
-                                dish.price
+                                R.string.price_format, dish.price
                             ),
                             style = LittleLemonTheme.typography.bodySmall,
                             color = LittleLemonTheme.colors.contentPlaceholder,
@@ -293,11 +292,16 @@ private fun MenuCardPreview() {
                     category = listOf(),
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
-                ), orderQuantity = 2, onDecreaseQuantity = {}, onIncreaseQuantity = {})
+                ),
+                orderQuantity = 2,
+                onDecreaseQuantity = {},
+                onIncreaseQuantity = {},
+                placeholder = painterResource(R.drawable.illustration_image_loading)
+            )
             MenuCard(
                 Dish(
                     title = "Grilled Whole Fish",
-                    description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
+                    description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with extra-virgin olive oil, the primary source of monounsaturated  fats in this diet",
                     price = 29.85,
                     imageURL = "https://images.pexels.com/photos/18698241/pexels-photo-18698241.jpeg",
                     stock = 15,
@@ -310,11 +314,13 @@ private fun MenuCardPreview() {
                 orderQuantity = 0,
                 outOfStock = true,
                 onDecreaseQuantity = {},
-                onIncreaseQuantity = {})
+                onIncreaseQuantity = {},
+                placeholder = painterResource(R.drawable.illustration_image_loading)
+            )
             MenuCard(
                 Dish(
                     title = "Grilled Whole Fish",
-                    description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
+                    description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with extra-virgin olive oil, the primary source of monounsaturated  fats in this diet",
                     price = 29.85,
                     imageURL = "https://images.pexels.com/photos/18698241/pexels-photo-18698241.jpeg",
                     stock = 15,
@@ -323,7 +329,12 @@ private fun MenuCardPreview() {
                     category = listOf(),
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
-                ), orderQuantity = 0, onDecreaseQuantity = {}, onIncreaseQuantity = {})
+                ),
+                orderQuantity = 0,
+                onDecreaseQuantity = {},
+                onIncreaseQuantity = {},
+                placeholder = painterResource(R.drawable.illustration_image_loading)
+            )
             MenuCard(
                 Dish(
                     title = "Grilled Whole Fish",
@@ -336,7 +347,12 @@ private fun MenuCardPreview() {
                     category = listOf(),
                     dateAdded = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
                     popularityIndex = 392
-                ), orderQuantity = 0, onDecreaseQuantity = {}, onIncreaseQuantity = {})
+                ),
+                orderQuantity = 0,
+                onDecreaseQuantity = {},
+                onIncreaseQuantity = {},
+                placeholder = painterResource(R.drawable.illustration_image_loading)
+            )
         }
     }
 }
