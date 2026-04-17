@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
@@ -30,6 +31,7 @@ class MenuViewModel(
     private val _forceFetch = MutableStateFlow(false)
 
     private val _currentCategory = MutableStateFlow<String?>(null)
+    val currentCategory = _currentCategory.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val state = combine(

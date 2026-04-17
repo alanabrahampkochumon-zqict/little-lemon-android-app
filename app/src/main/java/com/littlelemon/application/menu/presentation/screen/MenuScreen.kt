@@ -37,6 +37,7 @@ import com.littlelemon.application.menu.MenuTestTags
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
+import com.littlelemon.application.menu.presentation.MenuActions
 import com.littlelemon.application.menu.presentation.MenuState
 import com.littlelemon.application.menu.presentation.MenuViewModel
 import com.littlelemon.application.menu.presentation.screen.components.MenuCard
@@ -47,13 +48,22 @@ import kotlin.random.Random
 @Composable
 fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
     val menuState by viewModel.state.collectAsStateWithLifecycle()
-    MenuScreenRoot(menuState, { /** TODO */ }, { /** TODO */ }, { /** TODO */ }, modifier)
+    val currentCategory by viewModel.currentCategory.collectAsStateWithLifecycle()
+    MenuScreenRoot(
+        menuState,
+        currentCategory,
+        { viewModel.onAction(MenuActions.UpdateDishCategory(it)) },
+        { /** TODO */ },
+        { /** TODO */ },
+        modifier
+    )
 }
 
 @Composable
 fun MenuScreenRoot(
     menuState: MenuState,
-    onCategoryChanged: (String) -> Unit,
+    currentCategory: String?,
+    onCategoryChanged: (String?) -> Unit,
     onIncreaseQuantity: (Dish) -> Unit,
     onDecreaseQuantity: (Dish) -> Unit,
     modifier: Modifier = Modifier
@@ -72,10 +82,6 @@ fun MenuScreenRoot(
         categories.addAll(dish.category)
         categories
     }.map { it.categoryName }
-
-    val currentCategory by remember {
-        mutableStateOf("")
-    }
 
     LazyColumn(modifier = modifier.testTag(MenuTestTags.MENU_ITEM_LIST)) {
         item {
@@ -115,6 +121,13 @@ fun MenuScreenRoot(
                 contentPadding = PaddingValues(horizontal = contentPadding),
                 modifier = Modifier,
             ) {
+                item {
+                    CategoryCard(
+                        stringResource(R.string.all_category),
+                        selected = currentCategory == null,
+                        { onCategoryChanged(null) }
+                    )
+                }
                 items(categories) { category ->
                     CategoryCard(
                         category,
@@ -171,6 +184,6 @@ private fun MenuScreenRootPreview() {
     val dishes = List(10) { generateDish() }
     val state = MenuState(dishes)
     LittleLemonTheme {
-        MenuScreenRoot(state, {}, {}, {})
+        MenuScreenRoot(state, null, {}, {}, {})
     }
 }

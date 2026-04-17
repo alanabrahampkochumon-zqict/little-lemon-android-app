@@ -154,6 +154,7 @@
     <string name="reorder">Re-order</string>
     <string name="refund_made_on">Refund made on</string>
     <string name="out_of_stock">Sold out</string>
+    <string name="all_category">All</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>
