@@ -7,11 +7,9 @@ import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
+import com.littlelemon.application.utils.LocalDateTimeGenerator
 import io.github.serpro69.kfaker.faker
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.offsetAt
-import kotlinx.datetime.toLocalDateTime
 import java.util.UUID
 import kotlin.math.roundToInt
 import kotlin.random.Random
@@ -47,9 +45,7 @@ object DishGenerator {
         val instant = Instant.fromEpochMilliseconds(
             Clock.System.now().toEpochMilliseconds() - randomSeconds * 1000L
         )
-        val localTimeZone = TimeZone.currentSystemDefault()
-        val localDateTime = instant.toLocalDateTime(localTimeZone)
-        val offset = localTimeZone.offsetAt(instant)
+        val (localDateTime, dateString) = LocalDateTimeGenerator.generateTimestampTZ()
 
         return DishEntity(
             dishId = UUID.randomUUID().toString(),
@@ -61,7 +57,7 @@ object DishGenerator {
             nutritionInfo = nutritionInfo,
             discountedPrice = Math.random() * 1000,
             popularityIndex = (0..100).random(),
-            dateAdded = localDateTime.toString() + offset
+            dateAdded = dateString
         ) to localDateTime
     }
 
