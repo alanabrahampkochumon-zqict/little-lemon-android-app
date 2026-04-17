@@ -1,14 +1,21 @@
 package com.littlelemon.application.menu.presentation.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,11 +24,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
@@ -82,73 +91,112 @@ fun MenuScreenRoot(
         categories
     }.map { it.categoryName }
 
-    LazyColumn(modifier = modifier.testTag(MenuTestTags.MENU_ITEM_LIST)) {
-        item {
-            Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
-            Header(
-                label = stringResource(R.string.heading_explore_our_cuisines),
-                typeStyle = HeaderTypeStyle.Primary,
-                modifier = Modifier.padding(horizontal = contentPadding)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.sizeMD
-                    ),
-                    modifier = Modifier.minimumInteractiveComponentSize()
-                ) {
-                    Image(
-                        painterResource(R.drawable.ic_settings),
-                        null,
-                        colorFilter = ColorFilter.tint(
-                            MaterialTheme.colors.contentHighlight
-                        )
-                    )
-                    Text(
-                        stringResource(R.string.act_filter),
-                        style = MaterialTheme.typeStyle.labelMedium,
-                        color = MaterialTheme.colors.contentHighlight
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
-            LazyRow(
-                verticalAlignment = Alignment.CenterVertically,
+    Column(modifier = modifier
+        .fillMaxSize()
+        .testTag(MenuTestTags.MENU_ITEM_LIST)) {
+        Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
+        Header(
+            label = stringResource(R.string.heading_explore_our_cuisines),
+            typeStyle = HeaderTypeStyle.Primary,
+            modifier = Modifier.padding(horizontal = contentPadding)
+        ) {
+            Row(
+                verticalAlignment = Alignment.Top,
                 horizontalArrangement = Arrangement.spacedBy(
                     MaterialTheme.dimens.sizeMD
                 ),
-                contentPadding = PaddingValues(horizontal = contentPadding),
-                modifier = Modifier,
+                modifier = Modifier.minimumInteractiveComponentSize()
             ) {
-                item {
-                    CategoryCard(
-                        stringResource(R.string.all_category),
-                        selected = currentCategory == null,
-                        { onCategoryChanged(null) }
+                Image(
+                    painterResource(R.drawable.ic_settings),
+                    null,
+                    colorFilter = ColorFilter.tint(
+                        MaterialTheme.colors.contentHighlight
                     )
-                }
-                items(categories) { category ->
-                    CategoryCard(
-                        category,
-                        selected = category == currentCategory,
-                        { onCategoryChanged(category) }
-                    )
-                }
+                )
+                Text(
+                    stringResource(R.string.act_filter),
+                    style = MaterialTheme.typeStyle.labelMedium,
+                    color = MaterialTheme.colors.contentHighlight
+                )
             }
         }
-        item { Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL)) }
-        items(menuState.dishes) { dish ->
-            MenuCard(
-                dish,
-                Random.nextInt(5),
-                { onIncreaseQuantity(dish) },
-                { onDecreaseQuantity(dish) },
-                modifier = Modifier.padding(horizontal = contentPadding),
-                placeholder = placeholder
-            )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
+        LazyRow(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(
+                MaterialTheme.dimens.sizeMD
+            ),
+            contentPadding = PaddingValues(horizontal = contentPadding),
+            modifier = Modifier,
+        ) {
+            item {
+                CategoryCard(
+                    stringResource(R.string.all_category),
+                    selected = currentCategory == null,
+                    { onCategoryChanged(null) }
+                )
+            }
+            items(categories) { category ->
+                CategoryCard(
+                    category,
+                    selected = category == currentCategory,
+                    { onCategoryChanged(category) }
+                )
+            }
         }
+
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
+//        items(menuState.dishes) { dish ->
+//            MenuCard(
+//                dish,
+//                Random.nextInt(5),
+//                { onIncreaseQuantity(dish) },
+//                { onDecreaseQuantity(dish) },
+//                modifier = Modifier.padding(horizontal = contentPadding),
+//                placeholder = placeholder
+//            )
+//            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
+//        }
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 340.dp),
+            verticalArrangement = Arrangement.spacedBy(
+                LittleLemonTheme.dimens.size2XL
+            ),
+            horizontalArrangement = Arrangement.spacedBy(
+                LittleLemonTheme.dimens.size2XL
+            )
+        ) {
+            items(menuState.dishes, key = { it.title }) { dish ->
+                Box(Modifier
+                    .fillMaxWidth()
+                    .background(Color.Red))
+                MenuCard(
+                    dish,
+                    Random.nextInt(5),
+                    { onIncreaseQuantity(dish) },
+                    { onDecreaseQuantity(dish) },
+                    modifier = Modifier.padding(horizontal = contentPadding),
+                    placeholder = placeholder
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
+//        FlowRow {
+//            menuState.dishes.forEach { dish ->
+//                MenuCard(
+//                    dish,
+//                    Random.nextInt(5),
+//                    { onIncreaseQuantity(dish) },
+//                    { onDecreaseQuantity(dish) },
+//                    modifier = Modifier.padding(horizontal = contentPadding),
+//                    placeholder = placeholder
+//                )
+//                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
+//            }
+//        }
     }
+
 }
 
 
