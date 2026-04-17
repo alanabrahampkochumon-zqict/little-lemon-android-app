@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
@@ -90,113 +91,89 @@ fun MenuScreenRoot(
         categories.addAll(dish.category)
         categories
     }.map { it.categoryName }
-
-    Column(modifier = modifier
-        .fillMaxSize()
-        .testTag(MenuTestTags.MENU_ITEM_LIST)) {
-        Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
-        Header(
-            label = stringResource(R.string.heading_explore_our_cuisines),
-            typeStyle = HeaderTypeStyle.Primary,
-            modifier = Modifier.padding(horizontal = contentPadding)
-        ) {
-            Row(
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.spacedBy(
-                    MaterialTheme.dimens.sizeMD
-                ),
-                modifier = Modifier.minimumInteractiveComponentSize()
-            ) {
-                Image(
-                    painterResource(R.drawable.ic_settings),
-                    null,
-                    colorFilter = ColorFilter.tint(
-                        MaterialTheme.colors.contentHighlight
-                    )
-                )
-                Text(
-                    stringResource(R.string.act_filter),
-                    style = MaterialTheme.typeStyle.labelMedium,
-                    color = MaterialTheme.colors.contentHighlight
-                )
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 340.dp),
+        verticalArrangement = Arrangement.spacedBy(
+            LittleLemonTheme.dimens.size2XL
+        ),
+        horizontalArrangement = Arrangement.spacedBy(
+            LittleLemonTheme.dimens.size2XL
+        ),
+        modifier = modifier
+            .fillMaxSize()
+            .testTag(MenuTestTags.MENU_ITEM_LIST),
+        contentPadding = PaddingValues(vertical = LittleLemonTheme.dimens.size2XL)
+    ) {
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Column {
+                Header(
+                    label = stringResource(R.string.heading_explore_our_cuisines),
+                    typeStyle = HeaderTypeStyle.Primary,
+                    modifier = Modifier.padding(horizontal = contentPadding)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(
+                            MaterialTheme.dimens.sizeMD
+                        ),
+                        modifier = Modifier.minimumInteractiveComponentSize()
+                    ) {
+                        Image(
+                            painterResource(R.drawable.ic_settings),
+                            null,
+                            colorFilter = ColorFilter.tint(
+                                MaterialTheme.colors.contentHighlight
+                            )
+                        )
+                        Text(
+                            stringResource(R.string.act_filter),
+                            style = MaterialTheme.typeStyle.labelMedium,
+                            color = MaterialTheme.colors.contentHighlight
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXL))
+                LazyRow(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(
+                        MaterialTheme.dimens.sizeMD
+                    ),
+                    contentPadding = PaddingValues(horizontal = contentPadding),
+                    modifier = Modifier,
+                ) {
+                    item {
+                        CategoryCard(
+                            stringResource(R.string.all_category),
+                            selected = currentCategory == null,
+                            { onCategoryChanged(null) })
+                    }
+                    items(categories) { category ->
+                        CategoryCard(
+                            category,
+                            selected = category == currentCategory,
+                            { onCategoryChanged(category) })
+                    }
+                }
+                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
             }
         }
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
-        LazyRow(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(
-                MaterialTheme.dimens.sizeMD
-            ),
-            contentPadding = PaddingValues(horizontal = contentPadding),
-            modifier = Modifier,
-        ) {
-            item {
-                CategoryCard(
-                    stringResource(R.string.all_category),
-                    selected = currentCategory == null,
-                    { onCategoryChanged(null) }
-                )
-            }
-            items(categories) { category ->
-                CategoryCard(
-                    category,
-                    selected = category == currentCategory,
-                    { onCategoryChanged(category) }
-                )
-            }
-        }
 
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
-//        items(menuState.dishes) { dish ->
-//            MenuCard(
-//                dish,
-//                Random.nextInt(5),
-//                { onIncreaseQuantity(dish) },
-//                { onDecreaseQuantity(dish) },
-//                modifier = Modifier.padding(horizontal = contentPadding),
-//                placeholder = placeholder
-//            )
-//            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
-//        }
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 340.dp),
-            verticalArrangement = Arrangement.spacedBy(
-                LittleLemonTheme.dimens.size2XL
-            ),
-            horizontalArrangement = Arrangement.spacedBy(
-                LittleLemonTheme.dimens.size2XL
-            )
-        ) {
-            items(menuState.dishes, key = { it.title }) { dish ->
-                Box(Modifier
+        items(menuState.dishes, key = { it.title }) { dish ->
+            Box(
+                Modifier
                     .fillMaxWidth()
-                    .background(Color.Red))
-                MenuCard(
-                    dish,
-                    Random.nextInt(5),
-                    { onIncreaseQuantity(dish) },
-                    { onDecreaseQuantity(dish) },
-                    modifier = Modifier.padding(horizontal = contentPadding),
-                    placeholder = placeholder
-                )
-            }
+                    .background(Color.Red)
+            )
+            MenuCard(
+                dish,
+                Random.nextInt(5),
+                { onIncreaseQuantity(dish) },
+                { onDecreaseQuantity(dish) },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = placeholder
+            )
         }
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
-//        FlowRow {
-//            menuState.dishes.forEach { dish ->
-//                MenuCard(
-//                    dish,
-//                    Random.nextInt(5),
-//                    { onIncreaseQuantity(dish) },
-//                    { onDecreaseQuantity(dish) },
-//                    modifier = Modifier.padding(horizontal = contentPadding),
-//                    placeholder = placeholder
-//                )
-//                Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
-//            }
-//        }
     }
-
 }
 
 
