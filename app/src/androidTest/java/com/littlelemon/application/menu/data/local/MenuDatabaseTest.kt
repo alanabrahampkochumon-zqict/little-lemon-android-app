@@ -68,7 +68,7 @@ class MenuDatabaseTest {
         // Arrange
         val numCategories = 1
         val dish = DishGenerator.generateDishEntity().first
-        val categories = DishEntityGenerator.generateCategoryEntities(numCategories)
+        val categories = DishGenerator.generateCategoryEntities(numCategories)
         val crossRef = categories.map { (categoryId, _) ->
             DishCategoryCrossRef(
                 dishId = dish.dishId,
@@ -91,8 +91,8 @@ class MenuDatabaseTest {
     fun dishWithTwoCategoriesInserted_whenQueried_returnsCorrectDishWithTwoCategories() = runTest {
         // Arrange
         val numCategories = 2
-        val dish = DishEntityGenerator.generateDishEntity().first
-        val categories = DishEntityGenerator.generateCategoryEntities(numCategories)
+        val dish = DishGenerator.generateDishEntity().first
+        val categories = DishGenerator.generateCategoryEntities(numCategories)
         val crossRef = categories.map { (categoryId, _) ->
             DishCategoryCrossRef(
                 dishId = dish.dishId,
@@ -338,11 +338,11 @@ class MenuDatabaseTest {
         }
 
     private suspend fun insertDishes(numDishes: Int = 7) {
-        val dishes = List(numDishes) { DishEntityGenerator.generateDishEntity().first }
+        val dishes = List(numDishes) { DishGenerator.generateDishEntity().first }
         val categories = mutableListOf<CategoryEntity>()
         val crossRefs = mutableListOf<DishCategoryCrossRef>()
         dishes.forEach { dish ->
-            categories.addAll(DishEntityGenerator.generateCategoryEntities(Random.nextInt(5, 20)))
+            categories.addAll(DishGenerator.generateCategoryEntities(Random.nextInt(5, 20)))
             crossRefs.addAll(categories.map { (categoryId, _) ->
                 DishCategoryCrossRef(
                     dishId = dish.dishId,

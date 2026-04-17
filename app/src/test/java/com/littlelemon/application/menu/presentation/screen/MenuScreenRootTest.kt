@@ -40,7 +40,7 @@ class MenuScreenRootTest {
     @Test
     fun displaysHeader() {
         composeTestRule.setContent {
-            MenuScreenRoot(state, {}, {}, {})
+            MenuScreenRoot(state, null, {}, {}, {})
         }
         composeTestRule.onNodeWithText(application.getString(R.string.heading_explore_our_cuisines))
             .assertIsDisplayed()
@@ -49,7 +49,7 @@ class MenuScreenRootTest {
     @Test
     fun displaysFilter() {
         composeTestRule.setContent {
-            MenuScreenRoot(state, {}, {}, {})
+            MenuScreenRoot(state, null, {}, {}, {})
         }
         composeTestRule.onNodeWithText(application.getString(R.string.act_filter))
             .assertIsDisplayed()
@@ -58,7 +58,7 @@ class MenuScreenRootTest {
     @Test
     fun displaysCategories() {
         composeTestRule.setContent {
-            MenuScreenRoot(state, {}, {}, {})
+            MenuScreenRoot(state, null, {}, {}, {})
         }
         categories.forEach { category ->
             composeTestRule.onNodeWithText(category.categoryName).performScrollTo()
@@ -70,7 +70,7 @@ class MenuScreenRootTest {
     @Test
     fun displaysDish() {
         composeTestRule.setContent {
-            MenuScreenRoot(state, {}, {}, {})
+            MenuScreenRoot(state, null, {}, {}, {})
         }
         // Since this is an instrumentation test for menu card, checking that the title is
         // displayed implicitly verifies that the card itself is displayed.
@@ -87,7 +87,7 @@ class MenuScreenRootTest {
         val dishCardIndex = 0
         var triggeredDish: Dish? = null
         composeTestRule.setContent {
-            MenuScreenRoot(state, {}, { triggeredDish = it }, {})
+            MenuScreenRoot(state, null, {}, { triggeredDish = it }, {})
         }
 
         composeTestRule.onAllNodesWithTag(CoreTestTags.STEPPER_INCREASE)[dishCardIndex].performClick()
@@ -101,7 +101,7 @@ class MenuScreenRootTest {
         val dishCardIndex = 0
         var triggeredDish: Dish? = null
         composeTestRule.setContent {
-            MenuScreenRoot(state, {}, { }, { triggeredDish = it })
+            MenuScreenRoot(state, null, {}, { }, { triggeredDish = it })
         }
 
         composeTestRule.onAllNodesWithTag(CoreTestTags.STEPPER_DECREASE)[dishCardIndex].performClick()
@@ -112,9 +112,9 @@ class MenuScreenRootTest {
     @Test
     fun onCategoryChange_triggersCallbackWithCategory() {
         val categoryIndex = 0
-        var categoryTriggered = ""
+        var categoryTriggered: String? = ""
         composeTestRule.setContent {
-            MenuScreenRoot(state, { categoryTriggered = it }, { }, {})
+            MenuScreenRoot(state, null, { categoryTriggered = it }, { }, {})
         }
 
         composeTestRule.onNodeWithText(categories[categoryIndex].categoryName).performClick()

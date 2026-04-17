@@ -102,7 +102,7 @@ class AddressDaoTests {
         val count = dao.getAddressCount()
 
         // Assert
-        assertEquals(0L, count)
+        assertEquals(0, count)
     }
 
     @Test
@@ -116,6 +116,6 @@ class AddressDaoTests {
         val count = dao.getAddressCount()
 
         // Assert
-        assertEquals(numAddresses.toLong(), count)
+        assertEquals(numAddresses, count)
     }
 }
