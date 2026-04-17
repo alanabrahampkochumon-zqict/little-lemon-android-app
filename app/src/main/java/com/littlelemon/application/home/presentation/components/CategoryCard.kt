@@ -1,5 +1,7 @@
 package com.littlelemon.application.home.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -61,9 +63,6 @@ fun CategoryCard(
             .then(if (enabled) Modifier.dropShadow(shape, shadow) else Modifier)
             .background(backgroundColor, shape)
             .then(if (selected) Modifier.border(1.dp, contentColor, shape) else Modifier)
-            .padding(
-                horizontal = MaterialTheme.dimens.size2XL, vertical = MaterialTheme.dimens.sizeMD
-            )
             .selectable(
                 selected = selected,
                 enabled = enabled,
@@ -71,20 +70,26 @@ fun CategoryCard(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = onSelectionChange
-            ), verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (selected) {
-            Image(
-                painterResource(R.drawable.ic_checkcircle_filled),
-                null,
-                modifier = Modifier
-                    .size(
-                        MaterialTheme.dimens.sizeXL
-                    )
-                    .testTag(HomeTestTags.CATEGORY_CARD_CHECK_MARK),
-                colorFilter = ColorFilter.tint(contentColor)
             )
-            Spacer(modifier = Modifier.width(MaterialTheme.dimens.sizeMD))
+            .padding(
+                horizontal = MaterialTheme.dimens.size2XL, vertical = MaterialTheme.dimens.sizeMD
+            )
+            .animateContentSize(), verticalAlignment = Alignment.CenterVertically
+    ) {
+        AnimatedVisibility(selected) {
+            Row {
+                Image(
+                    painterResource(R.drawable.ic_checkcircle_filled),
+                    null,
+                    modifier = Modifier
+                        .size(
+                            MaterialTheme.dimens.sizeXL
+                        )
+                        .testTag(HomeTestTags.CATEGORY_CARD_CHECK_MARK),
+                    colorFilter = ColorFilter.tint(contentColor)
+                )
+                Spacer(modifier = Modifier.width(MaterialTheme.dimens.sizeMD))
+            }
         }
         Text(label, style = MaterialTheme.typeStyle.labelSmall, color = contentColor)
     }
