@@ -90,6 +90,8 @@ class AddressDaoTests {
         // Act
         dao.insertAddress(address)
         val result = dao.getAllAddress().first()
+        println("ACTUAL: $result")
+        println("EXPECTED: $address")
 
         // Assert
         assertEquals(1, result.size)

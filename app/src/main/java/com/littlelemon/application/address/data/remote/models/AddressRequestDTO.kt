@@ -2,7 +2,6 @@ package com.littlelemon.application.address.data.remote.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.time.Instant
 
 @Serializable
 data class AddressRequestDTO(
@@ -17,6 +16,6 @@ data class AddressRequestDTO(
     val pinCode: String?,
     val location: String?,
     @SerialName("created_at")
-    val createdAt: Instant,
+    val createdAt: String,
     val isDefault: Boolean = false,
 )
