@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -78,6 +79,8 @@ fun MenuScreenRoot(
 
     val placeholder = painterResource(R.drawable.illustration_image_loading)
 
+    val contentPadding = LittleLemonTheme.dimens.sizeXL
+
     val categories = menuState.dishes?.fold(
         mutableSetOf<Category>()
     ) { categories, dish ->
@@ -96,8 +99,8 @@ fun MenuScreenRoot(
             .fillMaxSize()
             .testTag(MenuTestTags.MENU_ITEM_LIST),
         contentPadding = PaddingValues(
-            vertical = LittleLemonTheme.dimens.size2XL,
-            horizontal = LittleLemonTheme.dimens.sizeXL
+            vertical = contentPadding,
+            horizontal = contentPadding
         )
     ) {
         item(span = { GridItemSpan(maxLineSpan) }) {
@@ -133,7 +136,25 @@ fun MenuScreenRoot(
                     horizontalArrangement = Arrangement.spacedBy(
                         MaterialTheme.dimens.sizeMD
                     ),
-                    modifier = Modifier,
+                    contentPadding = PaddingValues(horizontal = contentPadding * 2),
+                    modifier = Modifier
+                        .layout { measurable, constraint ->
+                        // To prevent the lazy row from cutting off due to content padding of the LazyVerticalGrid(parent)
+                        // we need to force the LazyRow to be larger than it's calculated width
+                        val padding = contentPadding.roundToPx()
+
+                        // Manually add the extra padding to already calculated max width
+                        val expandedConstraints =
+                            constraint.copy(maxWidth = constraint.maxWidth + (padding * 2))
+
+                        val placeable = measurable.measure(expandedConstraints)
+
+                        // Shift the entire Lazy to the row the left by padding value.
+                        layout(placeable.width, placeable.height) {
+                            placeable.place(-padding, 0)
+                        }
+
+                    },
                 ) {
                     item {
                         CategoryCard(
