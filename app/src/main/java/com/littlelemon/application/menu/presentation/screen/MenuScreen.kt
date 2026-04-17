@@ -15,8 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -69,11 +67,12 @@ fun MenuScreenRoot(
     modifier: Modifier = Modifier
 ) {
     val contentPadding = MaterialTheme.dimens.sizeXL
+    val placeholder = painterResource(R.drawable.illustration_image_loading)
 
     if (menuState.dishes == null) {
         // TODO: ERROR UI
         Text("There was an error loading the dishes.")
-        return;
+        return
     }
 
     val categories = menuState.dishes.fold(
@@ -144,7 +143,8 @@ fun MenuScreenRoot(
                 Random.nextInt(5),
                 { onIncreaseQuantity(dish) },
                 { onDecreaseQuantity(dish) },
-                modifier = Modifier.padding(horizontal = contentPadding)
+                modifier = Modifier.padding(horizontal = contentPadding),
+                placeholder = placeholder
             )
             Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
         }
