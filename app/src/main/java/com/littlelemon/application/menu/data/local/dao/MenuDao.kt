@@ -44,6 +44,8 @@ interface MenuDao {
     @Query("SELECT * FROM dishentity")
     fun getAllDishes(): Flow<List<DishWithCategories>>
 
+    @Query("SELECT DISTINCT(categoryName), categoryId FROM categoryentity")
+    fun getAllCategories(): Flow<List<CategoryEntity>>
 
     @Transaction
     @Query("SELECT * FROM dishentity ORDER BY popularityIndex DESC")

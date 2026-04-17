@@ -71,6 +71,10 @@ class FakeMenuDao(
         emit(dishes)
     }
 
+    override fun getAllCategories(): Flow<List<CategoryEntity>> = flow {
+        emit(categoryEntities)
+    }
+
     override fun getDishesSortedByPopularity(): Flow<List<DishWithCategories>> = flow {
         val dishes = _getAllDishes().sortedByDescending { (dish, _) -> dish.popularityIndex }
         emit(dishes)
@@ -133,7 +137,4 @@ class FakeMenuDao(
         dishCategoryCrossRefs.clear()
     }
 
-    fun getAllCategories(): List<CategoryEntity> {
-        return categoryEntities
-    }
 }
