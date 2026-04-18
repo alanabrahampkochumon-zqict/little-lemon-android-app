@@ -44,4 +44,14 @@ class FakeAddressLocalDataSource(
         if (throwError) throw IllegalArgumentException()
         return _address.size
     }
+
+    override suspend fun removeAddress(address: AddressEntity) {
+        if (throwError) throw IllegalArgumentException()
+        _address.remove(address)
+    }
+
+    override suspend fun clearAddress() {
+        if (throwError) throw IllegalArgumentException()
+        _address.clear()
+    }
 }

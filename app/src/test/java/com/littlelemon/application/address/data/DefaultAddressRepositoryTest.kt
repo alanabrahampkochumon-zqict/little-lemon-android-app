@@ -914,24 +914,27 @@ class DefaultAddressRepositoryTest {
 
             // NOTE: First state is loading.
             // And addresses are queried
+            println("RESULT: $result")
             repository.getAddress().test {
                 skipItems(2) // TODO: Update after refactoring getAddress to only return cached data.
 
                 val addressResource = awaitItem()
-
                 assertIs<Resource.Success<List<LocalAddress>>>(addressResource)
                 // Then old cache data is removed
+                println("REMOTE: $remoteAddresses")
+                println("LOCAL: $localAddresses")
+                println(addressResource.data)
                 assertTrue(remoteAddresses.all { addressDTO ->
                     addressResource.data?.contains(
                         addressDTO.toAddressEntity().toLocalAddress()
-                    ) != true
-                })
+                    ) == true
+                }, "Some or no remote address were found in the cache after refresh!")
                 // And new data is present
                 assertTrue(localAddresses.all { addressEntity ->
                     addressResource.data?.contains(
                         addressEntity.toLocalAddress()
-                    ) == true
-                })
+                    ) == false
+                }, "Found local address in the cache after refresh!")
                 cancelAndConsumeRemainingEvents()
             }
         }

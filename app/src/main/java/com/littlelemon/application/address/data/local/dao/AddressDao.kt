@@ -1,6 +1,7 @@
 package com.littlelemon.application.address.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -21,5 +22,8 @@ interface AddressDao {
 
     @Query("SELECT * FROM ADDRESSENTITY ORDER BY createdAt DESC")
     fun getAllAddress(): Flow<List<AddressEntity>>
+
+    @Delete
+    fun deleteAddress(address: AddressEntity): Int
 
 }

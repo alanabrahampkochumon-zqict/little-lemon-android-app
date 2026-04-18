@@ -56,4 +56,12 @@ class AddressLocalDataSourceImpl(
     }
 
     override suspend fun getAddressCount(): Int = dao.getAddressCount()
+
+    override suspend fun removeAddress(address: AddressEntity) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun clearAddress() {
+        TODO("Not yet implemented")
+    }
 }
