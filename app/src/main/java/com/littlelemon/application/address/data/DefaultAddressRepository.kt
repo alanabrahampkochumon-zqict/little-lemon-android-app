@@ -156,6 +156,7 @@ class DefaultAddressRepository(
 
     override suspend fun getAddressCount(): Int {
         try {
+            // TODO: Remove and work with only cached data
             val remoteResponse =
                 addressRemoteDataSource.getAddress().map { it.toAddressEntity() }
             addressLocalDataSource.saveAddresses(remoteResponse)
@@ -202,7 +203,7 @@ class DefaultAddressRepository(
         try {
             val addressEntities =
                 addressRemoteDataSource.getAddress().map { it.toAddressEntity() }
-            addressLocalDataSource.saveAddresses(addressEntities)
+            addressLocalDataSource.clearAndInsertAddress(addressEntities)
             return Resource.Success()
         } catch (e: Exception) {
             currentCoroutineContext().ensureActive()
