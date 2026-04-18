@@ -520,7 +520,6 @@ class DefaultMenuRepositoryTest {
             assertTrue(result is Resource.Success)
             result as Resource.Success
             assertNotNull(result.data)
-            println(result)
             assertEquals(0, result.data.size)
         }
     }

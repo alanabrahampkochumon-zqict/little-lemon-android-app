@@ -39,7 +39,6 @@ object DishGenerator {
         )
 
         val (localDateTime, dateString) = LocalDateTimeGenerator.generateTimestampTZ()
-
         return DishEntity(
             dishId = UUID.randomUUID().toString(),
             title = faker.dessert.dessert()(),

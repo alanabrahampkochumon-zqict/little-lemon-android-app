@@ -26,7 +26,7 @@ object LocalDateTimeGenerator {
      */
     fun generateTimestampTZ(
         timeZone: TimeZone = TimeZone.currentSystemDefault(),
-        secondOffset: Long = -(Random.nextLong())
+        secondOffset: Long = -(Random.nextLong(YEAR_IN_SECONDS))
     ): Pair<LocalDateTime, String> {
         val instant = Instant.fromEpochMilliseconds(
             Clock.System.now().toEpochMilliseconds() + secondOffset * 1000L
