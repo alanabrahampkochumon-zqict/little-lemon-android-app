@@ -61,7 +61,8 @@ class AddressLocalDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun clearAddress() {
-        TODO("Not yet implemented")
+    override suspend fun clearAndInsertAddress(addresses: List<AddressEntity>) {
+        dao.clearAndInsertAllAddress(addresses)
     }
+
 }

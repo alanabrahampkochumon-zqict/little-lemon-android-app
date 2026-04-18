@@ -50,6 +50,8 @@ class FakeAddressDao(entriesCount: Int? = null, private val throwError: Boolean 
         return count
     }
 
+    fun getAddressList(): List<AddressEntity> = addressList.toList()
+
     override suspend fun clearAndInsertAllAddress(addresses: List<AddressEntity>) {
         if (throwError) throw IllegalArgumentException()
         addressList.clear()

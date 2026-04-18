@@ -50,8 +50,9 @@ class FakeAddressLocalDataSource(
         _address.remove(address)
     }
 
-    override suspend fun clearAddress() {
+    override suspend fun clearAndInsertAddress(addresses: List<AddressEntity>) {
         if (throwError) throw IllegalArgumentException()
         _address.clear()
+        _address.addAll(addresses)
     }
 }

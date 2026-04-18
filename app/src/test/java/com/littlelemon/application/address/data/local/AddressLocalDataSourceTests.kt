@@ -14,10 +14,13 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
+import kotlin.test.assertContains
+import kotlin.test.assertFalse
 
 class AddressLocalDataSourceTests {
 
@@ -147,7 +150,7 @@ class AddressLocalDataSourceTests {
     }
 
     @Test
-    fun onInsertAddress_validAddresses_throwsNoException() = runTest {
+    fun onInsertAddress_validAddresses_rethrowsException() = runTest {
         // Arrange
         dao = FakeAddressDao()
         datasource = AddressLocalDataSourceImpl(locationProvider, dao)
@@ -161,7 +164,7 @@ class AddressLocalDataSourceTests {
     }
 
     @Test
-    fun onInsertAddress_exceptionThrown_throwsNoException() = runTest {
+    fun onInsertAddress_exceptionThrown_rethrowsException() = runTest {
         // Arrange
         dao = FakeAddressDao(throwError = true)
         datasource = AddressLocalDataSourceImpl(locationProvider, dao)
@@ -200,5 +203,43 @@ class AddressLocalDataSourceTests {
 
         // Assert
         assertEquals(addresses, queriedAddress)
+    }
+
+    @Nested
+    inner class ClearAndInsertAddressTests {
+
+        @Test
+        fun exceptionThrown_rethrowsException() = runTest {
+            val addresses = List(5) { AddressGenerator.generateAddressEntity() }
+            dao = FakeAddressDao(throwError = true)
+            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+
+            assertThrows<IllegalArgumentException> { datasource.clearAndInsertAddress(addresses) }
+        }
+
+        @Test
+        fun dbSuccess_clearAddressAndInsertsNewAddress() = runTest {
+            val newAddresses = List(3) { AddressGenerator.generateAddressEntity() }
+
+            // Given a data source with non-empty addresses
+            dao = FakeAddressDao(5)
+            val oldAddresses = (dao as FakeAddressDao).getAddressList()
+            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+
+            // When addresses are clear and new addresses inserted
+            datasource.clearAndInsertAddress(newAddresses)
+
+            // Then, old address are removed
+            val retrievedAddresses = datasource.getAddress().first()
+            oldAddresses.forEach { address ->
+                assertFalse("Old address found!\n$address") { retrievedAddresses.contains(address) }
+            }
+            // And new addresses are in the list
+            newAddresses.forEach { address ->
+                assertContains(retrievedAddresses, address, "New address not found!\n$address")
+            }
+
+        }
+
     }
 }

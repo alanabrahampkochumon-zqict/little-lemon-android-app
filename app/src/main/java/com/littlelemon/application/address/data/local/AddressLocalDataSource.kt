@@ -18,5 +18,5 @@ interface AddressLocalDataSource {
 
     suspend fun removeAddress(address: AddressEntity)
 
-    suspend fun clearAddress()
+    suspend fun clearAndInsertAddress(addresses: List<AddressEntity>)
 }
