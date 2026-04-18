@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.littlelemon.application.address.data.local.models.AddressEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -28,5 +29,11 @@ interface AddressDao {
 
     @Query("DELETE FROM ADDRESSENTITY")
     suspend fun clear(): Int
+
+    @Transaction
+    suspend fun clearAndInsertAllAddress(addresses: List<AddressEntity>) {
+        clear()
+        insertAddress(addresses)
+    }
 
 }

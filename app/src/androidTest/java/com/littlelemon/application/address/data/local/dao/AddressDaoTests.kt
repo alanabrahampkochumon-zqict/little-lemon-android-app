@@ -10,6 +10,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -229,4 +230,54 @@ class AddressDaoTests {
         // Then, all address are deleted
         assertEquals(0, dao.getAddressCount())
     }
+
+
+    //////// Clear and insert address //////
+    @Test
+    fun onClearAndInsert_emptyDb_insertsNewAddress() = runTest {
+        // Given an empty db
+        val addressesToInsert = List(5) { AddressGenerator.generateAddressEntity() }
+
+        // When addresses are cleared and inserted
+        dao.clearAndInsertAllAddress(addressesToInsert)
+
+        // Then the new addresses are in the database
+        val retrievedAddresses = dao.getAllAddress().first()
+        addressesToInsert.forEach { address ->
+            assertContains(retrievedAddresses, address, "$address not found in DB!")
+        }
+    }
+
+
+    @Test
+    fun onClearAndInsert_emptyDb_clearsOldAddressAndInsertsNewAddress() = runTest {
+        // Given a non-empty db
+        val numAddress = 5
+        val oldAddresses = List(numAddress) { AddressGenerator.generateAddressEntity() }
+        val newAddresses = List(numAddress) { AddressGenerator.generateAddressEntity() }
+        dao.insertAddress(oldAddresses)
+        assertEquals(
+            numAddress,
+            dao.getAddressCount()
+        ) // Assert to ensure that the old addresses are inserted.
+
+        // When addresses are cleared and inserted
+        dao.clearAndInsertAllAddress(newAddresses)
+
+        // Then, the old addresses are cleared
+        val retrievedAddresses = dao.getAllAddress().first()
+        oldAddresses.forEach { address ->
+            assertFalse("Old address found in the db.\n$address") {
+                retrievedAddresses.contains(
+                    address
+                )
+            }
+        }
+
+        // And the new addresses are in the database
+        newAddresses.forEach { address ->
+            assertContains(retrievedAddresses, address, "Address not found in DB!\n$address")
+        }
+    }
+
 }
