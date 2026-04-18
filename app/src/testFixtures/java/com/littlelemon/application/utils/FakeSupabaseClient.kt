@@ -13,6 +13,7 @@ import io.ktor.client.request.HttpResponseData
 
 // Taken from supabase-kt test-common
 // https://github.com/supabase-community/supabase-kt/blob/master/test-common/src/commonMain/kotlin/io/github/jan/supabase/testing/SupabaseClientMock.kt
+
 fun createFakeSupabaseClient(
     supabaseURL: String = "https://supabase.com/",
     supabaseKey: String = "fake-supabase-key",

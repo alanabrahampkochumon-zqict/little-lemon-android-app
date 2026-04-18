@@ -148,6 +148,7 @@ dependencies {
     testFixturesImplementation(libs.supbase.auth)
     testFixturesImplementation(libs.supbase.postgres)
     testFixturesImplementation(libs.supbase.storage)
+    testFixturesImplementation(libs.io.mockk)
     testFixturesImplementation(libs.io.ktor.mock)
     testFixturesImplementation(libs.io.ktor.client)
     testFixturesImplementation(libs.kotlin.faker)
