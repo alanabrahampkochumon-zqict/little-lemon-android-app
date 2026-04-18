@@ -38,8 +38,15 @@ class FakeAddressDao(entriesCount: Int? = null, private val throwError: Boolean 
         emit(addressList)
     }
 
-    override fun deleteAddress(address: AddressEntity): Int {
+    override suspend fun deleteAddress(address: AddressEntity): Int {
         if (throwError) throw IllegalArgumentException()
         return if (addressList.remove(address)) 1 else 0
+    }
+
+    override suspend fun clear(): Int {
+        if (throwError) throw IllegalArgumentException()
+        val count = addressList.size
+        addressList.clear()
+        return count
     }
 }

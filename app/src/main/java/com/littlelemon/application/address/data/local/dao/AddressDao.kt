@@ -24,6 +24,9 @@ interface AddressDao {
     fun getAllAddress(): Flow<List<AddressEntity>>
 
     @Delete
-    fun deleteAddress(address: AddressEntity): Int
+    suspend fun deleteAddress(address: AddressEntity): Int
+
+    @Query("DELETE FROM ADDRESSENTITY")
+    suspend fun clear(): Int
 
 }

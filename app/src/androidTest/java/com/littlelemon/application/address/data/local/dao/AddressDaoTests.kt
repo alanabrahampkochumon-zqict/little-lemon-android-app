@@ -140,7 +140,7 @@ class AddressDaoTests {
         // When an address is removed
         val status = dao.deleteAddress(addressToRemove)
 
-        // Then a status of 1 is returned
+        // Then, a status of 1 is returned
         assertEquals(1, status)
     }
 
@@ -155,7 +155,7 @@ class AddressDaoTests {
         dao.deleteAddress(addressToRemove)
         val retrievedAddress = dao.getAllAddress().first()
 
-        // Then that address is not in the list
+        // Then, that address is not in the list
         assertFalse { retrievedAddress.contains(addressToRemove) }
         // And all the other address are in the list
         addresses.drop(1).forEach { address ->
@@ -173,7 +173,7 @@ class AddressDaoTests {
         // When an address is removed
         val status = dao.deleteAddress(addressToRemove)
 
-        // Then a status of 0 is returned
+        // Then, a status of 0 is returned
         assertEquals(0, status)
     }
 
@@ -188,9 +188,45 @@ class AddressDaoTests {
         dao.deleteAddress(addressToRemove)
         val retrievedAddress = dao.getAllAddress().first()
 
-        // Then no address is removed
+        // Then, no address is removed
         addresses.forEach { address ->
             assertTrue("$address was not found!") { retrievedAddress.contains(address) }
         }
+    }
+
+
+    ////////// CLEAR ADDRESS ///////////
+
+    @Test
+    fun onClear_emptyDb_returnsZero() = runTest {
+        assertEquals(0, dao.clear())
+    }
+
+    @Test
+    fun onClear_nonEmptyDb_returnsNumberOfAddress() = runTest {
+        // Given a non-empty db
+        val numAddress = 5
+        val address = List(numAddress) { AddressGenerator.generateAddressEntity() }
+        dao.insertAddress(address)
+
+        // When addresses are cleared
+        val status = dao.clear()
+
+        // Then, it returns the number of address
+        assertEquals(numAddress, status)
+    }
+
+    @Test
+    fun onClear_nonEmptyDb_deletesAllAddress() = runTest {
+        // Given a non-empty db
+        val numAddress = 5
+        val address = List(numAddress) { AddressGenerator.generateAddressEntity() }
+        dao.insertAddress(address)
+
+        // When addresses are cleared
+        dao.clear()
+
+        // Then, all address are deleted
+        assertEquals(0, dao.getAddressCount())
     }
 }
