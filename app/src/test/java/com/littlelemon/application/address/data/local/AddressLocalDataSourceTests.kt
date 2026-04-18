@@ -59,11 +59,10 @@ class AddressLocalDataSourceTests {
         @Test
         fun nullLocation_getNewLocation() = runTest {
             // Arrange
-            every { locationProvider.lastLocation } returns Tasks.forResult<Location?>(null)
+            every { locationProvider.lastLocation } returns Tasks.forResult(null)
             every {
                 locationProvider.getCurrentLocation(
-                    Priority.PRIORITY_HIGH_ACCURACY,
-                    null
+                    Priority.PRIORITY_HIGH_ACCURACY, null
                 )
             } returns Tasks.forResult(newLocation)
 
@@ -260,5 +259,42 @@ class AddressLocalDataSourceTests {
 
         }
 
+    }
+
+    @Nested
+    inner class RemoveAddress {
+        @Test
+        fun exceptionThrown_rethrowsException() = runTest {
+            val addresses = List(5) { AddressGenerator.generateAddressEntity() }
+            dao = FakeAddressDao(throwError = true)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
+
+            assertThrows<IllegalArgumentException> { datasource.removeAddress(addresses[0]) }
+        }
+
+        @Test
+        fun dbSuccess_clearAddressAndInsertsNewAddress() = runTest {
+            val addresses = List(5) { AddressGenerator.generateAddressEntity() }
+            val addressToRemove = addresses[0]
+
+            // Given a data source with non-empty addresses
+            dao = FakeAddressDao(0)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
+            datasource.saveAddresses(addresses)
+
+            // When an address is removed
+            datasource.removeAddress(addressToRemove)
+
+            // Then, that address are removed
+            val retrievedAddresses = datasource.getAddress().first()
+            assertFalse("Address not removed!") { retrievedAddresses.contains(addressToRemove) }
+
+            // And all other addresses are present
+            // Removes the first one as that is the address we removed.
+            addresses.drop(1).forEach { address ->
+                assertContains(retrievedAddresses, address, "New address not found!\n$address")
+            }
+
+        }
     }
 }
