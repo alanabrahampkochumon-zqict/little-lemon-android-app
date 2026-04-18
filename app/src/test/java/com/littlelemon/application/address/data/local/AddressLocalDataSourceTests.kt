@@ -50,7 +50,7 @@ class AddressLocalDataSourceTests {
         every { staleLocation.time } returns System.currentTimeMillis() - STALE_TIME
 
         dao = FakeAddressDao()
-        datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+        datasource = DefaultAddressLocalDataSource(locationProvider, dao)
     }
 
     @Nested
@@ -120,7 +120,7 @@ class AddressLocalDataSourceTests {
         fun emptyDatasource_returnsFlowOfEmptyList() = runTest {
             // Arrange
             dao = FakeAddressDao()
-            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
 
             // Act
             val result = datasource.getAddress().first()
@@ -136,7 +136,7 @@ class AddressLocalDataSourceTests {
             val address = List(numAddress) { AddressGenerator.generateAddressEntity() }
             dao = FakeAddressDao()
             dao.insertAddress(address)
-            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
 
             // Act
             val result = datasource.getAddress().first()
@@ -148,7 +148,7 @@ class AddressLocalDataSourceTests {
         @Test
         fun exceptionThrown_rethrowsException() = runTest {
             dao = FakeAddressDao(throwError = true)
-            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
 
             assertThrows<IllegalArgumentException> { datasource.getAddress().collect {} }
         }
@@ -160,7 +160,7 @@ class AddressLocalDataSourceTests {
         @Test
         fun exceptionThrown_rethrowsException() = runTest {
             dao = FakeAddressDao(throwError = true)
-            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
 
             assertThrows<IllegalArgumentException> { datasource.getAddressCount() }
         }
@@ -172,7 +172,7 @@ class AddressLocalDataSourceTests {
             val addresses = List(numAddress) { AddressGenerator.generateAddressEntity() }
             dao = FakeAddressDao()
             dao.insertAddress(addresses)
-            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
 
             // Act
             val count = datasource.getAddressCount()
@@ -189,7 +189,7 @@ class AddressLocalDataSourceTests {
         fun validAddresses_rethrowsException() = runTest {
             // Arrange
             dao = FakeAddressDao()
-            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
             val address = AddressGenerator.generateAddressEntity()
 
             // Act & Assert
@@ -202,7 +202,7 @@ class AddressLocalDataSourceTests {
         @Test
         fun exceptionThrown_rethrowsException() = runTest {
             dao = FakeAddressDao(throwError = true)
-            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
 
             assertThrows<IllegalArgumentException> { datasource.getAddress().first() }
         }
@@ -213,7 +213,7 @@ class AddressLocalDataSourceTests {
             val numAddresses = 5
             val addresses = List(numAddresses) { AddressGenerator.generateAddressEntity() }
             dao = FakeAddressDao()
-            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
 
             // Act
             datasource.saveAddresses(addresses)
@@ -231,7 +231,7 @@ class AddressLocalDataSourceTests {
         fun exceptionThrown_rethrowsException() = runTest {
             val addresses = List(5) { AddressGenerator.generateAddressEntity() }
             dao = FakeAddressDao(throwError = true)
-            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
 
             assertThrows<IllegalArgumentException> { datasource.clearAndInsertAddress(addresses) }
         }
@@ -243,7 +243,7 @@ class AddressLocalDataSourceTests {
             // Given a data source with non-empty addresses
             dao = FakeAddressDao(5)
             val oldAddresses = (dao as FakeAddressDao).getAddressList()
-            datasource = AddressLocalDataSourceImpl(locationProvider, dao)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
 
             // When addresses are clear and new addresses inserted
             datasource.clearAndInsertAddress(newAddresses)

@@ -8,7 +8,7 @@ import com.littlelemon.application.BuildConfig
 import com.littlelemon.application.address.data.DefaultAddressRepository
 import com.littlelemon.application.address.data.local.AddressDatabase
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
-import com.littlelemon.application.address.data.local.AddressLocalDataSourceImpl
+import com.littlelemon.application.address.data.local.DefaultAddressLocalDataSource
 import com.littlelemon.application.address.data.local.dao.AddressDao
 import com.littlelemon.application.address.data.local.dao.GeocodingDao
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
@@ -48,7 +48,7 @@ val addressModule = module {
     single<AddressRepository> { DefaultAddressRepository(get(), get(), get(), get()) }
 
     single<AddressRemoteDataSource> { SupabaseAddressRemoteDataSource(get()) }
-    single<AddressLocalDataSource> { AddressLocalDataSourceImpl(get(), get()) }
+    single<AddressLocalDataSource> { DefaultAddressLocalDataSource(get(), get()) }
 
     single<FusedLocationProviderClient> {
         LocationServices.getFusedLocationProviderClient(androidContext())

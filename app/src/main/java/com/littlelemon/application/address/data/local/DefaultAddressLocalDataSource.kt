@@ -11,7 +11,7 @@ import com.littlelemon.application.core.domain.exceptions.LocationUnavailableExc
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
-class AddressLocalDataSourceImpl(
+class DefaultAddressLocalDataSource(
     private val locationProvider: FusedLocationProviderClient,
     private val dao: AddressDao
 ) : AddressLocalDataSource {
