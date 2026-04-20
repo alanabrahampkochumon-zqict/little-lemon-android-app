@@ -11,12 +11,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,16 +28,11 @@ import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.BasicStepper
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
-import com.littlelemon.application.core.presentation.components.Stepper
 import com.littlelemon.application.core.presentation.components.Tag
 import com.littlelemon.application.core.presentation.components.TagVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.designsystem.xSmall
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
 import com.littlelemon.application.orders.domain.models.MenuItem
@@ -56,10 +49,10 @@ fun OrderItem(
     onRemoveItem: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardShape = MaterialTheme.shapes.small
-    val cardShadow = MaterialTheme.shadows.dropSM
+    val cardShape = LittleLemonTheme.shapes.xs
+    val cardShadow = LittleLemonTheme.shadows.dropSM
     val density = LocalDensity.current.density
-    val imageOffset = MaterialTheme.dimens.sizeLG
+    val imageOffset = LittleLemonTheme.dimens.sizeLG
 
     val orderTotal = menuItem.quantity * menuItem.dish.price
     val discountedTotal = menuItem.quantity * (menuItem.dish.discountedPrice ?: 0.0)
@@ -70,14 +63,14 @@ fun OrderItem(
     }
     Column(
         modifier = modifier
-            .dropShadow(cardShape, cardShadow.firstShadow.toComposeShadow(density))
-            .background(MaterialTheme.colors.primary, shape = cardShape)
+            .applyShadow(cardShape, LittleLemonTheme.shadows.dropXS)
+            .background(LittleLemonTheme.colors.primary, shape = cardShape)
     ) {
         Row(
             modifier = Modifier
                 .padding(
-                    start = MaterialTheme.dimens.sizeLG,
-                    end = MaterialTheme.dimens.sizeLG
+                    start = LittleLemonTheme.dimens.sizeLG,
+                    end = LittleLemonTheme.dimens.sizeLG
                 )
                 .zIndex(1f)
         ) {
@@ -87,31 +80,31 @@ fun OrderItem(
                     .size(80.dp)
                     .offset(y = imageOffset)
                     .background(
-                        MaterialTheme.colors.primaryDark,
-                        shape = MaterialTheme.shapes.xSmall
+                        LittleLemonTheme.colors.primaryDark,
+                        shape = LittleLemonTheme.shapes.xs
                     ),
                 placeholder = painterResource(R.drawable.illustration_image_loading),
                 contentDescription = menuItem.dish.title
             )
-            Spacer(Modifier.width(MaterialTheme.dimens.sizeMD))
+            Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(top = imageOffset),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2XS)
+                verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XS)
             ) {
                 Text(
                     text = menuItem.dish.title,
-                    style = MaterialTheme.typeStyle.labelMedium,
-                    color = MaterialTheme.colors.contentPrimary
+                    style = LittleLemonTheme.typography.labelMedium,
+                    color = LittleLemonTheme.colors.contentPrimary
                 )
                 Text(
                     text = stringResource(R.string.price_format_ea, menuItem.dish.price),
-                    style = MaterialTheme.typeStyle.bodyXSmall,
-                    color = MaterialTheme.colors.contentPlaceholder
+                    style = LittleLemonTheme.typography.bodyXSmall,
+                    color = LittleLemonTheme.colors.contentPlaceholder
                 )
             }
-            Spacer(Modifier.width(MaterialTheme.dimens.sizeMD))
+            Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
             Column(
                 horizontalAlignment = Alignment.End,
                 modifier = Modifier.padding(top = imageOffset)
@@ -119,16 +112,16 @@ fun OrderItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         stringResource(R.string.currency_symbol),
-                        style = MaterialTheme.typeStyle.bodyMedium,
-                        color = MaterialTheme.colors.contentOnAction
+                        style = LittleLemonTheme.typography.bodyMedium,
+                        color = LittleLemonTheme.colors.contentOnAction
                     )
                     Text(
                         stringResource(
                             R.string.price_format,
                             if (menuItem.dish.discountedPrice != null) discountedTotal else orderTotal
                         ),
-                        style = MaterialTheme.typeStyle.headlineSmall,
-                        color = MaterialTheme.colors.contentOnAction
+                        style = LittleLemonTheme.typography.headlineSmall,
+                        color = LittleLemonTheme.colors.contentOnAction
                     )
                 }
                 discountPercent?.let {
@@ -139,13 +132,13 @@ fun OrderItem(
                                 R.string.price_format,
                                 orderTotal
                             ),
-                            style = MaterialTheme.typeStyle.bodyXSmall.copy(
+                            style = LittleLemonTheme.typography.bodyXSmall.copy(
                                 textAlign = TextAlign.End,
                                 textDecoration = TextDecoration.LineThrough
                             ),
-                            color = MaterialTheme.colors.contentPrimary
+                            color = LittleLemonTheme.colors.contentPrimary
                         )
-                        Spacer(Modifier.height(MaterialTheme.dimens.sizeSM))
+                        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
                         Tag(
                             stringResource(R.string.discount_format, discountPercent),
                             variant = TagVariant.SuccessLight
@@ -156,8 +149,8 @@ fun OrderItem(
         }
         Row(
             modifier = Modifier
-                .background(MaterialTheme.colors.secondary)
-                .padding(start = MaterialTheme.dimens.size2XL)
+                .background(LittleLemonTheme.colors.secondary)
+                .padding(start = LittleLemonTheme.dimens.size2XL)
         ) {
             Button(
                 stringResource(R.string.act_remove),
@@ -165,7 +158,11 @@ fun OrderItem(
                 variant = ButtonVariant.GHOST,
                 modifier = Modifier.weight(1f)
             )
-            BasicStepper(menuItem.quantity, onIncrease = onIncreaseQuantity, onDecrease = onDecreaseQuantity)
+            BasicStepper(
+                menuItem.quantity,
+                onIncrease = onIncreaseQuantity,
+                onDecrease = onDecreaseQuantity
+            )
         }
     }
 }

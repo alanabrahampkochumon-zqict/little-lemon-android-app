@@ -15,14 +15,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -34,11 +31,7 @@ import com.littlelemon.application.core.presentation.components.DashedDivider
 import com.littlelemon.application.core.presentation.components.Tag
 import com.littlelemon.application.core.presentation.components.TagVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.orders.domain.models.MenuItem
 import com.littlelemon.application.orders.domain.models.OrderItem
@@ -55,8 +48,8 @@ fun OrderCardItem(
     expanded: Boolean = false
 ) {
 
-    val shape = MaterialTheme.shapes.large
-    val shadow = MaterialTheme.shadows.dropMD
+    val shape = LittleLemonTheme.shapes.md
+    val shadow = LittleLemonTheme.shadows.dropMD
     val density = LocalDensity.current.density
     val tagVariant = if (expanded) {
         when (orderItem.orderStatus) {
@@ -77,23 +70,22 @@ fun OrderCardItem(
     }
     Column(
         modifier = modifier
-            .dropShadow(shape, shadow.firstShadow.toComposeShadow(density))
-            .dropShadow(shape, shadow.secondShadow?.toComposeShadow(density) ?: Shadow(0.dp))
-            .background(MaterialTheme.colors.primary, shape = shape)
-            .padding(top = MaterialTheme.dimens.sizeXL)
+            .applyShadow(shape, shadow)
+            .background(LittleLemonTheme.colors.primary, shape = shape)
+            .padding(top = LittleLemonTheme.dimens.sizeXL)
             .clip(shape)
     ) {
-        Column(Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)) {
+        Column(Modifier.padding(horizontal = LittleLemonTheme.dimens.sizeXL)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = orderItem.orderName,
-                    style = MaterialTheme.typeStyle.headlineSmall,
-                    color = MaterialTheme.colors.contentPrimary,
+                    style = LittleLemonTheme.typography.headlineSmall,
+                    color = LittleLemonTheme.colors.contentPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
-                Spacer(Modifier.width(MaterialTheme.dimens.sizeMD))
+                Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
                 if (expanded) {
                     Tag(orderItem.orderStatus.name, variant = tagVariant)
                 } else {
@@ -104,30 +96,33 @@ fun OrderCardItem(
                     )
                 }
             }
-            Spacer(Modifier.height(MaterialTheme.dimens.size2XS))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size2XS))
             Text(
                 orderItem.orderDate.format(dateFormat),
-                style = MaterialTheme.typeStyle.bodyXSmall,
-                color = MaterialTheme.colors.contentPlaceholder
+                style = LittleLemonTheme.typography.bodyXSmall,
+                color = LittleLemonTheme.colors.contentPlaceholder
             )
         }
-        Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
         Column(
             Modifier.padding(
-                start = MaterialTheme.dimens.sizeXL,
-                end = MaterialTheme.dimens.sizeXL,
-                bottom = MaterialTheme.dimens.sizeSM
+                start = LittleLemonTheme.dimens.sizeXL,
+                end = LittleLemonTheme.dimens.sizeXL,
+                bottom = LittleLemonTheme.dimens.sizeSM
             )
         ) {
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colors.secondary, shape = MaterialTheme.shapes.small),
+                    .background(
+                        LittleLemonTheme.colors.secondary,
+                        shape = LittleLemonTheme.shapes.xs
+                    ),
                 contentPadding = PaddingValues(
-                    MaterialTheme.dimens.sizeMD
+                    LittleLemonTheme.dimens.sizeMD
                 ),
                 horizontalArrangement = Arrangement.spacedBy(
-                    MaterialTheme.dimens.sizeMD
+                    LittleLemonTheme.dimens.sizeMD
                 )
             ) {
                 items(orderItem.menuItems) { menuItem ->
@@ -139,171 +134,171 @@ fun OrderCardItem(
                 }
             }
             if (expanded) {
-                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+                Spacer(Modifier.height(LittleLemonTheme.dimens.sizeLG))
                 DashedDivider()
-                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+                Spacer(Modifier.height(LittleLemonTheme.dimens.sizeLG))
                 orderItem.specialInstructions?.let { specialInstruction ->
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(
-                                MaterialTheme.colors.secondary,
-                                shape = MaterialTheme.shapes.small
+                                LittleLemonTheme.colors.secondary,
+                                shape = LittleLemonTheme.shapes.xs
                             )
                             .padding(
-                                horizontal = MaterialTheme.dimens.sizeLG,
-                                vertical = MaterialTheme.dimens.sizeMD
+                                horizontal = LittleLemonTheme.dimens.sizeLG,
+                                vertical = LittleLemonTheme.dimens.sizeMD
                             ),
-                        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM)
+                        verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeSM)
                     ) {
                         Text(
                             stringResource(R.string.special_instructions),
-                            style = MaterialTheme.typeStyle.labelSmall,
-                            color = MaterialTheme.colors.contentTertiary
+                            style = LittleLemonTheme.typography.labelSmall,
+                            color = LittleLemonTheme.colors.contentTertiary
                         )
                         Text(
                             specialInstruction,
-                            style = MaterialTheme.typeStyle.bodySmall,
-                            color = MaterialTheme.colors.contentTertiary,
+                            style = LittleLemonTheme.typography.bodySmall,
+                            color = LittleLemonTheme.colors.contentTertiary,
                             maxLines = 1,
                         )
                     }
-                    Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+                    Spacer(Modifier.height(LittleLemonTheme.dimens.sizeLG))
                     DashedDivider()
-                    Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+                    Spacer(Modifier.height(LittleLemonTheme.dimens.sizeLG))
                 }
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            MaterialTheme.colors.secondary,
-                            shape = MaterialTheme.shapes.small
+                            LittleLemonTheme.colors.secondary,
+                            shape = LittleLemonTheme.shapes.xs
                         )
                         .padding(
-                            horizontal = MaterialTheme.dimens.sizeLG,
-                            vertical = MaterialTheme.dimens.sizeMD
+                            horizontal = LittleLemonTheme.dimens.sizeLG,
+                            vertical = LittleLemonTheme.dimens.sizeMD
                         ),
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM)
+                    verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeSM)
                 ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeMD)) {
                         Text(
                             stringResource(R.string.payment_mode),
-                            style = MaterialTheme.typeStyle.bodySmall,
-                            color = MaterialTheme.colors.contentTertiary
+                            style = LittleLemonTheme.typography.bodySmall,
+                            color = LittleLemonTheme.colors.contentTertiary
                         )
                         Text(
                             orderItem.paymentMode,
                             modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
-                            color = MaterialTheme.colors.contentTertiary,
+                            style = LittleLemonTheme.typography.labelSmall.copy(textAlign = TextAlign.End),
+                            color = LittleLemonTheme.colors.contentTertiary,
                             maxLines = 1,
                         )
                     }
                     if (orderItem.orderStatus == OrderItem.OrderStatus.Delivered) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeMD)) {
                             Text(
                                 stringResource(R.string.delivered_to),
-                                style = MaterialTheme.typeStyle.bodySmall,
-                                color = MaterialTheme.colors.contentTertiary
+                                style = LittleLemonTheme.typography.bodySmall,
+                                color = LittleLemonTheme.colors.contentTertiary
                             )
                             Text(
                                 orderItem.deliveryAddressLabel,
                                 modifier = Modifier.weight(1f),
-                                style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
-                                color = MaterialTheme.colors.contentTertiary,
+                                style = LittleLemonTheme.typography.labelSmall.copy(textAlign = TextAlign.End),
+                                color = LittleLemonTheme.colors.contentTertiary,
                                 maxLines = 1,
                             )
                         }
                     } else {
-                        Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeMD)) {
                             Text(
                                 stringResource(R.string.refund_made_on),
-                                style = MaterialTheme.typeStyle.bodySmall,
-                                color = MaterialTheme.colors.contentTertiary
+                                style = LittleLemonTheme.typography.bodySmall,
+                                color = LittleLemonTheme.colors.contentTertiary
                             )
                             Text(
                                 orderItem.refundDate!!.format(dateFormat),
                                 modifier = Modifier.weight(1f),
-                                style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
-                                color = MaterialTheme.colors.contentTertiary,
+                                style = LittleLemonTheme.typography.labelSmall.copy(textAlign = TextAlign.End),
+                                color = LittleLemonTheme.colors.contentTertiary,
                                 maxLines = 1,
                             )
                         }
                     }
                 }
-                Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+                Spacer(Modifier.height(LittleLemonTheme.dimens.sizeLG))
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            MaterialTheme.colors.secondary,
-                            shape = MaterialTheme.shapes.small
+                            LittleLemonTheme.colors.secondary,
+                            shape = LittleLemonTheme.shapes.xs
                         )
                         .padding(
-                            horizontal = MaterialTheme.dimens.sizeLG,
-                            vertical = MaterialTheme.dimens.sizeMD
+                            horizontal = LittleLemonTheme.dimens.sizeLG,
+                            vertical = LittleLemonTheme.dimens.sizeMD
                         ),
                 ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeMD)) {
                         Text(
                             stringResource(R.string.bill_amount),
-                            style = MaterialTheme.typeStyle.bodySmall,
-                            color = MaterialTheme.colors.contentTertiary
+                            style = LittleLemonTheme.typography.bodySmall,
+                            color = LittleLemonTheme.colors.contentTertiary
                         )
                         Text(
                             stringResource(R.string.currency_symbol) +
                                     stringResource(R.string.price_format, orderItem.billAmount),
                             modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
-                            color = MaterialTheme.colors.contentTertiary,
+                            style = LittleLemonTheme.typography.labelSmall.copy(textAlign = TextAlign.End),
+                            color = LittleLemonTheme.colors.contentTertiary,
                             maxLines = 1,
                         )
                     }
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeSM))
-                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                    Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeSM))
+                    Row(horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeMD)) {
                         Text(
                             stringResource(R.string.delivered_to),
-                            style = MaterialTheme.typeStyle.bodySmall,
-                            color = MaterialTheme.colors.contentTertiary
+                            style = LittleLemonTheme.typography.bodySmall,
+                            color = LittleLemonTheme.colors.contentTertiary
                         )
                         Text(
                             stringResource(R.string.currency_symbol) +
                                     stringResource(R.string.price_format, orderItem.deliveryCharge),
                             modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typeStyle.labelSmall.copy(textAlign = TextAlign.End),
-                            color = MaterialTheme.colors.contentTertiary,
+                            style = LittleLemonTheme.typography.labelSmall.copy(textAlign = TextAlign.End),
+                            color = LittleLemonTheme.colors.contentTertiary,
                             maxLines = 1,
                         )
                     }
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
-                    HorizontalDivider(color = MaterialTheme.colors.outlineSecondary)
-                    Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
-                    Row(horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                    Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeMD))
+                    HorizontalDivider(color = LittleLemonTheme.colors.outlineSecondary)
+                    Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeMD))
+                    Row(horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeMD)) {
                         Text(
                             stringResource(R.string.total_amount),
-                            style = MaterialTheme.typeStyle.bodySmall,
-                            color = MaterialTheme.colors.contentTertiary
+                            style = LittleLemonTheme.typography.bodySmall,
+                            color = LittleLemonTheme.colors.contentTertiary
                         )
                         Text(
                             stringResource(R.string.currency_symbol) +
                                     stringResource(R.string.price_format, orderItem.totalAmount),
                             modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typeStyle.labelLarge.copy(textAlign = TextAlign.End),
-                            color = MaterialTheme.colors.contentPrimary,
+                            style = LittleLemonTheme.typography.labelLarge.copy(textAlign = TextAlign.End),
+                            color = LittleLemonTheme.colors.contentPrimary,
                             maxLines = 1,
                         )
                     }
                 }
             }
         }
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeLG))
+        Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeLG))
         Box(
             modifier = Modifier
-                .background(MaterialTheme.colors.highlight)
+                .background(LittleLemonTheme.colors.highlight)
                 .padding(
-                    horizontal = MaterialTheme.dimens.sizeXL,
-                    vertical = MaterialTheme.dimens.sizeLG
+                    horizontal = LittleLemonTheme.dimens.sizeXL,
+                    vertical = LittleLemonTheme.dimens.sizeLG
                 )
                 .fillMaxWidth()
                 .clickable(onClick = onReorder),
@@ -311,8 +306,8 @@ fun OrderCardItem(
         ) {
             Text(
                 text = stringResource(R.string.reorder),
-                color = MaterialTheme.colors.contentOnColor,
-                style = MaterialTheme.typeStyle.labelMedium
+                color = LittleLemonTheme.colors.contentOnColor,
+                style = LittleLemonTheme.typography.labelMedium
             )
         }
     }

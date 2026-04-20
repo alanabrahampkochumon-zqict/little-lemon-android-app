@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,10 +26,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.designsystem.xLarge
 
 // TODO: Add image loading shimmer
 @Composable
@@ -40,11 +35,11 @@ fun DishImageCard(
     quantity: Int,
     modifier: Modifier = Modifier
 ) {
-    val innerCardShape = MaterialTheme.shapes.small
+    val innerCardShape = LittleLemonTheme.shapes.xs
     Column(
         modifier = modifier
-            .background(MaterialTheme.colors.primary, innerCardShape)
-            .padding(bottom = MaterialTheme.dimens.size2XS)
+            .background(LittleLemonTheme.colors.primary, innerCardShape)
+            .padding(bottom = LittleLemonTheme.dimens.size2XS)
             .clip(innerCardShape)
             .widthIn(max = 88.dp)
     ) {
@@ -52,14 +47,14 @@ fun DishImageCard(
             modifier = Modifier
                 .height(56.dp)
                 .width(88.dp)
-                .background(MaterialTheme.colors.tertiary, innerCardShape)
+                .background(LittleLemonTheme.colors.tertiary, innerCardShape)
                 .clip(innerCardShape),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painterResource(R.drawable.ic_gallery),
                 null,
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.contentDisabled)
+                colorFilter = ColorFilter.tint(LittleLemonTheme.colors.contentDisabled)
             )
             AsyncImage(
                 model = imageURL,
@@ -69,36 +64,36 @@ fun DishImageCard(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(
-                        vertical = MaterialTheme.dimens.sizeXS,
-                        horizontal = MaterialTheme.dimens.sizeSM
+                        vertical = LittleLemonTheme.dimens.sizeXS,
+                        horizontal = LittleLemonTheme.dimens.sizeSM
                     ),
                 contentAlignment = Alignment.TopEnd
             ) {
                 Box(
                     Modifier
                         .background(
-                            MaterialTheme.colors.information,
-                            shape = MaterialTheme.shapes.xLarge
+                            LittleLemonTheme.colors.information,
+                            shape = LittleLemonTheme.shapes.xl
                         )
                         .padding(
-                            horizontal = MaterialTheme.dimens.sizeMD,
-                            vertical = MaterialTheme.dimens.sizeXS
+                            horizontal = LittleLemonTheme.dimens.sizeMD,
+                            vertical = LittleLemonTheme.dimens.sizeXS
                         )
                 ) {
                     Text(
                         "${if (quantity < 10) quantity else "9+"}",
-                        style = MaterialTheme.typeStyle.bodyXSmall,
-                        color = MaterialTheme.colors.contentOnColor
+                        style = LittleLemonTheme.typography.bodyXSmall,
+                        color = LittleLemonTheme.colors.contentOnColor
                     )
                 }
             }
         }
         Text(
             text = dishName,
-            style = MaterialTheme.typeStyle.bodyXSmall.copy(textAlign = TextAlign.Center),
+            style = LittleLemonTheme.typography.bodyXSmall.copy(textAlign = TextAlign.Center),
             modifier = Modifier
                 .padding(
-                    MaterialTheme.dimens.size2XS
+                    LittleLemonTheme.dimens.size2XS
                 )
                 .fillMaxWidth(), maxLines = 1, overflow = TextOverflow.Clip
         )
