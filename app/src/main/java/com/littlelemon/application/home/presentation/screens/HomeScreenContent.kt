@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +25,6 @@ import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.home.presentation.HomeViewModel
 import com.littlelemon.application.reservation.domain.models.Reservation
 import com.littlelemon.application.reservation.presentation.screens.components.ReservationCard
@@ -46,7 +44,7 @@ fun HomeScreenContent(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
 @Composable
 fun HomeScreenRoot(modifier: Modifier = Modifier) {
     val homeOptions = listOf("Food Delivery", "Reserve a Table")
-    // TODO: Add navigation switch using navgraphs
+    // TODO: Add navigation switch using navgraph
     var currentSelection by remember { mutableStateOf(homeOptions[0]) }
 
     val cardWidth = 340.dp
@@ -75,7 +73,7 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
     val reservations = listOf(reservation1, reservation2, reservation3)
     // TODO: Remove content padding and apply padding to children.
 
-    val contentPadding = MaterialTheme.dimens.sizeXL
+    val contentPadding = LittleLemonTheme.dimens.sizeXL
 
     LazyColumn(
         modifier = modifier
@@ -84,7 +82,7 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
     ) {
         item {
 
-            Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
 
             // Upcoming reservations | Conditionally render
             Header(
@@ -95,10 +93,10 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
                 typeStyle = HeaderTypeStyle.Secondary,
                 modifier = Modifier.padding(horizontal = contentPadding)
             )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
+            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeMD))
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(
-                    MaterialTheme.dimens.sizeLG
+                    LittleLemonTheme.dimens.sizeLG
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(horizontal = contentPadding)
@@ -112,7 +110,7 @@ fun HomeScreenRoot(modifier: Modifier = Modifier) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size3XL))
+            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.size3XL))
         }
         foodDeliveryContent(contentPadding)
     }

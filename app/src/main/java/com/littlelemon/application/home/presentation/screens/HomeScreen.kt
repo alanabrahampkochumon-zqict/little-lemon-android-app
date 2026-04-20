@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +30,6 @@ import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
 import com.littlelemon.application.home.presentation.CartRoute
 import com.littlelemon.application.home.presentation.HomeRoute
 import com.littlelemon.application.home.presentation.HomeViewModel
@@ -79,10 +77,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             )
         },
         topBar = {
-            TopAppBar(LocalAddress(location = LocalLocation(1.234, 5.31234)), {/* TODO(Implementation) */ })
+            TopAppBar(
+                LocalAddress(location = LocalLocation(1.234, 5.31234)),
+                {/* TODO(Implementation) */ })
         },
-        containerColor = MaterialTheme.colors.secondary,
-        modifier = Modifier
+        containerColor = LittleLemonTheme.colors.secondary,
+        modifier = modifier
             .fillMaxWidth()
     ) { innerPadding ->
         NavDisplay(
