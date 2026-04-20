@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -34,8 +33,6 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 
@@ -45,14 +42,14 @@ fun BasicBadge(
     selected: Boolean,
     onSelect: () -> Unit,
     modifier: Modifier = Modifier,
-    contentColor: Color = MaterialTheme.colors.contentOnAction
+    contentColor: Color = LittleLemonTheme.colors.contentOnAction
 ) {
 
     val backgroundColor =
-        animateColorAsState(if (selected) MaterialTheme.colors.action else MaterialTheme.colors.secondary)
+        animateColorAsState(if (selected) LittleLemonTheme.colors.action else LittleLemonTheme.colors.secondary)
     val borderColor =
-        animateColorAsState(if (selected) MaterialTheme.colors.transparent else MaterialTheme.colors.action)
-    val shape = MaterialTheme.shapes.large
+        animateColorAsState(if (selected) LittleLemonTheme.colors.transparent else LittleLemonTheme.colors.action)
+    val shape = LittleLemonTheme.shapes.xl
     val density = LocalDensity.current.density
     val strokeWidth = 1 * density
     val stroke = remember {
@@ -78,10 +75,11 @@ fun BasicBadge(
                 )
             }
             .padding(
-                vertical = MaterialTheme.dimens.sizeSM, horizontal = MaterialTheme.dimens.sizeXL
+                vertical = LittleLemonTheme.dimens.sizeSM,
+                horizontal = LittleLemonTheme.dimens.sizeXL
             )
             .animateContentSize(),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD),
+        horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeMD),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AnimatedVisibility(selected, enter = scaleIn(), exit = scaleOut()) {
@@ -97,7 +95,7 @@ fun BasicBadge(
             )
         }
 
-        Text(label, style = MaterialTheme.typeStyle.labelMedium, color = contentColor)
+        Text(label, style = LittleLemonTheme.typography.labelMedium, color = contentColor)
     }
 
 }

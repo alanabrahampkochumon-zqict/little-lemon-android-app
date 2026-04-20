@@ -56,9 +56,10 @@ fun ActionScreen(
             Text(
                 heading,
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typeStyle.displayLarge.copy(textAlign = TextAlign.Center),
+                style = MaterialTheme.typeStyle.headlineLarge.copy(textAlign = TextAlign.Center),
                 color = headingColor
             )
+            Spacer(Modifier.height(MaterialTheme.dimens.sizeXS))
             Text(
                 content,
                 modifier = Modifier
@@ -67,18 +68,19 @@ fun ActionScreen(
                 style = MaterialTheme.typeStyle.bodyMedium.copy(textAlign = TextAlign.Center),
                 color = MaterialTheme.colors.contentSecondary
             )
-            Spacer(Modifier.height(MaterialTheme.dimens.size5XL))
+            Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
             Image(
                 painterResource(illustration),
                 contentDescription = null,
                 modifier = Modifier
+                    .fillMaxWidth(0.8f)
                     .widthIn(max = 360.dp)
                     .fillMaxWidth()
                     .testTag(CoreTestTags.ACTION_SCREEN_ILLUSTRATION)
             )
             Spacer(Modifier.height(MaterialTheme.dimens.size4XL))
             Button(primaryActionLabel, onPrimaryActionClick, variant = ButtonVariant.HIGH_CONTRAST)
-            Spacer(Modifier.height(MaterialTheme.dimens.sizeMD))
+            Spacer(Modifier.height(MaterialTheme.dimens.sizeXS))
             Button(secondaryActionLabel, onSecondaryActionClick, variant = ButtonVariant.GHOST)
         }
     }

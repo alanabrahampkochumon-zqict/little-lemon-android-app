@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -27,9 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.shadow.Shadow
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -37,11 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 
 @Composable
 fun AlertDialog(
@@ -55,18 +48,12 @@ fun AlertDialog(
     onNegativeAction: () -> Unit = {},
     dismissable: Boolean = true,
     onDismissDialog: () -> Unit = {},
-    positiveActionVariant: ButtonVariant = ButtonVariant.PRIMARY,
+    positiveActionVariant: ButtonVariant = ButtonVariant.HIGH_CONTRAST,
     negativeActionVariant: ButtonVariant = ButtonVariant.GHOST,
     content: @Composable () -> Unit = {},
 ) {
 
-    val screenDensityRatio = LocalDensity.current.density
-
-    val dialogShape = MaterialTheme.shapes.large
-    val dropShadow = MaterialTheme.shadows.dropLG
-    val firstShadowLayer = dropShadow.firstShadow.toComposeShadow(screenDensityRatio)
-    val secondShadowLayer =
-        dropShadow.secondShadow?.toComposeShadow(screenDensityRatio) ?: Shadow(0.dp)
+    val dialogShape = LittleLemonTheme.shapes.lg
 
     BackHandler(enabled = dismissable, onBack = onDismissDialog)
 
@@ -78,7 +65,7 @@ fun AlertDialog(
                 .fillMaxSize()
                 .then(
                     if (showDialog) Modifier
-                        .blur(MaterialTheme.dimens.sizeLG)
+                        .blur(LittleLemonTheme.dimens.sizeLG)
                         .disableTouch() else Modifier
                 )
         ) {
@@ -89,42 +76,45 @@ fun AlertDialog(
             Box(
                 Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.darkOverlay24)
+                    .background(LittleLemonTheme.colors.darkOverlay24)
                     .clickable(enabled = dismissable, onClick = onDismissDialog)
                     .testTag(stringResource(R.string.test_tag_alert_dialog_overlay))
             )
         }
         // Alert Dialog
-        AnimatedVisibility(showDialog, enter = scaleIn() + fadeIn(), exit = scaleOut() + fadeOut()) {
+        AnimatedVisibility(
+            showDialog,
+            enter = scaleIn() + fadeIn(),
+            exit = scaleOut() + fadeOut()
+        ) {
             Box(
                 modifier = Modifier
                     .widthIn(max = 480.dp)
-                    .padding(horizontal = MaterialTheme.dimens.sizeXL)
+                    .padding(horizontal = LittleLemonTheme.dimens.sizeXL)
                     .clip(
                         dialogShape
                     )
-                    .dropShadow(dialogShape, secondShadowLayer)
-                    .dropShadow(dialogShape, firstShadowLayer)
-                    .background(MaterialTheme.colors.primary)
+                    .applyShadow(dialogShape, LittleLemonTheme.shadows.dropLG)
+                    .background(LittleLemonTheme.colors.primary)
             ) {
                 Column(
                     modifier = Modifier,
                 ) {
                     Column(
                         modifier = Modifier
-                            .padding(MaterialTheme.dimens.size2XL)
+                            .padding(LittleLemonTheme.dimens.size2XL)
                     ) {
                         Text(
                             dialogTitle,
-                            style = MaterialTheme.typeStyle.displaySmall,
+                            style = LittleLemonTheme.typography.displaySmall,
                             textAlign = TextAlign.Start,
-                            color = MaterialTheme.colors.contentPrimary
+                            color = LittleLemonTheme.colors.contentPrimary
                         )
-                        Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+                        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeLG))
                         Text(
                             text = dialogText,
-                            style = MaterialTheme.typeStyle.bodyMedium,
-                            color = MaterialTheme.colors.contentSecondary
+                            style = LittleLemonTheme.typography.bodyMedium,
+                            color = LittleLemonTheme.colors.contentSecondary
                         )
                     }
                     Row(
@@ -168,7 +158,7 @@ private fun AlertDialogPreview() {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.primary)
+                    .background(LittleLemonTheme.colors.primary)
                     .padding(16.dp)
             ) {
                 items(100) {
@@ -179,14 +169,14 @@ private fun AlertDialogPreview() {
                     ) {
                         Text(
                             text = "Heading $it",
-                            style = MaterialTheme.typeStyle.headlineMedium,
-                            color = MaterialTheme.colors.contentPrimary,
+                            style = LittleLemonTheme.typography.headlineMedium,
+                            color = LittleLemonTheme.colors.contentPrimary,
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
                             text = "Long body copy $it",
-                            color = MaterialTheme.colors.contentPrimary,
-                            style = MaterialTheme.typeStyle.bodyMedium
+                            color = LittleLemonTheme.colors.contentPrimary,
+                            style = LittleLemonTheme.typography.bodyMedium
                         )
                         VerticalDivider()
 
@@ -211,7 +201,7 @@ private fun AlertDialogNotShownPreview() {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.primary)
+                    .background(LittleLemonTheme.colors.primary)
                     .padding(16.dp)
             ) {
                 items(100) {
@@ -222,14 +212,14 @@ private fun AlertDialogNotShownPreview() {
                     ) {
                         Text(
                             text = "Heading $it",
-                            style = MaterialTheme.typeStyle.headlineMedium,
-                            color = MaterialTheme.colors.contentPrimary,
+                            style = LittleLemonTheme.typography.headlineMedium,
+                            color = LittleLemonTheme.colors.contentPrimary,
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
                             text = "Long body copy $it",
-                            color = MaterialTheme.colors.contentPrimary,
-                            style = MaterialTheme.typeStyle.bodyMedium
+                            color = LittleLemonTheme.colors.contentPrimary,
+                            style = LittleLemonTheme.typography.bodyMedium
                         )
                         VerticalDivider()
 

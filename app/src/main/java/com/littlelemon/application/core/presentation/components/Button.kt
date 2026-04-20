@@ -10,24 +10,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.none
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import androidx.compose.material3.Button as M3Button
 
 enum class ButtonVariant {
@@ -63,56 +55,56 @@ fun Button(
     buttonShape: ButtonShape = ButtonShape.Rounded
 ) {
 
-    val screenDensityRatio = LocalDensity.current.density
-
     val colors = when (variant) {
         ButtonVariant.PRIMARY -> ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colors.action,
-            contentColor = MaterialTheme.colors.contentOnAction,
-            disabledContainerColor = MaterialTheme.colors.disabled,
-            disabledContentColor = MaterialTheme.colors.contentDisabled,
+            containerColor = LittleLemonTheme.colors.action,
+            contentColor = LittleLemonTheme.colors.contentOnAction,
+            disabledContainerColor = LittleLemonTheme.colors.disabled,
+            disabledContentColor = LittleLemonTheme.colors.contentDisabled,
         )
+
         ButtonVariant.SECONDARY -> ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.contentPrimary,
-            disabledContainerColor = MaterialTheme.colors.transparent,
-            disabledContentColor = MaterialTheme.colors.contentDisabled
+            containerColor = LittleLemonTheme.colors.primary,
+            contentColor = LittleLemonTheme.colors.contentPrimary,
+            disabledContainerColor = LittleLemonTheme.colors.transparent,
+            disabledContentColor = LittleLemonTheme.colors.contentDisabled
         )
 
         ButtonVariant.GHOST -> ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colors.transparent,
-            contentColor = MaterialTheme.colors.contentHighlight,
-            disabledContainerColor = MaterialTheme.colors.transparent,
-            disabledContentColor = MaterialTheme.colors.disabled
+            containerColor = LittleLemonTheme.colors.transparent,
+            contentColor = LittleLemonTheme.colors.contentHighlight,
+            disabledContainerColor = LittleLemonTheme.colors.transparent,
+            disabledContentColor = LittleLemonTheme.colors.disabled
         )
 
         ButtonVariant.GHOST_HIGHLIGHT -> ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colors.transparent,
-            contentColor = MaterialTheme.colors.contentAccentSecondary,
-            disabledContainerColor = MaterialTheme.colors.transparent,
-            disabledContentColor = MaterialTheme.colors.contentDisabled
+            containerColor = LittleLemonTheme.colors.transparent,
+            contentColor = LittleLemonTheme.colors.contentAccentSecondary,
+            disabledContainerColor = LittleLemonTheme.colors.transparent,
+            disabledContentColor = LittleLemonTheme.colors.contentDisabled
         )
+
         ButtonVariant.HIGH_CONTRAST -> ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colors.highlight,
-                contentColor = MaterialTheme.colors.contentOnColor,
-                disabledContainerColor = MaterialTheme.colors.disabled,
-                disabledContentColor = MaterialTheme.colors.contentDisabled
-            )
+            containerColor = LittleLemonTheme.colors.highlight,
+            contentColor = LittleLemonTheme.colors.contentOnColor,
+            disabledContainerColor = LittleLemonTheme.colors.disabled,
+            disabledContentColor = LittleLemonTheme.colors.contentDisabled
+        )
     }
 
     val textStyle = when (size) {
-        ButtonSize.Medium -> MaterialTheme.typeStyle.labelMedium
-        ButtonSize.Large -> MaterialTheme.typeStyle.labelLarge
+        ButtonSize.Medium -> LittleLemonTheme.typography.labelMedium
+        ButtonSize.Large -> LittleLemonTheme.typography.labelLarge
     }
 
     val spacingBetween = when (size) {
-        ButtonSize.Medium -> MaterialTheme.dimens.sizeMD
-        ButtonSize.Large -> MaterialTheme.dimens.sizeLG
+        ButtonSize.Medium -> LittleLemonTheme.dimens.sizeMD
+        ButtonSize.Large -> LittleLemonTheme.dimens.sizeLG
     }
 
     val iconSize = when (size) {
-        ButtonSize.Medium -> MaterialTheme.dimens.sizeMD
-        ButtonSize.Large -> MaterialTheme.dimens.sizeLG
+        ButtonSize.Medium -> LittleLemonTheme.dimens.sizeMD
+        ButtonSize.Large -> LittleLemonTheme.dimens.sizeLG
     }
 
 
@@ -122,13 +114,12 @@ fun Button(
             .defaultMinSize(minHeight = 48.dp)
             .fillMaxWidth()
             .then(
-                if (variant == ButtonVariant.SECONDARY && enabled) modifier.dropShadow(
-                    MaterialTheme.shapes.small,
-                    MaterialTheme.shadows.dropSM.firstShadow.toComposeShadow(screenDensityRatio)
+                if (variant == ButtonVariant.SECONDARY && enabled) modifier.applyShadow(
+                    LittleLemonTheme.shapes.sm, LittleLemonTheme.shadows.dropXS
                 ) else modifier
             ),
         colors = colors,
-        shape = if (buttonShape == ButtonShape.Rounded) MaterialTheme.shapes.small else MaterialTheme.shapes.none,
+        shape = if (buttonShape == ButtonShape.Rounded) LittleLemonTheme.shapes.sm else LittleLemonTheme.shapes.none,
         enabled = enabled
     ) {
         Row(
