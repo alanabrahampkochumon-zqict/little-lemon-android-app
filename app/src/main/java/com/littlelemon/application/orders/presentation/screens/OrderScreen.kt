@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -20,22 +19,19 @@ import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 // TODO: Add VM
 @Composable
 fun OrderScreen(modifier: Modifier = Modifier) {
-    OrderScreenRoot()
+    OrderScreenRoot(modifier)
 }
 
 @Composable
 fun OrderScreenRoot(modifier: Modifier = Modifier) {
-    val contentPadding = MaterialTheme.dimens.sizeXL
+    val contentPadding = LittleLemonTheme.dimens.sizeXL
     LazyColumn(modifier = modifier) {
         item {
-            Spacer(Modifier.height(MaterialTheme.dimens.size2XL))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
             Header(
                 stringResource(R.string.heading_your_orders),
                 typeStyle = HeaderTypeStyle.Primary,
@@ -47,14 +43,14 @@ fun OrderScreenRoot(modifier: Modifier = Modifier) {
                 ) {
                     Text(
                         stringResource(R.string.act_most_recent),
-                        style = MaterialTheme.typeStyle.labelMedium,
-                        color = MaterialTheme.colors.contentHighlight
+                        style = LittleLemonTheme.typography.labelMedium,
+                        color = LittleLemonTheme.colors.contentHighlight
                     )
-                    Spacer(Modifier.width(MaterialTheme.dimens.sizeMD))
+                    Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
                     Image(
                         painterResource(R.drawable.ic_chevron_down),
                         null,
-                        colorFilter = ColorFilter.tint(MaterialTheme.colors.contentHighlight)
+                        colorFilter = ColorFilter.tint(LittleLemonTheme.colors.contentHighlight)
                     )
                 }
             }

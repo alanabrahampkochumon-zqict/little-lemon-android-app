@@ -13,13 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,11 +28,8 @@ import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.Tag
 import com.littlelemon.application.core.presentation.components.TagVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
 import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.core.presentation.utils.toTitleCase
 import com.littlelemon.application.reservation.domain.models.Reservation
 import com.littlelemon.application.reservation.presentation.screens.formatters.formatTimeAsTwelveHourClock
@@ -55,30 +50,25 @@ fun ReservationCard(
     val dateTimeSize = 100.dp
 
     val contentColor =
-        if (upcomingReservation) MaterialTheme.colors.contentOnColor else MaterialTheme.colors.contentDisabled
+        if (upcomingReservation) LittleLemonTheme.colors.contentOnColor else LittleLemonTheme.colors.contentDisabled
     val backgroundColor =
-        if (upcomingReservation) MaterialTheme.colors.success else MaterialTheme.colors.disabled
+        if (upcomingReservation) LittleLemonTheme.colors.success else LittleLemonTheme.colors.disabled
     val borderColor =
-        if (upcomingReservation) MaterialTheme.colors.transparent else MaterialTheme.colors.outlineDisabled
+        if (upcomingReservation) LittleLemonTheme.colors.transparent else LittleLemonTheme.colors.outlineDisabled
 
     val tagVariant = if (upcomingReservation) TagVariant.SuccessLight else TagVariant.DisabledLight
 
-    val innerCardShape = MaterialTheme.shapes.small
-    val cardShape = MaterialTheme.shapes.medium
+    val innerCardShape = LittleLemonTheme.shapes.xs
+    val cardShape = LittleLemonTheme.shapes.xs
 
     val monthName = reservation.reservationDate.date.month.name.substring(0, 3).toTitleCase()
     val density = LocalDensity.current.density
 
     Row(
         modifier = modifier
-            .then(
-                if (upcomingReservation) Modifier.dropShadow(
-                    cardShape,
-                    MaterialTheme.shadows.dropSM.firstShadow.toComposeShadow(density)
-                ) else Modifier
-            )
+            .applyShadow(cardShape, LittleLemonTheme.shadows.dropSM)
             .widthIn(max = 440.dp, min = 300.dp)
-            .background(MaterialTheme.colors.primary, cardShape)
+            .background(LittleLemonTheme.colors.primary, cardShape)
             .border(1.dp, borderColor, cardShape)
             .clip(cardShape)
     ) {
@@ -92,18 +82,18 @@ fun ReservationCard(
             Text(
                 monthName,
                 color = contentColor,
-                style = MaterialTheme.typeStyle.headlineSmall
+                style = LittleLemonTheme.typography.headlineSmall
             )
             Text(
                 reservation.reservationDate.date.day.toString(),
                 color = contentColor,
-                style = MaterialTheme.typeStyle.displayLarge,
+                style = LittleLemonTheme.typography.displayLarge,
                 modifier = Modifier.offset(y = (-4).dp)
             )
             Text(
                 reservation.reservationDate.formatTimeAsTwelveHourClock(),
                 color = contentColor,
-                style = MaterialTheme.typeStyle.bodyXSmall,
+                style = LittleLemonTheme.typography.bodyXSmall,
                 modifier = Modifier.offset(y = (-6).dp)
             )
         }
@@ -111,29 +101,29 @@ fun ReservationCard(
         Column(
             modifier = Modifier
                 .padding(
-                    top = MaterialTheme.dimens.sizeMD,
-                    start = MaterialTheme.dimens.sizeLG,
-                    end = MaterialTheme.dimens.sizeMD
+                    top = LittleLemonTheme.dimens.sizeMD,
+                    start = LittleLemonTheme.dimens.sizeLG,
+                    end = LittleLemonTheme.dimens.sizeMD
                 )
         ) {
             Row {
                 Text(
                     stringResource(R.string.reservation_card_title, reservation.reservedFor),
                     modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typeStyle.labelLarge,
-                    color = MaterialTheme.colors.contentSecondary
+                    style = LittleLemonTheme.typography.labelLarge,
+                    color = LittleLemonTheme.colors.contentSecondary
                 )
-                Spacer(Modifier.width(MaterialTheme.dimens.sizeLG))
+                Spacer(Modifier.width(LittleLemonTheme.dimens.sizeLG))
                 Tag(reservation.reservationStatus.toString(), variant = tagVariant)
             }
-            Spacer(Modifier.height(MaterialTheme.dimens.sizeXS))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.sizeXS))
             Text(
                 stringResource(
                     R.string.reserved_time_ago,
                     reservation.reservedDate.toTimeDistance()
                 ),
-                style = MaterialTheme.typeStyle.bodyXSmall,
-                color = MaterialTheme.colors.contentDisabled
+                style = LittleLemonTheme.typography.bodyXSmall,
+                color = LittleLemonTheme.colors.contentDisabled
             )
             if (upcomingReservation)
                 Button(
