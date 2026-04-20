@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -30,10 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.designsystem.xLarge
 import kotlinx.coroutines.delay
 
 @Composable
@@ -68,7 +63,7 @@ fun ResendTimer(
     }
 
     AnimatedVisibility(isTimerRunning) {
-        Box(modifier = Modifier.padding(end = MaterialTheme.dimens.size2XL)) {
+        Box(modifier = Modifier.padding(end = LittleLemonTheme.dimens.size2XL)) {
             Box(modifier = modifier, contentAlignment = Alignment.Center) {
                 Canvas(Modifier.size(indicatorSize)) {
                     // Progress Background
@@ -95,8 +90,8 @@ fun ResendTimer(
                 }
                 Text(
                     timeLeft.toString(),
-                    style = MaterialTheme.typeStyle.bodySmall,
-                    color = MaterialTheme.colors.contentSecondary
+                    style = LittleLemonTheme.typography.bodySmall,
+                    color = LittleLemonTheme.colors.contentSecondary
                 )
             }
         }
@@ -106,27 +101,27 @@ fun ResendTimer(
         Box(
             modifier = Modifier
                 .clip(
-                    shape = MaterialTheme.shapes.xLarge.copy(
+                    shape = LittleLemonTheme.shapes.xl.copy(
                         topEnd = CornerSize(0.dp), bottomEnd = CornerSize(0.dp)
                     )
                 )
                 .background(
-                    MaterialTheme.colors.secondary,
+                    LittleLemonTheme.colors.secondary,
                 )
                 .minimumInteractiveComponentSize()
                 .clickable { onResendCode() }
                 .padding(
-                    top = MaterialTheme.dimens.sizeLG,
-                    bottom = MaterialTheme.dimens.sizeLG,
-                    start = MaterialTheme.dimens.size2XL,
-                    end = MaterialTheme.dimens.size2XL
+                    top = LittleLemonTheme.dimens.sizeLG,
+                    bottom = LittleLemonTheme.dimens.sizeLG,
+                    start = LittleLemonTheme.dimens.size2XL,
+                    end = LittleLemonTheme.dimens.size2XL
                 )
 
         ) {
             Text(
                 stringResource(R.string.act_resend_otp),
-                style = MaterialTheme.typeStyle.labelMedium,
-                color = MaterialTheme.colors.contentHighlight
+                style = LittleLemonTheme.typography.labelMedium,
+                color = LittleLemonTheme.colors.contentHighlight
             )
         }
     }

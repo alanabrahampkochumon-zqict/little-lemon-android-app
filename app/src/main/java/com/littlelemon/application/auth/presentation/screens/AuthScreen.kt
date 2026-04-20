@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
@@ -63,9 +61,6 @@ import com.littlelemon.application.core.presentation.components.CardLayout
 import com.littlelemon.application.core.presentation.components.DoodleBackground
 import com.littlelemon.application.core.presentation.components.Loader
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 // TODO: Animate card translation
 // TODO: Clear focus of text field on submit
@@ -188,7 +183,6 @@ fun AuthScreenRoot(
         }
     }
 
-    val screenDensityRatio = LocalDensity.current.density
     val (screenWidth, screenHeight) = LocalWindowInfo.current.containerDpSize
 
     val isFloating =
@@ -243,9 +237,9 @@ fun AuthScreenRoot(
                                 onSendOTP = onSendOTP,
                                 modifier = Modifier
                                     .padding(
-                                        top = MaterialTheme.dimens.sizeMD,
-                                        start = MaterialTheme.dimens.sizeXL,
-                                        end = MaterialTheme.dimens.sizeXL
+                                        top = LittleLemonTheme.dimens.sizeMD,
+                                        start = LittleLemonTheme.dimens.sizeXL,
+                                        end = LittleLemonTheme.dimens.sizeXL
                                     )
                                     .navigationBarsPadding()
                             )
@@ -291,11 +285,13 @@ fun AuthScreenRoot(
                                 onFirstNameChange = onUpdateFirstName,
                                 onLastNameChange = onUpdateLastName,
                                 onComplete = onCompletePersonalization,
-                                modifier = Modifier.padding(
-                                    top = MaterialTheme.dimens.sizeMD,
-                                    start = MaterialTheme.dimens.sizeMD,
-                                    end = MaterialTheme.dimens.sizeMD
-                                ).navigationBarsPadding()
+                                modifier = Modifier
+                                    .padding(
+                                        top = LittleLemonTheme.dimens.sizeMD,
+                                        start = LittleLemonTheme.dimens.sizeMD,
+                                        end = LittleLemonTheme.dimens.sizeMD
+                                    )
+                                    .navigationBarsPadding()
                             )
                         }
                     }
@@ -360,13 +356,13 @@ fun EmailVerifyLoaderContent(email: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             stringResource(R.string.loader_sending_verification_code),
-            style = MaterialTheme.typeStyle.labelMedium,
-            color = MaterialTheme.colors.contentPrimary
+            style = LittleLemonTheme.typography.labelMedium,
+            color = LittleLemonTheme.colors.contentPrimary
         )
         Text(
             email,
-            style = MaterialTheme.typeStyle.labelMedium,
-            color = MaterialTheme.colors.contentHighlight
+            style = LittleLemonTheme.typography.labelMedium,
+            color = LittleLemonTheme.colors.contentHighlight
         )
     }
 }
@@ -375,8 +371,8 @@ fun EmailVerifyLoaderContent(email: String) {
 fun OTPVerificationLoaderContent(message: String) {
     Text(
         message,
-        style = MaterialTheme.typeStyle.labelMedium,
-        color = MaterialTheme.colors.contentPrimary
+        style = LittleLemonTheme.typography.labelMedium,
+        color = LittleLemonTheme.colors.contentPrimary
     )
 }
 

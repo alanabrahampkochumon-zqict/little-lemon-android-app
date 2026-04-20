@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,9 +25,6 @@ import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.TextInputField
 import com.littlelemon.application.core.presentation.components.TopNavigationBar
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,8 +47,8 @@ fun PersonalInformationContent(
             navigationIconDescription = stringResource(R.string.act_back),
             modifier = Modifier.heightIn(max = 48.dp)
         )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
-        Column(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)) {
+        Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.size2XL))
+        Column(modifier = Modifier.padding(horizontal = LittleLemonTheme.dimens.sizeXL)) {
             NameInputField(
                 label = stringResource(R.string.label_first_name),
                 value = authState.firstName,
@@ -60,7 +56,7 @@ fun PersonalInformationContent(
                 onValueChange = onFirstNameChange,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
             )
-            Spacer(modifier = Modifier.height(MaterialTheme.dimens.size2XL))
+            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.size2XL))
             NameInputField(
                 label = stringResource(R.string.label_last_name),
                 value = authState.lastName,
@@ -68,19 +64,23 @@ fun PersonalInformationContent(
                 onValueChange = onLastNameChange,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
-                    if(authState.enableLetsGoButton)
+                    if (authState.enableLetsGoButton)
                         onComplete()
                 })
             )
         }
 
         if (isScrollable) {
-            Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
         } else {
-            Spacer(Modifier.weight(1f).animateContentSize())
+            Spacer(
+                Modifier
+                    .weight(1f)
+                    .animateContentSize()
+            )
         }
 
-        Box(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.sizeXL)) {
+        Box(modifier = Modifier.padding(horizontal = LittleLemonTheme.dimens.sizeXL)) {
             Button(
                 stringResource(R.string.act_go),
                 onClick = onComplete,
@@ -104,10 +104,10 @@ fun NameInputField(
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = label,
-            style = MaterialTheme.typeStyle.labelMedium,
-            color = MaterialTheme.colors.contentSecondary
+            style = LittleLemonTheme.typography.labelMedium,
+            color = LittleLemonTheme.colors.contentSecondary
         )
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeMD))
+        Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeMD))
         TextInputField(
             placeholder = placeholder,
             value = value,

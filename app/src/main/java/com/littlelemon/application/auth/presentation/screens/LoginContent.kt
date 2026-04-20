@@ -24,7 +24,6 @@ import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
-import com.littlelemon.application.core.presentation.components.IndefiniteCircularProgressIndicator
 import com.littlelemon.application.core.presentation.components.TextInputField
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 
@@ -89,9 +88,11 @@ fun LoginContent(
         if (isScrollable) {
             Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
         } else {
-            Spacer(Modifier
-                .weight(1f)
-                .animateContentSize())
+            Spacer(
+                Modifier
+                    .weight(1f)
+                    .animateContentSize()
+            )
         }
         Button(
             stringResource(R.string.act_send_otp),
