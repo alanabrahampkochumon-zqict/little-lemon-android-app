@@ -41,6 +41,7 @@ import com.littlelemon.application.menu.MenuTestTags
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
+import com.littlelemon.application.menu.presentation.CategoryState
 import com.littlelemon.application.menu.presentation.MenuActions
 import com.littlelemon.application.menu.presentation.MenuState
 import com.littlelemon.application.menu.presentation.MenuViewModel
@@ -56,7 +57,7 @@ fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
     val currentCategory by viewModel.currentCategory.collectAsStateWithLifecycle()
     MenuScreenRoot(
         menuState,
-//        categories,
+        categories,
         currentCategory,
         { viewModel.onAction(MenuActions.UpdateDishCategory(it)) },
         { /** TODO */ },
@@ -68,7 +69,7 @@ fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
 @Composable
 fun MenuScreenRoot(
     menuState: MenuState,
-//    categories: List<Category>,
+    categories: CategoryState,
     currentCategory: String?,
     onCategoryChanged: (String?) -> Unit,
     onIncreaseQuantity: (Dish) -> Unit,
@@ -77,15 +78,8 @@ fun MenuScreenRoot(
 ) {
 
     val placeholder = painterResource(R.drawable.illustration_image_loading)
-
     val contentPadding = LittleLemonTheme.dimens.sizeXL
 
-    val categories = menuState.dishes?.fold(
-        mutableSetOf<Category>()
-    ) { categories, dish ->
-        categories.addAll(dish.category)
-        categories
-    }?.map { it.categoryName } ?: emptyList() // TODO: Replace this with loading state
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 340.dp),
         verticalArrangement = Arrangement.spacedBy(
@@ -163,11 +157,11 @@ fun MenuScreenRoot(
                             selected = currentCategory == null,
                             { onCategoryChanged(null) })
                     }
-                    this@LazyRow.items(categories) { category -> // TODO: Replace
+                    this@LazyRow.items(categories.categories) { category -> // TODO: Replace
                         CategoryCard(
-                            category,
-                            selected = category == currentCategory,
-                            { onCategoryChanged(category) })
+                            category.categoryName,
+                            selected = category.categoryName == currentCategory,
+                            { onCategoryChanged(category.categoryName) })
                     }
 
                 }
@@ -228,8 +222,9 @@ private fun MenuScreenRootPreview() {
     }
 
     val dishes = List(10) { generateDish() }
+    val categories = dishes.first().category
     val state = MenuState(dishes)
     LittleLemonTheme {
-        MenuScreenRoot(state, null, {}, {}, {})
+        MenuScreenRoot(state, CategoryState(categories = categories), null, {}, {}, {})
     }
 }

@@ -14,6 +14,7 @@ import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.menu.MenuTestTags
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
+import com.littlelemon.application.menu.presentation.CategoryState
 import com.littlelemon.application.menu.presentation.MenuState
 import com.littlelemon.application.menu.utils.DishGenerator
 import org.junit.Rule
@@ -34,13 +35,14 @@ class MenuScreenRootTest {
 
     private val dishes = List(10) { DishGenerator.generateDish() }
     private val categories = dishes.fold(listOf<Category>()) { list, dish -> list + dish.category }
+    private val categoryState = CategoryState(categories = categories)
     private val state = MenuState(dishes = dishes)
     // TODO: Add error state test
 
     @Test
     fun displaysHeader() {
         composeTestRule.setContent {
-            MenuScreenRoot(state, null, {}, {}, {})
+            MenuScreenRoot(state, categoryState, null, {}, {}, {})
         }
         composeTestRule.onNodeWithText(application.getString(R.string.heading_explore_our_cuisines))
             .assertIsDisplayed()
@@ -49,7 +51,7 @@ class MenuScreenRootTest {
     @Test
     fun displaysFilter() {
         composeTestRule.setContent {
-            MenuScreenRoot(state, null, {}, {}, {})
+            MenuScreenRoot(state, categoryState, null, {}, {}, {})
         }
         composeTestRule.onNodeWithText(application.getString(R.string.act_filter))
             .assertIsDisplayed()
@@ -58,7 +60,7 @@ class MenuScreenRootTest {
     @Test
     fun displaysCategories() {
         composeTestRule.setContent {
-            MenuScreenRoot(state, null, {}, {}, {})
+            MenuScreenRoot(state, categoryState, null, {}, {}, {})
         }
         categories.forEach { category ->
             composeTestRule.onNodeWithText(category.categoryName).performScrollTo()
@@ -70,14 +72,13 @@ class MenuScreenRootTest {
     @Test
     fun displaysDish() {
         composeTestRule.setContent {
-            MenuScreenRoot(state, null, {}, {}, {})
+            MenuScreenRoot(state, categoryState, null, {}, {}, {})
         }
         // Since this is an instrumentation test for menu card, checking that the title is
         // displayed implicitly verifies that the card itself is displayed.
         dishes.forEach { dish ->
             composeTestRule.onNodeWithTag(MenuTestTags.MENU_ITEM_LIST)
-                .performScrollToNode(hasText(dish.title))
-                .assertIsDisplayed()
+                .performScrollToNode(hasText(dish.title)).assertIsDisplayed()
         }
     }
 
@@ -87,7 +88,7 @@ class MenuScreenRootTest {
         val dishCardIndex = 0
         var triggeredDish: Dish? = null
         composeTestRule.setContent {
-            MenuScreenRoot(state, null, {}, { triggeredDish = it }, {})
+            MenuScreenRoot(state, categoryState, null, {}, { triggeredDish = it }, {})
         }
 
         composeTestRule.onAllNodesWithTag(CoreTestTags.STEPPER_INCREASE)[dishCardIndex].performClick()
@@ -101,7 +102,7 @@ class MenuScreenRootTest {
         val dishCardIndex = 0
         var triggeredDish: Dish? = null
         composeTestRule.setContent {
-            MenuScreenRoot(state, null, {}, { }, { triggeredDish = it })
+            MenuScreenRoot(state, categoryState, null, {}, { }, { triggeredDish = it })
         }
 
         composeTestRule.onAllNodesWithTag(CoreTestTags.STEPPER_DECREASE)[dishCardIndex].performClick()
@@ -114,7 +115,7 @@ class MenuScreenRootTest {
         val categoryIndex = 0
         var categoryTriggered: String? = ""
         composeTestRule.setContent {
-            MenuScreenRoot(state, null, { categoryTriggered = it }, { }, {})
+            MenuScreenRoot(state, categoryState, null, { categoryTriggered = it }, { }, {})
         }
 
         composeTestRule.onNodeWithText(categories[categoryIndex].categoryName).performClick()
