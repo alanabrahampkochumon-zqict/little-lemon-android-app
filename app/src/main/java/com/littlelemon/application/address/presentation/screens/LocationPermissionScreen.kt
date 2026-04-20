@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,9 +59,6 @@ import com.littlelemon.application.core.presentation.components.ButtonSize
 import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.DoodleBackground
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.core.presentation.utils.openAppSettings
 import com.littlelemon.application.core.presentation.utils.requestLocationPermission
 import org.koin.androidx.compose.koinViewModel
@@ -196,7 +192,7 @@ fun LocationPermissionScreenRoot(
                 modifier = modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(horizontal = MaterialTheme.dimens.sizeXL)
+                    .padding(horizontal = LittleLemonTheme.dimens.sizeXL)
                     .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -207,25 +203,25 @@ fun LocationPermissionScreenRoot(
                     Modifier
                         .fillMaxWidth(0.8f)
                         .widthIn(max = 320.dp)
-                        .offset(y = MaterialTheme.dimens.size2XL) // Offset applied to negate image's y height due to shadow
+                        .offset(y = LittleLemonTheme.dimens.size2XL) // Offset applied to negate image's y height due to shadow
                 )
-                Column(verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)) {
+                Column(verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeMD)) {
                     Text(
                         stringResource(R.string.heading_location_permission),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typeStyle.displayLarge.copy(textAlign = TextAlign.Center),
-                        color = MaterialTheme.colors.contentPrimary
+                        style = LittleLemonTheme.typography.displayLarge.copy(textAlign = TextAlign.Center),
+                        color = LittleLemonTheme.colors.contentPrimary
                     )
                     Text(
                         stringResource(R.string.body_location),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typeStyle.bodyMedium.copy(textAlign = TextAlign.Center),
-                        color = MaterialTheme.colors.contentSecondary
+                        style = LittleLemonTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
+                        color = LittleLemonTheme.colors.contentSecondary
                     )
                 }
-                Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+                Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeLG),
+                    verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeLG),
                     modifier = Modifier.widthIn(max = 480.dp)
                 ) {
                     Button(

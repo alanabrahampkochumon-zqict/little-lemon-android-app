@@ -8,14 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,12 +34,7 @@ import com.littlelemon.application.BuildConfig
 import com.littlelemon.application.R
 import com.littlelemon.application.address.presentation.AddressTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.designsystem.xLarge
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 
 
 // TODO: Fix navigation button not showing on landscape
@@ -59,8 +51,7 @@ fun MapHeader(
     isMyLocationEnabled: Boolean = false,
 ) {
 
-    val buttonShape = MaterialTheme.shapes.xLarge
-    val density = LocalDensity.current.density
+    val buttonShape = LittleLemonTheme.shapes.xl
     // TODO: For non location render a arbitrary pin
     val myLocation = LatLng(myLatitude ?: 10.1234, myLongitude ?: 103.123)
     val singaporeMarkerState = rememberUpdatedMarkerState(position = myLocation)
@@ -78,25 +69,25 @@ fun MapHeader(
                 contentAlignment = Alignment.Center, modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        MaterialTheme.colors.secondary
+                        LittleLemonTheme.colors.secondary
                     )
-                    .padding(MaterialTheme.dimens.sizeXL)
+                    .padding(LittleLemonTheme.dimens.sizeXL)
             ) {
                 // Content shown only when a Google map api key is not provided
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM),
+                    verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeSM),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         stringResource(R.string.no_gmap_api_key_header),
-                        style = MaterialTheme.typeStyle.displayLarge.copy(textAlign = TextAlign.Center),
-                        color = MaterialTheme.colors.contentOnColor
+                        style = LittleLemonTheme.typography.displayLarge.copy(textAlign = TextAlign.Center),
+                        color = LittleLemonTheme.colors.contentOnColor
                     )
 
                     Text(
                         stringResource(R.string.no_gmap_api_key_body),
-                        style = MaterialTheme.typeStyle.bodyMedium.copy(textAlign = TextAlign.Center),
-                        color = MaterialTheme.colors.contentOnColor
+                        style = LittleLemonTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
+                        color = LittleLemonTheme.colors.contentOnColor
                     )
                 }
             }
@@ -118,17 +109,14 @@ fun MapHeader(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(MaterialTheme.dimens.sizeXL),
+                .padding(LittleLemonTheme.dimens.sizeXL),
             contentAlignment = Alignment.BottomEnd
         ) {
             IconButton(
                 onClick = onFetchCurrentLocation,
                 modifier = Modifier
-                    .dropShadow(
-                        buttonShape,
-                        MaterialTheme.shadows.dropSM.firstShadow.toComposeShadow(density)
-                    )
-                    .background(MaterialTheme.colors.primary, buttonShape)
+                    .applyShadow(buttonShape, LittleLemonTheme.shadows.dropXS)
+                    .background(LittleLemonTheme.colors.primary, buttonShape)
                     .testTag(AddressTestTags.MAP_HEADER_FETCH_LOCATION_BUTTON)
             ) {
                 Image(painterResource(R.drawable.ic_gpsfix), null)

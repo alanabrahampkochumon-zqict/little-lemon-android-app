@@ -25,7 +25,6 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,10 +32,8 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -62,10 +59,7 @@ import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.Checkbox
 import com.littlelemon.application.core.presentation.components.LabelInputField
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.core.presentation.utils.toDP
 
 @Composable
@@ -112,7 +106,7 @@ fun LocationEntryContentRoot(
     onSaveAddress: () -> Unit = {},
     onClose: () -> Unit = {}
 ) {
-    val bottomSheetShape = MaterialTheme.shapes.medium.copy(
+    val bottomSheetShape = LittleLemonTheme.shapes.md.copy(
         bottomStart = CornerSize(0.dp), bottomEnd = CornerSize(0.dp)
     )
     val screenDensity = LocalDensity.current.density
@@ -123,7 +117,7 @@ fun LocationEntryContentRoot(
     val navBarHeight = 48.dp
     val mapHeightDP = 400.dp
     val safeContentPadding = WindowInsets.safeContent.asPaddingValues().calculateTopPadding()
-    val topBarBottomPadding = MaterialTheme.dimens.sizeXL
+    val topBarBottomPadding = LittleLemonTheme.dimens.sizeXL
     val topBarMinHeight = navBarHeight + safeContentPadding + topBarBottomPadding
 
     val mapHeightInPx = (mapHeightDP.value) * screenDensity
@@ -146,7 +140,7 @@ fun LocationEntryContentRoot(
                 return Offset(0f, consumed)
             }
 
-            // TODO: Fix animation using animateable
+            // TODO: Fix animation using animatable
             override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
                 mapHeight =
                     if (mapHeight > mapHeightInPx / 2) // If the current fling height 1/2 of the way then snap it to full height
@@ -166,19 +160,11 @@ fun LocationEntryContentRoot(
         bottomBar = {
             FlowRow(
                 modifier = Modifier
-                    .dropShadow(
-                        shape = bottomSheetShape,
-                        MaterialTheme.shadows.dropLG.firstShadow.toComposeShadow(screenDensity)
-                    )
-                    .dropShadow(
-                        shape = bottomSheetShape,
-                        MaterialTheme.shadows.dropLG.secondShadow?.toComposeShadow(screenDensity)
-                            ?: Shadow(0.dp)
-                    )
-                    .background(MaterialTheme.colors.primary, shape = bottomSheetShape)
+                    .applyShadow(bottomSheetShape, LittleLemonTheme.shadows.upperMD)
+                    .background(LittleLemonTheme.colors.primary, shape = bottomSheetShape)
                     .navigationBarsPadding()
-                    .padding(MaterialTheme.dimens.sizeXL),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)
+                    .padding(LittleLemonTheme.dimens.sizeXL),
+                verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeMD)
             ) {
                 if (mobileLandscape)
                     Button(
@@ -292,15 +278,15 @@ fun ModalForm(
 
     FlowRow(
         modifier = modifier
-            .background(MaterialTheme.colors.primary)
+            .background(LittleLemonTheme.colors.primary)
             .padding(
-                start = MaterialTheme.dimens.sizeXL,
-                end = MaterialTheme.dimens.sizeXL,
-                top = MaterialTheme.dimens.sizeXL,
-                bottom = MaterialTheme.dimens.sizeXL
+                start = LittleLemonTheme.dimens.sizeXL,
+                end = LittleLemonTheme.dimens.sizeXL,
+                top = LittleLemonTheme.dimens.sizeXL,
+                bottom = LittleLemonTheme.dimens.sizeXL
             ),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2XL),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.size2XL)
+        verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL),
+        horizontalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)
     ) {
 
         LabelInputField(
