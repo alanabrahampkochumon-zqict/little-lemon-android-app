@@ -47,12 +47,11 @@ fun CategoryCard(
     else LittleLemonTheme.colors.disabled
 
     val shape = LittleLemonTheme.shapes.xs
-    val shadow =
-        LittleLemonTheme.shadows.dropSM
+    val shadow = LittleLemonTheme.shadows.dropXS
 
     Row(
         modifier = modifier
-            .then(if (enabled) Modifier.applyShadow(shape, shadow) else Modifier)
+            .then(if (enabled && !selected) Modifier.applyShadow(shape, shadow) else Modifier)
             .background(backgroundColor, shape)
             .then(if (selected) Modifier.border(1.dp, contentColor, shape) else Modifier)
             .selectable(
