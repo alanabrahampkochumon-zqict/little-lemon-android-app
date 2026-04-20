@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,10 +28,7 @@ import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.BasicStepper
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
-import com.littlelemon.application.core.presentation.components.Tag
-import com.littlelemon.application.core.presentation.components.TagVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
@@ -50,17 +47,12 @@ fun OrderItem(
     modifier: Modifier = Modifier
 ) {
     val cardShape = LittleLemonTheme.shapes.xs
-    val cardShadow = LittleLemonTheme.shadows.dropSM
-    val density = LocalDensity.current.density
     val imageOffset = LittleLemonTheme.dimens.sizeLG
+
+    val fontOffset = -LittleLemonTheme.dimens.sizeSM
 
     val orderTotal = menuItem.quantity * menuItem.dish.price
     val discountedTotal = menuItem.quantity * (menuItem.dish.discountedPrice ?: 0.0)
-    val discountPercent = if (menuItem.dish.discountedPrice == null) {
-        null
-    } else {
-        (menuItem.dish.price - menuItem.dish.discountedPrice) / menuItem.dish.price * 100
-    }
     Column(
         modifier = modifier
             .applyShadow(cardShape, LittleLemonTheme.shadows.dropXS)
@@ -95,38 +87,39 @@ fun OrderItem(
             ) {
                 Text(
                     text = menuItem.dish.title,
-                    style = LittleLemonTheme.typography.labelMedium,
+                    style = LittleLemonTheme.typography.labelLarge,
                     color = LittleLemonTheme.colors.contentPrimary
                 )
                 Text(
                     text = stringResource(R.string.price_format_ea, menuItem.dish.price),
-                    style = LittleLemonTheme.typography.bodyXSmall,
-                    color = LittleLemonTheme.colors.contentPlaceholder
+                    style = LittleLemonTheme.typography.bodySmall,
+                    color = LittleLemonTheme.colors.contentTertiary
                 )
             }
             Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
             Column(
                 horizontalAlignment = Alignment.End,
-                modifier = Modifier.padding(top = imageOffset)
+                modifier = Modifier.padding(top = imageOffset).offset(y = fontOffset)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         stringResource(R.string.currency_symbol),
-                        style = LittleLemonTheme.typography.bodyMedium,
-                        color = LittleLemonTheme.colors.contentOnAction
+                        style = LittleLemonTheme.typography.displaySmall.copy(textAlign = TextAlign.End),
+                        color = LittleLemonTheme.colors.contentOnAction,
+                        modifier = Modifier.alignByBaseline()
                     )
                     Text(
                         stringResource(
                             R.string.price_format,
                             if (menuItem.dish.discountedPrice != null) discountedTotal else orderTotal
                         ),
-                        style = LittleLemonTheme.typography.headlineSmall,
-                        color = LittleLemonTheme.colors.contentOnAction
+                        style = LittleLemonTheme.typography.displayMedium.copy(textAlign = TextAlign.End),
+                        color = LittleLemonTheme.colors.contentOnAction,
+                        modifier = Modifier.alignByBaseline()
                     )
                 }
-                discountPercent?.let {
-                    Column(horizontalAlignment = Alignment.End) {
-
+                menuItem.dish.discountedPrice?.let {
+                    Column(horizontalAlignment = Alignment.End, modifier = Modifier.offset(y = fontOffset)) {
                         Text(
                             stringResource(R.string.currency_symbol) + stringResource(
                                 R.string.price_format,
@@ -136,12 +129,7 @@ fun OrderItem(
                                 textAlign = TextAlign.End,
                                 textDecoration = TextDecoration.LineThrough
                             ),
-                            color = LittleLemonTheme.colors.contentPrimary
-                        )
-                        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
-                        Tag(
-                            stringResource(R.string.discount_format, discountPercent),
-                            variant = TagVariant.SuccessLight
+                            color = LittleLemonTheme.colors.contentTertiary
                         )
                     }
                 }
@@ -149,7 +137,7 @@ fun OrderItem(
         }
         Row(
             modifier = Modifier
-                .background(LittleLemonTheme.colors.secondary)
+                .background(LittleLemonTheme.colors.primaryLight, cardShape.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp)))
                 .padding(start = LittleLemonTheme.dimens.size2XL)
         ) {
             Button(
