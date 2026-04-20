@@ -3,8 +3,10 @@ package com.littlelemon.application.menu.data
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.data.mappers.toDish
+import com.littlelemon.application.menu.data.mappers.toDomainCategory
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
 import com.littlelemon.application.menu.domain.MenuRepository
+import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
 import com.littlelemon.application.menu.utils.DishGenerator
@@ -13,6 +15,7 @@ import com.littlelemon.application.menu.utils.FakeMenuDao
 import com.littlelemon.application.menu.utils.MenuDTOGenerator
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
@@ -26,6 +29,7 @@ import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
 import kotlin.math.roundToInt
 import kotlin.test.assertContains
+import kotlin.test.assertIs
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -263,7 +267,7 @@ class DefaultMenuRepositoryTest {
                 assertTrue(result is Resource.Success)
                 result as Resource.Success
                 assertNotNull(result.data)
-                assertFalse(result.data.zipWithNext { firstDish, secondDish -> firstDish.stock > 0 }
+                assertFalse(result.data.map { dish -> dish.stock > 0 }
                     .all { it })
 
             }
@@ -294,8 +298,8 @@ class DefaultMenuRepositoryTest {
         private val entityGenerator = DishGenerator
         private val dtoGenerator = MenuDTOGenerator()
 
-        private val ENTITY_TITLE_PREDICATE = "ENTITY: "
-        private val DTO_TITLE_PREDICATE = "REMOTE: "
+        private val entityTitlePredicate = "ENTITY: "
+        private val dtoTitlePredicate = "REMOTE: "
 
         @BeforeEach
         fun setUp() {
@@ -311,7 +315,7 @@ class DefaultMenuRepositoryTest {
                 val dishEntities =
                     List(numDishEntities) { entityGenerator.generateDishEntity().first }.map { dish ->
                         dish.copy(
-                            title = "$ENTITY_TITLE_PREDICATE: ${dish.title}"
+                            title = "$entityTitlePredicate: ${dish.title}"
                         )
                     }
                 localDataSource.insertDishes(dishEntities)
@@ -320,7 +324,7 @@ class DefaultMenuRepositoryTest {
                 val dishDTO =
                     List(numDishDTO) { dtoGenerator.generateDishDTO().first }.map { dish ->
                         dish.copy(
-                            title = "$DTO_TITLE_PREDICATE: ${dish.title}"
+                            title = "$dtoTitlePredicate: ${dish.title}"
                         )
                     }
                 remoteDataSource = FakeDishRemoteDataSource(dishDTO)
@@ -334,7 +338,7 @@ class DefaultMenuRepositoryTest {
                 result as Resource.Success
                 assertNotNull(result.data)
                 assertEquals(numDishDTO, result.data.size)
-                assertTrue(result.data.all { dish -> dish.title.startsWith(DTO_TITLE_PREDICATE) })
+                assertTrue(result.data.all { dish -> dish.title.startsWith(dtoTitlePredicate) })
             }
 
         @Test
@@ -345,7 +349,7 @@ class DefaultMenuRepositoryTest {
             val dishDTO =
                 List(numDishDTO) { dtoGenerator.generateDishDTO().first }.map { dish ->
                     dish.copy(
-                        title = "$DTO_TITLE_PREDICATE: ${dish.title}"
+                        title = "$dtoTitlePredicate: ${dish.title}"
                     )
                 }
             remoteDataSource = FakeDishRemoteDataSource(dishDTO)
@@ -360,7 +364,7 @@ class DefaultMenuRepositoryTest {
             result as Resource.Success
             assertNotNull(result.data)
             assertEquals(numDishDTO, result.data.size)
-            assertTrue(result.data.all { dish -> dish.title.startsWith(DTO_TITLE_PREDICATE) })
+            assertTrue(result.data.all { dish -> dish.title.startsWith(dtoTitlePredicate) })
         }
 
         @Test
@@ -372,7 +376,7 @@ class DefaultMenuRepositoryTest {
                 val dishEntities =
                     List(numDishEntities) { entityGenerator.generateDishEntity().first }.map { dish ->
                         dish.copy(
-                            title = "$ENTITY_TITLE_PREDICATE: ${dish.title}"
+                            title = "$entityTitlePredicate: ${dish.title}"
                         )
                     }
 
@@ -389,7 +393,7 @@ class DefaultMenuRepositoryTest {
                 result as Resource.Success
                 assertNotNull(result.data)
                 assertEquals(numDishEntities, result.data.size)
-                assertTrue(result.data.all { dish -> dish.title.startsWith(ENTITY_TITLE_PREDICATE) })
+                assertTrue(result.data.all { dish -> dish.title.startsWith(entityTitlePredicate) })
             }
 
         @Test
@@ -498,15 +502,38 @@ class DefaultMenuRepositoryTest {
 
         @Test
         fun dbFailure_throwsErrorResource() = runTest {
-
+            localDataSource = FakeMenuDao(throwError = true)
+            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
+            val result = menuRepository.getAllCategories().take(2).last() // First state is loading
+            assertIs<Resource.Failure<List<Category>>>(result)
         }
 
         @Test
-        fun dbSuccess_throwsSuccessWithData() = runTest {
+        fun emitsLoadingInitially() = runTest {
+            val result = menuRepository.getAllCategories().first()
+            assertIs<Resource.Loading<List<Category>>>(result)
         }
 
         @Test
-        fun emptyDB_throwsSuccessWithEmptyList() = runTest {
+        fun dbSuccess_emitsSuccessWithData() = runTest {
+            localDataSource = FakeMenuDao(seedDatabase = true)
+            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
+            val result = menuRepository.getAllCategories().take(2).last() // First state is loading
+            assertIs<Resource.Success<List<Category>>>(result)
+            assertNotNull(result.data)
+            (localDataSource as FakeMenuDao).categoryEntities.forEach { categoryEntity ->
+                assertContains(result.data, categoryEntity.toDomainCategory())
+            }
+        }
+
+        @Test
+        fun emptyDB_emitsSuccessWithEmptyList() = runTest {
+            localDataSource = FakeMenuDao(seedDatabase = false)
+            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
+            val result = menuRepository.getAllCategories().take(2).last() // First state is loading
+            assertIs<Resource.Success<List<Category>>>(result)
+            assertNotNull(result.data)
+            assertEquals(0, result.data.size)
         }
     }
 }

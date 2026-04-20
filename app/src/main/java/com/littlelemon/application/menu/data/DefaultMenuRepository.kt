@@ -17,6 +17,7 @@ import com.littlelemon.application.menu.domain.util.DishSorting
 import io.github.jan.supabase.postgrest.exception.PostgrestRestException
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -64,8 +65,7 @@ class DefaultMenuRepository(
                         return@map null
                     }.filterNotNull()
                     Resource.Success(data = dishes)
-                } else
-                    Resource.Success(data = dishEntities.map { it.toDish() })
+                } else Resource.Success(data = dishEntities.map { it.toDish() })
             }
             emitAll(dbFlow)
         } else {
@@ -80,14 +80,13 @@ class DefaultMenuRepository(
     }
 
     override fun getAllCategories(): Flow<Resource<List<Category>>> = flow {
-        try {
-            emit(Resource.Loading())
-            val categories = localDataSource.getAllCategories()
-                .map { categoryEntities -> Resource.Success(categoryEntities.map { it.toDomainCategory() }) }
-            emitAll(categories)
-        } catch (e: Exception) {
-            emit(Resource.Failure(errorMessage = MenuErrorMessages.CATEGORY_FETCH_FAILURE))
-        }
+        emit(Resource.Loading())
+        val categories = localDataSource.getAllCategories()
+            .map { categoryEntities -> Resource.Success(categoryEntities.map { it.toDomainCategory() }) }
+            .catch {
+                emit(Resource.Failure(errorMessage = MenuErrorMessages.CATEGORY_FETCH_FAILURE))
+            }
+        emitAll(categories)
     }
 
     private fun getDishesBySortingAndFiltering(

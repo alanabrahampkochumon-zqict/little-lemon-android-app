@@ -9,11 +9,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FakeMenuDao(
-    seedDatabase: Boolean = true
+    seedDatabase: Boolean = true,
+    private val throwError: Boolean = false,
 ) : MenuDao {
 
     private val dishEntities = mutableListOf<DishEntity>()
-    private val categoryEntities = mutableListOf<CategoryEntity>()
+    val categoryEntities = mutableListOf<CategoryEntity>()
     private val dishCategoryCrossRefs = mutableListOf<DishCategoryCrossRef>()
 
     init {
@@ -35,11 +36,13 @@ class FakeMenuDao(
     }
 
     override suspend fun insertCategories(categories: List<CategoryEntity>) {
+        if (throwError) throw IllegalArgumentException()
         categoryEntities.removeIf { it in categories }
         categoryEntities.addAll(categories)
     }
 
     override suspend fun insertDishes(dishes: List<DishEntity>) {
+        if (throwError) throw IllegalArgumentException()
         dishes.forEach { newDish ->
             dishEntities.removeIf { dish -> dish == newDish }
             dishEntities.add(newDish)
@@ -48,6 +51,7 @@ class FakeMenuDao(
     }
 
     override suspend fun insertDishCategoryCrossRefs(crossRefs: List<DishCategoryCrossRef>) {
+        if (throwError) throw IllegalArgumentException()
         crossRefs.forEach { newCrossRef ->
             dishCategoryCrossRefs.removeIf { it.categoryId == newCrossRef.categoryId && it.dishId == newCrossRef.dishId }
             dishCategoryCrossRefs.add(newCrossRef)
@@ -57,6 +61,7 @@ class FakeMenuDao(
     override suspend fun getDishCount(): Int = dishEntities.size
 
     private fun _getAllDishes(): List<DishWithCategories> {
+        if (throwError) throw IllegalArgumentException()
         val returnedDishes = mutableListOf<DishWithCategories>()
         for (dish in dishEntities) {
             val categories = dishCategoryCrossRefs.filter { (dishId, _) -> dishId == dish.dishId }
@@ -67,20 +72,24 @@ class FakeMenuDao(
     }
 
     override fun getAllDishes(): Flow<List<DishWithCategories>> = flow {
+        if (throwError) throw IllegalArgumentException()
         val dishes = _getAllDishes()
         emit(dishes)
     }
 
     override fun getAllCategories(): Flow<List<CategoryEntity>> = flow {
+        if (throwError) throw IllegalArgumentException()
         emit(categoryEntities)
     }
 
     override fun getDishesSortedByPopularity(): Flow<List<DishWithCategories>> = flow {
+        if (throwError) throw IllegalArgumentException()
         val dishes = _getAllDishes().sortedByDescending { (dish, _) -> dish.popularityIndex }
         emit(dishes)
     }
 
     override fun getDishesSortedByName(ascending: Boolean): Flow<List<DishWithCategories>> = flow {
+        if (throwError) throw IllegalArgumentException()
         val dishes = _getAllDishes()
         if (ascending) {
             emit(dishes.sortedBy { (dish, _) -> dish.title })
@@ -90,6 +99,7 @@ class FakeMenuDao(
     }
 
     override fun getDishesSortedByPrice(ascending: Boolean): Flow<List<DishWithCategories>> = flow {
+        if (throwError) throw IllegalArgumentException()
         val dishes = _getAllDishes()
         if (ascending) {
             emit(dishes.sortedBy { (dish, _) -> dish.price })
@@ -101,6 +111,7 @@ class FakeMenuDao(
     override fun getDishesSortedByAdded(
         ascending: Boolean
     ): Flow<List<DishWithCategories>> = flow {
+        if (throwError) throw IllegalArgumentException()
         val dishes = _getAllDishes()
         if (ascending) {
             emit(dishes.sortedBy { (dish, _) -> dish.dateAdded })
@@ -112,6 +123,7 @@ class FakeMenuDao(
     override fun getDishesSortedByCalories(
         ascending: Boolean
     ): Flow<List<DishWithCategories>> = flow {
+        if (throwError) throw IllegalArgumentException()
         val dishes = _getAllDishes()
         if (ascending) {
             emit(dishes.sortedBy { (dish, _) -> dish.nutritionInfo?.calories })
@@ -123,6 +135,7 @@ class FakeMenuDao(
     override fun getDishesSortedByProtein(
         ascending: Boolean
     ): Flow<List<DishWithCategories>> = flow {
+        if (throwError) throw IllegalArgumentException()
         val dishes = _getAllDishes()
         if (ascending) {
             emit(dishes.sortedBy { (dish, _) -> dish.nutritionInfo?.protein })
@@ -132,6 +145,7 @@ class FakeMenuDao(
     }
 
     override suspend fun deleteAllDishes() {
+        if (throwError) throw IllegalArgumentException()
         dishEntities.clear()
         categoryEntities.clear()
         dishCategoryCrossRefs.clear()
