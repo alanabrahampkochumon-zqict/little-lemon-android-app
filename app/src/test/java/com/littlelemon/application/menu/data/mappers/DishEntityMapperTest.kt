@@ -112,9 +112,9 @@ class DishEntityMapperTest {
 
         @Test
         fun mapsCategoryToDomainObject() {
-            val categoryEntity = DishGenerator.generateCategoryEntities(1)
-            val category = categoryEntity.toDomainCategories()
-            assertEquals(categoryEntity.first().categoryName, category.first().categoryName)
+            val categoryEntity = DishGenerator.generateCategoryEntities(1).first()
+            val category = categoryEntity.toDomainCategory()
+            assertEquals(categoryEntity.categoryName, category.categoryName)
         }
     }
 }

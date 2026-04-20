@@ -81,8 +81,7 @@ class DefaultMenuRepository(
     override fun getAllCategories(): Flow<Resource<List<Category>>> = flow {
         try {
             emit(Resource.Loading())
-//            val categories =localDataSource.getAllCategories().map { Resource.Success(it.toCategory) }
-//            emitAll()
+            val categories = localDataSource.getAllCategories()
         } catch (e: Exception) {
             emit(Resource.Failure(errorMessage = MenuErrorMessages.CATEGORY_FETCH_FAILURE))
         }

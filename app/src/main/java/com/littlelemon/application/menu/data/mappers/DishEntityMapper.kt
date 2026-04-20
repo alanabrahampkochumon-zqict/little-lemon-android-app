@@ -23,7 +23,7 @@ fun DishWithCategories.toDish(): Dish {
         discountedPrice = if (dish.discountedPrice < 0.001) null else dish.discountedPrice,
         popularityIndex = dish.popularityIndex,
         dateAdded = instant.toLocalDateTime(timezone),
-        category = categories.toDomainCategories()
+        category = categories.map { it.toDomainCategory() }
     )
 }
 
@@ -36,7 +36,6 @@ private fun DishEntity.NutritionInfo.toDomainNutritionInfo(): NutritionInfo {
     )
 }
 
-fun List<CategoryEntity>.toDomainCategories(): List<Category> =
-    this.map { (_, categoryName) ->
-        Category(categoryName = categoryName)
-    }
+fun CategoryEntity.toDomainCategory(): Category =
+    Category(categoryName = categoryName)
+
