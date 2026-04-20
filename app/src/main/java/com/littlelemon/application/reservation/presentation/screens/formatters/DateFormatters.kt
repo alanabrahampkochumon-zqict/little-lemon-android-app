@@ -30,6 +30,8 @@ fun LocalDateTime.toTimeDistance(timezone: TimeZone = TimeZone.currentSystemDefa
         val hours =
             currentInstant.toLocalDateTime(timezone).hour - instant.toLocalDateTime(timezone).hour
         if (hours < 1) {
+            val seconds =
+                currentInstant.toLocalDateTime(timezone).second - instant.toLocalDateTime(timezone).second
             val minutes =
                 currentInstant.toLocalDateTime(timezone).minute - instant.toLocalDateTime(timezone).minute
             return if (minutes < 1)
