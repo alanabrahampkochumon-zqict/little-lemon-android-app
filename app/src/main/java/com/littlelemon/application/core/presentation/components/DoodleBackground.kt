@@ -4,7 +4,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -13,21 +12,19 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
 import kotlin.math.max
 import kotlin.random.Random
 
 @Composable
 fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
 
-    val color = MaterialTheme.colors.contentHighlight
+    val color = LittleLemonTheme.colors.contentHighlight
     val drawables = remember { mutableListOf<Int>() }
     try {
         val drawableClass = R.drawable::class.java
@@ -48,7 +45,7 @@ fun DoodleBackground(modifier: Modifier = Modifier, alpha: Float = 0.15f) {
         modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(MaterialTheme.colors.secondary)
+            .background(LittleLemonTheme.colors.secondary)
     ) {
         val (width, height) = size
         val spacing = Random.nextFloat() * 5 + 10

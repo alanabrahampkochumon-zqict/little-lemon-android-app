@@ -3,18 +3,17 @@ package com.littlelemon.application.core.presentation.components
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
-import com.littlelemon.application.core.presentation.designsystem.colors
+import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 
 @Composable
 fun DashedDivider(modifier: Modifier = Modifier) {
-    val color = MaterialTheme.colors.outlineSecondary
+    val color = LittleLemonTheme.colors.outlineSecondary
     Canvas(
         modifier
             .fillMaxWidth()

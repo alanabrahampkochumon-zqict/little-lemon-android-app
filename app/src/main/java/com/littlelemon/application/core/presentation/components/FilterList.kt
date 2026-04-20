@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,9 +40,6 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @Composable
 fun FilterList(
@@ -52,14 +48,15 @@ fun FilterList(
     onSelect: (filter: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shape = MaterialTheme.shapes.medium
+    val shape = LittleLemonTheme.shapes.md
     Column(
         modifier = modifier
-            .background(MaterialTheme.colors.primary, shape)
+            .background(LittleLemonTheme.colors.primary, shape)
             .border(
                 1.dp,
-                MaterialTheme.colors.outlineSecondary,shape
-            ).clip(shape)
+                LittleLemonTheme.colors.outlineSecondary, shape
+            )
+            .clip(shape)
     ) {
         filters.forEach { filter ->
             FilterListItem(filter, selected = filter == selected, { onSelect(filter) })
@@ -77,23 +74,23 @@ fun FilterListItem(
 ) {
     val backgroundColor by animateColorAsState(
         if (selected)
-            MaterialTheme.colors.primaryDark
+            LittleLemonTheme.colors.primaryDark
         else
-            MaterialTheme.colors.primary
+            LittleLemonTheme.colors.primary
     )
 
     val borderColor: Color by animateColorAsState(
         if (selected)
-            MaterialTheme.colors.transparent
+            LittleLemonTheme.colors.transparent
         else
-            MaterialTheme.colors.outlineSecondary
+            LittleLemonTheme.colors.outlineSecondary
     )
 
     val contentColor by animateColorAsState(
         if (selected)
-            MaterialTheme.colors.contentOnColor
+            LittleLemonTheme.colors.contentOnColor
         else
-            MaterialTheme.colors.contentSecondary
+            LittleLemonTheme.colors.contentSecondary
     )
 
 
@@ -111,23 +108,23 @@ fun FilterListItem(
             }
             .selectable(selected = selected, role = Role.DropdownList, onClick = onSelect)
             .padding(
-                vertical = MaterialTheme.dimens.sizeLG,
-                horizontal = MaterialTheme.dimens.sizeXL
+                vertical = LittleLemonTheme.dimens.sizeLG,
+                horizontal = LittleLemonTheme.dimens.sizeXL
             ), horizontalArrangement = Arrangement.spacedBy(
-            MaterialTheme.dimens.sizeLG
+            LittleLemonTheme.dimens.sizeLG
         ), verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             filterName,
-            style = MaterialTheme.typeStyle.bodyMedium,
+            style = LittleLemonTheme.typography.bodyMedium,
             color = contentColor,
             modifier = Modifier.weight(1f)
         )
         AnimatedVisibility(selected, enter = fadeIn(), exit = fadeOut()) {
-            Spacer(modifier = Modifier.width(MaterialTheme.dimens.sizeLG))
+            Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.sizeLG))
             Image(
                 painterResource(R.drawable.ic_checkcircle), null, colorFilter = ColorFilter.tint(
-                    MaterialTheme.colors.contentAccent
+                    LittleLemonTheme.colors.contentAccent
                 ), modifier = Modifier
                     .size(24.dp)
                     .testTag(CoreTestTags.FILTER_ITEM_CHECK)
@@ -163,7 +160,11 @@ private fun FilterListPreview() {
     val filters = listOf("Filter 1", "Filter 2", "Filter 3", "Filter 4", "Filter 5")
     var currentFilter by remember { mutableStateOf(filters[0]) }
     LittleLemonTheme {
-        Box(Modifier.fillMaxSize().padding(12.dp)) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(12.dp)
+        ) {
             FilterList(filters, currentFilter, { currentFilter = it })
         }
     }
