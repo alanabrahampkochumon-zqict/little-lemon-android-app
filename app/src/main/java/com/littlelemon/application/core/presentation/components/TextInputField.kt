@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
@@ -119,7 +118,7 @@ fun TextInputField(
                         interactionSource,
                         focusedBorderThickness = LittleLemonTheme.dimens.size3XS,
                         colors = colors,
-                        shape = MaterialTheme.shapes.small,
+                        shape = LittleLemonTheme.shapes.sm,
                         modifier = Modifier.fillMaxWidth(),
                     )
 

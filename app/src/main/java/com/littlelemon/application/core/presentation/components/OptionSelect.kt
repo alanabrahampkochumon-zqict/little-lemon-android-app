@@ -13,15 +13,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.xLarge
 import com.littlelemon.application.core.presentation.utils.applyShadow
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
 
 @Composable
 fun OptionSelect(
@@ -72,7 +68,10 @@ fun Option(
     Box(
         modifier = modifier
             .then(
-                if (selected) Modifier.applyShadow(shape, LittleLemonTheme.shadows.dropXS) else Modifier
+                if (selected) Modifier.applyShadow(
+                    shape,
+                    LittleLemonTheme.shadows.dropXS
+                ) else Modifier
             )
             .background(backgroundColor, shape)
             .selectable(

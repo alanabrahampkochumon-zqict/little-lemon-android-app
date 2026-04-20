@@ -5,17 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.designsystem.xLarge
+import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 
 
 enum class TagVariant {
@@ -43,73 +39,73 @@ enum class TagVariant {
 private fun TagVariant.getColor(): Pair<Color, Color> {
     return when (this) {
         TagVariant.PrimaryFilled -> Pair(
-            MaterialTheme.colors.action,
-            MaterialTheme.colors.contentTertiary
+            LittleLemonTheme.colors.action,
+            LittleLemonTheme.colors.contentTertiary
         )
 
         TagVariant.SecondaryFilled -> Pair(
-            MaterialTheme.colors.highlight,
-            MaterialTheme.colors.contentOnColor
+            LittleLemonTheme.colors.highlight,
+            LittleLemonTheme.colors.contentOnColor
         )
 
         TagVariant.NeutralFilled -> Pair(
-            MaterialTheme.colors.tertiary,
-            MaterialTheme.colors.contentTertiary
+            LittleLemonTheme.colors.tertiary,
+            LittleLemonTheme.colors.contentTertiary
         )
 
         TagVariant.SuccessFilled -> Pair(
-            MaterialTheme.colors.success,
-            MaterialTheme.colors.contentOnColor
+            LittleLemonTheme.colors.success,
+            LittleLemonTheme.colors.contentOnColor
         )
 
         TagVariant.InformationFilled -> Pair(
-            MaterialTheme.colors.information,
-            MaterialTheme.colors.contentOnColor
+            LittleLemonTheme.colors.information,
+            LittleLemonTheme.colors.contentOnColor
         )
 
         TagVariant.ErrorFilled -> Pair(
-            MaterialTheme.colors.error,
-            MaterialTheme.colors.contentOnColor
+            LittleLemonTheme.colors.error,
+            LittleLemonTheme.colors.contentOnColor
         )
 
         TagVariant.DisabledFilled -> Pair(
-            MaterialTheme.colors.disabled,
-            MaterialTheme.colors.contentPlaceholder
+            LittleLemonTheme.colors.disabled,
+            LittleLemonTheme.colors.contentPlaceholder
         )
 
         TagVariant.PrimaryLight -> Pair(
-            MaterialTheme.colors.actionLight,
-            MaterialTheme.colors.contentTertiary
+            LittleLemonTheme.colors.actionLight,
+            LittleLemonTheme.colors.contentTertiary
         )
 
         TagVariant.SecondaryLight -> Pair(
-            MaterialTheme.colors.highlightLight,
-            MaterialTheme.colors.contentAccentSecondary
+            LittleLemonTheme.colors.highlightLight,
+            LittleLemonTheme.colors.contentAccentSecondary
         )
 
         TagVariant.NeutralLight -> Pair(
-            MaterialTheme.colors.primary,
-            MaterialTheme.colors.contentPlaceholder
+            LittleLemonTheme.colors.primary,
+            LittleLemonTheme.colors.contentPlaceholder
         )
 
         TagVariant.SuccessLight -> Pair(
-            MaterialTheme.colors.successLight,
-            MaterialTheme.colors.contentSuccess
+            LittleLemonTheme.colors.successLight,
+            LittleLemonTheme.colors.contentSuccess
         )
 
         TagVariant.InformationLight -> Pair(
-            MaterialTheme.colors.informationLight,
-            MaterialTheme.colors.contentInformation
+            LittleLemonTheme.colors.informationLight,
+            LittleLemonTheme.colors.contentInformation
         )
 
         TagVariant.ErrorLight -> Pair(
-            MaterialTheme.colors.errorLight,
-            MaterialTheme.colors.contentError
+            LittleLemonTheme.colors.errorLight,
+            LittleLemonTheme.colors.contentError
         )
 
         TagVariant.DisabledLight -> Pair(
-            MaterialTheme.colors.secondary,
-            MaterialTheme.colors.contentDisabled
+            LittleLemonTheme.colors.secondary,
+            LittleLemonTheme.colors.contentDisabled
         )
     }
 }
@@ -126,10 +122,13 @@ fun Tag(
 
     Box(
         modifier
-            .background(backgroundColor, shape = MaterialTheme.shapes.xLarge)
-            .padding(horizontal = MaterialTheme.dimens.sizeSM)
+            .background(backgroundColor, shape = LittleLemonTheme.shapes.xl)
+            .padding(
+                horizontal = LittleLemonTheme.dimens.sizeMD,
+                vertical = LittleLemonTheme.dimens.size2XS
+            )
     ) {
-        Text(text = text, style = MaterialTheme.typeStyle.bodyXSmall, color = contentColor)
+        Text(text = text, style = LittleLemonTheme.typography.bodyXSmall, color = contentColor)
     }
 }
 
