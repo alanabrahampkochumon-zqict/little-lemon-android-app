@@ -74,7 +74,7 @@ fun FilterListItem(
 ) {
     val backgroundColor by animateColorAsState(
         if (selected)
-            LittleLemonTheme.colors.primaryDark
+            LittleLemonTheme.colors.primaryLight
         else
             LittleLemonTheme.colors.primary
     )
@@ -88,7 +88,7 @@ fun FilterListItem(
 
     val contentColor by animateColorAsState(
         if (selected)
-            LittleLemonTheme.colors.contentOnColor
+            LittleLemonTheme.colors.contentHighlight
         else
             LittleLemonTheme.colors.contentSecondary
     )
@@ -124,9 +124,9 @@ fun FilterListItem(
             Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.sizeLG))
             Image(
                 painterResource(R.drawable.ic_checkcircle), null, colorFilter = ColorFilter.tint(
-                    LittleLemonTheme.colors.contentAccent
+                    LittleLemonTheme.colors.contentHighlight
                 ), modifier = Modifier
-                    .size(24.dp)
+                    .size(20.dp)
                     .testTag(CoreTestTags.FILTER_ITEM_CHECK)
             )
         }

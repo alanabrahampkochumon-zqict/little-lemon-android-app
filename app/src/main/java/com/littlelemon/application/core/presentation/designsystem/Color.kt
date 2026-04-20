@@ -231,6 +231,7 @@ data class LittleLemonColors(
     // Surface Colors
     val primary: Color = AliasColors.NeutralWhite,
     val primaryDark: Color = AliasColors.Tertiary700,
+    val primaryLight: Color = AliasColors.Tertiary50,
     val secondary: Color = AliasColors.Neutral50,
     val tertiary: Color = AliasColors.Neutral100,
 
