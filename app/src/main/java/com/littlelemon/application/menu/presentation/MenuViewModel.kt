@@ -37,26 +37,33 @@ class MenuViewModel(
     val currentCategory = _currentCategory.asStateFlow()
 
 
-    val categories = getCategories().stateIn(
-        viewModelScope, SharingStarted.WhileSubscribed(5000L),
-        Resource.Loading(null)
+    val categories = getCategories().map { resource ->
+        when (resource) {
+            is Resource.Failure -> CategoryState(
+                isLoading = false,
+                error = if (resource.errorMessage != null) UiText.DynamicString(resource.errorMessage) else UiText.StringResource(
+                    R.string.category_fetch_unknown_error
+                )
+            )
+
+            is Resource.Loading -> CategoryState(isLoading = true, error = null)
+
+            is Resource.Success -> CategoryState(
+                isLoading = false, error = null, categories = resource.data ?: emptyList()
+            )
+        }
+    }.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000L), CategoryState(isLoading = true)
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val state = combine(
-        _dishSortingFlow,
-        _filterFlow,
-        _forceFetch,
-        _currentCategory
+        _dishSortingFlow, _filterFlow, _forceFetch, _currentCategory
     ) { sorting, filtering, forceFetch, currentCategory ->
         DishDataParams(
-            sorting,
-            filtering,
-            forceFetch,
-            currentCategory
+            sorting, filtering, forceFetch, currentCategory
         )
-    }
-        .flatMapLatest { (sorting, filter, forceFetch, currentCategory) ->
+    }.flatMapLatest { (sorting, filter, forceFetch, currentCategory) ->
             getDishes(sorting, filter, forceFetch, currentCategory)
         }.map { resource ->
             when (resource) {
@@ -70,13 +77,10 @@ class MenuViewModel(
 
                 is Resource.Loading -> MenuState(isLoading = true, error = null)
                 is Resource.Success -> MenuState(
-                    dishes = resource.data,
-                    isLoading = false,
-                    error = null
+                    dishes = resource.data, isLoading = false, error = null
                 )
             }
-        }
-        .flowOn(ioDispatcher)
+        }.flowOn(ioDispatcher)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MenuState(isLoading = true))
 
     fun onAction(action: MenuActions) {

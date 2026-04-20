@@ -155,6 +155,7 @@
     <string name="refund_made_on">Refund made on</string>
     <string name="out_of_stock">Sold out</string>
     <string name="all_category">All</string>
+    <string name="category_fetch_unknown_error">An unknown error occurred when getting fetching categories.</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>

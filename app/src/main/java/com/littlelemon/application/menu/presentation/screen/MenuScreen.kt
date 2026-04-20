@@ -52,9 +52,11 @@ import kotlin.random.Random
 @Composable
 fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
     val menuState by viewModel.state.collectAsStateWithLifecycle()
+    val categories by viewModel.categories.collectAsStateWithLifecycle()
     val currentCategory by viewModel.currentCategory.collectAsStateWithLifecycle()
     MenuScreenRoot(
         menuState,
+//        categories,
         currentCategory,
         { viewModel.onAction(MenuActions.UpdateDishCategory(it)) },
         { /** TODO */ },
@@ -66,6 +68,7 @@ fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
 @Composable
 fun MenuScreenRoot(
     menuState: MenuState,
+//    categories: List<Category>,
     currentCategory: String?,
     onCategoryChanged: (String?) -> Unit,
     onIncreaseQuantity: (Dish) -> Unit,

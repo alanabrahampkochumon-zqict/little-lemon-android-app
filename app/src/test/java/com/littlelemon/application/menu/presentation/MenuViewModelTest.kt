@@ -4,7 +4,6 @@ import androidx.test.filters.SmallTest
 import app.cash.turbine.test
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.data.mappers.toDish
-import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.usecase.GetCategoriesUseCase
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.menu.domain.util.DishFilter
@@ -24,7 +23,6 @@ import org.junit.jupiter.api.assertNull
 import org.junit.jupiter.api.extension.RegisterExtension
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 
@@ -102,7 +100,7 @@ class MenuViewModelTest {
             @Test
             fun initialStateIsLoading() = runTest {
                 viewModel.categories.test {
-                    assertIs<Resource.Loading<List<Category>>>(awaitItem())
+                    assertTrue { awaitItem().isLoading }
                 }
             }
 
@@ -111,10 +109,25 @@ class MenuViewModelTest {
             fun getsCategoriesFromUseCase() = runTest {
                 viewModel.categories.test {
                     awaitItem() // Skip initial state
-                    val resource = awaitItem()
+                    val state = awaitItem()
+                    assertEquals(categories, state.categories)
+                    assertNull(state.error)
+                    assertFalse(state.isLoading)
+                }
+            }
 
-                    assertIs<Resource.Success<List<Category>>>(resource)
-                    assertEquals(categories, resource.data)
+            @Test
+            fun useCaseError() = runTest {
+                coEvery { getCategoriesUseCase.invoke() } returns flow {
+                    emit(Resource.Failure())
+                }
+                viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
+
+                viewModel.categories.test {
+                    awaitItem() // Skip initial state
+                    val state = awaitItem()
+                    assertNotNull(state.error)
+                    assertFalse { state.isLoading }
                 }
             }
         }
