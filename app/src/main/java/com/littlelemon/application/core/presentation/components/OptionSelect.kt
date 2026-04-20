@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -15,17 +14,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.draw.innerShadow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.core.presentation.designsystem.xLarge
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.core.presentation.utils.toComposeShadow
 
 @Composable
@@ -35,11 +30,11 @@ fun OptionSelect(
     onSelectionChange: (option: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shape = MaterialTheme.shapes.xLarge
+    val shape = LittleLemonTheme.shapes.xl
     Row(
         modifier = modifier
-            .background(MaterialTheme.colors.tertiary, shape = shape)
-            .padding(MaterialTheme.dimens.sizeMD),
+            .background(LittleLemonTheme.colors.tertiary, shape = shape)
+            .padding(LittleLemonTheme.dimens.sizeMD),
     ) {
         options.forEach { option ->
             Option(
@@ -48,10 +43,6 @@ fun OptionSelect(
                 enabled = true,
                 onClick = { onSelectionChange(option) },
                 modifier = Modifier
-                    .innerShadow(
-                        shape,
-                        MaterialTheme.shadows.innerSM.firstShadow.toComposeShadow(LocalDensity.current.density)
-                    )
 
             )
         }
@@ -68,23 +59,20 @@ fun Option(
 ) {
 
     val backgroundColor =
-        if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.tertiary
+        if (selected) LittleLemonTheme.colors.primary else LittleLemonTheme.colors.tertiary
     val textColor =
-        if (selected) MaterialTheme.colors.contentPrimary else if (!enabled) MaterialTheme.colors.contentDisabled else MaterialTheme.colors.contentTertiary
+        if (selected) LittleLemonTheme.colors.contentPrimary else if (!enabled) LittleLemonTheme.colors.contentDisabled else LittleLemonTheme.colors.contentTertiary
 
     val textStyle =
-        if (selected) MaterialTheme.typeStyle.labelMedium else MaterialTheme.typeStyle.bodyMedium
+        if (selected) LittleLemonTheme.typography.labelMedium else LittleLemonTheme.typography.bodyMedium
 
-    val shape = MaterialTheme.shapes.xLarge
+    val shape = LittleLemonTheme.shapes.xl
 
     // TODO: Add animation
     Box(
         modifier = modifier
             .then(
-                if (selected) Modifier.dropShadow(
-                    shape,
-                    MaterialTheme.shadows.dropSM.firstShadow.toComposeShadow(LocalDensity.current.density)
-                ) else Modifier
+                if (selected) Modifier.applyShadow(shape, LittleLemonTheme.shadows.dropXS) else Modifier
             )
             .background(backgroundColor, shape)
             .selectable(
@@ -95,8 +83,8 @@ fun Option(
                 role = Role.Tab,
                 interactionSource = remember { MutableInteractionSource() })
             .padding(
-                horizontal = MaterialTheme.dimens.sizeXL,
-                vertical = MaterialTheme.dimens.sizeLG
+                horizontal = LittleLemonTheme.dimens.sizeXL,
+                vertical = LittleLemonTheme.dimens.sizeLG
             ),
         contentAlignment = Alignment.Center
     ) {

@@ -31,7 +31,6 @@ import com.littlelemon.application.core.presentation.utils.applyShadow
 @Composable
 fun Loader(
     modifier: Modifier = Modifier,
-    screenDensityRatio: Float = 2f,
     showLoader: Boolean = false,
     loaderContent: @Composable () -> Unit = {},
     screenContent: @Composable () -> Unit = {}

@@ -9,79 +9,46 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.shadow.Shadow
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
-
-enum class LoaderColorScheme {
-    DARK, LIGHT
-}
+import com.littlelemon.application.core.presentation.utils.applyShadow
 
 @Composable
 fun MiniLoader(
     label: String,
-    modifier: Modifier = Modifier, colorScheme: LoaderColorScheme = LoaderColorScheme.LIGHT
+    modifier: Modifier = Modifier
 ) {
-    val backgroundColor =
-        if (colorScheme == LoaderColorScheme.DARK) MaterialTheme.colors.primaryDark
-        else MaterialTheme.colors.primary
+    val backgroundColor = LittleLemonTheme.colors.primary
 
+    val contentColor = LittleLemonTheme.colors.contentSecondary
 
-    val spinnerColor =
-        if (colorScheme == LoaderColorScheme.DARK) MaterialTheme.colors.contentAccent
-        else MaterialTheme.colors.contentAccentSecondary
-
-
-    val contentColor =
-        if (colorScheme == LoaderColorScheme.DARK) MaterialTheme.colors.contentOnColor
-        else MaterialTheme.colors.contentSecondary
-
-    val shape = MaterialTheme.shapes.medium
-
-    val density = LocalDensity.current.density
-    val firstShadow = MaterialTheme.shadows.dropMD.firstShadow.toComposeShadow(density)
-    val secondShadow =
-        MaterialTheme.shadows.dropMD.secondShadow?.toComposeShadow(density) ?: Shadow(0.dp)
+    val shape = LittleLemonTheme.shapes.sm
 
     Row(
         modifier = modifier
-            .dropShadow(shape, firstShadow)
-            .dropShadow(shape, secondShadow)
+            .applyShadow(shape, LittleLemonTheme.shadows.dropXL)
             .background(backgroundColor, shape)
             .padding(
-                vertical = MaterialTheme.dimens.sizeMD,
-                horizontal = MaterialTheme.dimens.sizeLG
+                vertical = LittleLemonTheme.dimens.sizeMD,
+                horizontal = LittleLemonTheme.dimens.sizeLG
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CircularProgressIndicator(
-            trackColor = MaterialTheme.colors.transparent,
-            color = spinnerColor,
-            strokeCap = StrokeCap.Round,
+        IndefiniteCircularProgressIndicator(
             strokeWidth = 2.dp,
             modifier = Modifier
-                .size(MaterialTheme.dimens.size2XL)
+                .size(LittleLemonTheme.dimens.sizeXL)
                 .testTag(CoreTestTags.PROGRESS_INDICATOR)
         )
-        Spacer(modifier = Modifier.width(MaterialTheme.dimens.sizeLG))
-        Text(label, style = MaterialTheme.typeStyle.labelMedium, color = contentColor)
+        Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.sizeLG))
+        Text(label, style = LittleLemonTheme.typography.labelMedium, color = contentColor)
     }
 
 }
@@ -98,11 +65,6 @@ private fun MiniLoaderPreview() {
         ) {
             MiniLoader(
                 "Almost there. Tailoring your experience…",
-                colorScheme = LoaderColorScheme.DARK
-            )
-            MiniLoader(
-                "Almost there. Tailoring your experience…",
-                colorScheme = LoaderColorScheme.LIGHT
             )
         }
     }
