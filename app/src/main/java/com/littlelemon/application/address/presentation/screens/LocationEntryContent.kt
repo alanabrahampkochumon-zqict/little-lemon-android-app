@@ -180,20 +180,22 @@ fun LocationEntryContentRoot(
                     .padding(MaterialTheme.dimens.sizeXL),
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeMD)
             ) {
-                Button(
-                    stringResource(R.string.act_cancel),
-                    onClose,
-                    variant = ButtonVariant.GHOST_HIGHLIGHT,
-                    modifier = Modifier
-                        .widthIn(min = 320.dp)
-                        .weight(1f)
-                )
+                if (mobileLandscape)
+                    Button(
+                        stringResource(R.string.act_cancel),
+                        onClose,
+                        variant = ButtonVariant.GHOST_HIGHLIGHT,
+                        modifier = Modifier
+                            .widthIn(min = 320.dp)
+                            .weight(1f)
+                    )
                 Button(
                     stringResource(R.string.act_save_address),
                     onClick = onSaveAddress,
                     modifier = Modifier
                         .widthIn(min = 320.dp)
-                        .weight(1f)
+                        .weight(1f),
+                    variant = ButtonVariant.HIGH_CONTRAST
                 )
             }
         },
@@ -422,7 +424,7 @@ private fun AddressEntryModalFilledPreview() {
     }
 }
 
-@Preview(heightDp = 2000)
+@Preview(heightDp = 1225)
 @Composable
 private fun AddressEntryModalErrorPreview() {
 

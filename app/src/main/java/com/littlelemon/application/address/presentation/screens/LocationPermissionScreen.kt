@@ -232,7 +232,7 @@ fun LocationPermissionScreenRoot(
                         label = stringResource(R.string.act_enable_location),
                         onClick = onEnableLocationClick,
                         modifier = Modifier.fillMaxWidth(),
-                        variant = ButtonVariant.PRIMARY,
+                        variant = ButtonVariant.HIGH_CONTRAST,
                         size = ButtonSize.Medium
                     )
                     Button(
