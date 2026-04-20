@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -29,8 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.shadows
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.core.presentation.utils.toComposeShadow
 
 data class IconButtonColors(
@@ -49,7 +47,7 @@ fun BasicIconButton(
     interactionSource: MutableInteractionSource? = null,
     iconDescription: String? = null,
     enabled: Boolean = true,
-    shape: Shape = MaterialTheme.shapes.small
+    shape: Shape = LittleLemonTheme.shapes.sm
 ) {
     @Suppress("NAME_SHADOWING")
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
@@ -88,10 +86,10 @@ fun PrimaryIconButton(
     val interactionSource = remember { MutableInteractionSource() }
 
     val colors = IconButtonColors(
-        backgroundColor = if (showBackground) MaterialTheme.colors.action else MaterialTheme.colors.transparent,
-        contentColor = MaterialTheme.colors.contentOnAction,
-        disabledBackgroundColor = if (showBackground) MaterialTheme.colors.disabled else MaterialTheme.colors.transparent,
-        disabledContentColor = MaterialTheme.colors.contentDisabled,
+        backgroundColor = if (showBackground) LittleLemonTheme.colors.action else LittleLemonTheme.colors.transparent,
+        contentColor = LittleLemonTheme.colors.contentOnAction,
+        disabledBackgroundColor = if (showBackground) LittleLemonTheme.colors.disabled else LittleLemonTheme.colors.transparent,
+        disabledContentColor = LittleLemonTheme.colors.contentDisabled,
     )
 
     BasicIconButton(icon, onClick, colors, modifier, interactionSource, iconDescription, enabled)
@@ -108,28 +106,26 @@ fun SecondaryIconButton(
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }
-
-    val screenDensity = LocalDensity.current.density
-    val shape = MaterialTheme.shapes.small
+    val shape = LittleLemonTheme.shapes.sm
 
     val shadow = if (enabled && showBackground) {
-        MaterialTheme.shadows.dropSM.firstShadow.toComposeShadow(screenDensity)
+        LittleLemonTheme.shadows.dropSM
     } else {
         null
     }
 
     val colors = IconButtonColors(
-        backgroundColor = if (showBackground) MaterialTheme.colors.primary else MaterialTheme.colors.transparent,
-        contentColor = MaterialTheme.colors.contentAccentSecondary,
-        disabledBackgroundColor = if (showBackground) MaterialTheme.colors.disabled else MaterialTheme.colors.transparent,
-        disabledContentColor = MaterialTheme.colors.contentDisabled,
+        backgroundColor = if (showBackground) LittleLemonTheme.colors.primary else LittleLemonTheme.colors.transparent,
+        contentColor = LittleLemonTheme.colors.contentAccentSecondary,
+        disabledBackgroundColor = if (showBackground) LittleLemonTheme.colors.disabled else LittleLemonTheme.colors.transparent,
+        disabledContentColor = LittleLemonTheme.colors.contentDisabled,
     )
 
     BasicIconButton(
         icon,
         onClick,
         colors,
-        modifier.then(if (shadow != null) Modifier.dropShadow(shape, shadow) else Modifier),
+        modifier.then(if (shadow != null) Modifier.applyShadow(shape, shadow) else Modifier),
         interactionSource,
         iconDescription,
         enabled,
@@ -151,26 +147,26 @@ fun DestructiveIconButton(
     val interactionSource = remember { MutableInteractionSource() }
 
     val screenDensity = LocalDensity.current.density
-    val shape = MaterialTheme.shapes.small
+    val shape = LittleLemonTheme.shapes.sm
 
     val shadow = if (enabled && showBackground) {
-        MaterialTheme.shadows.dropSM.firstShadow.toComposeShadow(screenDensity)
+        LittleLemonTheme.shadows.dropSM
     } else {
         null
     }
 
     val colors = IconButtonColors(
-        backgroundColor = if (showBackground) MaterialTheme.colors.primary else MaterialTheme.colors.transparent,
-        contentColor = MaterialTheme.colors.contentError,
-        disabledBackgroundColor = if (showBackground) MaterialTheme.colors.disabled else MaterialTheme.colors.transparent,
-        disabledContentColor = MaterialTheme.colors.contentDisabled,
+        backgroundColor = if (showBackground) LittleLemonTheme.colors.primary else LittleLemonTheme.colors.transparent,
+        contentColor = LittleLemonTheme.colors.contentError,
+        disabledBackgroundColor = if (showBackground) LittleLemonTheme.colors.disabled else LittleLemonTheme.colors.transparent,
+        disabledContentColor = LittleLemonTheme.colors.contentDisabled,
     )
 
     BasicIconButton(
         icon,
         onClick,
         colors,
-        modifier.then(if (shadow != null) Modifier.dropShadow(shape, shadow) else Modifier),
+        modifier.then(if (shadow != null) Modifier.applyShadow(shape, shadow) else Modifier),
         interactionSource,
         iconDescription,
         enabled,
