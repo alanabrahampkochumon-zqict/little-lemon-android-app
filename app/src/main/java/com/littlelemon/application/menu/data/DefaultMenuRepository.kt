@@ -7,6 +7,7 @@ import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.data.local.models.DishWithCategories
 import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.data.mappers.toDishWithCategories
+import com.littlelemon.application.menu.data.mappers.toDomainCategory
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
 import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.models.Category
@@ -82,6 +83,8 @@ class DefaultMenuRepository(
         try {
             emit(Resource.Loading())
             val categories = localDataSource.getAllCategories()
+                .map { categoryEntities -> Resource.Success(categoryEntities.map { it.toDomainCategory() }) }
+            emitAll(categories)
         } catch (e: Exception) {
             emit(Resource.Failure(errorMessage = MenuErrorMessages.CATEGORY_FETCH_FAILURE))
         }

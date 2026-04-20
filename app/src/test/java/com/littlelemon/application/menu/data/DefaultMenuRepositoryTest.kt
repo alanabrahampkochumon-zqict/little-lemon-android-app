@@ -31,22 +31,20 @@ import kotlin.uuid.Uuid
 
 class DefaultMenuRepositoryTest {
 
+    private lateinit var localDataSource: MenuDao
+    private lateinit var remoteDataSource: MenuRemoteDataSource
+    private lateinit var menuRepository: MenuRepository
+
+    @BeforeEach
+    fun setUp() {
+        localDataSource = FakeMenuDao(seedDatabase = true)
+        remoteDataSource = FakeDishRemoteDataSource()
+        menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
+
+    }
 
     @Nested
     inner class DishSortingTests {
-
-        private lateinit var localDataSource: MenuDao
-        private lateinit var remoteDataSource: MenuRemoteDataSource
-        private lateinit var menuRepository: MenuRepository
-
-        @BeforeEach
-        fun setUp() {
-
-            localDataSource = FakeMenuDao(seedDatabase = true)
-            remoteDataSource = FakeDishRemoteDataSource()
-            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
-
-        }
 
         @Test
         fun withNameAscendingSortingApplied_whenGetDishesIsCalled_returnsDishesOrderedByNameAscending() =
@@ -242,19 +240,10 @@ class DefaultMenuRepositoryTest {
     @Nested
     inner class FilteringTests {
 
-        private lateinit var localDataSource: MenuDao
-        private lateinit var remoteDataSource: MenuRemoteDataSource
-        private lateinit var menuRepository: MenuRepository
-
         private val outOfStockDishCount: Int = (Math.random() * 10 + 5).roundToInt()
 
         @BeforeEach
         fun setUp() = runTest {
-
-            localDataSource = FakeMenuDao(seedDatabase = true)
-            remoteDataSource = FakeDishRemoteDataSource()
-            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
-
             localDataSource.insertDishes(List(outOfStockDishCount) {
                 DishGenerator.generateDishEntity().first.copy(stock = 0)
             })
@@ -302,10 +291,6 @@ class DefaultMenuRepositoryTest {
     @Nested
     inner class FetchFromRemoteTests {
 
-        private lateinit var localDataSource: MenuDao
-        private lateinit var remoteDataSource: MenuRemoteDataSource
-        private lateinit var menuRepository: MenuRepository
-
         private val entityGenerator = DishGenerator
         private val dtoGenerator = MenuDTOGenerator()
 
@@ -314,11 +299,7 @@ class DefaultMenuRepositoryTest {
 
         @BeforeEach
         fun setUp() {
-
-            localDataSource = FakeMenuDao(seedDatabase = false)
-            remoteDataSource = FakeDishRemoteDataSource(emptyList())
-            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
-
+            localDataSource = FakeMenuDao(false)
         }
 
         @Test
@@ -430,21 +411,9 @@ class DefaultMenuRepositoryTest {
             }
     }
 
-
     @Nested
     inner class FilterCategoryTesting {
 
-        private lateinit var localDataSource: MenuDao
-        private lateinit var remoteDataSource: MenuRemoteDataSource
-        private lateinit var menuRepository: MenuRepository
-
-        @BeforeEach
-        fun setUp() {
-            localDataSource = FakeMenuDao(seedDatabase = true)
-            remoteDataSource = FakeDishRemoteDataSource()
-            menuRepository = DefaultMenuRepository(localDataSource, remoteDataSource)
-
-        }
 
         @Test
         fun nullFilterCategory_returnsAllDishes() = runTest {
@@ -521,6 +490,23 @@ class DefaultMenuRepositoryTest {
             result as Resource.Success
             assertNotNull(result.data)
             assertEquals(0, result.data.size)
+        }
+    }
+
+    @Nested
+    inner class GetCategories {
+
+        @Test
+        fun dbFailure_throwsErrorResource() = runTest {
+
+        }
+
+        @Test
+        fun dbSuccess_throwsSuccessWithData() = runTest {
+        }
+
+        @Test
+        fun emptyDB_throwsSuccessWithEmptyList() = runTest {
         }
     }
 }
