@@ -72,8 +72,6 @@ fun Button(
             disabledContainerColor = MaterialTheme.colors.disabled,
             disabledContentColor = MaterialTheme.colors.contentDisabled,
         )
-
-        // TODO: Update Variants as necessary
         ButtonVariant.SECONDARY -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colors.primary,
             contentColor = MaterialTheme.colors.contentPrimary,
@@ -97,7 +95,7 @@ fun Button(
         ButtonVariant.HIGH_CONTRAST -> ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colors.highlight,
                 contentColor = MaterialTheme.colors.contentOnColor,
-                disabledContainerColor = MaterialTheme.colors.transparent,
+                disabledContainerColor = MaterialTheme.colors.disabled,
                 disabledContentColor = MaterialTheme.colors.contentDisabled
             )
     }

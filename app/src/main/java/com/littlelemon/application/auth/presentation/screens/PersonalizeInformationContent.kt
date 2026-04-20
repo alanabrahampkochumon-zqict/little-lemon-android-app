@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.core.presentation.components.Button
+import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.TextInputField
 import com.littlelemon.application.core.presentation.components.TopNavigationBar
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
@@ -83,7 +84,8 @@ fun PersonalInformationContent(
             Button(
                 stringResource(R.string.act_go),
                 onClick = onComplete,
-                enabled = authState.enableLetsGoButton
+                enabled = authState.enableLetsGoButton,
+                variant = ButtonVariant.HIGH_CONTRAST
             )
         }
     }

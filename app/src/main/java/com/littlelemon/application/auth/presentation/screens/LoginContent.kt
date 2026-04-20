@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.core.presentation.components.Button
+import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.IndefiniteCircularProgressIndicator
 import com.littlelemon.application.core.presentation.components.TextInputField
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
@@ -96,7 +97,8 @@ fun LoginContent(
             stringResource(R.string.act_send_otp),
             onSendOTP,
             modifier = Modifier.fillMaxWidth(),
-            enabled = authState.enableSendButton && authState.loadingState == null
+            enabled = authState.enableSendButton && authState.loadingState == null,
+            variant = ButtonVariant.HIGH_CONTRAST
         )
     }
 }

@@ -33,6 +33,7 @@ import com.littlelemon.application.auth.presentation.AuthState
 import com.littlelemon.application.auth.presentation.components.OTPInputField
 import com.littlelemon.application.auth.presentation.components.ResendTimer
 import com.littlelemon.application.core.presentation.components.Button
+import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.TopNavigationBar
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 
@@ -94,7 +95,8 @@ fun VerificationContent(
             Button(
                 stringResource(R.string.act_verify),
                 onClick = onVerifyOTP,
-                enabled = authState.enableVerifyButton
+                enabled = authState.enableVerifyButton,
+                variant = ButtonVariant.HIGH_CONTRAST
             )
         }
     }
