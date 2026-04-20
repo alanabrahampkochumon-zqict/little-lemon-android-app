@@ -9,6 +9,7 @@ import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.data.mappers.toDishWithCategories
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
 import com.littlelemon.application.menu.domain.MenuRepository
+import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
@@ -74,6 +75,16 @@ class DefaultMenuRepository(
                     error = Error.NetworkError.Unknown()
                 )
             )
+        }
+    }
+
+    override fun getAllCategories(): Flow<Resource<List<Category>>> = flow {
+        try {
+            emit(Resource.Loading())
+//            val categories =localDataSource.getAllCategories().map { Resource.Success(it.toCategory) }
+//            emitAll()
+        } catch (e: Exception) {
+            emit(Resource.Failure(errorMessage = MenuErrorMessages.CATEGORY_FETCH_FAILURE))
         }
     }
 

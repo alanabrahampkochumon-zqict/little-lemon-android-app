@@ -1,6 +1,7 @@
 package com.littlelemon.application.menu.domain
 
 import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
@@ -15,4 +16,6 @@ interface MenuRepository {
         filterCategory: String? = null,
     ): Flow<Resource<List<Dish>>>
 
+
+    fun getAllCategories(): Flow<Resource<List<Category>>>
 }

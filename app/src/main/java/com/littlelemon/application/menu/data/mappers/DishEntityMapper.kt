@@ -36,7 +36,7 @@ private fun DishEntity.NutritionInfo.toDomainNutritionInfo(): NutritionInfo {
     )
 }
 
-private fun List<CategoryEntity>.toDomainCategories(): List<Category> =
+fun List<CategoryEntity>.toDomainCategories(): List<Category> =
     this.map { (_, categoryName) ->
         Category(categoryName = categoryName)
     }
