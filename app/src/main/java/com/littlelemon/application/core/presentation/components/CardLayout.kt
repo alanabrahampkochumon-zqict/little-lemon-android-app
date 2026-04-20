@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,8 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
 import com.littlelemon.application.core.presentation.utils.applyShadow
 
 @Composable
@@ -39,7 +36,8 @@ fun CardLayout(
 
     val cardShadow =
         if (isFloating) LittleLemonTheme.shadows.dropXL else LittleLemonTheme.shadows.upperMD
-    val cardShape = if(isFloating) LittleLemonTheme.shapes.lg else LittleLemonTheme.shapes.attachedCardShape
+    val cardShape =
+        if (isFloating) LittleLemonTheme.shapes.lg else LittleLemonTheme.shapes.attachedCardShape
     Column(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -51,13 +49,13 @@ fun CardLayout(
                 .fillMaxWidth()
                 .applyShadow(cardShape, cardShadow)
                 .background(
-                    MaterialTheme.colors.primary,
+                    LittleLemonTheme.colors.primary,
                     shape = cardShape
                 )
                 .padding(
                     paddingValues = PaddingValues(
-                        top = MaterialTheme.dimens.sizeXL,
-                        bottom = if (isFloating) MaterialTheme.dimens.size2XL else MaterialTheme.dimens.size4XL,
+                        top = LittleLemonTheme.dimens.sizeXL,
+                        bottom = if (isFloating) LittleLemonTheme.dimens.size2XL else LittleLemonTheme.dimens.size4XL,
                     )
                 )
                 .then(

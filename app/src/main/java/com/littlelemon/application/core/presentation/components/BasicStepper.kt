@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
@@ -28,22 +27,16 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @Composable
 fun BasicStepper(
-    value: Int,
-    onDecrease: () -> Unit,
-    onIncrease: () -> Unit,
-    modifier: Modifier = Modifier
+    value: Int, onDecrease: () -> Unit, onIncrease: () -> Unit, modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(
-            MaterialTheme.dimens.sizeSM
+            LittleLemonTheme.dimens.sizeSM
         )
     ) {
         AnimatedVisibility(
@@ -61,10 +54,10 @@ fun BasicStepper(
                         CoreTestTags.STEPPER_DECREASE
                     ),
                     colors = IconButtonColors(
-                        backgroundColor = MaterialTheme.colors.transparent,
-                        contentColor = MaterialTheme.colors.contentPlaceholder,
-                        disabledBackgroundColor = MaterialTheme.colors.disabled,
-                        disabledContentColor = MaterialTheme.colors.contentDisabled
+                        backgroundColor = LittleLemonTheme.colors.transparent,
+                        contentColor = LittleLemonTheme.colors.contentPlaceholder,
+                        disabledBackgroundColor = LittleLemonTheme.colors.disabled,
+                        disabledContentColor = LittleLemonTheme.colors.contentDisabled
                     ),
                 )
                 AnimatedContent(targetState = value, transitionSpec = {
@@ -76,8 +69,8 @@ fun BasicStepper(
                 }) { targetValue ->
                     Text(
                         targetValue.toString(),
-                        style = MaterialTheme.typeStyle.displayMedium,
-                        color = MaterialTheme.colors.contentPlaceholder
+                        style = LittleLemonTheme.typography.displayMedium,
+                        color = LittleLemonTheme.colors.contentPlaceholder
                     )
                 }
             }
@@ -90,10 +83,10 @@ fun BasicStepper(
                 CoreTestTags.STEPPER_INCREASE
             ),
             colors = IconButtonColors(
-                backgroundColor = MaterialTheme.colors.transparent,
-                contentColor = MaterialTheme.colors.contentTertiary,
-                disabledBackgroundColor = MaterialTheme.colors.disabled,
-                disabledContentColor = MaterialTheme.colors.contentDisabled
+                backgroundColor = LittleLemonTheme.colors.transparent,
+                contentColor = LittleLemonTheme.colors.contentTertiary,
+                disabledBackgroundColor = LittleLemonTheme.colors.disabled,
+                disabledContentColor = LittleLemonTheme.colors.contentDisabled
             ),
         )
     }

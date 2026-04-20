@@ -89,7 +89,7 @@ fun ActionScreen(
 @Preview(showBackground = true)
 @Composable
 private fun ActionScreenPreview() {
-    LittleLemonTheme() {
+    LittleLemonTheme {
         ActionScreen(
             "Primary Action",
             "Secondary Action",

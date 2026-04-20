@@ -11,7 +11,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -40,10 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.designsystem.xSmall
 
 @Composable
 fun Checkbox(
@@ -54,11 +48,11 @@ fun Checkbox(
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }
-    val shape = MaterialTheme.shapes.xSmall
+    val shape = LittleLemonTheme.shapes.xs
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(
-            MaterialTheme.dimens.sizeMD
+            LittleLemonTheme.dimens.sizeMD
         ),
         modifier = modifier
             .heightIn(min = 48.dp)
@@ -73,10 +67,10 @@ fun Checkbox(
             modifier = Modifier
                 .size(28.dp)
                 .background(
-                    MaterialTheme.colors.primary,
+                    LittleLemonTheme.colors.primary,
                     shape = shape
                 )
-                .border(BorderStroke(2.dp, MaterialTheme.colors.contentHighlight), shape)
+                .border(BorderStroke(2.dp, LittleLemonTheme.colors.contentHighlight), shape)
                 .clip(shape)
                 .indication(interactionSource = interactionSource, ripple()),
             verticalAlignment = Alignment.CenterVertically,
@@ -101,7 +95,7 @@ fun Checkbox(
                     painter = painterResource(R.drawable.ic_check),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(
-                        MaterialTheme.colors.contentHighlight
+                        LittleLemonTheme.colors.contentHighlight
                     ),
                     modifier = Modifier.testTag(stringResource(R.string.test_tag_checkbox_icon))
                 )
@@ -110,8 +104,8 @@ fun Checkbox(
         label?.let {
             Text(
                 text = it,
-                style = MaterialTheme.typeStyle.labelMedium,
-                color = MaterialTheme.colors.contentSecondary
+                style = LittleLemonTheme.typography.labelMedium,
+                color = LittleLemonTheme.colors.contentSecondary
             )
         }
     }

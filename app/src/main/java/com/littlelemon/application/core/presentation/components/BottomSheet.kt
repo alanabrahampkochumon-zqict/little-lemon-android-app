@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,19 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.graphics.shadow.Shadow
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.designsystem.xLarge
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 
 @Composable
 fun BottomSheet(
@@ -48,10 +40,9 @@ fun BottomSheet(
     onDismiss: () -> Unit = {},
     content: @Composable BoxScope.() -> Unit = {},
 ) {
-    val bottomSheetShape = MaterialTheme.shapes.xLarge.copy(
+    val bottomSheetShape = LittleLemonTheme.shapes.xl.copy(
         bottomStart = CornerSize(0.dp), bottomEnd = CornerSize(0.dp)
     )
-    val bottomSheetShadow = MaterialTheme.shadows.dropXL
 
     Box(
         modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter
@@ -61,7 +52,8 @@ fun BottomSheet(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colors.darkOverlay24).testTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET_BACKGROUND)
+                    .background(LittleLemonTheme.colors.darkOverlay24)
+                    .testTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET_BACKGROUND)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
@@ -75,22 +67,14 @@ fun BottomSheet(
                 modifier = Modifier
                     .widthIn(max = 800.dp)
                     .heightIn(min = 400.dp, max = 900.dp)
-                    .dropShadow(
-                        bottomSheetShape, with(LocalDensity.current) {
-                            bottomSheetShadow.firstShadow.toComposeShadow(
-                                this.density
-                            )
-                        })
-                    .dropShadow(
-                        bottomSheetShape, with(LocalDensity.current) {
-                            bottomSheetShadow.secondShadow?.toComposeShadow(this.density) ?: Shadow(
-                                0.dp
-                            )
-                        })
-                    .background(MaterialTheme.colors.primary, shape = bottomSheetShape)
+                    .applyShadow(bottomSheetShape, LittleLemonTheme.shadows.upperLG)
+                    .background(LittleLemonTheme.colors.primary, shape = bottomSheetShape)
                     .fillMaxWidth()
-                    .padding(MaterialTheme.dimens.size2XL)
-                    .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {}
+                    .padding(LittleLemonTheme.dimens.size2XL)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {}
                     .testTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET)
             ) {
                 content()
