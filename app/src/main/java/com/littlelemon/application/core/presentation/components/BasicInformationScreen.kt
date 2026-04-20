@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,9 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 
 @Composable
 fun ActionScreen(
@@ -40,14 +36,14 @@ fun ActionScreen(
     heading: String,
     content: String,
     modifier: Modifier = Modifier,
-    headingColor: Color = MaterialTheme.colors.contentHighlight,
+    headingColor: Color = LittleLemonTheme.colors.contentHighlight,
 ) {
     Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         DoodleBackground(alpha = 0.1f)
 
         Column(
             Modifier
-                .padding(MaterialTheme.dimens.sizeXL)
+                .padding(LittleLemonTheme.dimens.sizeXL)
                 .verticalScroll(rememberScrollState())
                 .widthIn(max = 400.dp)
                 .fillMaxWidth(),
@@ -56,19 +52,19 @@ fun ActionScreen(
             Text(
                 heading,
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typeStyle.headlineLarge.copy(textAlign = TextAlign.Center),
+                style = LittleLemonTheme.typography.headlineLarge.copy(textAlign = TextAlign.Center),
                 color = headingColor
             )
-            Spacer(Modifier.height(MaterialTheme.dimens.sizeXS))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.sizeXS))
             Text(
                 content,
                 modifier = Modifier
                     .fillMaxWidth()
                     .widthIn(max = 320.dp),
-                style = MaterialTheme.typeStyle.bodyMedium.copy(textAlign = TextAlign.Center),
-                color = MaterialTheme.colors.contentSecondary
+                style = LittleLemonTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
+                color = LittleLemonTheme.colors.contentSecondary
             )
-            Spacer(Modifier.height(MaterialTheme.dimens.size3XL))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
             Image(
                 painterResource(illustration),
                 contentDescription = null,
@@ -78,9 +74,9 @@ fun ActionScreen(
                     .fillMaxWidth()
                     .testTag(CoreTestTags.ACTION_SCREEN_ILLUSTRATION)
             )
-            Spacer(Modifier.height(MaterialTheme.dimens.size4XL))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size4XL))
             Button(primaryActionLabel, onPrimaryActionClick, variant = ButtonVariant.HIGH_CONTRAST)
-            Spacer(Modifier.height(MaterialTheme.dimens.sizeXS))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.sizeXS))
             Button(secondaryActionLabel, onSecondaryActionClick, variant = ButtonVariant.GHOST)
         }
     }

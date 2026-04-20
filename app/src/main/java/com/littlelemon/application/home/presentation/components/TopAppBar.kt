@@ -12,12 +12,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,10 +26,7 @@ import com.littlelemon.application.address.domain.models.PhysicalAddress
 import com.littlelemon.application.address.presentation.screens.components.AddressPicker
 import com.littlelemon.application.core.presentation.components.PrimaryIconButton
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.home.HomeTestTags
 
 // TODO: Add address to address picker
@@ -44,22 +38,23 @@ fun TopAppBar(
     modifier: Modifier = Modifier
 ) {
     val shape =
-        MaterialTheme.shapes.large.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp))
+        LittleLemonTheme.shapes.lg.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp))
 
-    val address = defaultAddress.label + " (" +if(defaultAddress.address?.address?.isNotBlank() == true) defaultAddress.address.address else defaultAddress.address?.streetAddress + ")"
+    val address =
+        defaultAddress.label + " (" + if (defaultAddress.address?.address?.isNotBlank() == true) defaultAddress.address.address else defaultAddress.address?.streetAddress + ")"
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .dropShadow(
+            .applyShadow(
                 shape,
-                MaterialTheme.shadows.dropSM.firstShadow.toComposeShadow(LocalDensity.current.density)
+                LittleLemonTheme.shadows.dropSM
             )
-            .background(MaterialTheme.colors.primary, shape)
+            .background(LittleLemonTheme.colors.primary, shape)
             .padding(
-                start = MaterialTheme.dimens.sizeXL,
-                end = MaterialTheme.dimens.sizeXL,
-                bottom = MaterialTheme.dimens.sizeXL
+                start = LittleLemonTheme.dimens.sizeXL,
+                end = LittleLemonTheme.dimens.sizeXL,
+                bottom = LittleLemonTheme.dimens.sizeXL
             )
             .statusBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -72,10 +67,10 @@ fun TopAppBar(
                     HomeTestTags.LOGO
                 )
         )
-        Spacer(Modifier.height(MaterialTheme.dimens.sizeLG))
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeLG))
         Row {
             AddressPicker(address, modifier = Modifier.weight(1f))
-            Spacer(Modifier.width(MaterialTheme.dimens.sizeMD))
+            Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
             PrimaryIconButton(
                 R.drawable.ic_search,
                 onClick = onSearchClick,
@@ -92,18 +87,19 @@ fun TopAppBar(
 @Composable
 private fun TopAppBarPreview() {
     LittleLemonTheme {
-        TopAppBar(LocalAddress(
-            id = "1234",
-            label = "Home",
-            address = PhysicalAddress(
-                address = "1234 Building Name",
-                streetAddress = "Javier's Street",
-                city = "Chicago",
-                state = "Illinois",
-                pinCode = "123485"
-            ),
-            location = LocalLocation(1.234, 12.343),
-            isDefault = true
-        ), {})
+        TopAppBar(
+            LocalAddress(
+                id = "1234",
+                label = "Home",
+                address = PhysicalAddress(
+                    address = "1234 Building Name",
+                    streetAddress = "Javier's Street",
+                    city = "Chicago",
+                    state = "Illinois",
+                    pinCode = "123485"
+                ),
+                location = LocalLocation(1.234, 12.343),
+                isDefault = true
+            ), {})
     }
 }

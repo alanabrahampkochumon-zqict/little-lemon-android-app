@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,9 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.home.HomeTestTags
 
 
@@ -67,11 +63,11 @@ fun BottomNavigation(
     Row(
         modifier = modifier
             .background(
-                MaterialTheme.colors.primary
+                LittleLemonTheme.colors.primary
             )
             .padding(
-                horizontal = MaterialTheme.dimens.sizeXL,
-                vertical = MaterialTheme.dimens.sizeMD
+                horizontal = LittleLemonTheme.dimens.sizeXL,
+                vertical = LittleLemonTheme.dimens.sizeMD
             )
             .navigationBarsPadding()
             .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
@@ -86,7 +82,7 @@ fun BottomNavigation(
                 onSelect = { onNavigationClick(option) },
             )
             if (index < NavigationOption.entries.size - 1)
-                Spacer(modifier.width(MaterialTheme.dimens.sizeXL))
+                Spacer(modifier.width(LittleLemonTheme.dimens.sizeXL))
         }
     }
 }
@@ -103,8 +99,8 @@ fun BottomNavigationItem(
     val colorTransition = updateTransition(selected)
     val currentColor by colorTransition.animateColor { state ->
         when (state) {
-            true -> MaterialTheme.colors.contentAccentSecondary
-            false -> MaterialTheme.colors.contentPlaceholder
+            true -> LittleLemonTheme.colors.contentAccentSecondary
+            false -> LittleLemonTheme.colors.contentPlaceholder
         }
     }
 
@@ -129,10 +125,10 @@ fun BottomNavigationItem(
                 modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON)
             )
         }
-        Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXS))
+        Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXS))
         Text(
             label,
-            style = MaterialTheme.typeStyle.bodyXSmall,
+            style = LittleLemonTheme.typography.bodyXSmall,
             color = currentColor
         )
     }
