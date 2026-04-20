@@ -15,16 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.shadow.Shadow
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,12 +36,7 @@ import com.littlelemon.application.address.presentation.mappers.toFullAddress
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.shadows
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
-import com.littlelemon.application.core.presentation.designsystem.xSmall
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import kotlin.math.min
 
 // TODO: Convert to dismissable menu
@@ -61,21 +52,16 @@ fun AddressList(
     val unnamedAddress = stringResource(R.string.unnamed_address_label)
     val locationStringRes = R.string.location_string
     val unknownRes = stringResource(R.string.not_found_cap)
-    val shape = MaterialTheme.shapes.medium
-    val density = LocalDensity.current.density
-    val firstShadow = MaterialTheme.shadows.dropLG.firstShadow.toComposeShadow(density)
-    val secondShadow =
-        MaterialTheme.shadows.dropLG.secondShadow?.toComposeShadow(density) ?: Shadow(0.dp)
+    val shape = LittleLemonTheme.shapes.md
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .dropShadow(shape, firstShadow)
-            .dropShadow(shape, secondShadow)
-            .background(MaterialTheme.colors.primary, shape)
+            .applyShadow(shape, LittleLemonTheme.shadows.dropLG)
+            .background(LittleLemonTheme.colors.primary, shape)
             .padding(
-                MaterialTheme.dimens.sizeMD
-            ), verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.sizeSM)
+                LittleLemonTheme.dimens.sizeMD
+            ), verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeSM)
     ) {
         AddressListItem(
             addressLabel = selected.label ?: unnamedAddress,
@@ -122,22 +108,20 @@ fun AddressListItem(
     modifier: Modifier = Modifier
 ) {
 
-    val shape = MaterialTheme.shapes.xSmall
-    val shadow =
-        MaterialTheme.shadows.dropSM.firstShadow.toComposeShadow(LocalDensity.current.density)
+    val shape = LittleLemonTheme.shapes.xs
+    val borderColor =
+        if (selected) LittleLemonTheme.colors.contentAccentSecondary else LittleLemonTheme.colors.outlineDisabled
 
     Column(
         modifier
             .fillMaxWidth()
-            .dropShadow(shape, shadow)
-            .then(
-                if (selected) Modifier.border(
-                    1.dp, MaterialTheme.colors.contentAccentSecondary, shape
-                ) else Modifier
+            .border(
+                1.dp, borderColor, shape
             )
-            .background(MaterialTheme.colors.primary, shape)
+            .background(LittleLemonTheme.colors.primary, shape)
             .padding(
-                horizontal = MaterialTheme.dimens.sizeLG, vertical = MaterialTheme.dimens.sizeMD
+                horizontal = LittleLemonTheme.dimens.sizeLG,
+                vertical = LittleLemonTheme.dimens.sizeMD
             )
             .selectable(
                 selected = selected,
@@ -150,28 +134,28 @@ fun AddressListItem(
         Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = addressLabel,
-                style = MaterialTheme.typeStyle.bodySmall,
-                color = MaterialTheme.colors.contentTertiary,
+                style = LittleLemonTheme.typography.bodySmall,
+                color = LittleLemonTheme.colors.contentTertiary,
                 modifier = Modifier.weight(1f)
             )
             // TODO: Add animation
             if (selected) {
-                Spacer(Modifier.width(MaterialTheme.dimens.sizeMD))
+                Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
                 Image(
                     painterResource(R.drawable.ic_checkcircle_filled),
                     null,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.contentAccentSecondary),
+                    colorFilter = ColorFilter.tint(LittleLemonTheme.colors.contentAccentSecondary),
                     modifier = Modifier
                         .size(20.dp)
                         .testTag(AddressTestTags.ADDRESS_ITEM_CHECK_ICON)
                 )
             }
         }
-        Spacer(Modifier.height(MaterialTheme.dimens.sizeSM))
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
         Text(
             address,
-            style = MaterialTheme.typeStyle.labelMedium,
-            color = MaterialTheme.colors.contentSecondary,
+            style = LittleLemonTheme.typography.labelMedium,
+            color = LittleLemonTheme.colors.contentSecondary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
