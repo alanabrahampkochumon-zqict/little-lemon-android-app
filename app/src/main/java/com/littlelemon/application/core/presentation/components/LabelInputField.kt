@@ -9,16 +9,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
+import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 
 @Composable
 fun LabelInputField(
@@ -40,10 +37,10 @@ fun LabelInputField(
     Column(modifier.fillMaxWidth()) {
         Text(
             label,
-            color = MaterialTheme.colors.contentSecondary,
-            style = MaterialTheme.typeStyle.labelMedium
+            color = LittleLemonTheme.colors.contentSecondary,
+            style = LittleLemonTheme.typography.labelMedium
         )
-        Spacer(Modifier.height(MaterialTheme.dimens.sizeSM))
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
         TextInputField(
             placeholder = placeholder,
             value = value,

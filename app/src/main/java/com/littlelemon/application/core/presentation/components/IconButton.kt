@@ -17,11 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.utils.applyShadow
-import com.littlelemon.application.core.presentation.utils.toComposeShadow
 
 data class IconButtonColors(
     val backgroundColor: Color,
@@ -146,7 +143,6 @@ fun DestructiveIconButton(
 
     val interactionSource = remember { MutableInteractionSource() }
 
-    val screenDensity = LocalDensity.current.density
     val shape = LittleLemonTheme.shapes.sm
 
     val shadow = if (enabled && showBackground) {
