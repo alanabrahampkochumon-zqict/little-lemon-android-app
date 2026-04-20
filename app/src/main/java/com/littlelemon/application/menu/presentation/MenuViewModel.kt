@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.R
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
+import com.littlelemon.application.menu.domain.usecase.GetCategoriesUseCase
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.update
 
 class MenuViewModel(
     private val getDishes: GetDishesUseCase,
+    private val getCategories: GetCategoriesUseCase,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel(
 ) {
@@ -30,8 +32,15 @@ class MenuViewModel(
     private val _dishSortingFlow = MutableStateFlow(DishSorting.POPULARITY)
     private val _forceFetch = MutableStateFlow(false)
 
+
     private val _currentCategory = MutableStateFlow<String?>(null)
     val currentCategory = _currentCategory.asStateFlow()
+
+
+    val categories = getCategories().stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000L),
+        Resource.Loading(null)
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val state = combine(

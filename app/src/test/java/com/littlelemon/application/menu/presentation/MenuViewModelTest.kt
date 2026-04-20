@@ -4,6 +4,8 @@ import androidx.test.filters.SmallTest
 import app.cash.turbine.test
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.data.mappers.toDish
+import com.littlelemon.application.menu.domain.models.Category
+import com.littlelemon.application.menu.domain.usecase.GetCategoriesUseCase
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.assertNull
 import org.junit.jupiter.api.extension.RegisterExtension
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 
@@ -35,51 +38,84 @@ class MenuViewModelTest {
 
     private val testDispatcher = coroutineRule.testDispatcher
 
-    private val dishes = DishGenerator.generateDishWithCategories(10)
-        .map { (dishEntity, _) -> dishEntity.toDish() }
-    private val outOfStockDishes =
-        DishGenerator.generateDishWithCategories(5)
-            .map { (dishEntity, _) -> dishEntity.toDish().copy(stock = 0) }
+    private val dishes =
+        DishGenerator.generateDishWithCategories(10).map { (dishEntity, _) -> dishEntity.toDish() }
+    private val categories = dishes.flatMap { it.category }.distinct()
+    private val outOfStockDishes = DishGenerator.generateDishWithCategories(5)
+        .map { (dishEntity, _) -> dishEntity.toDish().copy(stock = 0) }
     private val remoteDishes =
-        DishGenerator.generateDishWithCategories(15)
-            .map { (dishEntity, _) -> dishEntity.toDish() }
-    private lateinit var useCase: GetDishesUseCase
+        DishGenerator.generateDishWithCategories(15).map { (dishEntity, _) -> dishEntity.toDish() }
+    private lateinit var getDishesUseCase: GetDishesUseCase
+    private lateinit var getCategoriesUseCase: GetCategoriesUseCase
     private lateinit var viewModel: MenuViewModel
 
     @BeforeEach
     fun setUp() {
-        useCase = mockk()
-        coEvery { useCase.invoke() } returns flow {
+        getDishesUseCase = mockk()
+        getCategoriesUseCase = mockk()
+
+        coEvery { getDishesUseCase.invoke() } returns flow {
             emit(Resource.Success(dishes))
         }
-        viewModel = MenuViewModel(useCase, testDispatcher)
+        coEvery { getCategoriesUseCase.invoke() } returns flow {
+            emit(Resource.Success(categories))
+        }
+        viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
     }
 
 
     @Nested
     inner class ViewModelInitialization {
-        @Test
-        fun initialStateIsSetToLoading() = runTest {
-            // Given viewmodel is created
-            viewModel.state.test {
-                // Then, initial state is loading
-                assertTrue(awaitItem().isLoading)
+
+        @Nested
+        inner class MenuState {
+            @Test
+            fun initialStateIsSetToLoading() = runTest {
+                // Given viewmodel is created
+                viewModel.state.test {
+                    // Then, initial state is loading
+                    assertTrue(awaitItem().isLoading)
+                }
+
             }
 
+            @Test
+            fun getsDishesFromUseCase() = runTest {
+                // Given viewmodel is created
+                viewModel.state.test {
+                    awaitItem() // Skips the initial loading
+
+                    // Then, then result is populated
+                    val state = awaitItem()
+
+                    assertFalse(state.isLoading)
+                    assertNull(state.error)
+                    assertEquals(dishes, state.dishes)
+                }
+            }
         }
 
-        @Test
-        fun getsDishesFromUseCase() = runTest {
-            // Given viewmodel is created
-            viewModel.state.test {
-                awaitItem() // Skips the initial loading
 
-                // Then, then result is populated
-                val state = awaitItem()
+        @Nested
+        inner class Categories {
 
-                assertFalse(state.isLoading)
-                assertNull(state.error)
-                assertEquals(dishes, state.dishes)
+            @Test
+            fun initialStateIsLoading() = runTest {
+                viewModel.categories.test {
+                    assertIs<Resource.Loading<List<Category>>>(awaitItem())
+                }
+            }
+
+
+            @Test
+            fun getsCategoriesFromUseCase() = runTest {
+                viewModel.categories.test {
+                    awaitItem() // Skip initial state
+                    val resource = awaitItem()
+
+                    assertIs<Resource.Success<List<Category>>>(resource)
+                    assertEquals(categories, resource.data)
+                }
             }
         }
     }
@@ -93,15 +129,15 @@ class MenuViewModelTest {
 
             @BeforeEach
             fun setUp() {
-                coEvery { useCase.invoke(filter = DishFilter.INCLUDE_OUT_OF_STOCK) } returns flow {
+                coEvery { getDishesUseCase.invoke(filter = DishFilter.INCLUDE_OUT_OF_STOCK) } returns flow {
                     emit(
                         Resource.Success(dishes + outOfStockDishes)
                     )
                 }
-                coEvery { useCase.invoke(filter = null) } returns flow {
+                coEvery { getDishesUseCase.invoke(filter = null) } returns flow {
                     emit(Resource.Success(dishes))
                 }
-                viewModel = MenuViewModel(useCase, testDispatcher)
+                viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
             }
 
             @Test
@@ -138,17 +174,17 @@ class MenuViewModelTest {
 
             @BeforeEach
             fun setUp() {
-                coEvery { useCase.invoke(sorting = DishSorting.NAME_ASCENDING) } returns flow {
+                coEvery { getDishesUseCase.invoke(sorting = DishSorting.NAME_ASCENDING) } returns flow {
                     emit(
                         Resource.Success(dishes.sortedBy { dish -> dish.title })
                     )
                 }
-                coEvery { useCase.invoke(sorting = DishSorting.NAME_DESCENDING) } returns flow {
+                coEvery { getDishesUseCase.invoke(sorting = DishSorting.NAME_DESCENDING) } returns flow {
                     emit(
                         Resource.Success(dishes.sortedByDescending { dish -> dish.title })
                     )
                 }
-                viewModel = MenuViewModel(useCase, testDispatcher)
+                viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
             }
 
 
@@ -192,18 +228,18 @@ class MenuViewModelTest {
 
             @BeforeEach
             fun setUp() {
-                coEvery { useCase.invoke(forceFetch = true) } returns flow {
+                coEvery { getDishesUseCase.invoke(forceFetch = true) } returns flow {
                     emit(
                         Resource.Success(remoteDishes)
                     )
                 }
 
-                coEvery { useCase.invoke(forceFetch = false) } returns flow {
+                coEvery { getDishesUseCase.invoke(forceFetch = false) } returns flow {
                     emit(
                         Resource.Success(dishes)
                     )
                 }
-                viewModel = MenuViewModel(useCase, testDispatcher)
+                viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
             }
 
             @Test
@@ -240,21 +276,20 @@ class MenuViewModelTest {
         @Nested
         inner class UpdateCategory {
             private val filterCategory = "CATEGORY"
-            private val categoryFilteredDishes =
-                DishGenerator.generateDishWithCategories(5)
-                    .map { (dishEntity, _) -> dishEntity.toDish() }
+            private val categoryFilteredDishes = DishGenerator.generateDishWithCategories(5)
+                .map { (dishEntity, _) -> dishEntity.toDish() }
 
             @BeforeEach
             fun setUp() {
-                coEvery { useCase.invoke(filterCategory = null) } returns flow {
+                coEvery { getDishesUseCase.invoke(filterCategory = null) } returns flow {
                     emit(Resource.Success(dishes))
                 }
 
-                coEvery { useCase.invoke(filterCategory = filterCategory) } returns flow {
+                coEvery { getDishesUseCase.invoke(filterCategory = filterCategory) } returns flow {
                     emit(Resource.Success(categoryFilteredDishes))
                 }
 
-                viewModel = MenuViewModel(useCase, testDispatcher)
+                viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
             }
 
 

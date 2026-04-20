@@ -7,6 +7,7 @@ import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSourceImpl
 import com.littlelemon.application.menu.domain.MenuRepository
+import com.littlelemon.application.menu.domain.usecase.GetCategoriesUseCase
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.menu.presentation.MenuViewModel
 import org.koin.android.ext.koin.androidContext
@@ -15,8 +16,10 @@ import org.koin.dsl.module
 
 val dishModule = module {
     viewModel<MenuViewModel> {
-        MenuViewModel(get())
+        MenuViewModel(get(), get())
     }
+
+    single<GetCategoriesUseCase> { GetCategoriesUseCase(get()) }
 
     single<GetDishesUseCase> { GetDishesUseCase(get()) }
 
