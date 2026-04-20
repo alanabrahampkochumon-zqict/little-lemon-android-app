@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -37,9 +36,6 @@ import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.core.presentation.designsystem.colors
-import com.littlelemon.application.core.presentation.designsystem.dimens
-import com.littlelemon.application.core.presentation.designsystem.typeStyle
 import com.littlelemon.application.home.presentation.components.CategoryCard
 import com.littlelemon.application.menu.MenuTestTags
 import com.littlelemon.application.menu.domain.models.Category
@@ -112,7 +108,7 @@ fun MenuScreenRoot(
                     Row(
                         verticalAlignment = Alignment.Top,
                         horizontalArrangement = Arrangement.spacedBy(
-                            MaterialTheme.dimens.sizeMD
+                            LittleLemonTheme.dimens.sizeMD
                         ),
                         modifier = Modifier.minimumInteractiveComponentSize()
                     ) {
@@ -120,21 +116,21 @@ fun MenuScreenRoot(
                             painterResource(R.drawable.ic_settings),
                             null,
                             colorFilter = ColorFilter.tint(
-                                MaterialTheme.colors.contentHighlight
+                                LittleLemonTheme.colors.contentHighlight
                             )
                         )
                         Text(
                             stringResource(R.string.act_filter),
-                            style = MaterialTheme.typeStyle.labelMedium,
-                            color = MaterialTheme.colors.contentHighlight
+                            style = LittleLemonTheme.typography.labelMedium,
+                            color = LittleLemonTheme.colors.contentHighlight
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(MaterialTheme.dimens.sizeXS))
+                Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXS))
                 LazyRow(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(
-                        MaterialTheme.dimens.sizeMD
+                        LittleLemonTheme.dimens.sizeMD
                     ),
                     contentPadding = PaddingValues(horizontal = contentPadding),
                     modifier = Modifier
