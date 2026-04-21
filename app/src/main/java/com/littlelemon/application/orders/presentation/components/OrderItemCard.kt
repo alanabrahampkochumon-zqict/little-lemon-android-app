@@ -1,9 +1,10 @@
 package com.littlelemon.application.orders.presentation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -293,20 +296,28 @@ fun OrderCardItem(
             }
         }
         Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeLG))
-        Box(
+        Row(
             modifier = Modifier
-                .background(LittleLemonTheme.colors.highlight)
+                .background(LittleLemonTheme.colors.primary)
+                .border(
+                    LittleLemonTheme.dimens.size3XS,
+                    LittleLemonTheme.colors.outlineHighlight,
+                    shape.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp))
+                )
                 .padding(
                     horizontal = LittleLemonTheme.dimens.sizeXL,
                     vertical = LittleLemonTheme.dimens.sizeLG
                 )
                 .fillMaxWidth()
                 .clickable(onClick = onReorder),
-            contentAlignment = Alignment.Center
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
+            Image(painterResource(R.drawable.ic_refresh), contentDescription = null)
+            Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
             Text(
                 text = stringResource(R.string.reorder),
-                color = LittleLemonTheme.colors.contentOnColor,
+                color = LittleLemonTheme.colors.contentAccentSecondary,
                 style = LittleLemonTheme.typography.labelMedium
             )
         }
