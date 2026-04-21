@@ -2,6 +2,7 @@ package com.littlelemon.application.home.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.updateTransition
@@ -9,9 +10,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -25,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -99,12 +103,12 @@ fun BottomNavigationItem(
     val colorTransition = updateTransition(selected)
     val currentColor by colorTransition.animateColor { state ->
         when (state) {
-            true -> LittleLemonTheme.colors.contentAccentSecondary
+            true -> LittleLemonTheme.colors.contentHighlight
             false -> LittleLemonTheme.colors.contentPlaceholder
         }
     }
 
-    Column(
+    Box(
         modifier = modifier
             .size(48.dp)
             .selectable(
@@ -114,23 +118,41 @@ fun BottomNavigationItem(
                 role = Role.Tab,
                 selected = selected
             ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        contentAlignment = Alignment.Center
     ) {
-        Crossfade(selected) { state ->
-            Image(
-                painterResource(if (state) selectedIcon else defaultIcon),
-                contentDescription = label,
-                colorFilter = ColorFilter.tint(currentColor),
-                modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON)
+        AnimatedVisibility(selected) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.radialGradient(
+                            listOf(
+                                LittleLemonTheme.colors.contentAccent,
+                                LittleLemonTheme.colors.transparent
+                            )
+                        )
+                    )
             )
         }
-        Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXS))
-        Text(
-            label,
-            style = LittleLemonTheme.typography.bodyXSmall,
-            color = currentColor
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Crossfade(selected) { state ->
+                Image(
+                    painterResource(if (state) selectedIcon else defaultIcon),
+                    contentDescription = label,
+                    colorFilter = ColorFilter.tint(currentColor),
+                    modifier = Modifier.testTag(HomeTestTags.BOTTOM_NAVIGATION_ICON)
+                )
+            }
+            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeXS))
+            Text(
+                label,
+                style = LittleLemonTheme.typography.bodyXSmall,
+                color = currentColor
+            )
+        }
     }
 }
 
