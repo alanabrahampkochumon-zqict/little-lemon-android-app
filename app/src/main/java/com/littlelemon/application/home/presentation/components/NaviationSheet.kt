@@ -20,6 +20,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -35,10 +38,11 @@ import com.littlelemon.application.home.HomeTestTags
 
 @Composable
 fun NavigationSheet(modifier: Modifier = Modifier) {
+    var selectedItem by remember { mutableStateOf(NavigationOption.HOME) } // TODO: Hoist
     Row(
         modifier = modifier
             .fillMaxSize()
-            .background(LittleLemonTheme.colors.secondary)
+            .background(LittleLemonTheme.colors.secondary),
     ) {
         // Navbar
         Column(
@@ -46,21 +50,31 @@ fun NavigationSheet(modifier: Modifier = Modifier) {
                 .widthIn(min = 280.dp, max = 360.dp)
                 .fillMaxWidth()
                 .fillMaxHeight()
+                .padding(LittleLemonTheme.dimens.sizeXL),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(painterResource(R.drawable.logo_full), null, modifier = Modifier.height(48.dp))
-            AddressPicker("Some address: Replace")
-
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
+            AddressPicker("Some address: Replace", elevated = true)
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
             NavigationOption.entries.forEach { navigationOption ->
-                NavigationItem(navigationOption, true)
+                NavigationItem(
+                    navigationOption,
+                    selectedItem == navigationOption,
+                    { selectedItem = it })
+                Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
             }
         }
     }
 }
 
+// TODO: Add test
 @Composable
 fun NavigationItem(
     navigationOption: NavigationOption,
     selected: Boolean,
+    onSelected: (NavigationOption) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val colorTransition = updateTransition(selected)
