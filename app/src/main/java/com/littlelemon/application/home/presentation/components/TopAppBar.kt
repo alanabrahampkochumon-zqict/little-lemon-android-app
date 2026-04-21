@@ -23,7 +23,7 @@ import com.littlelemon.application.R
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.models.PhysicalAddress
-import com.littlelemon.application.address.presentation.screens.components.AddressPicker
+import com.littlelemon.application.core.presentation.components.AddressPicker
 import com.littlelemon.application.core.presentation.components.PrimaryIconButton
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.utils.applyShadow

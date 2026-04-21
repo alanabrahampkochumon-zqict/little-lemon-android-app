@@ -1,4 +1,4 @@
-package com.littlelemon.application.address.presentation.screens.components
+package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

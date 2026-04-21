@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import com.littlelemon.application.R
+import com.littlelemon.application.core.presentation.components.AddressPicker
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
