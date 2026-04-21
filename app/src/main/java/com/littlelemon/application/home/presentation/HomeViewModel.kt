@@ -24,69 +24,64 @@ class HomeViewModel(
         getDishes(sorting = DishSorting.POPULARITY),
         getCategories()
     ) { addressResult, dishResult, categoryResult ->
-        var state = HomeState(
-            dishLoading = true,
-            addressLoading = true,
-            categoryLoading = true
-        )
-        state = when (addressResult) {
-            is Resource.Failure -> state.copy(
-                addressLoading = false,
-                addressError = if (addressResult.errorMessage != null) UiText.DynamicString(
+
+        ///// ADDRESS //////
+        val addressLoading = addressResult is Resource.Loading
+        val addressError = if (addressResult is Resource.Failure)
+            if (addressResult.errorMessage != null)
+                UiText.DynamicString(
                     addressResult.errorMessage
-                ) else UiText.StringResource(R.string.address_loading_error_message)
-            )
+                )
+            else UiText.StringResource(R.string.address_loading_error_message)
+        else null
+        val addresses =
+            if (addressResult is Resource.Success && addressResult.data != null) addressResult.data else emptyList()
 
-            is Resource.Loading -> state.copy(addressLoading = true, addressError = null)
-            is Resource.Success -> state.copy(
-                addressLoading = false,
-                addressError = null,
-                addresses = addressResult.data ?: emptyList()
-            )
-        }
 
-        state = when (dishResult) {
-            is Resource.Failure -> state.copy(
-                dishLoading = false,
-                dishError = if (dishResult.errorMessage != null) UiText.DynamicString(
+        ///// DISHES //////
+        val dishLoading = dishResult is Resource.Loading
+        val dishError = if (dishResult is Resource.Failure)
+            if (dishResult.errorMessage != null)
+                UiText.DynamicString(
                     dishResult.errorMessage
-                ) else UiText.StringResource(R.string.dish_loading_error_message)
-            )
+                )
+            else UiText.StringResource(R.string.dish_loading_error_message)
+        else null
+        val dishes =
+            if (dishResult is Resource.Success && dishResult.data != null) dishResult.data else emptyList()
 
-            is Resource.Loading -> state.copy(dishLoading = true, dishError = null)
-            is Resource.Success -> state.copy(
-                dishLoading = false,
-                dishError = null,
-                popularDishes = dishResult.data ?: emptyList()
-            )
-        }
 
-        state = when (categoryResult) {
-            is Resource.Failure -> state.copy(
-                categoryLoading = false,
-                categoryError = if (categoryResult.errorMessage != null) UiText.DynamicString(
+        ///// CATEGORIES //////
+        val categoryLoading = categoryResult is Resource.Loading
+        val categoryError = if (categoryResult is Resource.Failure)
+            if (categoryResult.errorMessage != null)
+                UiText.DynamicString(
                     categoryResult.errorMessage
-                ) else UiText.StringResource(R.string.address_loading_error_message)
-            )
+                )
+            else UiText.StringResource(R.string.category_loading_error_message)
+        else null
+        val categories =
+            if (categoryResult is Resource.Success && categoryResult.data != null) categoryResult.data else emptyList()
 
-            is Resource.Loading -> state.copy(categoryLoading = true, categoryError = null)
-            is Resource.Success -> state.copy(
-                categoryLoading = false,
-                categoryError = null,
-                categories = categoryResult.data ?: emptyList()
-            )
-        }
-        return@combine state
+        return@combine HomeState(
+            dishLoading = dishLoading,
+            dishError = dishError,
+            popularDishes = dishes,
+            addressLoading = addressLoading,
+            addressError = addressError,
+            addresses = addresses,
+            categoryLoading = categoryLoading,
+            categoryError = categoryError,
+            categories = categories
+        )
     }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            Resource.Loading(
-                HomeState(
-                    dishLoading = true,
-                    addressLoading = true,
-                    categoryLoading = true
-                )
+            HomeState(
+                dishLoading = true,
+                addressLoading = true,
+                categoryLoading = true
             )
         )
 
