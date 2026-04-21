@@ -5,6 +5,8 @@ import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.utils.AddressGenerator
 import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.menu.domain.usecase.GetCategoriesUseCase
+import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
@@ -18,19 +20,23 @@ import kotlin.test.assertIs
 class HomeViewModelTest {
 
     private lateinit var getAddressUseCase: GetAddressUseCase
+    private lateinit var getDishesUseCase: GetDishesUseCase
+    private lateinit var getCategoriesUseCase: GetCategoriesUseCase
     private lateinit var viewModel: HomeViewModel
     private val addresses = List(3) { AddressGenerator.generateLocalAddress() }
 
     @BeforeEach
     fun setUp() {
         getAddressUseCase = mockk()
+        getDishesUseCase = mockk()
+        getCategoriesUseCase = mockk()
 
         coEvery { getAddressUseCase.invoke() } returns flow {
             emit(Resource.Loading(null))
             emit(Resource.Success(addresses))
         }
 
-        viewModel = HomeViewModel(getAddressUseCase)
+        viewModel = HomeViewModel(getAddressUseCase, getDishesUseCase, getCategoriesUseCase)
     }
 
 
@@ -39,7 +45,7 @@ class HomeViewModelTest {
 
         @Test
         fun initiallyEmitsLoadingState() = runTest {
-            viewModel.addresses.test {
+            viewModel.state.test {
                 val loadingState = awaitItem()
                 assertIs<Resource.Loading<List<LocalAddress>>>(loadingState)
                 cancelAndConsumeRemainingEvents()
@@ -48,7 +54,7 @@ class HomeViewModelTest {
 
         @Test
         fun onSuccess_emitsSuccessResourceWithData() = runTest {
-            viewModel.addresses.test {
+            viewModel.state.test {
                 skipItems(1)
 
                 val successState = awaitItem()
@@ -61,9 +67,9 @@ class HomeViewModelTest {
         fun onFailure_emitsFailureResource() = runTest {
             // When a usecase failure occurs
             coEvery { getAddressUseCase.invoke() } returns flow { emit(Resource.Failure()) }
-            viewModel = HomeViewModel(getAddressUseCase)
+            viewModel = HomeViewModel(getAddressUseCase, getDishesUseCase, getCategoriesUseCase)
 
-            viewModel.addresses.test {
+            viewModel.state.test {
                 skipItems(1)
 
                 // Then a failure state is emitted.
