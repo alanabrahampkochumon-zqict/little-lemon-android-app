@@ -83,9 +83,6 @@ fun MenuCard(
     }
 
     val cardColor = LittleLemonTheme.colors.primary
-//    val discount =
-//        if (dish.discountedPrice != null && dish.discountedPrice > 0.0) ((dish.price - dish.discountedPrice) / dish.price * 100).toInt() else null
-
     Column(
         modifier = modifier
             .applyShadow(imageShape, LittleLemonTheme.shadows.dropSM)
@@ -116,8 +113,8 @@ fun MenuCard(
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current).data(dish.imageURL)
                     .crossfade(true).build(),
-                placeholder = placeholder,
-                error = placeholder,
+                placeholder = placeholder ?: painterResource(R.drawable.illustration_image_loading),
+                error = placeholder ?: painterResource(R.drawable.illustration_image_loading),
                 contentDescription = dish.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
