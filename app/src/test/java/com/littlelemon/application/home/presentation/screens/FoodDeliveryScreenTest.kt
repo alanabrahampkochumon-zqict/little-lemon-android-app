@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.home.presentation.HomeState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,7 +26,7 @@ class FoodDeliveryScreenTest {
     fun categoryHeaderIsDisplayed() {
         testRule.setContent {
             LazyColumn {
-                foodDeliveryContent(12.dp)
+                foodDeliveryContent(HomeState(), {}, {}, 12.dp)
             }
         }
 
@@ -37,7 +38,7 @@ class FoodDeliveryScreenTest {
     fun popularOrderHeaderIsDisplayed() {
         testRule.setContent {
             LazyColumn {
-                foodDeliveryContent(12.dp)
+                foodDeliveryContent(HomeState(), {}, {}, 12.dp)
             }
         }
 
