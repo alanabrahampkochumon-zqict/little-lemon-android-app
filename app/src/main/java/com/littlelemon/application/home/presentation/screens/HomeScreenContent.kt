@@ -41,12 +41,18 @@ import kotlin.time.Duration.Companion.days
 @Composable
 fun HomeScreenContent(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
     val homeState by viewModel.state.collectAsStateWithLifecycle()
-    HomeScreenContentRoot(homeState, modifier)
+    HomeScreenContentRoot(homeState, {/* TODO */ }, {/* TODO */ }, {/* TODO */ }, modifier)
 }
 
 
 @Composable
-fun HomeScreenContentRoot(state: HomeState, modifier: Modifier = Modifier) {
+fun HomeScreenContentRoot(
+    state: HomeState,
+    onCategoryChange: (String) -> Unit,
+    onViewAll: () -> Unit,
+    onGetRoute: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val cardWidth = 340.dp
     // TODO: Replace with state
     val currentInstant = LocalDateTime(2025, Month.MAY, 12, 14, 30).toInstant(TimeZone.UTC)
@@ -101,7 +107,7 @@ fun HomeScreenContentRoot(state: HomeState, modifier: Modifier = Modifier) {
                 items(reservations) { reservation ->
                     ReservationCard(
                         reservation = reservation,
-                        onGetRoute = {/* TODO */ },
+                        onGetRoute = onGetRoute,
                         modifier = Modifier.width(cardWidth)
                     )
                 }
@@ -109,7 +115,7 @@ fun HomeScreenContentRoot(state: HomeState, modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.size3XL))
         }
-        foodDeliveryContent(state, {/* TODO */ }, {/* TODO */ }, contentPadding)
+        foodDeliveryContent(state, onCategoryChange, onViewAll, contentPadding)
     }
 }
 
@@ -147,7 +153,7 @@ private fun HomeScreenContentPreview() {
                     Category("Category 3"),
                     Category("Category 4"),
                 )
-            )
+            ), {}, {}, {}
         )
     }
 }
