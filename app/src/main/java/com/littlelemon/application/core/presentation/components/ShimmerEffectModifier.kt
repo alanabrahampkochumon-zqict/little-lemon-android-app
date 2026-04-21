@@ -15,18 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 
 @Composable
 fun Modifier.shimmer(
-    durationMillis: Int = 1000,
+    durationMillis: Int = 2000,
 ): Modifier {
-    val transition = rememberInfiniteTransition(label = "")
-
-    val colorStop by transition.animateFloat(
+    val transition = rememberInfiniteTransition(label = "shimmer_transition")
+// TODO: Rework animation jumping
+    val translation by transition.animateFloat(
         initialValue = 0.0f,
         targetValue = 1.0f,
         animationSpec = infiniteRepeatable(
@@ -36,18 +35,21 @@ fun Modifier.shimmer(
             ),
             repeatMode = RepeatMode.Restart,
         ),
-        label = "color stop animation"
+        label = "shimmer_transition"
     )
 
-    val colorStops = arrayOf(
-        0.0f to LittleLemonTheme.colors.secondary,
-        colorStop to LittleLemonTheme.colors.disabled,
-        1.0f to LittleLemonTheme.colors.secondary
+    val colors = listOf(
+        LittleLemonTheme.colors.secondary,
+        LittleLemonTheme.colors.disabled,
+        LittleLemonTheme.colors.secondary
     )
     return drawBehind {
+        val x = translation * size.width * 3 - size.width
         drawRect(
             brush = Brush.linearGradient(
-                colorStops = colorStops
+                colors = colors,
+                start = Offset(x = x, y = 0f),
+                end = Offset(x = x + size.width, y = size.height)
             )
         )
     }
@@ -59,10 +61,12 @@ fun Modifier.shimmer(
 private fun ShimmerEffectPreview() {
 
     LittleLemonTheme {
-        Box(Modifier
-            .width(250.dp)
-            .height(250.dp)
-            .shimmer())
+        Box(
+            Modifier
+                .width(250.dp)
+                .height(250.dp)
+                .shimmer()
+        )
     }
 
 }

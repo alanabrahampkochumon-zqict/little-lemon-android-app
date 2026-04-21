@@ -1,12 +1,14 @@
 package com.littlelemon.application.home.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -22,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
+import com.littlelemon.application.core.presentation.components.shimmer
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.home.presentation.HomeState
 import com.littlelemon.application.home.presentation.HomeViewModel
@@ -85,7 +88,9 @@ fun HomeScreenContentRoot(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
-
+            Box(Modifier
+                .size(300.dp)
+                .shimmer())
             Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
 
             // Upcoming reservations | Conditionally render
