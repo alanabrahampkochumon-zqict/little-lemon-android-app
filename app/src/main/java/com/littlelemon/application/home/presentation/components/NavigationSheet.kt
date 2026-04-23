@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
+import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.core.presentation.components.AddressPicker
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.utils.applyShadow
@@ -62,7 +63,8 @@ fun NavigationSheet(content: @Composable () -> Unit, modifier: Modifier = Modifi
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(painterResource(R.drawable.logo_full), null, modifier = Modifier.height(48.dp))
+            Image(painterResource(R.drawable.logo_full), null, modifier = Modifier.height(48.dp).testTag(
+                CoreTestTags.LOGO))
             Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
             AddressPicker("Some address: Replace", elevated = true)
             Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))

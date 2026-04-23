@@ -53,7 +53,7 @@ fun BottomSheet(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(LittleLemonTheme.colors.darkOverlay24)
-                    .testTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET_BACKGROUND)
+                    .testTag(CoreTestTags.BOTTOM_SHEET_BACKGROUND)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
@@ -75,7 +75,7 @@ fun BottomSheet(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) {}
-                    .testTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET)
+                    .testTag(CoreTestTags.BOTTOM_SHEET)
             ) {
                 content()
             }

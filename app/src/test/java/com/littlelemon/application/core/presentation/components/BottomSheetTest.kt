@@ -28,13 +28,13 @@ class BottomSheetTest {
 
     private lateinit var bottomSheetBackground: SemanticsNodeInteraction
     private lateinit var bottomSheet: SemanticsNodeInteraction
-    
+
     @Before
     fun setUp() {
         composeTestRule.mainClock.autoAdvance = false
-        bottomSheet = composeTestRule.onNodeWithTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET)
+        bottomSheet = composeTestRule.onNodeWithTag(CoreTestTags.BOTTOM_SHEET)
         bottomSheetBackground =
-            composeTestRule.onNodeWithTag(CoreTestTags.TEST_TAG_BOTTOM_SHEET_BACKGROUND)
+            composeTestRule.onNodeWithTag(CoreTestTags.BOTTOM_SHEET_BACKGROUND)
 
     }
 
