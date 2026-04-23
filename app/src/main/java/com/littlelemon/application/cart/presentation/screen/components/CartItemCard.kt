@@ -45,7 +45,7 @@ fun CartItemCard(
     onRemoveItem: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val cardShape = LittleLemonTheme.shapes.xs
+    val cardShape = LittleLemonTheme.shapes.sm
     val imageOffset = LittleLemonTheme.dimens.sizeLG
 
     val fontOffset = -LittleLemonTheme.dimens.sizeSM
@@ -54,7 +54,7 @@ fun CartItemCard(
     val discountedTotal = cartItem.quantity * (cartItem.dish.discountedPrice ?: 0.0)
     Column(
         modifier = modifier
-            .applyShadow(cardShape, LittleLemonTheme.shadows.dropXS)
+            .applyShadow(cardShape, LittleLemonTheme.shadows.dropSM)
             .background(LittleLemonTheme.colors.primary, shape = cardShape)
     ) {
         Row(
@@ -71,10 +71,10 @@ fun CartItemCard(
                     .size(80.dp)
                     .offset(y = imageOffset)
                     .background(
-                        LittleLemonTheme.colors.primaryDark,
+                        LittleLemonTheme.colors.disabled,
                         shape = LittleLemonTheme.shapes.xs
                     ),
-                placeholder = painterResource(R.drawable.illustration_image_loading),
+                placeholder = painterResource(R.drawable.ic_gallery), // TODO: Change
                 contentDescription = cartItem.dish.title
             )
             Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))

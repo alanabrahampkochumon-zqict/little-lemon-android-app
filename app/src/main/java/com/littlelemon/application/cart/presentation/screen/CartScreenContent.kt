@@ -116,21 +116,11 @@ fun LazyListScope.itemsSection() {
         )
     }.map { CartItem(it, Random.nextInt(3, 5)) }
 
-//    LazyColumn(
-//        modifier.padding(
-//        ),
-//        contentPadding = PaddingValues(
-//            horizontal = LittleLemonTheme.dimens.sizeLG,
-//            vertical = LittleLemonTheme.dimens.size2XL
-//        ),
-//        verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)
-//    ) {
     items(cartItems) { cartItem ->
         Box(modifier = Modifier.padding(horizontal = LittleLemonTheme.dimens.sizeXL)) {
             CartItemCard(cartItem = cartItem, { /** TODO */ }, { /** TODO */ }, { /** TODO */ })
         }
     }
-//    }
 
 }
 
