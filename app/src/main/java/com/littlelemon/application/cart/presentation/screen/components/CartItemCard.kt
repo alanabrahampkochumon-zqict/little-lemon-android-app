@@ -1,4 +1,4 @@
-package com.littlelemon.application.orders.presentation.components
+package com.littlelemon.application.cart.presentation.screen.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -39,7 +38,7 @@ import kotlinx.datetime.LocalDateTime
 // TODO: Change stepper
 // TODO: Check connect button
 @Composable
-fun OrderItem(
+fun CartItemCard(
     menuItem: MenuItem,
     onIncreaseQuantity: () -> Unit,
     onDecreaseQuantity: () -> Unit,
@@ -158,7 +157,7 @@ fun OrderItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun OrderItemPreview() {
+private fun CartItemCardPreview() {
     LittleLemonTheme {
         Column(
             Modifier
@@ -178,8 +177,8 @@ private fun OrderItemPreview() {
                 dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
                 popularityIndex = 11
             )
-            OrderItem(MenuItem(dish, 2), {}, {}, {})
-            OrderItem(MenuItem(dish.copy(discountedPrice = null), 4), {}, {}, {})
+            CartItemCard(MenuItem(dish, 2), {}, {}, {})
+            CartItemCard(MenuItem(dish.copy(discountedPrice = null), 4), {}, {}, {})
         }
     }
 }

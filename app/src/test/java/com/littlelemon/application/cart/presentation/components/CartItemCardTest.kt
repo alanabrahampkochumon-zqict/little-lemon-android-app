@@ -1,4 +1,4 @@
-package com.littlelemon.application.orders.presentation.components
+package com.littlelemon.application.cart.presentation.components
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -6,6 +6,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.littlelemon.application.R
+import com.littlelemon.application.cart.presentation.screen.components.CartItemCard
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
@@ -19,7 +20,7 @@ import org.robolectric.RuntimeEnvironment
 import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
-class OrderItemTest {
+class CartItemCardTest {
 
     @get:Rule
     val testRule = createComposeRule()
@@ -46,7 +47,7 @@ class OrderItemTest {
     fun dishTitle_isDisplayed() {
         // When an order item is rendered
         testRule.setContent {
-            OrderItem(menuItem, {}, {}, {})
+            CartItemCard(menuItem, {}, {}, {})
         }
 
         // Then, title is displayed
@@ -57,7 +58,7 @@ class OrderItemTest {
     fun dishPrice_isDisplayed() {
         // When an order item is rendered
         testRule.setContent {
-            OrderItem(menuItem, {}, {}, {})
+            CartItemCard(menuItem, {}, {}, {})
         }
 
         // Then, price per item is displayed
@@ -74,7 +75,7 @@ class OrderItemTest {
     fun discountedTotalPrice_isDisplayed() {
         // When an order item is rendered
         testRule.setContent {
-            OrderItem(menuItem, {}, {}, {})
+            CartItemCard(menuItem, {}, {}, {})
         }
 
         // Then, total discounted price is displayed
@@ -91,7 +92,7 @@ class OrderItemTest {
     fun totalPrice_isDisplayed() {
         // When an order item is rendered
         testRule.setContent {
-            OrderItem(menuItem, {}, {}, {})
+            CartItemCard(menuItem, {}, {}, {})
         }
 
         // Then, total price is displayed
@@ -108,7 +109,11 @@ class OrderItemTest {
     fun noDiscountPrice_normalPriceIsDisplayed() {
         // When an order item is rendered
         testRule.setContent {
-            OrderItem(menuItem.copy(dish = menuItem.dish.copy(discountedPrice = null)), {}, {}, {})
+            CartItemCard(
+                menuItem.copy(dish = menuItem.dish.copy(discountedPrice = null)),
+                {},
+                {},
+                {})
         }
 
         // Then, total price is displayed
@@ -127,7 +132,7 @@ class OrderItemTest {
         // Given an order item
         var callbackTriggered = false
         testRule.setContent {
-            OrderItem(
+            CartItemCard(
                 menuItem.copy(dish = menuItem.dish.copy(discountedPrice = null)),
                 { callbackTriggered = true },
                 {},
@@ -146,7 +151,7 @@ class OrderItemTest {
         // Given an order item
         var callbackTriggered = false
         testRule.setContent {
-            OrderItem(
+            CartItemCard(
                 menuItem.copy(dish = menuItem.dish.copy(discountedPrice = null)),
                 { },
                 { callbackTriggered = true },
@@ -165,7 +170,7 @@ class OrderItemTest {
         // Given an order item
         var callbackTriggered = false
         testRule.setContent {
-            OrderItem(
+            CartItemCard(
                 menuItem.copy(dish = menuItem.dish.copy(discountedPrice = null)),
                 { },
                 { },
