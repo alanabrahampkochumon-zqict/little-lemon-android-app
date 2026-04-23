@@ -26,7 +26,7 @@ fun PriceRow(label: String, price: Double, modifier: Modifier = Modifier) {
 
     var priceColor = LittleLemonTheme.colors.contentSecondary
     if (abs(price) < 0.001) {
-        formattedPrice = "FREE"
+        formattedPrice = stringResource(R.string.free)
         priceColor = LittleLemonTheme.colors.contentSuccess
     }
 
