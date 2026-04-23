@@ -159,7 +159,7 @@
     <string name="address_loading_error_message">There was an error loading your address!</string>
     <string name="dish_loading_error_message">An unknown error occured while loading dishes.</string>
     <string name="category_loading_error_message">An unknown error occured while loading categories!</string>
-    <string name="heading_your_cart">Your cart(%d)</string>
+    <string name="heading_your_cart">Your cart (%d)</string>
     <string name="free">FREE</string>
     <string name="subtotal">Subtotal</string>
     <string name="taxes">Taxes</string>

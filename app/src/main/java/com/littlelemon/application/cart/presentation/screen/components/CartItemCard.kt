@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import com.littlelemon.application.R
+import com.littlelemon.application.cart.domain.models.CartItem
 import com.littlelemon.application.core.presentation.components.BasicStepper
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
@@ -31,7 +32,6 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo
-import com.littlelemon.application.orders.domain.models.MenuItem
 import kotlinx.datetime.LocalDateTime
 
 // TODO: Add tests
@@ -39,7 +39,7 @@ import kotlinx.datetime.LocalDateTime
 // TODO: Check connect button
 @Composable
 fun CartItemCard(
-    menuItem: MenuItem,
+    cartItem: CartItem,
     onIncreaseQuantity: () -> Unit,
     onDecreaseQuantity: () -> Unit,
     onRemoveItem: () -> Unit,
@@ -50,8 +50,8 @@ fun CartItemCard(
 
     val fontOffset = -LittleLemonTheme.dimens.sizeSM
 
-    val orderTotal = menuItem.quantity * menuItem.dish.price
-    val discountedTotal = menuItem.quantity * (menuItem.dish.discountedPrice ?: 0.0)
+    val orderTotal = cartItem.quantity * cartItem.dish.price
+    val discountedTotal = cartItem.quantity * (cartItem.dish.discountedPrice ?: 0.0)
     Column(
         modifier = modifier
             .applyShadow(cardShape, LittleLemonTheme.shadows.dropXS)
@@ -66,7 +66,7 @@ fun CartItemCard(
                 .zIndex(1f)
         ) {
             AsyncImage(
-                model = menuItem.dish.imageURL,
+                model = cartItem.dish.imageURL,
                 modifier = Modifier
                     .size(80.dp)
                     .offset(y = imageOffset)
@@ -75,7 +75,7 @@ fun CartItemCard(
                         shape = LittleLemonTheme.shapes.xs
                     ),
                 placeholder = painterResource(R.drawable.illustration_image_loading),
-                contentDescription = menuItem.dish.title
+                contentDescription = cartItem.dish.title
             )
             Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
             Column(
@@ -85,12 +85,12 @@ fun CartItemCard(
                 verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XS)
             ) {
                 Text(
-                    text = menuItem.dish.title,
+                    text = cartItem.dish.title,
                     style = LittleLemonTheme.typography.labelLarge,
                     color = LittleLemonTheme.colors.contentPrimary
                 )
                 Text(
-                    text = stringResource(R.string.price_format_ea, menuItem.dish.price),
+                    text = stringResource(R.string.price_format_ea, cartItem.dish.price),
                     style = LittleLemonTheme.typography.bodySmall,
                     color = LittleLemonTheme.colors.contentTertiary
                 )
@@ -98,7 +98,9 @@ fun CartItemCard(
             Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
             Column(
                 horizontalAlignment = Alignment.End,
-                modifier = Modifier.padding(top = imageOffset).offset(y = fontOffset)
+                modifier = Modifier
+                    .padding(top = imageOffset)
+                    .offset(y = fontOffset)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
@@ -110,15 +112,18 @@ fun CartItemCard(
                     Text(
                         stringResource(
                             R.string.price_format,
-                            if (menuItem.dish.discountedPrice != null) discountedTotal else orderTotal
+                            if (cartItem.dish.discountedPrice != null) discountedTotal else orderTotal
                         ),
                         style = LittleLemonTheme.typography.displayMedium.copy(textAlign = TextAlign.End),
                         color = LittleLemonTheme.colors.contentOnAction,
                         modifier = Modifier.alignByBaseline()
                     )
                 }
-                menuItem.dish.discountedPrice?.let {
-                    Column(horizontalAlignment = Alignment.End, modifier = Modifier.offset(y = fontOffset)) {
+                cartItem.dish.discountedPrice?.let {
+                    Column(
+                        horizontalAlignment = Alignment.End,
+                        modifier = Modifier.offset(y = fontOffset)
+                    ) {
                         Text(
                             stringResource(R.string.currency_symbol) + stringResource(
                                 R.string.price_format,
@@ -136,7 +141,10 @@ fun CartItemCard(
         }
         Row(
             modifier = Modifier
-                .background(LittleLemonTheme.colors.primaryLight, cardShape.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp)))
+                .background(
+                    LittleLemonTheme.colors.primaryLight,
+                    cardShape.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp))
+                )
                 .padding(start = LittleLemonTheme.dimens.size2XL)
         ) {
             Button(
@@ -146,7 +154,7 @@ fun CartItemCard(
                 modifier = Modifier.weight(1f)
             )
             BasicStepper(
-                menuItem.quantity,
+                cartItem.quantity,
                 onIncrease = onIncreaseQuantity,
                 onDecrease = onDecreaseQuantity
             )
@@ -177,8 +185,8 @@ private fun CartItemCardPreview() {
                 dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
                 popularityIndex = 11
             )
-            CartItemCard(MenuItem(dish, 2), {}, {}, {})
-            CartItemCard(MenuItem(dish.copy(discountedPrice = null), 4), {}, {}, {})
+            CartItemCard(CartItem(dish, 2), {}, {}, {})
+            CartItemCard(CartItem(dish.copy(discountedPrice = null), 4), {}, {}, {})
         }
     }
 }
