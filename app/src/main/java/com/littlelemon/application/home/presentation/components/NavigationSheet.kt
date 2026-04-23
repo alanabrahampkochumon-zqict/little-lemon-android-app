@@ -6,6 +6,7 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,11 +37,16 @@ import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.AddressPicker
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
+import com.littlelemon.application.core.presentation.utils.applyShadow
 import com.littlelemon.application.home.HomeTestTags
 
 @Composable
-fun NavigationSheet(modifier: Modifier = Modifier) {
+fun NavigationSheet(content: @Composable () -> Unit, modifier: Modifier = Modifier) {
     var selectedItem by remember { mutableStateOf(NavigationOption.HOME) } // TODO: Hoist
+    val contentCardShape =LittleLemonTheme.shapes.xl.copy(
+        bottomStart = CornerSize(0.dp),
+        bottomEnd = CornerSize(0.dp)
+    )
     Row(
         modifier = modifier
             .fillMaxSize()
@@ -66,6 +73,18 @@ fun NavigationSheet(modifier: Modifier = Modifier) {
                     { selectedItem = it })
                 Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
             }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .applyShadow(contentCardShape, LittleLemonTheme.shadows.dropLG)
+                .background(
+                    LittleLemonTheme.colors.primary,
+                    shape =contentCardShape
+                ).padding(horizontal = LittleLemonTheme.dimens.sizeSM)
+        ) {
+            content()
         }
     }
 }
@@ -125,6 +144,8 @@ fun NavigationItem(
 @Composable
 private fun NavigationSheetPreview() {
     LittleLemonTheme {
-        NavigationSheet()
+        NavigationSheet({
+            Text("Hello, world")
+        })
     }
 }
