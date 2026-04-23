@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.Header
+import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 
 @Composable
@@ -49,7 +51,11 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             }
         }
         item {
-            Header(stringResource(R.string.addresses))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
+            Header(
+                stringResource(R.string.addresses),
+                typeStyle = HeaderTypeStyle.Secondary
+            ) // TODO: Add action content
         }
         items(5) {
 //            AddressCard
@@ -58,7 +64,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ProfileScreenPreview() {
     LittleLemonTheme {
