@@ -2,8 +2,8 @@ package com.littlelemon.application.cart.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -22,6 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.littlelemon.application.R
 import com.littlelemon.application.cart.domain.models.CartItem
 import com.littlelemon.application.cart.presentation.screen.components.CartItemCard
+import com.littlelemon.application.core.presentation.components.Button
+import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.PriceRow
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.menu.domain.models.Dish
@@ -31,13 +34,16 @@ import kotlin.random.Random
 
 @Composable
 fun CartScreenContent(modifier: Modifier = Modifier) {
-    Row(modifier) {
-        PricingSection(modifier = Modifier.fillMaxWidth())
-        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
-        ItemSection(modifier = Modifier.fillMaxWidth())
+    LazyColumn(modifier, verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)) {
+        item {
+            PricingSection(modifier = Modifier.fillMaxWidth())
+            Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
+        }
+        itemsSection()
     }
 }
 
+// TODO: Add test
 @Composable
 fun PricingSection(modifier: Modifier = Modifier) {
     // TODO: REPLACE
@@ -86,11 +92,15 @@ fun PricingSection(modifier: Modifier = Modifier) {
                 color = LittleLemonTheme.colors.contentPrimary
             )
         }
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeXL))
+        Button(
+            stringResource(R.string.proceed_to_checkout),
+            variant = ButtonVariant.HIGH_CONTRAST,
+            onClick = { /** TODO */ })
     }
 }
 
-@Composable
-fun ItemSection(modifier: Modifier = Modifier) {
+fun LazyListScope.itemsSection() {
     val cartItems = List(5) {
         Dish(
             title = "Dish $it",
@@ -106,24 +116,26 @@ fun ItemSection(modifier: Modifier = Modifier) {
         )
     }.map { CartItem(it, Random.nextInt(3, 5)) }
 
-    LazyColumn(
-        modifier.padding(
-        ),
-        contentPadding = PaddingValues(
-            horizontal = LittleLemonTheme.dimens.sizeLG,
-            vertical = LittleLemonTheme.dimens.size2XL
-        ),
-        verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)
-    ) {
-        items(cartItems) { cartItem ->
+//    LazyColumn(
+//        modifier.padding(
+//        ),
+//        contentPadding = PaddingValues(
+//            horizontal = LittleLemonTheme.dimens.sizeLG,
+//            vertical = LittleLemonTheme.dimens.size2XL
+//        ),
+//        verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)
+//    ) {
+    items(cartItems) { cartItem ->
+        Box(modifier = Modifier.padding(horizontal = LittleLemonTheme.dimens.sizeXL)) {
             CartItemCard(cartItem = cartItem, { /** TODO */ }, { /** TODO */ }, { /** TODO */ })
         }
     }
+//    }
 
 }
 
 
-@Preview(showBackground = true, backgroundColor = 0xccc)
+@Preview(showBackground = true, backgroundColor = 0xfff)
 @Composable
 private fun CartScreenContentPreview() {
 
