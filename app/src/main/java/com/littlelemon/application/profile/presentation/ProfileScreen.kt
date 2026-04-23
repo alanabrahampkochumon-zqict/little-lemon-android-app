@@ -14,8 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.littlelemon.application.R
+import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 
 @Composable
@@ -44,6 +47,12 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                     )
                 }
             }
+        }
+        item {
+            Header(stringResource(R.string.addresses))
+        }
+        items(5) {
+//            AddressCard
         }
     }
 }
