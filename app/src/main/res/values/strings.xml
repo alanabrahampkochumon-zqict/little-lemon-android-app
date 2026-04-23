@@ -159,6 +159,7 @@
     <string name="address_loading_error_message">There was an error loading your address!</string>
     <string name="dish_loading_error_message">An unknown error occured while loading dishes.</string>
     <string name="category_loading_error_message">An unknown error occured while loading categories!</string>
+    <string name="heading_your_cart">Your cart(%d)</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>
