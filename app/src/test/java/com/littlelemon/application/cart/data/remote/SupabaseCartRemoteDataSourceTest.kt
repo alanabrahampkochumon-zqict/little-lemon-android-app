@@ -37,7 +37,7 @@ class SupabaseCartRemoteDataSourceTest {
     }
 
     @Nested
-    inner class AddToCart {
+    inner class UpdateCart {
 
         @Test
         fun networkError_throwsError() = runTest {
@@ -50,7 +50,7 @@ class SupabaseCartRemoteDataSourceTest {
             }
             dataSource = SupabaseCartRemoteDataSource(client)
 
-            assertThrows<PostgrestRestException> { dataSource.addToCart(cartItem) }
+            assertThrows<PostgrestRestException> { dataSource.updateCart(cartItem) }
         }
 
         @Test
@@ -65,7 +65,7 @@ class SupabaseCartRemoteDataSourceTest {
             }
             dataSource = SupabaseCartRemoteDataSource(client)
 
-            assertDoesNotThrow { dataSource.addToCart(cartItem) }
+            assertDoesNotThrow { dataSource.updateCart(cartItem) }
         }
     }
 

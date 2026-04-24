@@ -13,21 +13,11 @@ class SupabaseCartRemoteDataSource(private val client: SupabaseClient) : CartRem
         HttpRequestTimeoutException::class,
         HttpRequestException::class
     )
-    override suspend fun addToCart(cartItem: CartItemDTO) {
+    override suspend fun updateCart(cartItem: CartItemDTO) {
         TODO("Not yet implemented")
     }
 
-
-    @Throws(
-        PostgrestRestException::class,
-        HttpRequestTimeoutException::class,
-        HttpRequestException::class
-    )
-    override suspend fun removeFromCart(cartItem: CartItemDTO) {
-        TODO("Not yet implemented")
-    }
-
-
+    
     @Throws(
         PostgrestRestException::class,
         HttpRequestTimeoutException::class,
