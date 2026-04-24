@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.data.local.models
+package com.littlelemon.application.cart.data.local.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
