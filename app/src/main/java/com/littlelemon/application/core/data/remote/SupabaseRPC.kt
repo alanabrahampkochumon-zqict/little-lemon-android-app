@@ -34,5 +34,9 @@ object SupabaseRPC {
         const val P_QUANTITY = "p_quantity"
     }
 
+    object ClearCart {
+        const val RPC_NAME = "clear_cart"
+    }
+
 
 }
