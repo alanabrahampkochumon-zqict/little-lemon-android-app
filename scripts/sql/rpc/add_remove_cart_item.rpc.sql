@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION sync_cart_item(
+CREATE OR REPLACE FUNCTION upsert_cart_item(
   p_dish_id UUID,
   p_quantity INT
 )
