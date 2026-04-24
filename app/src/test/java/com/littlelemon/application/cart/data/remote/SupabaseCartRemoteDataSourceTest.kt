@@ -12,6 +12,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -67,6 +68,40 @@ class SupabaseCartRemoteDataSourceTest {
 
             val dto = dataSource.updateCart(cartItem)
             assertEquals(cartItem, dto)
+        }
+    }
+
+
+    @Nested
+    inner class ClearCart {
+
+        @Test
+        fun networkError_throwsError() = runTest {
+            client = createFakeSupabaseClient {
+                respond(
+                    errorResponse,
+                    errorCode,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }
+            dataSource = SupabaseCartRemoteDataSource(client)
+
+            assertThrows<PostgrestRestException> { dataSource.clearCart() }
+        }
+
+        @Test
+        fun networkSuccess_returnsUpdatedDTO() = runTest {
+            val response = Json.encodeToString(listOf(cartItem))
+            client = createFakeSupabaseClient {
+                respond(
+                    response,
+                    HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }
+            dataSource = SupabaseCartRemoteDataSource(client)
+
+            assertDoesNotThrow { dataSource.clearCart() }
         }
     }
 
