@@ -1,34 +1,32 @@
-CREATE OR REPLACE FUNCTION add_to_cart(
+CREATE OR REPLACE FUNCTION sync_cart_item(
   p_dish_id UUID,
   p_quantity INT
 )
-RETURNS VOID LANGUAGE plpgsql AS $$
+RETURNS cart_item LANGUAGE plpgsql AS $$
+DECLARE
+    d_cart_item cart_item;
 BEGIN
-  IF p_quantity <= 0 THEN RETURN; END IF;
+    -- If the quantity is 0, then delete it from database and return null
+    IF p_quantity <= 0 THEN 
+        DELETE FROM cart_item WHERE user_id = auth.uid() AND dish_id = p_dish_id;
+        RETURN NULL;
+    END IF;
   
-  INSERT INTO cart_item (user_id, dish_id, quantity)
-  VALUES (auth.uid(), p_dish_id, p_quantity)
-  ON CONFLICT (user_id, dish_id) 
-  DO UPDATE SET 
-    quantity = cart_item.quantity + EXCLUDED.quantity;
+    -- If quantity is non-negative, either increment the count or insert into database if the record doesn't exist.
+    INSERT INTO cart_item (user_id, dish_id, quantity)
+    VALUES (auth.uid(), p_dish_id, p_quantity)
+    ON CONFLICT (user_id, dish_id) 
+    DO UPDATE SET quantity = EXCLUDED.quantity
+    RETURNING * INTO d_cart_item;
+    
+    RETURN d_cart_item;
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION remove_from_cart(
-  p_dish_id UUID,
-  p_quantity INT
-)
+CREATE OR REPLACE FUNCTION clear_cart()
 RETURNS VOID LANGUAGE plpgsql AS $$
 BEGIN
-  IF p_quantity <= 0 THEN RETURN; END IF;
-
-  UPDATE cart_item 
-  SET quantity = quantity - p_quantity
-  WHERE user_id = auth.uid() AND dish_id = p_dish_id;
-
-  DELETE FROM cart_item 
-  WHERE user_id = auth.uid() 
-    AND dish_id = p_dish_id 
-    AND quantity <= 0;
+    DELETE FROM cart_item
+    WHERE user_id = auth.uid();
 END;
 $$;
