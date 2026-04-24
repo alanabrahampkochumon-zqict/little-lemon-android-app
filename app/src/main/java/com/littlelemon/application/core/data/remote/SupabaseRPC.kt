@@ -28,5 +28,11 @@ object SupabaseRPC {
         const val P_ID = "p_reservation_id"
     }
 
+    object UpdateCart {
+        const val RPC_NAME = "upsert_cart_item"
+        const val P_DISH_ID = "p_dish_id"
+        const val P_QUANTITY = "p_quantity"
+    }
+
 
 }
