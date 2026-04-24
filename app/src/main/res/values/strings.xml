@@ -168,6 +168,7 @@
     <string name="amount_payable">Amount payable</string>
     <string name="proceed_to_checkout">Proceed to Checkout</string>
     <string name="addresses">Addresses</string>
+    <string name="default_tag">Default</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>
