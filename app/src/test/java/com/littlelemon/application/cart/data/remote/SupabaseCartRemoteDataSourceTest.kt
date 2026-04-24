@@ -12,9 +12,9 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class SupabaseCartRemoteDataSourceTest {
 
@@ -54,8 +54,8 @@ class SupabaseCartRemoteDataSourceTest {
         }
 
         @Test
-        fun networkSuccess_throwsNoError() = runTest {
-            val response = Json.encodeToString(cartItem)
+        fun networkSuccess_returnsUpdatedDTO() = runTest {
+            val response = Json.encodeToString(listOf(cartItem))
             client = createFakeSupabaseClient {
                 respond(
                     response,
@@ -65,7 +65,8 @@ class SupabaseCartRemoteDataSourceTest {
             }
             dataSource = SupabaseCartRemoteDataSource(client)
 
-            assertDoesNotThrow { dataSource.updateCart(cartItem) }
+            val dto = dataSource.updateCart(cartItem)
+            assertEquals(cartItem, dto)
         }
     }
 
