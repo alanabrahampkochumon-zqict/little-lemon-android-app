@@ -1,10 +1,9 @@
-package com.littlelemon.application.cart.data.local
+package com.littlelemon.application.database.cart
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.littlelemon.application.database.LittleLemonDatabase
-import com.littlelemon.application.database.cart.CartDao
 import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.database.menu.MenuDao
 import com.littlelemon.application.menu.utils.DishGenerator
