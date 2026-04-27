@@ -14,13 +14,13 @@ interface CartDao {
     suspend fun upsertCartItem(cartItem: CartItemEntity)
 
     @Query("DELETE FROM cartitementity WHERE id = :id")
-    suspend fun deleteCartItem(id: String)
+    suspend fun removeCartItem(id: String)
 
     @Transaction
     suspend fun upsertOrRemoveCartItem(cartItem: CartItemEntity) {
         upsertCartItem(cartItem)
         if (cartItem.quantity <= 0)
-            deleteCartItem(cartItem.id)
+            removeCartItem(cartItem.id)
     }
 
     @Transaction

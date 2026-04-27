@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.littlelemon.application.database.cart
 
 import android.content.Context
@@ -13,7 +15,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.random.Random
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class CartDaoTest {
 
@@ -70,6 +76,46 @@ class CartDaoTest {
 
         // Then the cart item is updated.
         assertEquals(cartItem, cartDetails.first().cartItem)
+    }
+
+
+    @Test
+    fun removeCartItem_validId_removesItem() = runTest {
+        // Given a non-empty database
+        val ids = List(dishes.size) { Uuid.generateV4().toString() }
+        val removeId = ids[0]
+        dishes.forEachIndexed { index, dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        }
+
+        // When cart item is removed
+        cartDao.removeCartItem(removeId)
+
+        // Then it is removed
+        val cartDetails = cartDao.getAllCartItems().first()
+        assertTrue { cartDetails.indexOfFirst { it.cartItem.id == removeId } == -1 }
+    }
+
+    @Test
+    fun removeCartItem_invalidId_removesNoItem() = runTest {
+        // Given a non-empty database
+        val ids = List(dishes.size) { Uuid.generateV4().toString() }
+        val removeId = Uuid.generateV4().toString()
+        dishes.forEachIndexed { index, dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        }
+
+        // When cart item is removed with invalid ID is removed
+        cartDao.removeCartItem(removeId)
+
+        // Then no item is removed
+        val cartDetails = cartDao.getAllCartItems().first()
+        assertTrue {
+            dishes.all { dish ->
+                cartDetails.map { cartDetailItem -> cartDetailItem.dish.dishId }
+                    .contains(dish.dishId)
+            }
+        }
     }
 
 }
