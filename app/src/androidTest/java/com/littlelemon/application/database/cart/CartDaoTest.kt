@@ -6,6 +6,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.littlelemon.application.database.LittleLemonDatabase
+import com.littlelemon.application.database.cart.models.CartItemDetails
 import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.database.menu.MenuDao
 import com.littlelemon.application.menu.utils.DishGenerator
@@ -190,6 +191,33 @@ class CartDaoTest {
         // Then, it is updated
         val cartDetails = cartDao.getAllCartItems().first()
         assertTrue { cartDetails.indexOfFirst { it.cartItem.id == updatedCartItem.id } == -1 }
+    }
+
+    @Test
+    fun getAllCartItems_emptyDb_returnsEmptyList() = runTest {
+        val result = cartDao.getAllCartItems().first()
+        assertEquals(0, result.size)
+    }
+
+    @Test
+    fun getAllCartItems_nonEmptyDb_returnsListOfCartDetails() = runTest {
+        // Given a non-empty database
+        val cartItems = dishes.map { CartItemEntity(it.dishId, Random.nextInt(3, 5)) }
+        val cartDetails = cartItems.mapIndexed { index, cartItem ->
+            CartItemDetails(
+                cartItem,
+                dish = dishes[index]
+            )
+        }
+        cartItems.forEach { cartItem ->
+            cartDao.upsertCartItem(cartItem)
+        }
+
+        // When queried for cartItems
+        val queriedCartItems = cartDao.getAllCartItems().first()
+
+        // Then it contains all the items
+        assertTrue { cartDetails.all { cartDetail -> queriedCartItems.contains(cartDetail) } }
     }
 
 }
