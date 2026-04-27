@@ -4,6 +4,7 @@ import androidx.room.Room
 import com.littlelemon.application.database.LittleLemonDatabase
 import com.littlelemon.application.database.address.dao.AddressDao
 import com.littlelemon.application.database.address.dao.GeocodingDao
+import com.littlelemon.application.database.cart.CartDao
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -20,6 +21,13 @@ val databaseModule = module {
     single<GeocodingDao> {
         get<LittleLemonDatabase>().geocodingDao
     }
+
+    ///// Cart /////
+    single<CartDao> {
+        get<LittleLemonDatabase>().cartDao
+    }
+
+    ///// Database /////
     single<LittleLemonDatabase> {
         Room.databaseBuilder(androidContext(), LittleLemonDatabase::class.java, databaseName)
             .build()
