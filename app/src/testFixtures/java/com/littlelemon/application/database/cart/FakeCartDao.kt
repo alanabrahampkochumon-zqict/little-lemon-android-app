@@ -13,7 +13,10 @@ import kotlin.uuid.Uuid
 // NOTE: Keep initial items null to seed the database
 //       and pass in a emptyList to seed with no entries.
 @OptIn(ExperimentalUuidApi::class)
-class FakeCartDao(initialItems: List<CartItemEntity>? = null, throwError: Boolean = false) :
+class FakeCartDao(
+    initialItems: List<CartItemEntity>? = null,
+    private val throwError: Boolean = false
+) :
     CartDao {
 
     private val faker = faker {}
@@ -33,16 +36,22 @@ class FakeCartDao(initialItems: List<CartItemEntity>? = null, throwError: Boolea
 
 
     override suspend fun upsertCartItem(cartItem: CartItemEntity) {
+        if (throwError)
+            throw IllegalArgumentException()
         if (cartItem in database)
             database.remove(cartItem)
         database.add(cartItem)
     }
 
     override suspend fun removeCartItem(id: String) {
+        if (throwError)
+            throw IllegalArgumentException()
         database = database.filter { it.id != id }.toMutableList()
     }
 
     override fun getAllCartItems(): Flow<List<CartItemDetails>> = flow {
+        if (throwError)
+            throw IllegalArgumentException()
         emit(database.map {
             CartItemDetails(
                 it, DishEntity(
@@ -62,6 +71,8 @@ class FakeCartDao(initialItems: List<CartItemEntity>? = null, throwError: Boolea
     }
 
     override fun clearCartItems() {
+        if (throwError)
+            throw IllegalArgumentException()
         database.clear()
     }
 
