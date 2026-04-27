@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
-class AuthRepositoryImpl(
+class DefaultAuthRepository(
     private val remoteDataSource: AuthRemoteDataSource
 ) : AuthRepository {
     override suspend fun sendOTP(emailAddress: String): Resource<Unit> {

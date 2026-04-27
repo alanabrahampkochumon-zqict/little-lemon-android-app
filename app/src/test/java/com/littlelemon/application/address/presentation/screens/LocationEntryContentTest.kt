@@ -25,6 +25,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestParameterInjector
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -403,6 +404,7 @@ class LocationEntryContentTest {
     }
 
     @Test
+    @Config(qualifiers = "w1024dp") // Cancel button only shown on larger screens
     fun locationEntryScreen_cancelClicked_triggersOnCloseCallback() {
         // Given a location entry screen
         var callbackTriggered = false

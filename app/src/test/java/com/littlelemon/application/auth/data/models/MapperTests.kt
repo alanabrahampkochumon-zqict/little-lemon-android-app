@@ -1,6 +1,6 @@
 package com.littlelemon.application.auth.data.models
 
-import com.littlelemon.application.auth.data.Constants
+import com.littlelemon.application.auth.AuthConstants
 import com.littlelemon.application.auth.data.mappers.toSessionToken
 import io.github.jan.supabase.auth.user.UserInfo
 import io.github.jan.supabase.auth.user.UserSession
@@ -32,8 +32,8 @@ class MapperTests {
             email = EMAIL_ADDRESS,
             id = "101",
             userMetadata = buildJsonObject {
-                put(Constants.FIRST_NAME_KEY, JsonPrimitive(FIRST_NAME))
-                put(Constants.LAST_NAME_KEY, JsonPrimitive(LAST_NAME))
+                put(AuthConstants.FIRST_NAME_KEY, JsonPrimitive(FIRST_NAME))
+                put(AuthConstants.LAST_NAME_KEY, JsonPrimitive(LAST_NAME))
             },
         )
 

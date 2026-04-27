@@ -1,6 +1,6 @@
 package com.littlelemon.application.auth.di
 
-import com.littlelemon.application.auth.data.AuthRepositoryImpl
+import com.littlelemon.application.auth.data.DefaultAuthRepository
 import com.littlelemon.application.auth.data.remote.AuthRemoteDataSource
 import com.littlelemon.application.auth.domain.AuthRepository
 import com.littlelemon.application.auth.domain.SessionManagerImpl
@@ -29,7 +29,7 @@ val authModule = module {
     single { SaveUserInformationUseCase(get()) }
     single { GetUserSessionStatusUseCase(get()) }
 
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single<AuthRepository> { DefaultAuthRepository(get()) }
 
     single<AuthRemoteDataSource> { AuthRemoteDataSource(get()) }
 }

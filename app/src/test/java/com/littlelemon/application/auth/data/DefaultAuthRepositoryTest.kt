@@ -1,6 +1,7 @@
 package com.littlelemon.application.auth.data
 
 import app.cash.turbine.test
+import com.littlelemon.application.auth.AuthConstants
 import com.littlelemon.application.auth.data.mappers.toSessionToken
 import com.littlelemon.application.auth.data.remote.AuthRemoteDataSource
 import com.littlelemon.application.auth.domain.models.UserSessionStatus
@@ -27,7 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertIs
 
 @ExtendWith(StandardTestDispatcherRule::class)
-class AuthRepositoryImplTest {
+class DefaultAuthRepositoryTest {
 
     private companion object {
         const val EMAIL_ADDRESS = "test@email.com"
@@ -47,8 +48,8 @@ class AuthRepositoryImplTest {
         email = EMAIL_ADDRESS,
         id = "101",
         userMetadata = buildJsonObject {
-            put(Constants.FIRST_NAME_KEY, JsonPrimitive(FIRST_NAME))
-            put(Constants.LAST_NAME_KEY, JsonPrimitive(LAST_NAME))
+            put(AuthConstants.FIRST_NAME_KEY, JsonPrimitive(FIRST_NAME))
+            put(AuthConstants.LAST_NAME_KEY, JsonPrimitive(LAST_NAME))
         },
     )
 
@@ -61,7 +62,7 @@ class AuthRepositoryImplTest {
     )
     private val remoteDataSource = mockk<AuthRemoteDataSource>()
 
-    private val repository = AuthRepositoryImpl(
+    private val repository = DefaultAuthRepository(
         remoteDataSource
     )
 
