@@ -7,14 +7,14 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class ToCartItemEntityTest {
+class CartItemDTOMapperTests {
 
     @Test
-    fun correctlyMapsToEntity() {
+    fun toEntity_correctlyMapsToEntity() {
         val dishId = Uuid.generateV4().toString()
         val quantity = 5
 
-        val entity = CartItemDTO(dishId, quantity).toCartItemEntity()
+        val entity = CartItemDTO(dishId, quantity).toEntity()
 
         assertEquals(dishId, entity.dishId)
         assertEquals(quantity, entity.quantity)
