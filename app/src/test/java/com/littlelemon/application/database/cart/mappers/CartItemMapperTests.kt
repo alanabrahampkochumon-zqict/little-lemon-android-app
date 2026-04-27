@@ -29,4 +29,17 @@ class CartItemMapperTests {
             assertEquals(cartItemId, entity.id)
         }
     }
+
+
+    @Nested
+    inner class ToDTO {
+
+        @Test
+        fun mapsToDTO() {
+            val dto = CartItem(cartItemId, dish, quantity).toDTO()
+
+            assertEquals(quantity, dto.quantity)
+            assertEquals(dish.id, dto.dishId)
+        }
+    }
 }
