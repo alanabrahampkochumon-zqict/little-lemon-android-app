@@ -1,4 +1,4 @@
-package com.littlelemon.application.address.data.local.models
+package com.littlelemon.application.database.address.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,9 +1,9 @@
-package com.littlelemon.application.address.data.local.dao
+package com.littlelemon.application.database.address.dao
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import com.littlelemon.application.address.data.local.models.GeocodingEntity
+import com.littlelemon.application.database.address.models.GeocodingEntity
 
 @Dao
 interface GeocodingDao {

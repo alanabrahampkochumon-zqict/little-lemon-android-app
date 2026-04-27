@@ -1,4 +1,4 @@
-package com.littlelemon.application.cart.data.local.models
+package com.littlelemon.application.database.cart.models
 
 import androidx.room.Embedded
 import androidx.room.Relation

@@ -1,11 +1,11 @@
-package com.littlelemon.application.cart.data.local
+package com.littlelemon.application.database.cart
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.littlelemon.application.cart.data.local.models.CartItemDetails
-import com.littlelemon.application.cart.data.local.models.CartItemEntity
+import com.littlelemon.application.database.cart.models.CartItemDetails
+import com.littlelemon.application.database.cart.models.CartItemEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

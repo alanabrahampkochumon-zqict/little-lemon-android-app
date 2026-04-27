@@ -5,9 +5,9 @@ import android.location.Location
 import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
-import com.littlelemon.application.address.data.local.dao.AddressDao
-import com.littlelemon.application.address.data.local.models.AddressEntity
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
+import com.littlelemon.application.database.address.dao.AddressDao
+import com.littlelemon.application.database.address.models.AddressEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 

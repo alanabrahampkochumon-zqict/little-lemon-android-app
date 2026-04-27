@@ -3,7 +3,8 @@ package com.littlelemon.application.cart.data.local
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.littlelemon.application.cart.data.local.models.CartItemEntity
+import com.littlelemon.application.database.cart.CartDao
+import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.menu.data.local.dao.MenuDao
 import com.littlelemon.application.menu.utils.DishGenerator
 import kotlinx.coroutines.flow.first

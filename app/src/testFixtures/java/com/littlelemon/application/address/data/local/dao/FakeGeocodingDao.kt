@@ -1,7 +1,8 @@
 package com.littlelemon.application.address.data.local.dao
 
-import com.littlelemon.application.address.data.local.models.GeocodingEntity
 import com.littlelemon.application.address.utils.GeocodingGenerator
+import com.littlelemon.application.database.address.dao.GeocodingDao
+import com.littlelemon.application.database.address.models.GeocodingEntity
 
 class FakeGeocodingDao(
     entries: List<GeocodingEntity> = emptyList(),

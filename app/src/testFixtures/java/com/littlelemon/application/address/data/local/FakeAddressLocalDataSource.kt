@@ -1,8 +1,8 @@
 package com.littlelemon.application.address.data.local
 
 import android.location.Location
-import com.littlelemon.application.address.data.local.models.AddressEntity
 import com.littlelemon.application.core.domain.exceptions.LocationUnavailableException
+import com.littlelemon.application.database.address.models.AddressEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

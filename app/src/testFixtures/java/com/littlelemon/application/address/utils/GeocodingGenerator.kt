@@ -6,12 +6,12 @@ import com.google.maps.model.GeocodingResult
 import com.google.maps.model.Geometry
 import com.google.maps.model.LatLng
 import com.google.maps.model.LocationType
-import com.littlelemon.application.address.data.local.models.GeocodingEntity
 import com.littlelemon.application.address.data.mappers.toLocationTypeDTO
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.domain.models.GeocodedAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.models.PhysicalAddress
+import com.littlelemon.application.database.address.models.GeocodingEntity
 import io.github.serpro69.kfaker.faker
 import java.util.UUID
 import kotlin.random.Random

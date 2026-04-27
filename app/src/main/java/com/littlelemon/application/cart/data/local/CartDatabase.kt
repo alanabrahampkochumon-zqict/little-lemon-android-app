@@ -2,7 +2,8 @@ package com.littlelemon.application.cart.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.littlelemon.application.cart.data.local.models.CartItemEntity
+import com.littlelemon.application.database.cart.CartDao
+import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.menu.data.local.models.CategoryEntity
 import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.data.local.models.DishEntity

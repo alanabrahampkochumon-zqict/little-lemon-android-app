@@ -1,4 +1,4 @@
-package com.littlelemon.application.address.data.local
+package com.littlelemon.application.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -7,12 +7,14 @@ import com.littlelemon.application.database.address.dao.GeocodingDao
 import com.littlelemon.application.database.address.models.AddressEntity
 import com.littlelemon.application.database.address.models.GeocodingEntity
 
+
 @Database(
     entities = [AddressEntity::class, GeocodingEntity::class],
     version = 1,
     exportSchema = false
 )
-abstract class AddressDatabase : RoomDatabase() {
+abstract class LittleLemonDatabase : RoomDatabase() {
+
     abstract val addressDao: AddressDao
     abstract val geocodingDao: GeocodingDao
 }

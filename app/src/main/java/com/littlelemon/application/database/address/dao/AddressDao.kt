@@ -1,4 +1,4 @@
-package com.littlelemon.application.address.data.local.dao
+package com.littlelemon.application.database.address.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.littlelemon.application.address.data.local.models.AddressEntity
+import com.littlelemon.application.database.address.models.AddressEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

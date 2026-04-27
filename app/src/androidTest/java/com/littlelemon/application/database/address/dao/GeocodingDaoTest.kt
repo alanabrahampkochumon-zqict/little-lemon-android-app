@@ -1,11 +1,11 @@
-package com.littlelemon.application.address.data.local.dao
+package com.littlelemon.application.database.address.dao
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.littlelemon.application.address.data.local.AddressDatabase
-import com.littlelemon.application.address.data.local.models.GeocodingEntity
 import com.littlelemon.application.address.utils.GeocodingGenerator
+import com.littlelemon.application.database.LittleLemonDatabase
+import com.littlelemon.application.database.address.models.GeocodingEntity
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -18,12 +18,12 @@ class GeocodingDaoTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
-    private lateinit var db: AddressDatabase
+    private lateinit var db: LittleLemonDatabase
     private lateinit var dao: GeocodingDao
 
     @Before
     fun setUp() {
-        db = Room.inMemoryDatabaseBuilder(context, AddressDatabase::class.java).build()
+        db = Room.inMemoryDatabaseBuilder(context, LittleLemonDatabase::class.java).build()
         dao = db.geocodingDao
     }
 

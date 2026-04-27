@@ -12,7 +12,6 @@ import com.google.maps.model.LocationType.GEOMETRIC_CENTER
 import com.google.maps.model.LocationType.RANGE_INTERPOLATED
 import com.google.maps.model.LocationType.ROOFTOP
 import com.google.maps.model.LocationType.UNKNOWN
-import com.littlelemon.application.address.data.local.models.GeocodingEntity
 import com.littlelemon.application.address.data.remote.models.GeocodingDTO
 import com.littlelemon.application.address.domain.GeocoderException
 import com.littlelemon.application.address.domain.models.GeocodedAddress
@@ -22,6 +21,7 @@ import com.littlelemon.application.core.domain.exceptions.CoreException
 import com.littlelemon.application.core.domain.exceptions.InvalidRequestException
 import com.littlelemon.application.core.domain.exceptions.RequestDeniedException
 import com.littlelemon.application.core.domain.exceptions.UnknownException
+import com.littlelemon.application.database.address.models.GeocodingEntity
 import com.google.maps.errors.InvalidRequestException as GeoApiInvalidRequestException
 import com.google.maps.errors.RequestDeniedException as GeoApiRequestDeniedException
 

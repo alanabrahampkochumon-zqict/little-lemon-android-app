@@ -1,10 +1,10 @@
-package com.littlelemon.application.address.data.local.dao
+package com.littlelemon.application.database.address.dao
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.littlelemon.application.address.data.local.AddressDatabase
 import com.littlelemon.application.address.utils.AddressGenerator
+import com.littlelemon.application.database.LittleLemonDatabase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -20,12 +20,12 @@ class AddressDaoTests {
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
     private lateinit
-    var db: AddressDatabase
+    var db: LittleLemonDatabase
     private lateinit var dao: AddressDao
 
     @Before
     fun setUp() {
-        db = Room.inMemoryDatabaseBuilder(context, AddressDatabase::class.java).build()
+        db = Room.inMemoryDatabaseBuilder(context, LittleLemonDatabase::class.java).build()
         dao = db.addressDao
     }
 

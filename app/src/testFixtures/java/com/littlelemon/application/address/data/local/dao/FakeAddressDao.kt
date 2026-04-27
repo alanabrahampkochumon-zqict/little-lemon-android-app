@@ -1,7 +1,8 @@
 package com.littlelemon.application.address.data.local.dao
 
-import com.littlelemon.application.address.data.local.models.AddressEntity
 import com.littlelemon.application.address.utils.AddressGenerator
+import com.littlelemon.application.database.address.dao.AddressDao
+import com.littlelemon.application.database.address.models.AddressEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

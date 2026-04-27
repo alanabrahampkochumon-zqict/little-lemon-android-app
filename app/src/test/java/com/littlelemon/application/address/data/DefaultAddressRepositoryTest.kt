@@ -5,7 +5,6 @@ import app.cash.turbine.test
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.local.FakeAddressLocalDataSource
 import com.littlelemon.application.address.data.local.dao.FakeGeocodingDao
-import com.littlelemon.application.address.data.local.dao.GeocodingDao
 import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.mappers.toRequestDTO
@@ -20,6 +19,7 @@ import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.utils.AddressGenerator
 import com.littlelemon.application.address.utils.GeocodingGenerator
 import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.database.address.dao.GeocodingDao
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.every
 import io.mockk.mockk

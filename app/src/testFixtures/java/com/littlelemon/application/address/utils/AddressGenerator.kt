@@ -1,12 +1,12 @@
 package com.littlelemon.application.address.utils
 
-import com.littlelemon.application.address.data.local.models.AddressEntity
 import com.littlelemon.application.address.data.remote.models.AddressDTO
 import com.littlelemon.application.address.domain.models.GeocodedAddress
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.domain.models.PhysicalAddress
 import com.littlelemon.application.address.presentation.AddressState
+import com.littlelemon.application.database.address.models.AddressEntity
 import com.littlelemon.application.utils.LocalDateTimeGenerator
 import io.github.serpro69.kfaker.faker
 import kotlin.uuid.ExperimentalUuidApi
