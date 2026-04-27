@@ -19,7 +19,7 @@ class CartDaoTest {
 
     private lateinit var cartDao: CartDao
     private lateinit var menuDao: MenuDao
-    private lateinit var testDatabase: TestCartDatabase
+    private lateinit var testDatabase: CartDatabase
 
     private val dishes = List(5) { DishGenerator.generateDishEntity().first }
 
@@ -27,9 +27,8 @@ class CartDaoTest {
 
     @Before
     fun setUp() {
-        testDatabase = Room.inMemoryDatabaseBuilder(context, TestCartDatabase::class.java).build()
-        cartDao = testDatabase.cartDao
-        menuDao = testDatabase.menuDao
+        testDatabase = Room.inMemoryDatabaseBuilder(context, CartDatabase::class.java).build()
+        cartDao = testDatabase.dao
         runBlocking {
             menuDao.insertDishes(dishes)
         }

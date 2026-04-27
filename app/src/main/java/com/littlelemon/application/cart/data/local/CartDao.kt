@@ -23,6 +23,7 @@ interface CartDao {
             deleteCartItem(cartItem.id)
     }
 
+    @Transaction
     @Query("SELECT * FROM cartitementity")
     fun getAllCartItems(): Flow<List<CartItemDetails>>
 }

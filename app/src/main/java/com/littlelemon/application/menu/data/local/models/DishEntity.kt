@@ -1,5 +1,6 @@
 package com.littlelemon.application.menu.data.local.models
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -19,15 +20,12 @@ data class DishEntity(
     val popularityIndex: Int = 0, // Used for categorizing products with best sales
     val dateAdded: String
 ) {
-
     data class NutritionInfo(
-        val calories: Int,
-        val protein: Int,
-        val carbs: Int,
-        val fats: Int
+        @ColumnInfo(name = "calories") val calories: Int,
+        @ColumnInfo(name = "protein") val protein: Int,
+        @ColumnInfo(name = "carbs") val carbs: Int,
+        @ColumnInfo(name = "fats") val fats: Int
     )
-
-
 }
 
 
