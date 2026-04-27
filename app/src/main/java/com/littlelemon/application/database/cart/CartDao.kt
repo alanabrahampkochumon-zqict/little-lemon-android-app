@@ -28,5 +28,6 @@ interface CartDao {
     fun getAllCartItems(): Flow<List<CartItemDetails>>
 
 
-//    @Query()
+    @Query("DELETE FROM cartitementity")
+    fun clearCartItems()
 }

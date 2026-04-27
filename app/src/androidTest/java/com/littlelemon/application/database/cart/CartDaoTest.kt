@@ -216,8 +216,26 @@ class CartDaoTest {
         // When queried for cartItems
         val queriedCartItems = cartDao.getAllCartItems().first()
 
-        // Then it contains all the items
+        // Then, it contains all the items
         assertTrue { cartDetails.all { cartDetail -> queriedCartItems.contains(cartDetail) } }
+    }
+
+
+    @Test
+    fun clearAll_nonEmptyDb_clearsAllItems() = runTest {
+        // Given a non-empty database
+        val cartItems = dishes.map { CartItemEntity(it.dishId, Random.nextInt(3, 5)) }
+        cartItems.forEach { cartItem ->
+            cartDao.upsertCartItem(cartItem)
+        }
+
+        // When cleared
+        cartDao.clearCartItems()
+
+
+        // Then, an empty list is returned
+        val items = cartDao.getAllCartItems().first()
+        assertEquals(0, items.size)
     }
 
 }
