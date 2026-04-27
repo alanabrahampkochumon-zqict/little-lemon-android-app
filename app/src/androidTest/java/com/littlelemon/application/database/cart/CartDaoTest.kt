@@ -57,7 +57,7 @@ class CartDaoTest {
         // When cart item is upserted
         cartDao.upsertCartItem(cartItem)
 
-        // Then it is inserted
+        // Then, it is inserted
         val cartDetails = cartDao.getAllCartItems().first()
         assertEquals(cartItem, cartDetails.first().cartItem)
     }
@@ -74,7 +74,7 @@ class CartDaoTest {
         // And queried
         val cartDetails = cartDao.getAllCartItems().first()
 
-        // Then the cart item is updated.
+        // Then, the cart item is updated.
         assertEquals(cartItem, cartDetails.first().cartItem)
     }
 
@@ -91,7 +91,7 @@ class CartDaoTest {
         // When cart item is removed
         cartDao.removeCartItem(removeId)
 
-        // Then it is removed
+        // Then, it is removed
         val cartDetails = cartDao.getAllCartItems().first()
         assertTrue { cartDetails.indexOfFirst { it.cartItem.id == removeId } == -1 }
     }
@@ -108,7 +108,7 @@ class CartDaoTest {
         // When cart item is removed with invalid ID is removed
         cartDao.removeCartItem(removeId)
 
-        // Then no item is removed
+        // Then, no item is removed
         val cartDetails = cartDao.getAllCartItems().first()
         assertTrue {
             dishes.all { dish ->
@@ -116,6 +116,80 @@ class CartDaoTest {
                     .contains(dish.dishId)
             }
         }
+    }
+
+
+    @Test
+    fun upsertOrRemoveCartItem_nonExistentItem_addsIt() = runTest {
+        // Given a non-empty database
+        val ids = List(dishes.size) { Uuid.generateV4().toString() }
+        val newCartItem = CartItemEntity(dishes[0].dishId, 4, Uuid.generateV4().toString())
+        dishes.drop(1).forEachIndexed { index, dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        }
+
+        // When cart item is upserted
+        cartDao.upsertOrRemoveCartItem(newCartItem)
+
+        // Then, it is inserted
+        val cartDetails = cartDao.getAllCartItems().first()
+        assertTrue { cartDetails.map { it.cartItem.id }.contains(newCartItem.id) }
+    }
+
+
+    @Test
+    fun upsertOrRemoveCartItem_existentItem_updatesItem() = runTest {
+        // Given a non-empty database with the cart item in it
+        val ids = List(dishes.size) { Uuid.generateV4().toString() }
+        val updatedCartItem = CartItemEntity(dishes[0].dishId, 100, ids[0])
+        dishes.forEachIndexed { index, dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        }
+
+        // When cart item is upserted
+        cartDao.upsertOrRemoveCartItem(updatedCartItem)
+
+        // Then, it is updated
+        val cartDetails = cartDao.getAllCartItems().first()
+        assertEquals(
+            updatedCartItem.quantity,
+            cartDetails.find { it.cartItem.id == updatedCartItem.id }?.cartItem?.quantity ?: 0
+        )
+    }
+
+
+    @Test
+    fun upsertOrRemoveCartItem_zeroQuantity_removesItem() = runTest {
+        // Given a non-empty database with the cart item in it
+        val ids = List(dishes.size) { Uuid.generateV4().toString() }
+        val updatedCartItem = CartItemEntity(dishes[0].dishId, 0, ids[0])
+        dishes.forEachIndexed { index, dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        }
+
+        // When cart item is upserted
+        cartDao.upsertOrRemoveCartItem(updatedCartItem)
+
+        // Then, it is updated
+        val cartDetails = cartDao.getAllCartItems().first()
+        assertTrue { cartDetails.indexOfFirst { it.cartItem.id == updatedCartItem.id } == -1 }
+    }
+
+    @Test
+    fun upsertOrRemoveCartItem_negativeQuantity_removesItem() = runTest {
+        // Given a non-empty database with the cart item in it
+        val ids = List(dishes.size) { Uuid.generateV4().toString() }
+        val updatedCartItem = CartItemEntity(dishes[0].dishId, 0, ids[0])
+        dishes.forEachIndexed { index, dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        }
+
+        // When cart item is upserted
+        cartDao.upsertOrRemoveCartItem(updatedCartItem)
+
+        // Then, it is updated
+        val cartDetails = cartDao.getAllCartItems().first()
+        assertTrue { cartDetails.indexOfFirst { it.cartItem.id == updatedCartItem.id } == -1 }
     }
 
 }
