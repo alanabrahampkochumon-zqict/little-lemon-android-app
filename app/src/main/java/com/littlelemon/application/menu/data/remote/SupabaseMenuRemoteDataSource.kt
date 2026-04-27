@@ -11,7 +11,7 @@ import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.storage.storage
 import io.ktor.client.plugins.HttpRequestTimeoutException
 
-class MenuRemoteDataSourceImpl(
+class SupabaseMenuRemoteDataSource(
     private val client: SupabaseClient
 ) : MenuRemoteDataSource {
 

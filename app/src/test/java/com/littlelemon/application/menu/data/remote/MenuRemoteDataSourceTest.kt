@@ -49,7 +49,7 @@ class MenuRemoteDataSourceTest {
                 headersOf(HttpHeaders.ContentType, "application/json")
             )
         })
-        val dataSource = MenuRemoteDataSourceImpl(client)
+        val dataSource = SupabaseMenuRemoteDataSource(client)
 
         // Act
         val result = dataSource.fetchDishes()
@@ -68,7 +68,7 @@ class MenuRemoteDataSourceTest {
                 headersOf(HttpHeaders.ContentType, "application/json")
             )
         })
-        val dataSource = MenuRemoteDataSourceImpl(client)
+        val dataSource = SupabaseMenuRemoteDataSource(client)
 
         // Act & Assert
         assertThrows<RestException> { dataSource.fetchDishes() }

@@ -2,7 +2,7 @@ package com.littlelemon.application.menu.di
 
 import com.littlelemon.application.menu.data.DefaultMenuRepository
 import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
-import com.littlelemon.application.menu.data.remote.MenuRemoteDataSourceImpl
+import com.littlelemon.application.menu.data.remote.SupabaseMenuRemoteDataSource
 import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.usecase.GetCategoriesUseCase
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
@@ -24,6 +24,6 @@ val dishModule = module {
     }
 
     single<MenuRemoteDataSource> {
-        MenuRemoteDataSourceImpl(get())
+        SupabaseMenuRemoteDataSource(get())
     }
 }
