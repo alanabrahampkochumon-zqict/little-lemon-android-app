@@ -280,6 +280,7 @@ private fun MenuCardPreview() {
         ) {
             MenuCard(
                 Dish(
+                    id = "",
                     title = "Grilled Whole Fish",
                     description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
                     price = 29.85,
@@ -298,6 +299,7 @@ private fun MenuCardPreview() {
             )
             MenuCard(
                 Dish(
+                    id = "",
                     title = "Grilled Whole Fish",
                     description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with extra-virgin olive oil, the primary source of monounsaturated  fats in this diet",
                     price = 29.85,
@@ -317,6 +319,7 @@ private fun MenuCardPreview() {
             )
             MenuCard(
                 Dish(
+                    id = "",
                     title = "Grilled Whole Fish",
                     description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with extra-virgin olive oil, the primary source of monounsaturated  fats in this diet",
                     price = 29.85,
@@ -335,6 +338,7 @@ private fun MenuCardPreview() {
             )
             MenuCard(
                 Dish(
+                    id = "",
                     title = "Grilled Whole Fish",
                     description = "The warm bread is rubbed with raw garlic cloves known for immune-boosting  and anti-inflammatory properties and generously drizzled with  extra-virgin olive oil (EVOO), the primary source of monounsaturated  fats in this diet",
                     price = 29.85,

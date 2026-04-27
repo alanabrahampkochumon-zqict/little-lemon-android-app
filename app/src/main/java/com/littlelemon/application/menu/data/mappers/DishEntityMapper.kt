@@ -14,6 +14,7 @@ fun DishWithCategories.toDish(): Dish {
     val instant = Instant.parse(dish.dateAdded)
     val timezone = TimeZone.currentSystemDefault()
     return Dish(
+        id = dish.dishId,
         title = dish.title,
         description = dish.description,
         price = dish.price,

@@ -13,8 +13,11 @@ import kotlinx.datetime.LocalDateTime
 import java.util.UUID
 import kotlin.math.roundToInt
 import kotlin.random.Random
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 
+@OptIn(ExperimentalUuidApi::class)
 object DishGenerator {
     private val faker = faker {}
     fun generateDishWithCategories(
@@ -89,6 +92,7 @@ object DishGenerator {
             fats = (Math.random() * 1000).roundToInt(),
         )
         return Dish(
+            id = Uuid.generateV4().toString(),
             title = faker.dessert.dessert()(),
             description = faker.lorem.toString(),
             price = Math.random() * 1000,

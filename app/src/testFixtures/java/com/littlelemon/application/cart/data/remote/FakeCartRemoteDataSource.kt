@@ -14,7 +14,7 @@ class FakeCartRemoteDataSource(
     private val throwError: Boolean = false
 ) : CartRemoteDataSource {
 
-    private val remoteData = mutableListOf<CartItemDTO>()
+    val remoteData = mutableListOf<CartItemDTO>()
 
     init {
         if (initialData == null) {

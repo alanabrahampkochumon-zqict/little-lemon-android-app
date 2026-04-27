@@ -174,6 +174,7 @@ private fun CartItemCardPreview() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             val dish = Dish(
+                id = "",
                 title = "Dish 1",
                 description = "Very long description",
                 price = 14.99,
@@ -185,8 +186,8 @@ private fun CartItemCardPreview() {
                 dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
                 popularityIndex = 11
             )
-            CartItemCard(CartItem(dish, 2), {}, {}, {})
-            CartItemCard(CartItem(dish.copy(discountedPrice = null), 4), {}, {}, {})
+            CartItemCard(CartItem("", dish, 2), {}, {}, {})
+            CartItemCard(CartItem("", dish.copy(discountedPrice = null), 4), {}, {}, {})
         }
     }
 }

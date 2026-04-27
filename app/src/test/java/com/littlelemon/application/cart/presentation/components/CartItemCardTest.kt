@@ -29,7 +29,8 @@ class CartItemCardTest {
     val priceFormat = R.string.price_format
 
     private val cartItem = CartItem(
-        Dish(
+        id = "", dish = Dish(
+            id = "",
             title = "Dish Name",
             description = "Dish Description",
             price = 100.00,
@@ -64,11 +65,9 @@ class CartItemCardTest {
         // Then, price per item is displayed
         testRule.onNodeWithText(
             application.getString(
-                R.string.price_format_ea,
-                cartItem.dish.price
+                R.string.price_format_ea, cartItem.dish.price
             )
-        )
-            .assertIsDisplayed()
+        ).assertIsDisplayed()
     }
 
     @Test
@@ -81,11 +80,9 @@ class CartItemCardTest {
         // Then, total discounted price is displayed
         testRule.onNodeWithText(
             application.getString(
-                priceFormat,
-                cartItem.dish.discountedPrice?.times(cartItem.quantity)
+                priceFormat, cartItem.dish.discountedPrice?.times(cartItem.quantity)
             )
-        )
-            .assertIsDisplayed()
+        ).assertIsDisplayed()
     }
 
     @Test
@@ -98,11 +95,9 @@ class CartItemCardTest {
         // Then, total price is displayed
         testRule.onNodeWithText(
             "$" + application.getString(
-                priceFormat,
-                (cartItem.dish.price * cartItem.quantity)
+                priceFormat, (cartItem.dish.price * cartItem.quantity)
             )
-        )
-            .assertIsDisplayed()
+        ).assertIsDisplayed()
     }
 
     @Test
@@ -120,11 +115,9 @@ class CartItemCardTest {
         // NOTE: In the main price area, the $ is separate from the actual amount.
         testRule.onNodeWithText(
             application.getString(
-                priceFormat,
-                (cartItem.dish.price * cartItem.quantity)
+                priceFormat, (cartItem.dish.price * cartItem.quantity)
             )
-        )
-            .assertIsDisplayed()
+        ).assertIsDisplayed()
     }
 
     @Test

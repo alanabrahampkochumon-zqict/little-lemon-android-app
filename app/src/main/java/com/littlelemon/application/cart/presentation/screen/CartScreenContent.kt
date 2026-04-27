@@ -34,7 +34,10 @@ import kotlin.random.Random
 
 @Composable
 fun CartScreenContent(modifier: Modifier = Modifier) {
-    LazyColumn(modifier, verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)) {
+    LazyColumn(
+        modifier,
+        verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)
+    ) {
         item {
             PricingSection(modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
@@ -103,6 +106,7 @@ fun PricingSection(modifier: Modifier = Modifier) {
 fun LazyListScope.itemsSection() {
     val cartItems = List(5) {
         Dish(
+            id = "",
             title = "Dish $it",
             description = "Long description for the dish that is generated at index $it",
             price = 14.99,
@@ -114,7 +118,7 @@ fun LazyListScope.itemsSection() {
             dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
             popularityIndex = 11
         )
-    }.map { CartItem(it, Random.nextInt(3, 5)) }
+    }.map { CartItem("", it, Random.nextInt(3, 5)) }
 
     items(cartItems) { cartItem ->
         Box(modifier = Modifier.padding(horizontal = LittleLemonTheme.dimens.sizeXL)) {
@@ -131,6 +135,7 @@ private fun CartScreenContentPreview() {
 
     val dishes = List(5) {
         Dish(
+            id = "",
             title = "Dish $it",
             description = "Long description for the dish that is generated at index $it",
             price = 14.99,
@@ -142,7 +147,7 @@ private fun CartScreenContentPreview() {
             dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
             popularityIndex = 11
         )
-    }.map { CartItem(it, Random.nextInt(3, 5)) }
+    }.map { CartItem("", it, Random.nextInt(3, 5)) }
 
     LittleLemonTheme {
         CartScreenContent()

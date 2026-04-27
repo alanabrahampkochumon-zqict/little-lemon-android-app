@@ -3,6 +3,7 @@ package com.littlelemon.application.menu.domain.models
 import kotlinx.datetime.LocalDateTime
 
 data class Dish(
+    val id: String,
     val title: String,
     val description: String?,
     val price: Double,

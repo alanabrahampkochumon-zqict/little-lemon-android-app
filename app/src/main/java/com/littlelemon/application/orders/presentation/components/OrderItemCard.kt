@@ -333,6 +333,7 @@ private fun OrderCardItemPreview() {
         menuItems = listOf(
             MenuItem(
                 Dish(
+                    id = "",
                     title = "Dish 1",
                     description = "Long Description",
                     price = 2.2,
@@ -347,6 +348,7 @@ private fun OrderCardItemPreview() {
             ),
             MenuItem(
                 Dish(
+                    id = "",
                     title = "Dish 2",
                     description = "Long Description",
                     price = 2.2,
@@ -360,6 +362,7 @@ private fun OrderCardItemPreview() {
                 ), quantity = 10
             ), MenuItem(
                 Dish(
+                    id = "",
                     title = "Dish 3",
                     description = "Long Description",
                     price = 2.2,
@@ -373,6 +376,7 @@ private fun OrderCardItemPreview() {
                 ), quantity = 1
             ), MenuItem(
                 Dish(
+                    id = "",
                     title = "Dish 4",
                     description = "Long Description",
                     price = 2.2,

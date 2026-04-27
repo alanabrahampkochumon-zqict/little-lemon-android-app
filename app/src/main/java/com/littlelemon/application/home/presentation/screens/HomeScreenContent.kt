@@ -136,6 +136,7 @@ private fun HomeScreenContentPreview() {
             fats = (Math.random() * 1000).roundToInt(),
         )
         return Dish(
+            id = "",
             title = "Greek Salad",
             description = "The famous greek salad of crispy lettuce, peppers, olives and our Chicago style feta cheese, garnished with crunchy garlic and rosemary croutons",
             price = Math.random() * 1000,
