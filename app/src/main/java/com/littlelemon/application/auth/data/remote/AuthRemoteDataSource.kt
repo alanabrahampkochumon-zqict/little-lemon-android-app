@@ -1,6 +1,6 @@
 package com.littlelemon.application.auth.data.remote
 
-import com.littlelemon.application.auth.data.Constants
+import com.littlelemon.application.auth.AuthConstants
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
@@ -39,8 +39,8 @@ class AuthRemoteDataSource(
     suspend fun savePersonalInformation(firstName: String, lastName: String) {
         client.auth.updateUser {
             data {
-                put(Constants.FIRST_NAME_KEY, firstName)
-                put(Constants.LAST_NAME_KEY, lastName)
+                put(AuthConstants.FIRST_NAME_KEY, firstName)
+                put(AuthConstants.LAST_NAME_KEY, lastName)
             }
         }
     }
