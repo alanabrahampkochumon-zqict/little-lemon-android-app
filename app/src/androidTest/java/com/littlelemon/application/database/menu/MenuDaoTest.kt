@@ -1,12 +1,12 @@
-package com.littlelemon.application.menu.data.local
+package com.littlelemon.application.database.menu
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.littlelemon.application.menu.data.local.dao.MenuDao
-import com.littlelemon.application.menu.data.local.models.CategoryEntity
-import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
+import com.littlelemon.application.database.LittleLemonDatabase
+import com.littlelemon.application.database.menu.models.CategoryEntity
+import com.littlelemon.application.database.menu.models.DishCategoryCrossRef
 import com.littlelemon.application.menu.utils.DishGenerator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -20,18 +20,19 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
-class MenuDatabaseTest {
+class MenuDaoTest {
 
-    private lateinit var database: MenuDatabase
+    private lateinit var database: LittleLemonDatabase
     private lateinit var dao: MenuDao
 
 
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        database = Room.inMemoryDatabaseBuilder(context = context, klass = MenuDatabase::class.java)
-            .build()
-        dao = database.dao
+        database =
+            Room.inMemoryDatabaseBuilder(context = context, klass = LittleLemonDatabase::class.java)
+                .build()
+        dao = database.menuDao
     }
 
     @After
@@ -342,7 +343,7 @@ class MenuDatabaseTest {
         val categories = mutableListOf<CategoryEntity>()
         val crossRefs = mutableListOf<DishCategoryCrossRef>()
         dishes.forEach { dish ->
-            categories.addAll(DishGenerator.generateCategoryEntities(Random.nextInt(5, 20)))
+            categories.addAll(DishGenerator.generateCategoryEntities(Random.Default.nextInt(5, 20)))
             crossRefs.addAll(categories.map { (categoryId, _) ->
                 DishCategoryCrossRef(
                     dishId = dish.dishId,

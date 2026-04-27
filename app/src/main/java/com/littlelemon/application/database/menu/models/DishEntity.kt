@@ -1,4 +1,4 @@
-package com.littlelemon.application.menu.data.local.models
+package com.littlelemon.application.database.menu.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded

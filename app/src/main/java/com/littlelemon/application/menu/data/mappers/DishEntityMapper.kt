@@ -1,8 +1,8 @@
 package com.littlelemon.application.menu.data.mappers
 
-import com.littlelemon.application.menu.data.local.models.CategoryEntity
-import com.littlelemon.application.menu.data.local.models.DishEntity
-import com.littlelemon.application.menu.data.local.models.DishWithCategories
+import com.littlelemon.application.database.menu.models.CategoryEntity
+import com.littlelemon.application.database.menu.models.DishEntity
+import com.littlelemon.application.database.menu.models.DishWithCategories
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.models.NutritionInfo

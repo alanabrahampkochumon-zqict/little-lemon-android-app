@@ -2,7 +2,7 @@ package com.littlelemon.application.database.cart.models
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.littlelemon.application.menu.data.local.models.DishEntity
+import com.littlelemon.application.database.menu.models.DishEntity
 
 data class CartItemDetails(
     @Embedded val cartItem: CartItemEntity,

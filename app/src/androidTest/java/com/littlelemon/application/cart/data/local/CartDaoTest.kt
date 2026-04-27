@@ -3,9 +3,10 @@ package com.littlelemon.application.cart.data.local
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import com.littlelemon.application.database.LittleLemonDatabase
 import com.littlelemon.application.database.cart.CartDao
 import com.littlelemon.application.database.cart.models.CartItemEntity
-import com.littlelemon.application.menu.data.local.dao.MenuDao
+import com.littlelemon.application.database.menu.MenuDao
 import com.littlelemon.application.menu.utils.DishGenerator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -20,7 +21,7 @@ class CartDaoTest {
 
     private lateinit var cartDao: CartDao
     private lateinit var menuDao: MenuDao
-    private lateinit var testDatabase: CartDatabase
+    private lateinit var testDatabase: LittleLemonDatabase
 
     private val dishes = List(5) { DishGenerator.generateDishEntity().first }
 
@@ -28,8 +29,9 @@ class CartDaoTest {
 
     @Before
     fun setUp() {
-        testDatabase = Room.inMemoryDatabaseBuilder(context, CartDatabase::class.java).build()
-        cartDao = testDatabase.dao
+        testDatabase =
+            Room.inMemoryDatabaseBuilder(context, LittleLemonDatabase::class.java).build()
+        cartDao = testDatabase.cartDao
         runBlocking {
             menuDao.insertDishes(dishes)
         }

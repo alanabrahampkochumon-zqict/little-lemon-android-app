@@ -1,7 +1,7 @@
 package com.littlelemon.application.menu.data.mappers
 
-import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
-import com.littlelemon.application.menu.data.local.models.DishEntity
+import com.littlelemon.application.database.menu.models.DishCategoryCrossRef
+import com.littlelemon.application.database.menu.models.DishEntity
 import com.littlelemon.application.menu.data.remote.models.CategoryDTO
 import com.littlelemon.application.menu.data.remote.models.DishDTO
 import com.littlelemon.application.menu.data.remote.models.NutritionInfoDTO

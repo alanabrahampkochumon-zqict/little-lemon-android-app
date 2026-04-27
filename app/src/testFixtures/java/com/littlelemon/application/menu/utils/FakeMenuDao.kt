@@ -1,10 +1,10 @@
 package com.littlelemon.application.menu.utils
 
-import com.littlelemon.application.menu.data.local.dao.MenuDao
-import com.littlelemon.application.menu.data.local.models.CategoryEntity
-import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
-import com.littlelemon.application.menu.data.local.models.DishEntity
-import com.littlelemon.application.menu.data.local.models.DishWithCategories
+import com.littlelemon.application.database.menu.MenuDao
+import com.littlelemon.application.database.menu.models.CategoryEntity
+import com.littlelemon.application.database.menu.models.DishCategoryCrossRef
+import com.littlelemon.application.database.menu.models.DishEntity
+import com.littlelemon.application.database.menu.models.DishWithCategories
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

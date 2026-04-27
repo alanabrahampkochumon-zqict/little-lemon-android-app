@@ -1,26 +1,26 @@
-package com.littlelemon.application.menu.data.local.dao
+package com.littlelemon.application.database.menu
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.littlelemon.application.menu.data.local.models.CategoryEntity
-import com.littlelemon.application.menu.data.local.models.DishCategoryCrossRef
-import com.littlelemon.application.menu.data.local.models.DishEntity
-import com.littlelemon.application.menu.data.local.models.DishWithCategories
+import com.littlelemon.application.database.menu.models.CategoryEntity
+import com.littlelemon.application.database.menu.models.DishCategoryCrossRef
+import com.littlelemon.application.database.menu.models.DishEntity
+import com.littlelemon.application.database.menu.models.DishWithCategories
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MenuDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
     suspend fun insertCategories(categories: List<CategoryEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
     suspend fun insertDishes(dishes: List<DishEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.Companion.IGNORE)
     suspend fun insertDishCategoryCrossRefs(crossRefs: List<DishCategoryCrossRef>)
 
     @Query("SELECT COUNT(*) FROM dishentity")

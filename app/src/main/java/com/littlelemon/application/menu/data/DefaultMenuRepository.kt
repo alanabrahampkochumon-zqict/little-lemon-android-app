@@ -3,8 +3,8 @@ package com.littlelemon.application.menu.data
 import com.littlelemon.application.core.domain.utils.Error
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.domain.utils.toNetworkError
-import com.littlelemon.application.menu.data.local.dao.MenuDao
-import com.littlelemon.application.menu.data.local.models.DishWithCategories
+import com.littlelemon.application.database.menu.MenuDao
+import com.littlelemon.application.database.menu.models.DishWithCategories
 import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.data.mappers.toDishWithCategories
 import com.littlelemon.application.menu.data.mappers.toDomainCategory
