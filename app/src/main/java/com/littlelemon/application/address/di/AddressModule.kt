@@ -1,12 +1,10 @@
 package com.littlelemon.application.address.di
 
-import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.maps.GeoApiContext
 import com.littlelemon.application.BuildConfig
 import com.littlelemon.application.address.data.DefaultAddressRepository
-import com.littlelemon.application.address.data.local.AddressDatabase
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.local.DefaultAddressLocalDataSource
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
@@ -25,8 +23,6 @@ import com.littlelemon.application.address.domain.usecase.ReverseGeocodeLocation
 import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
 import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.core.domain.AddressManager
-import com.littlelemon.application.database.address.dao.AddressDao
-import com.littlelemon.application.database.address.dao.GeocodingDao
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -52,17 +48,6 @@ val addressModule = module {
 
     single<FusedLocationProviderClient> {
         LocationServices.getFusedLocationProviderClient(androidContext())
-    }
-
-    single<AddressDao> {
-        get<AddressDatabase>().addressDao
-    }
-
-    single<GeocodingDao> {
-        get<AddressDatabase>().geocodingDao
-    }
-    single<AddressDatabase> {
-        Room.databaseBuilder(androidContext(), AddressDatabase::class.java, "address.db").build()
     }
 
     single<GeocodingRemoteDataSource> {
