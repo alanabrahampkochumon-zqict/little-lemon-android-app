@@ -76,4 +76,8 @@ class FakeCartDao(
         database.clear()
     }
 
+    override suspend fun getQuantity(id: String): Int {
+        return database.find { it.id == id }?.quantity ?: 0
+    }
+
 }

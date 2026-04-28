@@ -55,7 +55,7 @@ class CartDaoTest {
         // Given an empty database
         val cartItem = CartItemEntity(dishes[0].dishId, 5)
 
-        // When cart item is upserted
+        // When, cart item is upserted
         cartDao.upsertCartItem(cartItem)
 
         // Then, it is inserted
@@ -69,7 +69,7 @@ class CartDaoTest {
         val cartItem = CartItemEntity(dishes[0].dishId, 2)
         cartDao.upsertCartItem(cartItem.copy(quantity = 5))
 
-        // When quantity is updated
+        // When, quantity is updated
         cartDao.upsertCartItem(cartItem)
 
         // And queried
@@ -89,7 +89,7 @@ class CartDaoTest {
             cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
         }
 
-        // When cart item is removed
+        // When, cart item is removed
         cartDao.removeCartItem(removeId)
 
         // Then, it is removed
@@ -106,7 +106,7 @@ class CartDaoTest {
             cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
         }
 
-        // When cart item is removed with invalid ID is removed
+        // When, cart item is removed with invalid ID is removed
         cartDao.removeCartItem(removeId)
 
         // Then, no item is removed
@@ -129,7 +129,7 @@ class CartDaoTest {
             cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
         }
 
-        // When cart item is upserted
+        // When, cart item is upserted
         cartDao.upsertOrRemoveCartItem(newCartItem)
 
         // Then, it is inserted
@@ -147,7 +147,7 @@ class CartDaoTest {
             cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
         }
 
-        // When cart item is upserted
+        // When, cart item is upserted
         cartDao.upsertOrRemoveCartItem(updatedCartItem)
 
         // Then, it is updated
@@ -168,7 +168,7 @@ class CartDaoTest {
             cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
         }
 
-        // When cart item is upserted
+        // When, cart item is upserted
         cartDao.upsertOrRemoveCartItem(updatedCartItem)
 
         // Then, it is updated
@@ -185,7 +185,7 @@ class CartDaoTest {
             cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
         }
 
-        // When cart item is upserted
+        // When, cart item is upserted
         cartDao.upsertOrRemoveCartItem(updatedCartItem)
 
         // Then, it is updated
@@ -213,7 +213,7 @@ class CartDaoTest {
             cartDao.upsertCartItem(cartItem)
         }
 
-        // When queried for cartItems
+        // When, queried for cartItems
         val queriedCartItems = cartDao.getAllCartItems().first()
 
         // Then, it contains all the items
@@ -229,13 +229,42 @@ class CartDaoTest {
             cartDao.upsertCartItem(cartItem)
         }
 
-        // When cleared
+        // When, cleared
         cartDao.clearCartItems()
 
 
         // Then, an empty list is returned
         val items = cartDao.getAllCartItems().first()
         assertEquals(0, items.size)
+    }
+
+    @Test
+    fun getQuantity_ofExistingItem_returnsQuantity() = runTest {
+        // Given a `CartItem` already exists in the database
+        val quantity = 5
+        val cartItem = CartItemEntity(dishes[0].dishId, quantity)
+        cartDao.upsertCartItem(cartItem)
+
+        // When, getQuantity is called with a valid ID
+        val retrievedQuantity = cartDao.getQuantity(cartItem.id)
+
+        // Then, it returns the correct quantity.
+        assertEquals(quantity, retrievedQuantity)
+    }
+
+
+    @Test
+    fun getQuantity_ofNonExistingItem_returnsZero() = runTest {
+        // Given a `CartItem` already exists in the database
+        val quantity = 5
+        val cartItem = CartItemEntity(dishes[0].dishId, quantity)
+        cartDao.upsertCartItem(cartItem)
+
+        // When, getQuantity is called with a valid ID
+        val retrievedQuantity = cartDao.getQuantity("random-id-1234")
+
+        // Then, it returns the correct quantity.
+        assertEquals(0, retrievedQuantity)
     }
 
 }
