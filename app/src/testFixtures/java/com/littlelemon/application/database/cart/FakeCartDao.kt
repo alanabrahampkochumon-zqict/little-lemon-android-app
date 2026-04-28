@@ -1,10 +1,9 @@
 package com.littlelemon.application.database.cart
 
-import com.littlelemon.application.cart.domain.models.CartItem
 import com.littlelemon.application.database.cart.models.CartItemDetails
 import com.littlelemon.application.database.cart.models.CartItemEntity
-import com.littlelemon.application.database.menu.models.DishEntity
 import com.littlelemon.application.database.menu.models.DishWithCategories
+import com.littlelemon.application.menu.utils.DishGenerator
 import io.github.serpro69.kfaker.faker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,7 +15,7 @@ import kotlin.uuid.Uuid
 //       and pass in a emptyList to seed with no entries.
 @OptIn(ExperimentalUuidApi::class)
 class FakeCartDao(
-    initialItems: List<CartItem>? = null,
+    initialItems: List<CartItemEntity>? = null,
     private val throwError: Boolean = false
 ) :
     CartDao {
@@ -24,7 +23,7 @@ class FakeCartDao(
     private val faker = faker {}
 
     private var database = mutableListOf<CartItemEntity>()
-    private var dishes = mutableListOf<DishEntity>()
+    val dishes = mutableListOf<DishWithCategories>()
 
     init {
         if (initialItems == null) {
@@ -33,8 +32,11 @@ class FakeCartDao(
                 database.add(CartItemEntity(Uuid.generateV4().toString(), Random.nextInt(5, 10)))
             }
         } else {
-            database.addAll(initialItems.map { CartItemEntity(it.dish.id, it.quantity) })
-//            dishes.addAll(initialItems.map { it.dish })
+            database.addAll(initialItems)
+            dishes.addAll(initialItems.map { cartItemEntity ->
+                val dish = DishGenerator.generateDishWithCategories(1, 1).first().first
+                dish.copy(dish = dish.dish.copy(dishId = cartItemEntity.dishId))
+            })
         }
     }
 
@@ -58,20 +60,9 @@ class FakeCartDao(
             throw IllegalArgumentException()
         emit(database.map {
             CartItemDetails(
-                it, DishWithCategories(
-                    DishEntity(
-                        dishId = Uuid.generateV4().toString(),
-                        title = faker.dessert.dessert()(),
-                        description = faker.lorem.words(),
-                        price = Random.nextDouble(10.0, 15.0),
-                        image = "",
-                        stock = Random.nextInt(20, 50),
-                        nutritionInfo = null,
-                        discountedPrice = 0.0,
-                        popularityIndex = Random.nextInt(20, 50),
-                        dateAdded = "2024-05-24T11:42:36Z"
-                    ), categories = emptyList()
-                )
+                it,
+                dishes.find { (dish) -> dish.dishId == it.dishId }
+                    ?: DishGenerator.generateDishWithCategories(1, 1).first().first
             )
         })
     }

@@ -1,0 +1,24 @@
+-- CREATE
+-- OR REPLACE FUNCTION PLACE_ORDER (
+--     p_special_instructions TEXT
+-- )
+-- RETURNS VOID AS $$
+-- DECLARE
+--     order_title TEXT;
+--     bill_amount TEXT;
+--     total_payable TEXT;
+-- BEGIN
+--     INSERT INTO user_orders(
+--         user_id,
+--         label,
+--         order_date,
+--         updated_at,
+--         status,
+--         deliver_to,
+--         bill_amount,
+--         delivery_charge,
+--         total_payable,
+--         special_instructions
+--     )
+-- END;
+-- $$;
