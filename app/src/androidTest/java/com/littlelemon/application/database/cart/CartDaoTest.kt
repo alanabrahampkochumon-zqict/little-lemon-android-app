@@ -6,7 +6,6 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.littlelemon.application.database.LittleLemonDatabase
-import com.littlelemon.application.database.cart.models.CartItemDetails
 import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.database.menu.MenuDao
 import com.littlelemon.application.menu.utils.DishGenerator
@@ -29,7 +28,7 @@ class CartDaoTest {
     private lateinit var menuDao: MenuDao
     private lateinit var database: LittleLemonDatabase
 
-    private val dishes = List(5) { DishGenerator.generateDishEntity().first }
+    private val dishes = DishGenerator.generateDishWithCategories(5).map { it.first }
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
@@ -39,7 +38,8 @@ class CartDaoTest {
         cartDao = database.cartDao
         menuDao = database.menuDao
         runBlocking {
-            menuDao.insertDishes(dishes)
+            menuDao.insertCategories(dishes.flatMap { it.categories })
+            menuDao.insertDishes(dishes.map { it.dish })
         }
     }
 
@@ -52,7 +52,7 @@ class CartDaoTest {
     @Test
     fun upsertCartItem_addsNewCartItem() = runTest {
         // Given an empty database
-        val cartItem = CartItemEntity(dishes[0].dishId, 5)
+        val cartItem = CartItemEntity(dishes[0].dish.dishId, 5)
 
         // When, cart item is upserted
         cartDao.upsertCartItem(cartItem)
@@ -65,7 +65,7 @@ class CartDaoTest {
     @Test
     fun upsertCartItem_updatesExistingCartItem() = runTest {
         // Given a `CartItem` already exists in the database
-        val cartItem = CartItemEntity(dishes[0].dishId, 2)
+        val cartItem = CartItemEntity(dishes[0].dish.dishId, 2)
         cartDao.upsertCartItem(cartItem.copy(quantity = 5))
 
         // When, quantity is updated
@@ -82,9 +82,9 @@ class CartDaoTest {
     @Test
     fun removeCartItem_validId_removesItem() = runTest {
         // Given a non-empty database
-        val removeId = dishes.first().dishId
+        val removeId = dishes.first().dish.dishId
         dishes.forEach { dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
+            cartDao.upsertCartItem(CartItemEntity(dish.dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is removed
@@ -100,7 +100,7 @@ class CartDaoTest {
         // Given a non-empty database
         val removeId = Uuid.generateV4().toString()
         dishes.forEach { dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
+            cartDao.upsertCartItem(CartItemEntity(dish.dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is removed with invalid ID is removed
@@ -110,8 +110,8 @@ class CartDaoTest {
         val cartDetails = cartDao.getAllCartItems().first()
         assertTrue {
             dishes.all { dish ->
-                cartDetails.map { cartDetailItem -> cartDetailItem.dish.dishId }
-                    .contains(dish.dishId)
+                cartDetails.map { cartDetailItem -> cartDetailItem.dish.dish.dishId }
+                    .contains(dish.dish.dishId)
             }
         }
     }
@@ -120,9 +120,9 @@ class CartDaoTest {
     @Test
     fun upsertOrRemoveCartItem_nonExistentItem_addsIt() = runTest {
         // Given a non-empty database
-        val newCartItem = CartItemEntity(dishes[0].dishId, 4)
+        val newCartItem = CartItemEntity(dishes[0].dish.dishId, 4)
         dishes.drop(1).forEach { dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
+            cartDao.upsertCartItem(CartItemEntity(dish.dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is upserted
@@ -137,9 +137,9 @@ class CartDaoTest {
     @Test
     fun upsertOrRemoveCartItem_existentItem_updatesItem() = runTest {
         // Given a non-empty database with the cart item in it
-        val updatedCartItem = CartItemEntity(dishes[0].dishId, 100)
+        val updatedCartItem = CartItemEntity(dishes[0].dish.dishId, 100)
         dishes.forEach { dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
+            cartDao.upsertCartItem(CartItemEntity(dish.dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is upserted
@@ -158,9 +158,9 @@ class CartDaoTest {
     @Test
     fun upsertOrRemoveCartItem_zeroQuantity_removesItem() = runTest {
         // Given a non-empty database with the cart item in it
-        val updatedCartItem = CartItemEntity(dishes[0].dishId, 0)
+        val updatedCartItem = CartItemEntity(dishes[0].dish.dishId, 0)
         dishes.forEach { dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
+            cartDao.upsertCartItem(CartItemEntity(dish.dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is upserted
@@ -174,9 +174,9 @@ class CartDaoTest {
     @Test
     fun upsertOrRemoveCartItem_negativeQuantity_removesItem() = runTest {
         // Given a non-empty database with the cart item in it
-        val updatedCartItem = CartItemEntity(dishes[0].dishId, 0)
+        val updatedCartItem = CartItemEntity(dishes[0].dish.dishId, 0)
         dishes.forEach { dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
+            cartDao.upsertCartItem(CartItemEntity(dish.dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is upserted
@@ -196,28 +196,24 @@ class CartDaoTest {
     @Test
     fun getAllCartItems_nonEmptyDb_returnsListOfCartDetails() = runTest {
         // Given a non-empty database
-        val cartItems = dishes.map { CartItemEntity(it.dishId, Random.nextInt(3, 5)) }
-        val cartDetails = cartItems.mapIndexed { index, cartItem ->
-            CartItemDetails(
-                cartItem, dish = dishes[index]
-            )
-        }
+        val cartItems = dishes.map { CartItemEntity(it.dish.dishId, Random.nextInt(3, 5)) }
         cartItems.forEach { cartItem ->
             cartDao.upsertCartItem(cartItem)
         }
 
         // When, queried for cartItems
         val queriedCartItems = cartDao.getAllCartItems().first()
+        val queriedCartIds = queriedCartItems.map { cartDetails -> cartDetails.dish.dish.dishId }
 
         // Then, it contains all the items
-        assertTrue { cartDetails.all { cartDetail -> queriedCartItems.contains(cartDetail) } }
+        assertTrue { cartItems.all { cartItem -> queriedCartIds.contains(cartItem.dishId) } }
     }
 
 
     @Test
     fun clearAll_nonEmptyDb_clearsAllItems() = runTest {
         // Given a non-empty database
-        val cartItems = dishes.map { CartItemEntity(it.dishId, Random.nextInt(3, 5)) }
+        val cartItems = dishes.map { CartItemEntity(it.dish.dishId, Random.nextInt(3, 5)) }
         cartItems.forEach { cartItem ->
             cartDao.upsertCartItem(cartItem)
         }
@@ -235,7 +231,7 @@ class CartDaoTest {
     fun getQuantity_ofExistingItem_returnsQuantity() = runTest {
         // Given a `CartItem` already exists in the database
         val quantity = 5
-        val cartItem = CartItemEntity(dishes[0].dishId, quantity)
+        val cartItem = CartItemEntity(dishes[0].dish.dishId, quantity)
         cartDao.upsertCartItem(cartItem)
 
         // When, getQuantity is called with a valid ID
@@ -250,7 +246,7 @@ class CartDaoTest {
     fun getQuantity_ofNonExistingItem_returnsZero() = runTest {
         // Given a `CartItem` already exists in the database
         val quantity = 5
-        val cartItem = CartItemEntity(dishes[0].dishId, quantity)
+        val cartItem = CartItemEntity(dishes[0].dish.dishId, quantity)
         cartDao.upsertCartItem(cartItem)
 
         // When, getQuantity is called with a valid ID

@@ -3,6 +3,7 @@ package com.littlelemon.application.database.cart
 import com.littlelemon.application.database.cart.models.CartItemDetails
 import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.database.menu.models.DishEntity
+import com.littlelemon.application.database.menu.models.DishWithCategories
 import io.github.serpro69.kfaker.faker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -54,17 +55,19 @@ class FakeCartDao(
             throw IllegalArgumentException()
         emit(database.map {
             CartItemDetails(
-                it, DishEntity(
-                    dishId = Uuid.generateV4().toString(),
-                    title = faker.dessert.dessert()(),
-                    description = faker.lorem.words(),
-                    price = Random.nextDouble(10.0, 15.0),
-                    image = "",
-                    stock = Random.nextInt(20, 50),
-                    nutritionInfo = null,
-                    discountedPrice = 0.0,
-                    popularityIndex = Random.nextInt(20, 50),
-                    dateAdded = "2024-05-24T11:42:36Z"
+                it, DishWithCategories(
+                    DishEntity(
+                        dishId = Uuid.generateV4().toString(),
+                        title = faker.dessert.dessert()(),
+                        description = faker.lorem.words(),
+                        price = Random.nextDouble(10.0, 15.0),
+                        image = "",
+                        stock = Random.nextInt(20, 50),
+                        nutritionInfo = null,
+                        discountedPrice = 0.0,
+                        popularityIndex = Random.nextInt(20, 50),
+                        dateAdded = "2024-05-24T11:42:36Z"
+                    ), categories = emptyList()
                 )
             )
         })
