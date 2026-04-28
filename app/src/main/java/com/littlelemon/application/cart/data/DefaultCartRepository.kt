@@ -6,6 +6,7 @@ import com.littlelemon.application.cart.domain.CartRepository
 import com.littlelemon.application.cart.domain.models.CartItem
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,19 +16,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class DefaultCartRepository(
-    val remoteDataSource: CartRemoteDataSource,
-    val localDataSource: CartDao
+    private val remoteDataSource: CartRemoteDataSource,
+    private val localDataSource: CartDao,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : CartRepository {
 
 
     private val cartJobs = mutableMapOf<String, Job>()
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope = CoroutineScope(dispatcher + SupervisorJob())
 
 
     override suspend fun upsertCartItem(
-        cartItem: CartItem,
-        previousQuantity: Int
+        cartItem: CartItem
     ): Resource<Unit> {
 
         TODO()

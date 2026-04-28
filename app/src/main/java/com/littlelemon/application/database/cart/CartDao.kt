@@ -30,4 +30,7 @@ interface CartDao {
 
     @Query("DELETE FROM cartitementity")
     fun clearCartItems()
+
+    @Query("SELECT quantity FROM cartitementity WHERE id = :id")
+    suspend fun getQuantity(id: String): Int
 }

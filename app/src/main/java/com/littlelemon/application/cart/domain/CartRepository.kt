@@ -7,8 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface CartRepository {
 
     suspend fun upsertCartItem(
-        cartItem: CartItem,
-        previousQuantity: Int
+        cartItem: CartItem
     ): Resource<Unit>
 
     suspend fun clearCart(): Resource<Unit>
