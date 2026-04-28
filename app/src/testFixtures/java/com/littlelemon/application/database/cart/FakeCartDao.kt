@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 // NOTE: Keep initial items null to seed the database
 //       and pass in a emptyList to seed with no entries.
@@ -29,7 +28,9 @@ class FakeCartDao(
         if (initialItems == null) {
             val seedCount = Random.nextInt(5, 10)
             repeat(seedCount) {
-                database.add(CartItemEntity(Uuid.generateV4().toString(), Random.nextInt(5, 10)))
+                val dish = DishGenerator.generateDishWithCategories(1, 1).first().first
+                dishes.add(dish)
+                database.add(CartItemEntity(dish.dish.dishId, Random.nextInt(5, 10)))
             }
         } else {
             database.addAll(initialItems)
