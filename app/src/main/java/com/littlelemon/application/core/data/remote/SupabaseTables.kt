@@ -9,4 +9,6 @@ object SupabaseTables {
     const val USER_ADDRESS_VIEW = "user_addresses_view"
 
     const val RESERVATIONS = "reservations"
+
+    const val CART = "cart_item"
 }

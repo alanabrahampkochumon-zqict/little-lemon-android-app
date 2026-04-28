@@ -42,4 +42,9 @@ class FakeCartRemoteDataSource(
         remoteData.clear()
     }
 
+    override suspend fun getCart(): List<CartItemDTO> {
+        if (throwError) throw IllegalArgumentException()
+        return remoteData
+    }
+
 }

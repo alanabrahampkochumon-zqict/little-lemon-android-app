@@ -2,6 +2,7 @@ package com.littlelemon.application.cart.data.remote
 
 import com.littlelemon.application.cart.data.remote.models.CartItemDTO
 import com.littlelemon.application.core.data.remote.SupabaseRPC
+import com.littlelemon.application.core.data.remote.SupabaseTables
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.exceptions.HttpRequestException
 import io.github.jan.supabase.postgrest.exception.PostgrestRestException
@@ -32,5 +33,9 @@ class SupabaseCartRemoteDataSource(private val client: SupabaseClient) : CartRem
     )
     override suspend fun clearCart() {
         client.postgrest.rpc(SupabaseRPC.ClearCart.RPC_NAME)
+    }
+
+    override suspend fun getCart(): List<CartItemDTO> {
+        return client.postgrest.from(SupabaseTables.CART).select().decodeList()
     }
 }

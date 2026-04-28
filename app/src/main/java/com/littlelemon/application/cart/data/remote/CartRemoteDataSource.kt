@@ -6,4 +6,6 @@ interface CartRemoteDataSource {
 
     suspend fun updateCart(cartItem: CartItemDTO): CartItemDTO?
     suspend fun clearCart()
+
+    suspend fun getCart(): List<CartItemDTO>
 }
