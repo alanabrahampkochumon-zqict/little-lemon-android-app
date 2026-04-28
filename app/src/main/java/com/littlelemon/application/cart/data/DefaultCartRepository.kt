@@ -2,10 +2,12 @@ package com.littlelemon.application.cart.data
 
 import com.littlelemon.application.cart.CartConstants
 import com.littlelemon.application.cart.data.remote.CartRemoteDataSource
+import com.littlelemon.application.cart.data.remote.mappers.toEntity
 import com.littlelemon.application.cart.domain.CartRepository
 import com.littlelemon.application.cart.domain.models.CartItem
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
+import com.littlelemon.application.database.cart.mappers.toCartItems
 import com.littlelemon.application.database.cart.mappers.toDTO
 import com.littlelemon.application.database.cart.mappers.toEntity
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,7 +19,6 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -77,10 +78,23 @@ class DefaultCartRepository(
     }
 
 
-    override fun getAllCartItems(): Flow<Resource<List<CartItem>>> = flow {
-        emit(Resource.Loading())
-        val cachedCart = localDataSource.getAllCartItems().map { it }
-//        emitAll(cachedCart.map)
+    override fun getAllCartItems(): Flow<Resource<List<CartItem>>> {
+        scope.launch {
+            try {
+                val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
+                if (remoteCart.isEmpty()) {
+                    localDataSource.clearCartItems()
+                } else {
+                    remoteCart.forEach { localDataSource.upsertCartItem(it) }
+                }
+            } catch (e: Exception) {
+                // TODO: Broadcast to your error event bus (SharedFlow)
+            }
+        }
+
+        return localDataSource.getAllCartItems().map { entities ->
+            Resource.Success(entities.toCartItems())
+        }
     }
 
 
