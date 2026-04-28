@@ -23,6 +23,7 @@ class DefaultCartRepository(
 
 
     private val cartJobs = mutableMapOf<String, Job>()
+    private val cartDefault = mutableMapOf<String, Int?>()
 
     private val scope = CoroutineScope(dispatcher + SupervisorJob())
 
@@ -31,8 +32,9 @@ class DefaultCartRepository(
         cartItem: CartItem
     ): Resource<Unit> {
 
+        
         TODO()
-        cartJobs[cartItem.id] = scope.launch {
+        cartJobs[cartItem.dish.id] = scope.launch {
             delay(CartConstants.NETWORK_DEBOUNCE)
 //            remoteDataSource.updateCart(CartItemDTO(dishId, newQuantity))
         }

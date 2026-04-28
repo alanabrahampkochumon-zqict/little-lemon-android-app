@@ -22,11 +22,10 @@ class CartItemMapperTests {
 
         @Test
         fun mapsToEntity() {
-            val entity = CartItem(cartItemId, dish, quantity).toEntity()
+            val entity = CartItem(dish, quantity).toEntity()
 
             assertEquals(quantity, entity.quantity)
             assertEquals(dish.id, entity.dishId)
-            assertEquals(cartItemId, entity.id)
         }
     }
 
@@ -36,7 +35,7 @@ class CartItemMapperTests {
 
         @Test
         fun mapsToDTO() {
-            val dto = CartItem(cartItemId, dish, quantity).toDTO()
+            val dto = CartItem(dish, quantity).toDTO()
 
             assertEquals(quantity, dto.quantity)
             assertEquals(dish.id, dto.dishId)

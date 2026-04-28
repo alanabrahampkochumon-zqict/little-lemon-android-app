@@ -13,14 +13,14 @@ interface CartDao {
     @Upsert
     suspend fun upsertCartItem(cartItem: CartItemEntity)
 
-    @Query("DELETE FROM cartitementity WHERE id = :id")
-    suspend fun removeCartItem(id: String)
+    @Query("DELETE FROM cartitementity WHERE dishId = :dishId")
+    suspend fun removeCartItem(dishId: String)
 
     @Transaction
     suspend fun upsertOrRemoveCartItem(cartItem: CartItemEntity) {
         upsertCartItem(cartItem)
         if (cartItem.quantity <= 0)
-            removeCartItem(cartItem.id)
+            removeCartItem(cartItem.dishId)
     }
 
     @Transaction
@@ -31,6 +31,6 @@ interface CartDao {
     @Query("DELETE FROM cartitementity")
     fun clearCartItems()
 
-    @Query("SELECT quantity FROM cartitementity WHERE id = :id")
-    suspend fun getQuantity(id: String): Int
+    @Query("SELECT quantity FROM cartitementity WHERE dishId = :dishId")
+    suspend fun getQuantity(dishId: String): Int
 }

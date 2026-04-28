@@ -4,6 +4,6 @@ import com.littlelemon.application.cart.data.remote.models.CartItemDTO
 import com.littlelemon.application.cart.domain.models.CartItem
 import com.littlelemon.application.database.cart.models.CartItemEntity
 
-fun CartItem.toEntity() = CartItemEntity(dish.id, quantity, id)
+fun CartItem.toEntity() = CartItemEntity(dish.id, quantity)
 
 fun CartItem.toDTO() = CartItemDTO(dish.id, quantity)

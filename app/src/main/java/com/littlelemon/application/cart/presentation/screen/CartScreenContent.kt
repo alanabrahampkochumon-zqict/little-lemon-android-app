@@ -60,7 +60,7 @@ fun PricingSection(modifier: Modifier = Modifier) {
         stringResource(R.string.currency_symbol) + stringResource(R.string.price_format, total)
     ////////
     Column(
-        modifier = Modifier
+        modifier = modifier
             .background(LittleLemonTheme.colors.secondary, LittleLemonTheme.shapes.md)
             .padding(
                 horizontal = LittleLemonTheme.dimens.sizeXL,
@@ -118,7 +118,7 @@ fun LazyListScope.itemsSection() {
             dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
             popularityIndex = 11
         )
-    }.map { CartItem("", it, Random.nextInt(3, 5)) }
+    }.map { CartItem(it, Random.nextInt(3, 5)) }
 
     items(cartItems) { cartItem ->
         Box(modifier = Modifier.padding(horizontal = LittleLemonTheme.dimens.sizeXL)) {
@@ -147,7 +147,7 @@ private fun CartScreenContentPreview() {
             dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
             popularityIndex = 11
         )
-    }.map { CartItem("", it, Random.nextInt(3, 5)) }
+    }.map { CartItem(it, Random.nextInt(3, 5)) }
 
     LittleLemonTheme {
         CartScreenContent()

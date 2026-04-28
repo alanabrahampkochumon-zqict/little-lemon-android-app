@@ -43,10 +43,10 @@ class FakeCartDao(
         database.add(cartItem)
     }
 
-    override suspend fun removeCartItem(id: String) {
+    override suspend fun removeCartItem(dishId: String) {
         if (throwError)
             throw IllegalArgumentException()
-        database = database.filter { it.id != id }.toMutableList()
+        database = database.filter { it.dishId != dishId }.toMutableList()
     }
 
     override fun getAllCartItems(): Flow<List<CartItemDetails>> = flow {
@@ -76,8 +76,8 @@ class FakeCartDao(
         database.clear()
     }
 
-    override suspend fun getQuantity(id: String): Int {
-        return database.find { it.id == id }?.quantity ?: 0
+    override suspend fun getQuantity(dishId: String): Int {
+        return database.find { it.dishId == dishId }?.quantity ?: 0
     }
 
 }

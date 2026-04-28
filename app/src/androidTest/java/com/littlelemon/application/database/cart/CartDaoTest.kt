@@ -35,8 +35,7 @@ class CartDaoTest {
 
     @Before
     fun setUp() {
-        database =
-            Room.inMemoryDatabaseBuilder(context, LittleLemonDatabase::class.java).build()
+        database = Room.inMemoryDatabaseBuilder(context, LittleLemonDatabase::class.java).build()
         cartDao = database.cartDao
         menuDao = database.menuDao
         runBlocking {
@@ -83,10 +82,9 @@ class CartDaoTest {
     @Test
     fun removeCartItem_validId_removesItem() = runTest {
         // Given a non-empty database
-        val ids = List(dishes.size) { Uuid.generateV4().toString() }
-        val removeId = ids[0]
-        dishes.forEachIndexed { index, dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        val removeId = dishes.first().dishId
+        dishes.forEach { dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is removed
@@ -94,16 +92,15 @@ class CartDaoTest {
 
         // Then, it is removed
         val cartDetails = cartDao.getAllCartItems().first()
-        assertTrue { cartDetails.indexOfFirst { it.cartItem.id == removeId } == -1 }
+        assertTrue { cartDetails.indexOfFirst { it.cartItem.dishId == removeId } == -1 }
     }
 
     @Test
     fun removeCartItem_invalidId_removesNoItem() = runTest {
         // Given a non-empty database
-        val ids = List(dishes.size) { Uuid.generateV4().toString() }
         val removeId = Uuid.generateV4().toString()
-        dishes.forEachIndexed { index, dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        dishes.forEach { dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is removed with invalid ID is removed
@@ -123,10 +120,9 @@ class CartDaoTest {
     @Test
     fun upsertOrRemoveCartItem_nonExistentItem_addsIt() = runTest {
         // Given a non-empty database
-        val ids = List(dishes.size) { Uuid.generateV4().toString() }
-        val newCartItem = CartItemEntity(dishes[0].dishId, 4, Uuid.generateV4().toString())
-        dishes.drop(1).forEachIndexed { index, dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        val newCartItem = CartItemEntity(dishes[0].dishId, 4)
+        dishes.drop(1).forEach { dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is upserted
@@ -134,17 +130,16 @@ class CartDaoTest {
 
         // Then, it is inserted
         val cartDetails = cartDao.getAllCartItems().first()
-        assertTrue { cartDetails.map { it.cartItem.id }.contains(newCartItem.id) }
+        assertTrue { cartDetails.map { it.cartItem.dishId }.contains(newCartItem.dishId) }
     }
 
 
     @Test
     fun upsertOrRemoveCartItem_existentItem_updatesItem() = runTest {
         // Given a non-empty database with the cart item in it
-        val ids = List(dishes.size) { Uuid.generateV4().toString() }
-        val updatedCartItem = CartItemEntity(dishes[0].dishId, 100, ids[0])
-        dishes.forEachIndexed { index, dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        val updatedCartItem = CartItemEntity(dishes[0].dishId, 100)
+        dishes.forEach { dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is upserted
@@ -154,7 +149,8 @@ class CartDaoTest {
         val cartDetails = cartDao.getAllCartItems().first()
         assertEquals(
             updatedCartItem.quantity,
-            cartDetails.find { it.cartItem.id == updatedCartItem.id }?.cartItem?.quantity ?: 0
+            cartDetails.find { it.cartItem.dishId == updatedCartItem.dishId }?.cartItem?.quantity
+                ?: 0
         )
     }
 
@@ -162,10 +158,9 @@ class CartDaoTest {
     @Test
     fun upsertOrRemoveCartItem_zeroQuantity_removesItem() = runTest {
         // Given a non-empty database with the cart item in it
-        val ids = List(dishes.size) { Uuid.generateV4().toString() }
-        val updatedCartItem = CartItemEntity(dishes[0].dishId, 0, ids[0])
-        dishes.forEachIndexed { index, dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        val updatedCartItem = CartItemEntity(dishes[0].dishId, 0)
+        dishes.forEach { dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is upserted
@@ -173,16 +168,15 @@ class CartDaoTest {
 
         // Then, it is updated
         val cartDetails = cartDao.getAllCartItems().first()
-        assertTrue { cartDetails.indexOfFirst { it.cartItem.id == updatedCartItem.id } == -1 }
+        assertTrue { cartDetails.indexOfFirst { it.cartItem.dishId == updatedCartItem.dishId } == -1 }
     }
 
     @Test
     fun upsertOrRemoveCartItem_negativeQuantity_removesItem() = runTest {
         // Given a non-empty database with the cart item in it
-        val ids = List(dishes.size) { Uuid.generateV4().toString() }
-        val updatedCartItem = CartItemEntity(dishes[0].dishId, 0, ids[0])
-        dishes.forEachIndexed { index, dish ->
-            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5), ids[index]))
+        val updatedCartItem = CartItemEntity(dishes[0].dishId, 0)
+        dishes.forEach { dish ->
+            cartDao.upsertCartItem(CartItemEntity(dish.dishId, Random.nextInt(3, 5)))
         }
 
         // When, cart item is upserted
@@ -190,7 +184,7 @@ class CartDaoTest {
 
         // Then, it is updated
         val cartDetails = cartDao.getAllCartItems().first()
-        assertTrue { cartDetails.indexOfFirst { it.cartItem.id == updatedCartItem.id } == -1 }
+        assertTrue { cartDetails.indexOfFirst { it.cartItem.dishId == updatedCartItem.dishId } == -1 }
     }
 
     @Test
@@ -205,8 +199,7 @@ class CartDaoTest {
         val cartItems = dishes.map { CartItemEntity(it.dishId, Random.nextInt(3, 5)) }
         val cartDetails = cartItems.mapIndexed { index, cartItem ->
             CartItemDetails(
-                cartItem,
-                dish = dishes[index]
+                cartItem, dish = dishes[index]
             )
         }
         cartItems.forEach { cartItem ->
@@ -246,7 +239,7 @@ class CartDaoTest {
         cartDao.upsertCartItem(cartItem)
 
         // When, getQuantity is called with a valid ID
-        val retrievedQuantity = cartDao.getQuantity(cartItem.id)
+        val retrievedQuantity = cartDao.getQuantity(cartItem.dishId)
 
         // Then, it returns the correct quantity.
         assertEquals(quantity, retrievedQuantity)

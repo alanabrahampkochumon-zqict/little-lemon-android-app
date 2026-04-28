@@ -186,8 +186,8 @@ private fun CartItemCardPreview() {
                 dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
                 popularityIndex = 11
             )
-            CartItemCard(CartItem("", dish, 2), {}, {}, {})
-            CartItemCard(CartItem("", dish.copy(discountedPrice = null), 4), {}, {}, {})
+            CartItemCard(CartItem( dish, 2), {}, {}, {})
+            CartItemCard(CartItem(dish.copy(discountedPrice = null), 4), {}, {}, {})
         }
     }
 }
