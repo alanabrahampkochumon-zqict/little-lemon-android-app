@@ -14,8 +14,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class SupabaseCartRemoteDataSourceTest {
 
@@ -31,6 +34,10 @@ class SupabaseCartRemoteDataSourceTest {
     private val errorCode = HttpStatusCode.BadRequest
 
     private val cartItem = CartItemDTO("1234", 5)
+
+    @OptIn(ExperimentalUuidApi::class)
+    private val cartItems =
+        List(5) { CartItemDTO(Uuid.generateV4().toString(), Random.nextInt(5, 10)) }
 
     @BeforeEach
     fun setUp() {
@@ -102,6 +109,42 @@ class SupabaseCartRemoteDataSourceTest {
             dataSource = SupabaseCartRemoteDataSource(client)
 
             assertDoesNotThrow { dataSource.clearCart() }
+        }
+    }
+
+
+    @Nested
+    inner class GetCart {
+
+        @Test
+        fun networkError_throwsError() = runTest {
+            client = createFakeSupabaseClient {
+                respond(
+                    errorResponse,
+                    errorCode,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }
+            dataSource = SupabaseCartRemoteDataSource(client)
+
+            assertThrows<PostgrestRestException> { dataSource.getCart() }
+        }
+
+        @Test
+        fun networkSuccess_returnsUpdatedDTO() = runTest {
+            val response = Json.encodeToString(cartItems)
+            client = createFakeSupabaseClient {
+                respond(
+                    response,
+                    HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }
+            dataSource = SupabaseCartRemoteDataSource(client)
+
+            val retrievedCartItems = dataSource.getCart()
+
+            assertEquals(cartItems, retrievedCartItems)
         }
     }
 

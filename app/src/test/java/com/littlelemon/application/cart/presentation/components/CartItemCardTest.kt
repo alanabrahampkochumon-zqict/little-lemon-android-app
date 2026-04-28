@@ -29,7 +29,7 @@ class CartItemCardTest {
     val priceFormat = R.string.price_format
 
     private val cartItem = CartItem(
-        id = "", dish = Dish(
+        dish = Dish(
             id = "",
             title = "Dish Name",
             description = "Dish Description",
