@@ -1,5 +1,6 @@
 package com.littlelemon.application.database.cart
 
+import com.littlelemon.application.cart.domain.models.CartItem
 import com.littlelemon.application.database.cart.models.CartItemDetails
 import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.database.menu.models.DishEntity
@@ -15,7 +16,7 @@ import kotlin.uuid.Uuid
 //       and pass in a emptyList to seed with no entries.
 @OptIn(ExperimentalUuidApi::class)
 class FakeCartDao(
-    initialItems: List<CartItemEntity>? = null,
+    initialItems: List<CartItem>? = null,
     private val throwError: Boolean = false
 ) :
     CartDao {
@@ -23,6 +24,7 @@ class FakeCartDao(
     private val faker = faker {}
 
     private var database = mutableListOf<CartItemEntity>()
+    private var dishes = mutableListOf<DishEntity>()
 
     init {
         if (initialItems == null) {
@@ -31,7 +33,8 @@ class FakeCartDao(
                 database.add(CartItemEntity(Uuid.generateV4().toString(), Random.nextInt(5, 10)))
             }
         } else {
-            database.addAll(initialItems)
+            database.addAll(initialItems.map { CartItemEntity(it.dish.id, it.quantity) })
+//            dishes.addAll(initialItems.map { it.dish })
         }
     }
 
