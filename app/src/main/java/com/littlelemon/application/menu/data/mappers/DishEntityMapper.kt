@@ -40,3 +40,17 @@ private fun DishEntity.NutritionInfo.toDomainNutritionInfo(): NutritionInfo {
 fun CategoryEntity.toDomainCategory(): Category =
     Category(categoryName = categoryName)
 
+
+//fun DishEntity.toDish(): Dish = Dish(
+//    id = dishId,
+//    title = title,
+//    description = description,
+//    price = price,
+//    imageURL = image,
+//    stock = stock,
+//    nutritionInfo = nutritionInfo.toDomainNutritionInfo(),
+//    discountedPrice = discountedPrice,
+//    category = emptyList(),
+//    dateAdded = TODO(),
+//    popularityIndex = TODO()
+//)

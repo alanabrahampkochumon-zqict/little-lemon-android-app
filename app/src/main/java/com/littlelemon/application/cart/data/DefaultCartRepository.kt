@@ -17,6 +17,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class DefaultCartRepository(
@@ -75,8 +76,10 @@ class DefaultCartRepository(
     }
 
 
-    override fun getAllCartItems(): Flow<Resource<List<CartItem>>> {
-        TODO("Not yet implemented")
+    override fun getAllCartItems(): Flow<Resource<List<CartItem>>> = flow {
+        emit(Resource.Loading())
+        val cachedCart = localDataSource.getAllCartItems()
+//        emitAll(cachedCart.map)
     }
 
 
