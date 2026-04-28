@@ -8,7 +8,7 @@ interface CartRepository {
 
     suspend fun upsertCartItem(
         cartItem: CartItem
-    ): Resource<Unit>
+    )
 
     suspend fun clearCart(): Resource<Unit>
 
