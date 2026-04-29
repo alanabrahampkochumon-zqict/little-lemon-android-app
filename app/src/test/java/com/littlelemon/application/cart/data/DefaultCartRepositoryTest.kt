@@ -130,6 +130,7 @@ class DefaultCartRepositoryTest {
             repository = DefaultCartRepository(remoteDS, localDS)
 
             val items = repository.getAllCartItems().first()
+            println(items)
 
             assertIs<Resource.Success<List<CartItem>>>(items)
             assertNotNull(items.data)

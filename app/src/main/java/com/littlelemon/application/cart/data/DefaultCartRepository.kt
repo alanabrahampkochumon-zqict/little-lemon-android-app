@@ -105,11 +105,16 @@ class DefaultCartRepository(
         localDataSource.getAllCartItems().map { cartItemDetails ->
             Resource.Success(cartItemDetails.toCartItems())
         }.onStart {
-            val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
-            if (remoteCart.isEmpty()) {
-                localDataSource.clearCartItems()
-            } else {
-                remoteCart.forEach { localDataSource.upsertCartItem(it) }
+            try {
+                val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
+                if (remoteCart.isEmpty()) {
+                    localDataSource.clearCartItems()
+                } else {
+                    remoteCart.forEach { localDataSource.upsertCartItem(it) }
+                }
+            } catch (_: Exception) {
+                currentCoroutineContext().ensureActive()
+                // TODO: Broadcast to your error event bus (SharedFlow)
             }
         }.catch {
             // TODO: Broadcast to your error event bus (SharedFlow)
