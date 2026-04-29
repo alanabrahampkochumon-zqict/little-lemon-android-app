@@ -3,6 +3,7 @@ package com.littlelemon.application
 import android.app.Application
 import com.littlelemon.application.address.di.addressModule
 import com.littlelemon.application.auth.di.authModule
+import com.littlelemon.application.cart.di.cartModule
 import com.littlelemon.application.core.di.coreModule
 import com.littlelemon.application.database.di.databaseModule
 import com.littlelemon.application.home.di.homeModule
@@ -19,12 +20,13 @@ class LittleLemonApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@LittleLemonApplication)
+            modules(databaseModule)
             modules(authModule)
             modules(coreModule)
             modules(addressModule)
             modules(dishModule)
             modules(homeModule)
-            modules(databaseModule)
+            modules(cartModule)
         }
     }
 }
