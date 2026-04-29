@@ -19,7 +19,9 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class DefaultCartRepository(
@@ -41,8 +43,8 @@ class DefaultCartRepository(
         val dishId = cartItem.dish.id
         // Check if a default value exists in the cache,
         // If not, update with a value from the cache
-        if (!cartDefault.containsKey(dishId))
-            cartDefault[dishId] = localDataSource.getQuantity(dishId)
+        if (!cartDefault.containsKey(dishId)) cartDefault[dishId] =
+            localDataSource.getQuantity(dishId)
 
         // Update the database to reflect the updated cart quantity
         localDataSource.upsertCartItem(cartItem.toEntity())
@@ -78,24 +80,40 @@ class DefaultCartRepository(
     }
 
 
-    override fun getAllCartItems(): Flow<Resource<List<CartItem>>> {
-        scope.launch {
-            try {
-                val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
-                if (remoteCart.isEmpty()) {
-                    localDataSource.clearCartItems()
-                } else {
-                    remoteCart.forEach { localDataSource.upsertCartItem(it) }
-                }
-            } catch (e: Exception) {
-                // TODO: Broadcast to your error event bus (SharedFlow)
-            }
-        }
+//    override fun getAllCartItems(): Flow<Resource<List<CartItem>>> {
+//        scope.launch {
+//            try {
+//                val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
+//                if (remoteCart.isEmpty()) {
+//                    localDataSource.clearCartItems()
+//                } else {
+//                    remoteCart.forEach { localDataSource.upsertCartItem(it) }
+//                }
+//            } catch (e: Exception) {
+//                // TODO: Broadcast to your error event bus (SharedFlow)
+//            }
+//        }
+//
+//        return localDataSource.getAllCartItems().map { entities ->
+//            Resource.Success(entities.toCartItems())
+//        }.catch {
+//            // TODO: Broadcast to your error event bus (SharedFlow)
+//        }
+//    }
 
-        return localDataSource.getAllCartItems().map { entities ->
-            Resource.Success(entities.toCartItems())
+    override fun getAllCartItems(): Flow<Resource<List<CartItem>>> =
+        localDataSource.getAllCartItems().map { cartItemDetails ->
+            Resource.Success(cartItemDetails.toCartItems())
+        }.onStart {
+            val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
+            if (remoteCart.isEmpty()) {
+                localDataSource.clearCartItems()
+            } else {
+                remoteCart.forEach { localDataSource.upsertCartItem(it) }
+            }
+        }.catch {
+            // TODO: Broadcast to your error event bus (SharedFlow)
         }
-    }
 
 
 }
