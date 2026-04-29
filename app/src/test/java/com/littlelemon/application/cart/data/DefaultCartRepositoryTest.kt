@@ -1,5 +1,6 @@
 package com.littlelemon.application.cart.data
 
+import app.cash.turbine.test
 import com.littlelemon.application.cart.data.remote.CartRemoteDataSource
 import com.littlelemon.application.cart.data.remote.FakeCartRemoteDataSource
 import com.littlelemon.application.cart.data.remote.models.CartItemDTO
@@ -93,29 +94,35 @@ class DefaultCartRepositoryTest {
         }
 
         @Test
-        fun localFailure_emitErrorMessageStream() = runTest {
+        fun localFailure_emitsErrorMessageStream() = runTest {
             // Given db failure
             localDS = FakeCartDao(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
-            //TODO ()
 
-            // When an item is upserted into the repository
-            repository.upsertCartItem(cartItems.first().copy(quantity = 100))
+            repository.errorMessages.test {
+                // When an item is upserted into the repository
+                repository.upsertCartItem(cartItems.first().copy(quantity = 100))
 
-            // Then, the error message channel is updated with an error message
+                // Then, the error message channel is updated with an error message
+                val message = awaitItem()
+                assertEquals(CartErrorMessages.ERROR_UPDATING_CART, message)
+            }
         }
 
         @Test
-        fun remoteFailure_emitErrorMessageStream() = runTest {
+        fun remoteFailure_emitsErrorMessageStream() = runTest {
             // Given remote failure
             remoteDS = FakeCartRemoteDataSource(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
 
-            // When an item is upserted into the repository
-            repository.upsertCartItem(cartItems.first().copy(quantity = 100))
+            repository.errorMessages.test {
+                // When an item is upserted into the repository
+                repository.upsertCartItem(cartItems.first().copy(quantity = 100))
 
-            // Then, the error message channel is updated with an error message
-            //TODO()
+                // Then, the error message channel is updated with an error message
+                val message = awaitItem()
+                assertEquals(CartErrorMessages.ERROR_UPDATING_CART, message)
+            }
         }
     }
 
@@ -174,6 +181,53 @@ class DefaultCartRepositoryTest {
                 assertContains(retrievedIds, dishId)
             }
         }
+
+        @Test
+        fun remoteFailure_emitsErrorMessageStream() = runTest {
+            remoteDS = FakeCartRemoteDataSource(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+
+            repository.errorMessages.test {
+                // When cart is retrieved from repository
+                repository.getAllCartItems().first()
+
+                // Then, the error message channel is updated with an error message
+                val message = awaitItem()
+                assertEquals(CartErrorMessages.ERROR_RETRIEVING_CART, message)
+            }
+        }
+
+        @Test
+        fun dbFailure_returnsCachedData() = runTest {
+            remoteDS = FakeCartRemoteDataSource(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            val items = repository.getAllCartItems().first()
+
+            val retrievedIds = items.map { it.dish.id }
+            offlineCartItemEntity.forEach { (dishId, _) ->
+                assertContains(retrievedIds, dishId)
+            }
+        }
+
+
+        @Test
+        fun dbFailure_emitsErrorMessageStream() = runTest {
+            localDS = FakeCartDao(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            repository.errorMessages.test {
+                // When cart is retrieved from repository
+                repository.getAllCartItems().first()
+
+                // Then, the error message channel is updated with an error message
+                val message = awaitItem()
+                assertEquals(CartErrorMessages.ERROR_RETRIEVING_CART, message)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
     }
 
 

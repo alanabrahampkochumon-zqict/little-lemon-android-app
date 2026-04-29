@@ -38,8 +38,8 @@ class DefaultCartRepository(
 
     private val scope = CoroutineScope(dispatcher + SupervisorJob())
 
-    private val _errorMessages = MutableSharedFlow<String>()
-    val errorMessages = _errorMessages.asSharedFlow()
+    private val _errorMessages = MutableSharedFlow<String>(extraBufferCapacity = 1)
+    override val errorMessages = _errorMessages.asSharedFlow()
 
 
     override suspend fun upsertCartItem(
@@ -97,9 +97,7 @@ class DefaultCartRepository(
     }
 
     override fun getAllCartItems(): Flow<List<CartItem>> =
-        localDataSource.getAllCartItems().map { cartItemDetails ->
-            cartItemDetails.toCartItems()
-        }.onStart {
+        localDataSource.getAllCartItems().onStart {
             try {
                 val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
                 if (remoteCart.isEmpty()) {
@@ -109,10 +107,13 @@ class DefaultCartRepository(
                 }
             } catch (_: Exception) {
                 currentCoroutineContext().ensureActive()
-                _errorMessages.emit(CartErrorMessages.ERROR_RETRIEVING_CART)
+                _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
             }
+        }.map { cartItemDetails ->
+            cartItemDetails.toCartItems()
         }.catch {
-            _errorMessages.emit(CartErrorMessages.ERROR_RETRIEVING_CART)
+            _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
+            emit(emptyList())
         }
 
 
