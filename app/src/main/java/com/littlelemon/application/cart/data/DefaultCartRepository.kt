@@ -81,7 +81,13 @@ class DefaultCartRepository(
 
 
     override suspend fun clearCart(): Resource<Unit> {
-        TODO("Not yet implemented")
+        try {
+            remoteDataSource.clearCart()
+            localDataSource.clearCartItems()
+        } catch (_: Exception) {
+            return Resource.Failure(errorMessage = CartErrorMessages.ERROR_CLEARING_CART)
+        }
+        return Resource.Success()
     }
 
     override fun getAllCartItems(): Flow<Resource<List<CartItem>>> =
