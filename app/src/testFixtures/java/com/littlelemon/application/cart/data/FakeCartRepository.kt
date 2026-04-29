@@ -1,0 +1,60 @@
+package com.littlelemon.application.cart.data
+
+import com.littlelemon.application.cart.domain.CartRepository
+import com.littlelemon.application.cart.domain.models.CartItem
+import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.menu.utils.DishGenerator
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.flow
+import kotlin.random.Random
+
+class FakeCartRepository(
+    initialItems: List<CartItem>? = null,
+    private val throwError: Boolean = false
+) :
+    CartRepository {
+
+    companion object {
+        const val ERROR_MESSAGE = "There was an error with the repository"
+    }
+
+    private val _errorMessages = MutableSharedFlow<String>()
+    override val errorMessages: SharedFlow<String>
+        get() = _errorMessages
+
+    private val _data = mutableListOf<CartItem>()
+
+    init {
+        if (initialItems == null) {
+            val range = Random.nextInt(5, 10)
+            repeat(range) {
+                val dish = DishGenerator.generateDish()
+                val cartItem = CartItem(dish = dish, quantity = Random.nextInt(3, 5))
+                _data.add(cartItem)
+            }
+        } else {
+            _data.addAll(initialItems)
+        }
+    }
+
+    override suspend fun upsertCartItem(cartItem: CartItem) {
+        if (throwError)
+            _errorMessages.emit(ERROR_MESSAGE)
+        _data.add(cartItem)
+    }
+
+    override suspend fun clearCart(): Resource<Unit> {
+        if (throwError)
+            return Resource.Failure(errorMessage = ERROR_MESSAGE)
+        _data.clear()
+        return Resource.Success()
+    }
+
+    override fun getAllCartItems(): Flow<List<CartItem>> = flow {
+        if (throwError)
+            _errorMessages.emit(ERROR_MESSAGE)
+        emit(_data)
+    }
+}
