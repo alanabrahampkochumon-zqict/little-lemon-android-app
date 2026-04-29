@@ -20,7 +20,7 @@ class FakeCartRepository(
         const val ERROR_MESSAGE = "There was an error with the repository"
     }
 
-    private val _errorMessages = MutableSharedFlow<String>()
+    private val _errorMessages = MutableSharedFlow<String>(extraBufferCapacity = 1)
     override val errorMessages: SharedFlow<String>
         get() = _errorMessages
 
@@ -41,7 +41,7 @@ class FakeCartRepository(
 
     override suspend fun upsertCartItem(cartItem: CartItem) {
         if (throwError)
-            _errorMessages.emit(ERROR_MESSAGE)
+            _errorMessages.tryEmit(ERROR_MESSAGE)
         _data.add(cartItem)
     }
 
@@ -54,7 +54,7 @@ class FakeCartRepository(
 
     override fun getAllCartItems(): Flow<List<CartItem>> = flow {
         if (throwError) {
-            _errorMessages.emit(ERROR_MESSAGE)
+            _errorMessages.tryEmit(ERROR_MESSAGE)
             emit(emptyList())
         } else {
             emit(_data)
