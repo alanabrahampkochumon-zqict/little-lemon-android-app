@@ -19,6 +19,8 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -36,6 +38,9 @@ class DefaultCartRepository(
 
     private val scope = CoroutineScope(dispatcher + SupervisorJob())
 
+    private val _errorMessages = MutableSharedFlow<String>()
+    val errorMessages = _errorMessages.asSharedFlow()
+
 
     override suspend fun upsertCartItem(
         cartItem: CartItem
@@ -51,7 +56,7 @@ class DefaultCartRepository(
             localDataSource.upsertCartItem(cartItem.toEntity())
         } catch (_: Exception) {
             currentCoroutineContext().ensureActive()
-            // TODO: Message buffer impl
+            _errorMessages.emit(CartErrorMessages.ERROR_UPDATING_CART)
         }
 
         // Cancel any previous network jobs
@@ -64,6 +69,7 @@ class DefaultCartRepository(
                 remoteDataSource.updateCart(cartItem.toDTO())
             } catch (_: Exception) {
                 currentCoroutineContext().ensureActive()
+                _errorMessages.emit(CartErrorMessages.ERROR_UPDATING_CART)
                 // Removing when the cart item is zero is handled by the DAO
                 localDataSource.upsertOrRemoveCartItem(
                     cartItem.copy(
@@ -103,10 +109,10 @@ class DefaultCartRepository(
                 }
             } catch (_: Exception) {
                 currentCoroutineContext().ensureActive()
-                // TODO: Broadcast to your error event bus (SharedFlow)
+                _errorMessages.emit(CartErrorMessages.ERROR_RETRIEVING_CART)
             }
         }.catch {
-            // TODO: Broadcast to your error event bus (SharedFlow)
+            _errorMessages.emit(CartErrorMessages.ERROR_RETRIEVING_CART)
         }
 
 
