@@ -5,6 +5,7 @@ import com.littlelemon.application.cart.data.remote.FakeCartRemoteDataSource
 import com.littlelemon.application.cart.data.remote.models.CartItemDTO
 import com.littlelemon.application.cart.domain.CartRepository
 import com.littlelemon.application.cart.domain.models.CartItem
+import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
 import com.littlelemon.application.database.cart.FakeCartDao
 import com.littlelemon.application.database.cart.mappers.toDTO
@@ -24,6 +25,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.random.Random
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertNotEquals
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -178,19 +181,47 @@ class DefaultCartRepositoryTest {
     inner class ClearCart {
 
         @Test
-        fun success_clearsCart() {
+        fun success_clearsCart() = runTest {
+            // Initial condition: There is some data in the cache
+            val beforeClearing = repository.getAllCartItems().first()
+            assertNotEquals(0, beforeClearing.size)
+
+            repository.clearCart()
+            // Exit condition: No data is in the cache
+            val afterClearing = repository.getAllCartItems().first()
+            assertEquals(0, afterClearing.size)
         }
 
         @Test
-        fun success_returnsSuccess() {
+        fun success_returnsSuccess() = runTest {
+            assertIs<Resource.Success<Unit>>(repository.clearCart())
         }
 
         @Test
-        fun remoteFailure_returnsFailure() {
+        fun remoteFailure_doesNotClearCart() = runTest {
+            remoteDS = FakeCartRemoteDataSource(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            repository.clearCart()
+
+            val afterClearing = repository.getAllCartItems().first()
+            assertNotEquals(0, afterClearing.size)
         }
 
         @Test
-        fun dbFailure_returnsFailure() {
+        fun remoteFailure_returnsFailure() = runTest {
+            remoteDS = FakeCartRemoteDataSource(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            assertIs<Resource.Failure<Unit>>(repository.clearCart())
+        }
+
+        @Test
+        fun dbFailure_returnsFailure() = runTest {
+            localDS = FakeCartDao(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            assertIs<Resource.Failure<Unit>>(repository.clearCart())
         }
     }
 
