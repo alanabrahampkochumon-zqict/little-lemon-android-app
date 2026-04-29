@@ -21,7 +21,7 @@ class CartViewModel(
 
     val errorState: SharedFlow<String> = getCartError()
 
-    val cartState = combine(getCartError(), getCartItems()) { errorMessages, cartItems ->
+    val state = combine(getCartError(), getCartItems()) { errorMessages, cartItems ->
         CartState(
             isLoading = false,
             errorMessage = UiText.DynamicString(errorMessages),
