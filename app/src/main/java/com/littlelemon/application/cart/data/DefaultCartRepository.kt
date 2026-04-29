@@ -84,28 +84,6 @@ class DefaultCartRepository(
         TODO("Not yet implemented")
     }
 
-
-//    override fun getAllCartItems(): Flow<Resource<List<CartItem>>> {
-//        scope.launch {
-//            try {
-//                val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
-//                if (remoteCart.isEmpty()) {
-//                    localDataSource.clearCartItems()
-//                } else {
-//                    remoteCart.forEach { localDataSource.upsertCartItem(it) }
-//                }
-//            } catch (e: Exception) {
-//                // TODO: Broadcast to your error event bus (SharedFlow)
-//            }
-//        }
-//
-//        return localDataSource.getAllCartItems().map { entities ->
-//            Resource.Success(entities.toCartItems())
-//        }.catch {
-//            // TODO: Broadcast to your error event bus (SharedFlow)
-//        }
-//    }
-
     override fun getAllCartItems(): Flow<Resource<List<CartItem>>> =
         localDataSource.getAllCartItems().map { cartItemDetails ->
             Resource.Success(cartItemDetails.toCartItems())
