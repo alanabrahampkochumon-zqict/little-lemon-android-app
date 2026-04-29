@@ -90,9 +90,9 @@ class DefaultCartRepository(
         return Resource.Success()
     }
 
-    override fun getAllCartItems(): Flow<Resource<List<CartItem>>> =
+    override fun getAllCartItems(): Flow<List<CartItem>> =
         localDataSource.getAllCartItems().map { cartItemDetails ->
-            Resource.Success(cartItemDetails.toCartItems())
+            cartItemDetails.toCartItems()
         }.onStart {
             try {
                 val remoteCart = remoteDataSource.getCart().map { it.toEntity() }

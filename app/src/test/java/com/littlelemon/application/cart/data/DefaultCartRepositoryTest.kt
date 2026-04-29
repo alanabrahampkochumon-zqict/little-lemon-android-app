@@ -5,7 +5,6 @@ import com.littlelemon.application.cart.data.remote.FakeCartRemoteDataSource
 import com.littlelemon.application.cart.data.remote.models.CartItemDTO
 import com.littlelemon.application.cart.domain.CartRepository
 import com.littlelemon.application.cart.domain.models.CartItem
-import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
 import com.littlelemon.application.database.cart.FakeCartDao
 import com.littlelemon.application.database.cart.mappers.toDTO
@@ -25,7 +24,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.random.Random
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
-import kotlin.test.assertIs
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -62,13 +60,10 @@ class DefaultCartRepositoryTest {
 
             // Then, the getAllCartItems flow emits success with new item
             val upsertedItem = repository.getAllCartItems().first()
-            assertIs<Resource.Success<List<CartItem>>>(upsertedItem)
-            assertNotNull(upsertedItem.data)
-
             // Testing with direct comparison will require modifying the fakeDao to pass in both the Dish
             // and CartItem so, a simpler approach is to ensure that the item exists, and it has the right
             // quantity, which satisfies the domain of the test
-            val actualCartItem = upsertedItem.data.find { it.dish.id == cartItem.dish.id }
+            val actualCartItem = upsertedItem.find { it.dish.id == cartItem.dish.id }
             assertNotNull(actualCartItem)
             assertEquals(cartItem.quantity, actualCartItem.quantity)
         }
@@ -85,13 +80,11 @@ class DefaultCartRepositoryTest {
 
             // Then, the getAllCartItems flow emits success with old item
             val upsertedItem = repository.getAllCartItems().first()
-            assertIs<Resource.Success<List<CartItem>>>(upsertedItem)
-            assertNotNull(upsertedItem.data)
 
             // Testing with direct comparison will require modifying the fakeDao to pass in both the Dish
             // and CartItem so, a simpler approach is to ensure that the item exists, and it has the right
             // quantity, which satisfies the domain of the test
-            val actualCartItem = upsertedItem.data.find { it.dish.id == itemToUpdate.dish.id }
+            val actualCartItem = upsertedItem.find { it.dish.id == itemToUpdate.dish.id }
             assertNotNull(actualCartItem)
             assertEquals(itemToUpdate.quantity, actualCartItem.quantity)
         }
@@ -148,9 +141,7 @@ class DefaultCartRepositoryTest {
         fun success_returnsOfflineCacheFirst() = runTest {
             val items = repository.getAllCartItems().first()
 
-            assertIs<Resource.Success<List<CartItem>>>(items)
-            assertNotNull(items.data)
-            val retrievedIds = items.data.map { it.dish.id }
+            val retrievedIds = items.map { it.dish.id }
             offlineCartItemEntity.forEach { (dishId, _) ->
                 assertContains(retrievedIds, dishId)
             }
@@ -160,9 +151,7 @@ class DefaultCartRepositoryTest {
         fun success_returnsRemoteDataAfterCacheRefresh() = runTest {
             val items = repository.getAllCartItems().take(2).last()
 
-            assertIs<Resource.Success<List<CartItem>>>(items)
-            assertNotNull(items.data)
-            val retrievedIds = items.data.map { it.dish.id }
+            val retrievedIds = items.map { it.dish.id }
             val expectedIds =
                 offlineCartItemEntity.map { it.dishId } + onlineCartDTO.map { it.dishId }
             expectedIds.forEach { id ->
@@ -176,16 +165,33 @@ class DefaultCartRepositoryTest {
             repository = DefaultCartRepository(remoteDS, localDS)
 
             val items = repository.getAllCartItems().first()
-            println(items)
 
-            assertIs<Resource.Success<List<CartItem>>>(items)
-            assertNotNull(items.data)
-            val retrievedIds = items.data.map { it.dish.id }
+            val retrievedIds = items.map { it.dish.id }
             offlineCartItemEntity.forEach { (dishId, _) ->
                 assertContains(retrievedIds, dishId)
             }
         }
     }
 
+
+    @Nested
+    inner class ClearCart {
+
+        @Test
+        fun success_clearsCart() {
+        }
+
+        @Test
+        fun success_returnsSuccess() {
+        }
+
+        @Test
+        fun remoteFailure_returnsFailure() {
+        }
+
+        @Test
+        fun dbFailure_returnsFailure() {
+        }
+    }
 
 }

@@ -12,5 +12,5 @@ interface CartRepository {
 
     suspend fun clearCart(): Resource<Unit>
 
-    fun getAllCartItems(): Flow<Resource<List<CartItem>>>
+    fun getAllCartItems(): Flow<List<CartItem>>
 }
