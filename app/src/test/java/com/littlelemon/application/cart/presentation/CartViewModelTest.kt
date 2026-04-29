@@ -71,18 +71,6 @@ class CartViewModelTest {
     }
 
     @Nested
-    inner class ErrorState {
-
-        @Test
-        fun emitsErrorState_whenErrorMessageIsInQueue() = runTest(testScope.testScheduler) {
-            viewModel.errorState.test {
-                val message = awaitItem()
-                assertEquals(errorMessage, message)
-            }
-        }
-    }
-
-    @Nested
     inner class StateTest {
 
         @Test

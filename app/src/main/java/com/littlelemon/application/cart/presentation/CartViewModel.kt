@@ -7,7 +7,6 @@ import com.littlelemon.application.cart.domain.usecase.GetCartErrorMessagesUseCa
 import com.littlelemon.application.cart.domain.usecase.GetCartItemsUseCase
 import com.littlelemon.application.cart.domain.usecase.UpsertCartItemUseCase
 import com.littlelemon.application.core.presentation.UiText
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -18,8 +17,6 @@ class CartViewModel(
     private val upsertCartItem: UpsertCartItemUseCase,
     private val clearCart: ClearCartUseCase
 ) : ViewModel() {
-
-    val errorState: SharedFlow<String> = getCartError()
 
     val state = combine(getCartError(), getCartItems()) { errorMessages, cartItems ->
         CartState(
