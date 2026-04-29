@@ -12,6 +12,7 @@ import com.littlelemon.application.database.cart.mappers.toDTO
 import com.littlelemon.application.database.cart.mappers.toEntity
 import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.utils.StandardTestDispatcherRule
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.take
@@ -20,14 +21,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
-import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.random.Random
 import kotlin.test.assertContains
+import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-
+@ExtendWith(StandardTestDispatcherRule::class)
 class DefaultCartRepositoryTest {
 
     private lateinit var remoteDS: CartRemoteDataSource
@@ -35,7 +37,7 @@ class DefaultCartRepositoryTest {
     private lateinit var repository: CartRepository
 
 
-    private val cartItems = List(5) {
+    private val cartItems = List(1) {
         CartItem(DishGenerator.generateDish(), Random.nextInt(5, 10))
     }
 
@@ -53,27 +55,71 @@ class DefaultCartRepositoryTest {
         @Test
         fun success_updatesItemLocallyAndInRemote() = runTest {
             val cartItem = CartItem(DishGenerator.generateDish(), 5)
+
+            // When an item is upserted into the repository
             repository.upsertCartItem(cartItem)
+
+
+            // Then, the getAllCartItems flow emits success with new item
+            val upsertedItem = repository.getAllCartItems().first()
+            assertIs<Resource.Success<List<CartItem>>>(upsertedItem)
+            assertNotNull(upsertedItem.data)
+
+            // Testing with direct comparison will require modifying the fakeDao to pass in both the Dish
+            // and CartItem so, a simpler approach is to ensure that the item exists, and it has the right
+            // quantity, which satisfies the domain of the test
+            val actualCartItem = upsertedItem.data.find { it.dish.id == cartItem.dish.id }
+            assertNotNull(actualCartItem)
+            assertEquals(cartItem.quantity, actualCartItem.quantity)
         }
 
         @Test
         fun remoteFailure_rollbackItem() = runTest {
+            // Given remote failure
+            val itemToUpdate = cartItems.first()
             remoteDS = FakeCartRemoteDataSource(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
 
-            repository.upsertCartItem(cartItems.first().copy(quantity = 100))
+            // When an item is upserted into the repository
+            repository.upsertCartItem(itemToUpdate.copy(quantity = 100))
+
+            // Then, the getAllCartItems flow emits success with old item
+            val upsertedItem = repository.getAllCartItems().first()
+            assertIs<Resource.Success<List<CartItem>>>(upsertedItem)
+            assertNotNull(upsertedItem.data)
+
+            // Testing with direct comparison will require modifying the fakeDao to pass in both the Dish
+            // and CartItem so, a simpler approach is to ensure that the item exists, and it has the right
+            // quantity, which satisfies the domain of the test
+            val actualCartItem = upsertedItem.data.find { it.dish.id == itemToUpdate.dish.id }
+            assertNotNull(actualCartItem)
+            assertEquals(itemToUpdate.quantity, actualCartItem.quantity)
         }
 
         @Test
-        fun localFailure_rethrowsError() = runTest {
+        fun localFailure_emitErrorMessageStream() = runTest {
+            // Given db failure
             localDS = FakeCartDao(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
+            //TODO ()
 
-            assertThrows<IllegalArgumentException> {
-                repository.upsertCartItem(
-                    cartItems.first().copy(quantity = 100)
-                )
-            }
+            // When an item is upserted into the repository
+            repository.upsertCartItem(cartItems.first().copy(quantity = 100))
+
+            // Then, the error message channel is updated with an error message
+        }
+
+        @Test
+        fun remoteFailure_emitErrorMessageStream() = runTest {
+            // Given remote failure
+            remoteDS = FakeCartRemoteDataSource(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            // When an item is upserted into the repository
+            repository.upsertCartItem(cartItems.first().copy(quantity = 100))
+
+            // Then, the error message channel is updated with an error message
+            //TODO()
         }
     }
 

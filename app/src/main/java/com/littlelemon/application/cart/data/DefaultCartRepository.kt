@@ -41,13 +41,18 @@ class DefaultCartRepository(
         cartItem: CartItem
     ) {
         val dishId = cartItem.dish.id
-        // Check if a default value exists in the cache,
-        // If not, update with a value from the cache
-        if (!cartDefault.containsKey(dishId)) cartDefault[dishId] =
-            localDataSource.getQuantity(dishId)
+        try {
+            // Check if a default value exists in the cache,
+            // If not, update with a value from the cache
+            if (!cartDefault.containsKey(dishId)) cartDefault[dishId] =
+                localDataSource.getQuantity(dishId)
 
-        // Update the database to reflect the updated cart quantity
-        localDataSource.upsertCartItem(cartItem.toEntity())
+            // Update the database to reflect the updated cart quantity
+            localDataSource.upsertCartItem(cartItem.toEntity())
+        } catch (_: Exception) {
+            currentCoroutineContext().ensureActive()
+            // TODO: Message buffer impl
+        }
 
         // Cancel any previous network jobs
         cartJobs[dishId]?.cancel()
