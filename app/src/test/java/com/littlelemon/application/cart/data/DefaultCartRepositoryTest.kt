@@ -199,16 +199,13 @@ class DefaultCartRepositoryTest {
         }
 
         @Test
-        fun dbFailure_returnsCachedData() = runTest {
-            remoteDS = FakeCartRemoteDataSource(throwError = true)
+        fun dbFailure_returnsEmptyList() = runTest {
+            localDS = FakeCartDao(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
 
             val items = repository.getAllCartItems().first()
 
-            val retrievedIds = items.map { it.dish.id }
-            offlineCartItemEntity.forEach { (dishId, _) ->
-                assertContains(retrievedIds, dishId)
-            }
+            assertEquals(0, items.size)
         }
 
 
