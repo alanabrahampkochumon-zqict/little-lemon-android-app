@@ -53,8 +53,11 @@ class FakeCartRepository(
     }
 
     override fun getAllCartItems(): Flow<List<CartItem>> = flow {
-        if (throwError)
+        if (throwError) {
             _errorMessages.emit(ERROR_MESSAGE)
-        emit(_data)
+            emit(emptyList())
+        } else {
+            emit(_data)
+        }
     }
 }
