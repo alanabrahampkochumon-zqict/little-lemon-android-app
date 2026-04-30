@@ -42,7 +42,9 @@ class CartViewModel(
                 upsertCartItem(action.cartItem.copy(quantity = action.cartItem.quantity + 1))
             }
 
-            is CartAction.RemoveItem -> TODO()
+            is CartAction.RemoveItem -> viewModelScope.launch {
+                upsertCartItem(action.cartItem.copy(quantity = 0))
+            }
         }
     }
 }
