@@ -1,4 +1,4 @@
-package com.littlelemon.application.menu.domain.util
+package com.littlelemon.application.shared.menu.domain.util
 
 enum class DishSorting {
 

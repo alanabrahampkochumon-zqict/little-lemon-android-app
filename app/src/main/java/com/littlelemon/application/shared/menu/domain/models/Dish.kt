@@ -1,4 +1,4 @@
-package com.littlelemon.application.menu.domain.models
+package com.littlelemon.application.shared.menu.domain.models
 
 import kotlinx.datetime.LocalDateTime
 

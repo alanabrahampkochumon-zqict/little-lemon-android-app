@@ -27,8 +27,8 @@ import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.PriceRow
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
-import com.littlelemon.application.menu.domain.models.Dish
-import com.littlelemon.application.menu.domain.models.NutritionInfo
+import com.littlelemon.application.shared.menu.domain.models.Dish
+import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.LocalDateTime
 import kotlin.random.Random
 

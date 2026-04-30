@@ -12,11 +12,11 @@ import androidx.compose.ui.test.performScrollToNode
 import com.littlelemon.application.R
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.menu.MenuTestTags
-import com.littlelemon.application.menu.domain.models.Category
-import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.presentation.CategoryState
 import com.littlelemon.application.menu.presentation.MenuState
 import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.shared.menu.domain.models.Category
+import com.littlelemon.application.shared.menu.domain.models.Dish
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

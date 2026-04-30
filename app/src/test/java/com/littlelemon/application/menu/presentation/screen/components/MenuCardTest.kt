@@ -8,8 +8,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.littlelemon.application.R
 import com.littlelemon.application.core.CoreTestTags
-import com.littlelemon.application.menu.domain.models.Dish
-import com.littlelemon.application.menu.domain.models.NutritionInfo
+import com.littlelemon.application.shared.menu.domain.models.Dish
+import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

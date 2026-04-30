@@ -1,6 +1,6 @@
 package com.littlelemon.application.cart.domain.models
 
-import com.littlelemon.application.menu.domain.models.Dish
+import com.littlelemon.application.shared.menu.domain.models.Dish
 
 data class CartItem(
     val dish: Dish,

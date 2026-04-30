@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.R
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
-import com.littlelemon.application.menu.domain.usecase.GetCategoriesUseCase
-import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
-import com.littlelemon.application.menu.domain.util.DishFilter
-import com.littlelemon.application.menu.domain.util.DishSorting
+import com.littlelemon.application.shared.menu.domain.usecase.GetCategoriesUseCase
+import com.littlelemon.application.shared.menu.domain.usecase.GetDishesUseCase
+import com.littlelemon.application.shared.menu.domain.util.DishFilter
+import com.littlelemon.application.shared.menu.domain.util.DishSorting
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -64,23 +64,23 @@ class MenuViewModel(
             sorting, filtering, forceFetch, currentCategory
         )
     }.flatMapLatest { (sorting, filter, forceFetch, currentCategory) ->
-            getDishes(sorting, filter, forceFetch, currentCategory)
-        }.map { resource ->
-            when (resource) {
-                is Resource.Failure -> MenuState(
-                    dishes = resource.data,
-                    isLoading = false,
-                    error = if (resource.errorMessage != null) UiText.DynamicString(resource.errorMessage) else UiText.StringResource(
-                        R.string.generic_error_message
-                    )
+        getDishes(sorting, filter, forceFetch, currentCategory)
+    }.map { resource ->
+        when (resource) {
+            is Resource.Failure -> MenuState(
+                dishes = resource.data,
+                isLoading = false,
+                error = if (resource.errorMessage != null) UiText.DynamicString(resource.errorMessage) else UiText.StringResource(
+                    R.string.generic_error_message
                 )
+            )
 
-                is Resource.Loading -> MenuState(isLoading = true, error = null)
-                is Resource.Success -> MenuState(
-                    dishes = resource.data, isLoading = false, error = null
-                )
-            }
-        }.flowOn(ioDispatcher)
+            is Resource.Loading -> MenuState(isLoading = true, error = null)
+            is Resource.Success -> MenuState(
+                dishes = resource.data, isLoading = false, error = null
+            )
+        }
+    }.flowOn(ioDispatcher)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MenuState(isLoading = true))
 
     fun onAction(action: MenuActions) {

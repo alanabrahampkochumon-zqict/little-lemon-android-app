@@ -4,9 +4,9 @@ import app.cash.turbine.test
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.utils.AddressGenerator
 import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.menu.domain.usecase.GetCategoriesUseCase
-import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.shared.menu.domain.usecase.GetCategoriesUseCase
+import com.littlelemon.application.shared.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk

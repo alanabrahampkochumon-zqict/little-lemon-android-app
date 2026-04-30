@@ -38,14 +38,14 @@ import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.home.presentation.components.CategoryCard
 import com.littlelemon.application.menu.MenuTestTags
-import com.littlelemon.application.menu.domain.models.Category
-import com.littlelemon.application.menu.domain.models.Dish
-import com.littlelemon.application.menu.domain.models.NutritionInfo
 import com.littlelemon.application.menu.presentation.CategoryState
 import com.littlelemon.application.menu.presentation.MenuActions
 import com.littlelemon.application.menu.presentation.MenuState
 import com.littlelemon.application.menu.presentation.MenuViewModel
 import com.littlelemon.application.menu.presentation.screen.components.MenuCard
+import com.littlelemon.application.shared.menu.domain.models.Category
+import com.littlelemon.application.shared.menu.domain.models.Dish
+import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.LocalDateTime
 import kotlin.math.roundToInt
 import kotlin.random.Random

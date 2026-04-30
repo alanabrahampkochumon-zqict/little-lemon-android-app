@@ -1,8 +1,8 @@
-package com.littlelemon.application.menu.domain.usecase
+package com.littlelemon.application.shared.menu.domain.usecase
 
 import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.menu.domain.MenuRepository
-import com.littlelemon.application.menu.domain.models.Category
+import com.littlelemon.application.shared.menu.domain.MenuRepository
+import com.littlelemon.application.shared.menu.domain.models.Category
 import kotlinx.coroutines.flow.Flow
 
 class GetCategoriesUseCase(

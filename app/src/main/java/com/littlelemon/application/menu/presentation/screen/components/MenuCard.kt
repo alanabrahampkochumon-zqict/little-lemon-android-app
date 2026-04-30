@@ -47,11 +47,10 @@ import coil3.request.crossfade
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.DotSeparator
 import com.littlelemon.application.core.presentation.components.Stepper
-import com.littlelemon.application.core.presentation.components.shimmer
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.utils.applyShadow
-import com.littlelemon.application.menu.domain.models.Dish
-import com.littlelemon.application.menu.domain.models.NutritionInfo
+import com.littlelemon.application.shared.menu.domain.models.Dish
+import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock

@@ -28,11 +28,11 @@ import com.littlelemon.application.core.presentation.components.shimmer
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.home.presentation.HomeState
 import com.littlelemon.application.home.presentation.HomeViewModel
-import com.littlelemon.application.menu.domain.models.Category
-import com.littlelemon.application.menu.domain.models.Dish
-import com.littlelemon.application.menu.domain.models.NutritionInfo
 import com.littlelemon.application.reservation.domain.models.Reservation
 import com.littlelemon.application.reservation.presentation.screens.components.ReservationCard
+import com.littlelemon.application.shared.menu.domain.models.Category
+import com.littlelemon.application.shared.menu.domain.models.Dish
+import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
@@ -88,9 +88,11 @@ fun HomeScreenContentRoot(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
-            Box(Modifier
-                .size(300.dp)
-                .shimmer())
+            Box(
+                Modifier
+                    .size(300.dp)
+                    .shimmer()
+            )
             Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
 
             // Upcoming reservations | Conditionally render

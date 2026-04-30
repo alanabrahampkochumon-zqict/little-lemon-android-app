@@ -9,8 +9,8 @@ import com.littlelemon.application.R
 import com.littlelemon.application.cart.domain.models.CartItem
 import com.littlelemon.application.cart.presentation.screen.components.CartItemCard
 import com.littlelemon.application.core.CoreTestTags
-import com.littlelemon.application.menu.domain.models.Dish
-import com.littlelemon.application.menu.domain.models.NutritionInfo
+import com.littlelemon.application.shared.menu.domain.models.Dish
+import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.LocalDateTime
 import org.junit.Rule
 import org.junit.Test

@@ -6,9 +6,9 @@ import com.littlelemon.application.R
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
-import com.littlelemon.application.menu.domain.usecase.GetCategoriesUseCase
-import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
-import com.littlelemon.application.menu.domain.util.DishSorting
+import com.littlelemon.application.shared.menu.domain.usecase.GetCategoriesUseCase
+import com.littlelemon.application.shared.menu.domain.usecase.GetDishesUseCase
+import com.littlelemon.application.shared.menu.domain.util.DishSorting
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn

@@ -2,8 +2,8 @@ package com.littlelemon.application.home.presentation
 
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.core.presentation.UiText
-import com.littlelemon.application.menu.domain.models.Category
-import com.littlelemon.application.menu.domain.models.Dish
+import com.littlelemon.application.shared.menu.domain.models.Category
+import com.littlelemon.application.shared.menu.domain.models.Dish
 
 
 data class HomeState(

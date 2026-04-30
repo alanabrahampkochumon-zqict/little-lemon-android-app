@@ -30,8 +30,8 @@ import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.utils.applyShadow
-import com.littlelemon.application.menu.domain.models.Dish
-import com.littlelemon.application.menu.domain.models.NutritionInfo
+import com.littlelemon.application.shared.menu.domain.models.Dish
+import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.LocalDateTime
 
 // TODO: Add tests
@@ -186,7 +186,7 @@ private fun CartItemCardPreview() {
                 dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
                 popularityIndex = 11
             )
-            CartItemCard(CartItem( dish, 2), {}, {}, {})
+            CartItemCard(CartItem(dish, 2), {}, {}, {})
             CartItemCard(CartItem(dish.copy(discountedPrice = null), 4), {}, {}, {})
         }
     }

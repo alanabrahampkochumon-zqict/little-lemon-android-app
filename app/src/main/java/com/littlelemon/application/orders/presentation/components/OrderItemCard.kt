@@ -35,9 +35,9 @@ import com.littlelemon.application.core.presentation.components.Tag
 import com.littlelemon.application.core.presentation.components.TagVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.utils.applyShadow
-import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.orders.domain.models.MenuItem
 import com.littlelemon.application.orders.domain.models.OrderItem
+import com.littlelemon.application.shared.menu.domain.models.Dish
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format
 import kotlinx.datetime.format.MonthNames

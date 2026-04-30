@@ -3,9 +3,9 @@ package com.littlelemon.application.shared.menu.data.mappers
 import com.littlelemon.application.database.menu.models.CategoryEntity
 import com.littlelemon.application.database.menu.models.DishEntity
 import com.littlelemon.application.database.menu.models.DishWithCategories
-import com.littlelemon.application.menu.domain.models.Category
-import com.littlelemon.application.menu.domain.models.Dish
-import com.littlelemon.application.menu.domain.models.NutritionInfo
+import com.littlelemon.application.shared.menu.domain.models.Category
+import com.littlelemon.application.shared.menu.domain.models.Dish
+import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
