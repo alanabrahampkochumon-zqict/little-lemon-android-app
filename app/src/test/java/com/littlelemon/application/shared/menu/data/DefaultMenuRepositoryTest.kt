@@ -1,10 +1,7 @@
-package com.littlelemon.application.menu.data
+package com.littlelemon.application.shared.menu.data
 
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.menu.MenuDao
-import com.littlelemon.application.menu.data.mappers.toDish
-import com.littlelemon.application.menu.data.mappers.toDomainCategory
-import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
 import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.models.Category
 import com.littlelemon.application.menu.domain.util.DishFilter
@@ -13,6 +10,9 @@ import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.menu.utils.FakeDishRemoteDataSource
 import com.littlelemon.application.menu.utils.FakeMenuDao
 import com.littlelemon.application.menu.utils.MenuDTOGenerator
+import com.littlelemon.application.shared.menu.data.mappers.toDish
+import com.littlelemon.application.shared.menu.data.mappers.toDomainCategory
+import com.littlelemon.application.shared.menu.data.remote.MenuRemoteDataSource
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last

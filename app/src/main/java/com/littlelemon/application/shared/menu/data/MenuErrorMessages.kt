@@ -1,4 +1,4 @@
-package com.littlelemon.application.menu.data
+package com.littlelemon.application.shared.menu.data
 
 object MenuErrorMessages {
 

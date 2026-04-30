@@ -1,4 +1,4 @@
-package com.littlelemon.application.menu.data.mappers
+package com.littlelemon.application.shared.menu.data.mappers
 
 import com.littlelemon.application.database.menu.models.CategoryEntity
 import com.littlelemon.application.database.menu.models.DishEntity

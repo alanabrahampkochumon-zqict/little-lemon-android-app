@@ -1,11 +1,11 @@
-package com.littlelemon.application.menu.data.mappers
+package com.littlelemon.application.shared.menu.data.mappers
 
 import com.littlelemon.application.database.menu.models.CategoryEntity
 import com.littlelemon.application.database.menu.models.DishCategoryCrossRef
 import com.littlelemon.application.database.menu.models.DishEntity
-import com.littlelemon.application.menu.data.mappers.utils.convertCentsToDollars
-import com.littlelemon.application.menu.data.remote.models.DishDTO
-import com.littlelemon.application.menu.data.remote.models.NutritionInfoDTO
+import com.littlelemon.application.shared.menu.data.mappers.utils.convertCentsToDollars
+import com.littlelemon.application.shared.menu.data.remote.models.DishDTO
+import com.littlelemon.application.shared.menu.data.remote.models.NutritionInfoDTO
 
 data class MenuDataBundle(
     val dishes: List<DishEntity>,

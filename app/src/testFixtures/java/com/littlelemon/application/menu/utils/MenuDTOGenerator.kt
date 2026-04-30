@@ -1,8 +1,8 @@
 package com.littlelemon.application.menu.utils
 
-import com.littlelemon.application.menu.data.remote.models.CategoryDTO
-import com.littlelemon.application.menu.data.remote.models.DishDTO
-import com.littlelemon.application.menu.data.remote.models.NutritionInfoDTO
+import com.littlelemon.application.shared.menu.data.remote.models.CategoryDTO
+import com.littlelemon.application.shared.menu.data.remote.models.DishDTO
+import com.littlelemon.application.shared.menu.data.remote.models.NutritionInfoDTO
 import io.github.serpro69.kfaker.faker
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone

@@ -1,11 +1,11 @@
-package com.littlelemon.application.menu.data.mappers
+package com.littlelemon.application.shared.menu.data.mappers
 
 import com.littlelemon.application.database.menu.models.DishCategoryCrossRef
 import com.littlelemon.application.database.menu.models.DishEntity
-import com.littlelemon.application.menu.data.remote.models.CategoryDTO
-import com.littlelemon.application.menu.data.remote.models.DishDTO
-import com.littlelemon.application.menu.data.remote.models.NutritionInfoDTO
 import com.littlelemon.application.menu.utils.MenuDTOGenerator
+import com.littlelemon.application.shared.menu.data.remote.models.CategoryDTO
+import com.littlelemon.application.shared.menu.data.remote.models.DishDTO
+import com.littlelemon.application.shared.menu.data.remote.models.NutritionInfoDTO
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

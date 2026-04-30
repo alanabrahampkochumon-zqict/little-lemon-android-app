@@ -1,7 +1,7 @@
 package com.littlelemon.application.menu.utils
 
-import com.littlelemon.application.menu.data.remote.MenuRemoteDataSource
-import com.littlelemon.application.menu.data.remote.models.DishDTO
+import com.littlelemon.application.shared.menu.data.remote.MenuRemoteDataSource
+import com.littlelemon.application.shared.menu.data.remote.models.DishDTO
 import io.github.jan.supabase.exceptions.RestException
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine

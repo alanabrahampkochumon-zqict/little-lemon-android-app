@@ -3,12 +3,12 @@ package com.littlelemon.application.menu.presentation
 import androidx.test.filters.SmallTest
 import app.cash.turbine.test
 import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.domain.usecase.GetCategoriesUseCase
 import com.littlelemon.application.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
 import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.shared.menu.data.mappers.toDish
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk

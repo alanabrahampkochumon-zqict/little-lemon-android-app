@@ -2,8 +2,8 @@ package com.littlelemon.application.database.cart.mappers
 
 import com.littlelemon.application.database.cart.models.CartItemDetails
 import com.littlelemon.application.database.cart.models.CartItemEntity
-import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.shared.menu.data.mappers.toDish
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

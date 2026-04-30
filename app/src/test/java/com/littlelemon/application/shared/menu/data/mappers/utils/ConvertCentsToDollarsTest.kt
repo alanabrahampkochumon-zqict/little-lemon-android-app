@@ -1,4 +1,4 @@
-package com.littlelemon.application.menu.data.mappers.utils
+package com.littlelemon.application.shared.menu.data.mappers.utils
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue

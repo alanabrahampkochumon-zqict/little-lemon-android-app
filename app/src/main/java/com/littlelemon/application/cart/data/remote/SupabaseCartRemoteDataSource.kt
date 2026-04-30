@@ -40,6 +40,7 @@ class SupabaseCartRemoteDataSource(private val client: SupabaseClient) : CartRem
         return client.postgrest.from(SupabaseTables.CART).select().decodeList()
     }
 
+    // TODO: Move to order
     @Throws(
         PostgrestRestException::class,
         HttpRequestTimeoutException::class,

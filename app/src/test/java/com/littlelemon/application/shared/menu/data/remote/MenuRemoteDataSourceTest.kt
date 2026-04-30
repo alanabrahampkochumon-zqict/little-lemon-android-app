@@ -1,4 +1,4 @@
-package com.littlelemon.application.menu.data.remote
+package com.littlelemon.application.shared.menu.data.remote
 
 import com.littlelemon.application.utils.createFakeSupabaseClient
 import io.github.jan.supabase.exceptions.RestException

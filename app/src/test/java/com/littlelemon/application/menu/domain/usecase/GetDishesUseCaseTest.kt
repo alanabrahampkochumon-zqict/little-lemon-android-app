@@ -2,12 +2,12 @@ package com.littlelemon.application.menu.domain.usecase
 
 import androidx.test.filters.SmallTest
 import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.menu.data.mappers.toDish
 import com.littlelemon.application.menu.domain.MenuRepository
 import com.littlelemon.application.menu.domain.models.Dish
 import com.littlelemon.application.menu.domain.util.DishFilter
 import com.littlelemon.application.menu.domain.util.DishSorting
 import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.shared.menu.data.mappers.toDish
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.first

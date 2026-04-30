@@ -2,7 +2,7 @@ package com.littlelemon.application.database.cart.mappers
 
 import com.littlelemon.application.cart.domain.models.CartItem
 import com.littlelemon.application.database.cart.models.CartItemDetails
-import com.littlelemon.application.menu.data.mappers.toDish
+import com.littlelemon.application.shared.menu.data.mappers.toDish
 
 
 fun List<CartItemDetails>.toCartItems(): List<CartItem> {

@@ -1,4 +1,4 @@
-package com.littlelemon.application.menu.data.remote.models
+package com.littlelemon.application.shared.menu.data.remote.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
