@@ -10,6 +10,7 @@ import com.littlelemon.application.core.presentation.UiText
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class CartViewModel(
     private val getCartItems: GetCartItemsUseCase,
@@ -29,4 +30,16 @@ class CartViewModel(
         SharingStarted.WhileSubscribed(5000),
         CartState(isLoading = true, null, emptyList())
     )
+
+
+    fun onAction(action: CartAction) {
+        when (action) {
+            is CartAction.DecreaseQuantity -> viewModelScope.launch {
+                upsertCartItem(action.cartItem.copy(quantity = action.cartItem.quantity + 1))
+            }
+
+            is CartAction.IncreaseQuantity -> TODO()
+            is CartAction.RemoveItem -> TODO()
+        }
+    }
 }
