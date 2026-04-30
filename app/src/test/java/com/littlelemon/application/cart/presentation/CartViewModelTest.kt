@@ -71,7 +71,7 @@ class CartViewModelTest {
     }
 
     @Nested
-    inner class StateTest {
+    inner class StateTests {
 
         @Test
         fun isLoadingIsTrue_initially() = runTest {
@@ -112,4 +112,30 @@ class CartViewModelTest {
         }
     }
 
+
+    @Nested
+    inner class CartActionTests {
+
+        @Nested
+        inner class IncreaseQuantityTests {
+
+            @Test
+            fun increasesQuantityOfTheCartItem() = runTest {
+                val cartItem = cartItems.first()
+                viewModel.state.test {
+                    skipItems(1)
+                    // Initially the quantity is equals the quantity in our initial list
+                    val initialItem = awaitItem()
+                    assertEquals(cartItem.quantity, initialItem.cartItems.first().quantity)
+
+                    // When increase quantity action is performed
+                    viewModel.onAction(CartAction.IncreaseQuantity(cartItem))
+
+                    // Then, the quantity is decremented by 1
+                    val finalItem = awaitItem()
+                    assertEquals(cartItem.quantity - 1, finalItem.cartItems.first().quantity)
+                }
+            }
+        }
+    }
 }
