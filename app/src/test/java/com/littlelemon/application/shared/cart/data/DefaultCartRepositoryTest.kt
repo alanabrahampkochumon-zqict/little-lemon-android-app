@@ -63,7 +63,7 @@ class DefaultCartRepositoryTest {
 
 
             // Then, the getAllCartItems flow emits success with new item
-            val upsertedItem = repository.getAllCartItems().first()
+            val upsertedItem = repository.getAllDetailedCartItems().first()
             // Testing with direct comparison will require modifying the fakeDao to pass in both the Dish
             // and CartItem so, a simpler approach is to ensure that the item exists, and it has the right
             // quantity, which satisfies the domain of the test
@@ -83,7 +83,7 @@ class DefaultCartRepositoryTest {
             repository.upsertCartItem(itemToUpdate.copy(quantity = 100))
 
             // Then, the getAllCartItems flow emits success with old item
-            val upsertedItem = repository.getAllCartItems().first()
+            val upsertedItem = repository.getAllDetailedCartItems().first()
 
             // Testing with direct comparison will require modifying the fakeDao to pass in both the Dish
             // and CartItem so, a simpler approach is to ensure that the item exists, and it has the right
@@ -149,7 +149,7 @@ class DefaultCartRepositoryTest {
 
         @Test
         fun success_returnsOfflineCacheFirst() = runTest {
-            val items = repository.getAllCartItems().first()
+            val items = repository.getAllDetailedCartItems().first()
 
             val retrievedIds = items.map { it.dish.id }
             offlineCartItemEntity.forEach { (dishId, _) ->
@@ -159,7 +159,7 @@ class DefaultCartRepositoryTest {
 
         @Test
         fun success_returnsRemoteDataAfterCacheRefresh() = runTest {
-            val items = repository.getAllCartItems().take(2).last()
+            val items = repository.getAllDetailedCartItems().take(2).last()
 
             val retrievedIds = items.map { it.dish.id }
             val expectedIds =
@@ -174,7 +174,7 @@ class DefaultCartRepositoryTest {
             remoteDS = FakeCartRemoteDataSource(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
 
-            val items = repository.getAllCartItems().first()
+            val items = repository.getAllDetailedCartItems().first()
 
             val retrievedIds = items.map { it.dish.id }
             offlineCartItemEntity.forEach { (dishId, _) ->
@@ -190,7 +190,7 @@ class DefaultCartRepositoryTest {
 
             repository.errorMessages.test {
                 // When cart is retrieved from repository
-                repository.getAllCartItems().first()
+                repository.getAllDetailedCartItems().first()
 
                 // Then, the error message channel is updated with an error message
                 val message = awaitItem()
@@ -203,7 +203,7 @@ class DefaultCartRepositoryTest {
             localDS = FakeCartDao(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
 
-            val items = repository.getAllCartItems().first()
+            val items = repository.getAllDetailedCartItems().first()
 
             assertEquals(0, items.size)
         }
@@ -216,7 +216,7 @@ class DefaultCartRepositoryTest {
 
             repository.errorMessages.test {
                 // When cart is retrieved from repository
-                repository.getAllCartItems().first()
+                repository.getAllDetailedCartItems().first()
 
                 // Then, the error message channel is updated with an error message
                 val message = awaitItem()
@@ -234,12 +234,12 @@ class DefaultCartRepositoryTest {
         @Test
         fun success_clearsCart() = runTest {
             // Initial condition: There is some data in the cache
-            val beforeClearing = repository.getAllCartItems().first()
+            val beforeClearing = repository.getAllDetailedCartItems().first()
             assertNotEquals(0, beforeClearing.size)
 
             repository.clearCart()
             // Exit condition: No data is in the cache
-            val afterClearing = repository.getAllCartItems().first()
+            val afterClearing = repository.getAllDetailedCartItems().first()
             assertEquals(0, afterClearing.size)
         }
 
@@ -255,7 +255,7 @@ class DefaultCartRepositoryTest {
 
             repository.clearCart()
 
-            val afterClearing = repository.getAllCartItems().first()
+            val afterClearing = repository.getAllDetailedCartItems().first()
             assertNotEquals(0, afterClearing.size)
         }
 

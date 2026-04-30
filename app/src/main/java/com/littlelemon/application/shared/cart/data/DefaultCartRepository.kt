@@ -10,6 +10,7 @@ import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
 import com.littlelemon.application.shared.cart.data.remote.mappers.toEntity
 import com.littlelemon.application.shared.cart.domain.CartRepository
 import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
+import com.littlelemon.application.shared.cart.domain.models.CartItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -96,7 +97,7 @@ class DefaultCartRepository(
         return Resource.Success()
     }
 
-    override fun getAllCartItems(): Flow<List<CartDetailItem>> =
+    override fun getAllDetailedCartItems(): Flow<List<CartDetailItem>> =
         localDataSource.getAllCartItemDetails().onStart {
             try {
                 val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
@@ -115,6 +116,10 @@ class DefaultCartRepository(
             _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
             emit(emptyList())
         }
+
+    override fun getAllCartItems(): Flow<List<CartItem>> {
+        TODO("Not yet implemented")
+    }
 
 
 }

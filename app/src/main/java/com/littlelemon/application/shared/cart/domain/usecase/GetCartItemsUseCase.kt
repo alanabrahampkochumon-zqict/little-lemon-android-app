@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 class GetCartItemsUseCase(
     private val repository: CartRepository
 ) {
-    operator fun invoke(): Flow<List<CartDetailItem>> = repository.getAllCartItems()
+    operator fun invoke(): Flow<List<CartDetailItem>> = repository.getAllDetailedCartItems()
 }

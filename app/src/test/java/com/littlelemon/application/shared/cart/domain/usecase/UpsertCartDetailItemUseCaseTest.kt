@@ -28,7 +28,7 @@ class UpsertCartDetailItemUseCaseTest {
         useCase(cartDetailItem)
 
         // Then, the item is added to the repo
-        val internalList = repository.getAllCartItems().first()
+        val internalList = repository.getAllDetailedCartItems().first()
         assertContains(internalList, cartDetailItem)
     }
 }

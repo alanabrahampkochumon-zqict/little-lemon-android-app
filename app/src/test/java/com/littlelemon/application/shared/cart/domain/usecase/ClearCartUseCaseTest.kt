@@ -28,14 +28,14 @@ class ClearCartUseCaseTest {
         useCase = ClearCartUseCase(repository)
 
         // Initial assertion
-        val initialData = repository.getAllCartItems().first()
+        val initialData = repository.getAllDetailedCartItems().first()
         assertEquals(numItems, initialData.size)
 
         // When use case is invoked
         useCase()
 
         // Then, the repository is cleared
-        val finalData = repository.getAllCartItems().first()
+        val finalData = repository.getAllDetailedCartItems().first()
         assertEquals(0, finalData.size)
     }
 

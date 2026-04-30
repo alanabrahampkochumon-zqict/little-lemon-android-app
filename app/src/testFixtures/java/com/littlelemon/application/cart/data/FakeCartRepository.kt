@@ -4,6 +4,7 @@ import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.shared.cart.domain.CartRepository
 import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
+import com.littlelemon.application.shared.cart.domain.models.CartItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -52,12 +53,21 @@ class FakeCartRepository(
         return Resource.Success()
     }
 
-    override fun getAllCartItems(): Flow<List<CartDetailItem>> = flow {
+    override fun getAllDetailedCartItems(): Flow<List<CartDetailItem>> = flow {
         if (throwError) {
             _errorMessages.tryEmit(ERROR_MESSAGE)
             emit(emptyList())
         } else {
             emit(_data)
+        }
+    }
+
+    override fun getAllCartItems(): Flow<List<CartItem>> = flow {
+        if (throwError) {
+            _errorMessages.tryEmit(ERROR_MESSAGE)
+            emit(emptyList())
+        } else {
+            emit(_data.map { CartItem(dishId = it.dish.id, quantity = it.quantity) })
         }
     }
 }
