@@ -12,7 +12,7 @@ import com.littlelemon.application.auth.domain.usecase.ValidateEmailUseCase
 import com.littlelemon.application.auth.domain.usecase.ValidateOTPUseCase
 import com.littlelemon.application.auth.domain.usecase.VerifyOTPUseCase
 import com.littlelemon.application.auth.presentation.AuthViewModel
-import com.littlelemon.application.core.domain.SessionManager
+import com.littlelemon.application.shared.auth.domain.SessionManager
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 

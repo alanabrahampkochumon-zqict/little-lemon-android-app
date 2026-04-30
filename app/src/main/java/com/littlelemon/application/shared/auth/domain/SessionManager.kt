@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.domain
+package com.littlelemon.application.shared.auth.domain
 
 import com.littlelemon.application.core.domain.model.SessionStatus
 import kotlinx.coroutines.flow.Flow
