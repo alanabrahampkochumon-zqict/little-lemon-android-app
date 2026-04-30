@@ -1,9 +1,9 @@
 package com.littlelemon.application.core.presentation
 
 import app.cash.turbine.test
-import com.littlelemon.application.core.domain.model.SessionStatus
 import com.littlelemon.application.shared.address.domain.AddressManager
 import com.littlelemon.application.shared.auth.domain.SessionManager
+import com.littlelemon.application.shared.auth.domain.model.SessionStatus
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.every

@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.domain.model
+package com.littlelemon.application.shared.auth.domain.model
 
 sealed interface SessionStatus {
     // User session exists but user has some more things to do, in this app's case personalization

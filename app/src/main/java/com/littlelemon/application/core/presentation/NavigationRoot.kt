@@ -12,8 +12,8 @@ import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.address.presentation.screens.LocationPermissionScreen
 import com.littlelemon.application.auth.presentation.AuthViewModel
 import com.littlelemon.application.auth.presentation.screens.AuthScreen
-import com.littlelemon.application.core.domain.model.SessionStatus
 import com.littlelemon.application.home.presentation.screens.HomeScreen
+import com.littlelemon.application.shared.auth.domain.model.SessionStatus
 import org.koin.androidx.compose.koinViewModel
 
 

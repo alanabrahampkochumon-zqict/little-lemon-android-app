@@ -2,9 +2,9 @@ package com.littlelemon.application.auth.domain
 
 import com.littlelemon.application.auth.domain.models.UserSessionStatus
 import com.littlelemon.application.auth.domain.usecase.GetUserSessionStatusUseCase
-import com.littlelemon.application.core.domain.model.SessionStatus
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.shared.auth.domain.SessionManager
+import com.littlelemon.application.shared.auth.domain.model.SessionStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
