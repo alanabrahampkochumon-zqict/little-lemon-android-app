@@ -1,6 +1,7 @@
 package com.littlelemon.application.cart.data.remote
 
 import com.littlelemon.application.cart.data.remote.models.CartItemDTO
+import com.littlelemon.application.cart.data.remote.models.CartSummaryDTO
 import com.littlelemon.application.core.data.remote.SupabaseRPC
 import com.littlelemon.application.core.data.remote.SupabaseTables
 import io.github.jan.supabase.SupabaseClient
@@ -37,5 +38,14 @@ class SupabaseCartRemoteDataSource(private val client: SupabaseClient) : CartRem
 
     override suspend fun getCart(): List<CartItemDTO> {
         return client.postgrest.from(SupabaseTables.CART).select().decodeList()
+    }
+
+    @Throws(
+        PostgrestRestException::class,
+        HttpRequestTimeoutException::class,
+        HttpRequestException::class
+    )
+    override suspend fun getCartSummary(): CartSummaryDTO {
+        TODO("Not yet implemented")
     }
 }

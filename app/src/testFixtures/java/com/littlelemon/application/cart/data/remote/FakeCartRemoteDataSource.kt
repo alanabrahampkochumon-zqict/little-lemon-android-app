@@ -1,6 +1,7 @@
 package com.littlelemon.application.cart.data.remote
 
 import com.littlelemon.application.cart.data.remote.models.CartItemDTO
+import com.littlelemon.application.cart.data.remote.models.CartSummaryDTO
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -45,6 +46,14 @@ class FakeCartRemoteDataSource(
     override suspend fun getCart(): List<CartItemDTO> {
         if (throwError) throw IllegalArgumentException()
         return remoteData
+    }
+
+    override suspend fun getCartSummary(): CartSummaryDTO {
+        if (throwError)
+            throw IllegalArgumentException()
+        return CartSummaryDTO(
+            150, 15, 10, 0, 135
+        )
     }
 
 }

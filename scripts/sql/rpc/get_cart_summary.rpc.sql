@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION get_order_summary()
+CREATE OR REPLACE FUNCTION get_cart_summary()
 RETURNS TABLE(
     subtotal BIGINT,
     taxes BIGINT,
