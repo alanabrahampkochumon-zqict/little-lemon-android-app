@@ -11,9 +11,12 @@ import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -47,6 +50,8 @@ class CartViewModelTest {
         CartItem(dish, Random.nextInt(3, 5))
     }
 
+    private val cartItemSharedFlow = MutableSharedFlow<List<CartItem>>(replay = 1)
+
 
     @BeforeEach
     fun setUp() {
@@ -61,7 +66,9 @@ class CartViewModelTest {
             testScope,
             SharingStarted.Eagerly, 1
         )
-        coEvery { getItemUseCase.invoke() } returns flow { emit(cartItems) }
+
+        coEvery { getItemUseCase.invoke() } returns cartItemSharedFlow.asSharedFlow()
+        testScope.launch { cartItemSharedFlow.emit(cartItems) }
         coEvery { upsertUseCase(any()) } returns Unit
         coEvery { clearCartUseCase.invoke() } returns Resource.Success()
 
@@ -124,12 +131,40 @@ class CartViewModelTest {
                 val cartItem = cartItems.first()
                 viewModel.state.test {
                     skipItems(1)
-                    // Initially the quantity is equals the quantity in our initial list
+                    // Initially the quantity equals the quantity in our initial cart item
                     val initialItem = awaitItem()
                     assertEquals(cartItem.quantity, initialItem.cartItems.first().quantity)
 
                     // When increase quantity action is performed
                     viewModel.onAction(CartAction.IncreaseQuantity(cartItem))
+
+                    // Then, the quantity is incremented by 1
+                    val finalItem = awaitItem()
+                    assertEquals(cartItem.quantity + 1, finalItem.cartItems.first().quantity)
+                }
+            }
+        }
+
+        @Nested
+        inner class DecreaseQuantityTests {
+
+            @Test
+            fun decreasesQuantityOfTheCartItem() = runTest(testScope.testScheduler) {
+                val cartItem = cartItems.first()
+                viewModel.state.test {
+                    println(awaitItem())
+                    // Initially the quantity equals the quantity in our initial cart item
+                    val initialItem = awaitItem()
+                    println(initialItem)
+                    assertEquals(cartItem.quantity, initialItem.cartItems.first().quantity)
+
+                    // When decrease quantity action is performed
+                    viewModel.onAction(CartAction.DecreaseQuantity(cartItem))
+                    cartItemSharedFlow.emit(
+                        listOf(cartItem.copy(quantity = cartItem.quantity - 1)) + cartItems.drop(
+                            1
+                        )
+                    )
 
                     // Then, the quantity is decremented by 1
                     val finalItem = awaitItem()

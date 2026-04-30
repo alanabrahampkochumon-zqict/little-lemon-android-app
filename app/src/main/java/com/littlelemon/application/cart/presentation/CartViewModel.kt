@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class CartViewModel(
-    private val getCartItems: GetCartItemsUseCase,
-    private val getCartError: GetCartErrorMessagesUseCase,
+    getCartItems: GetCartItemsUseCase,
+    getCartError: GetCartErrorMessagesUseCase,
     private val upsertCartItem: UpsertCartItemUseCase,
     private val clearCart: ClearCartUseCase
 ) : ViewModel() {
