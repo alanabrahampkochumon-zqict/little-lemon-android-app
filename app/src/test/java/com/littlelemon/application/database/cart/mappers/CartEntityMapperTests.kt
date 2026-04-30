@@ -18,10 +18,26 @@ class CartEntityMapperTests {
             val dish = DishGenerator.generateDishWithCategories(1, 2).first().first
             val cartItemEntity = CartItemDetails(CartItemEntity(dish.dish.dishId, 5), dish)
 
-            val result = listOf(cartItemEntity).toCartItems().first()
+            val result = listOf(cartItemEntity).toCartDetailItems().first()
 
             assertEquals(dish.toDish(), result.dish)
             assertEquals(cartItemEntity.cartItem.quantity, result.quantity)
+        }
+    }
+
+    @Nested
+    inner class ToCartItem {
+
+        @Test
+        fun mapsToCartItem() {
+            val expectedId = "abcd-1324"
+            val expectedQuantity = 5
+            val cartItemEntity = CartItemEntity(expectedId, expectedQuantity)
+
+            val cartItem = listOf(cartItemEntity).toCartItems().first()
+
+            assertEquals(expectedId, cartItem.dishId)
+            assertEquals(expectedQuantity, cartItem.quantity)
         }
     }
 

@@ -2,7 +2,7 @@ package com.littlelemon.application.shared.cart.data
 
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
-import com.littlelemon.application.database.cart.mappers.toCartItems
+import com.littlelemon.application.database.cart.mappers.toCartDetailItems
 import com.littlelemon.application.database.cart.mappers.toDTO
 import com.littlelemon.application.database.cart.mappers.toEntity
 import com.littlelemon.application.shared.cart.CartConstants
@@ -110,7 +110,7 @@ class DefaultCartRepository(
                 _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
             }
         }.map { cartItemDetails ->
-            cartItemDetails.toCartItems()
+            cartItemDetails.toCartDetailItems()
         }.catch {
             _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
             emit(emptyList())
