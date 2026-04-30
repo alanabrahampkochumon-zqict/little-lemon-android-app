@@ -1,6 +1,5 @@
 package com.littlelemon.application.shared.cart.data.remote.mappers
 
-import com.littlelemon.application.shared.cart.data.remote.mappers.toEntity
 import com.littlelemon.application.shared.cart.data.remote.models.CartItemDTO
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -8,7 +7,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class CartItemDTOMapperTests {
+class CartDetailItemDTOMapperTests {
 
     @Test
     fun toEntity_correctlyMapsToEntity() {

@@ -1,10 +1,9 @@
 package com.littlelemon.application.shared.cart.domain.usecase
 
 import com.littlelemon.application.cart.data.FakeCartRepository
-import com.littlelemon.application.shared.cart.domain.CartRepository
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.menu.utils.DishGenerator
-import com.littlelemon.application.shared.cart.domain.usecase.ClearCartUseCase
+import com.littlelemon.application.shared.cart.domain.CartRepository
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
@@ -23,7 +22,7 @@ class ClearCartUseCaseTest {
         val numItems = 3
         val initialItems = List(numItems) {
             val dish = DishGenerator.generateDish()
-            CartItem(dish, Random.nextInt(3, 5))
+            CartDetailItem(dish, Random.nextInt(3, 5))
         }
         repository = FakeCartRepository(initialItems)
         useCase = ClearCartUseCase(repository)

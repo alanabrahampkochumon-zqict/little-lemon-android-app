@@ -1,17 +1,16 @@
 package com.littlelemon.application.shared.cart.domain.usecase
 
 import com.littlelemon.application.cart.data.FakeCartRepository
-import com.littlelemon.application.shared.cart.domain.CartRepository
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.menu.utils.DishGenerator
-import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemsUseCase
+import com.littlelemon.application.shared.cart.domain.CartRepository
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
 import kotlin.test.assertEquals
 
-class GetCartItemsUseCaseTest {
+class GetCartDetailItemsUseCaseTest {
 
 
     private lateinit var repository: CartRepository
@@ -22,7 +21,7 @@ class GetCartItemsUseCaseTest {
     fun repositorySuccess_emitsData() = runTest {
         val initialItems = List(3) {
             val dish = DishGenerator.generateDish()
-            CartItem(dish, Random.nextInt(3, 5))
+            CartDetailItem(dish, Random.nextInt(3, 5))
         }
 
         repository = FakeCartRepository(initialItems)

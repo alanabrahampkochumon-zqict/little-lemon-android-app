@@ -1,14 +1,14 @@
 package com.littlelemon.application.database.cart.mappers
 
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class CartItemMapperTests {
+class CartDetailItemMapperTests {
 
 
     private val dish = DishGenerator.generateDish()
@@ -22,7 +22,7 @@ class CartItemMapperTests {
 
         @Test
         fun mapsToEntity() {
-            val entity = CartItem(dish, quantity).toEntity()
+            val entity = CartDetailItem(dish, quantity).toEntity()
 
             assertEquals(quantity, entity.quantity)
             assertEquals(dish.id, entity.dishId)
@@ -35,7 +35,7 @@ class CartItemMapperTests {
 
         @Test
         fun mapsToDTO() {
-            val dto = CartItem(dish, quantity).toDTO()
+            val dto = CartDetailItem(dish, quantity).toDTO()
 
             assertEquals(quantity, dto.quantity)
             assertEquals(dish.id, dto.dishId)

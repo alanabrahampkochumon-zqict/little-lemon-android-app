@@ -6,9 +6,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.littlelemon.application.R
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.cart.presentation.screen.components.CartItemCard
 import com.littlelemon.application.core.CoreTestTags
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.menu.domain.models.Dish
 import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.LocalDateTime
@@ -20,7 +20,7 @@ import org.robolectric.RuntimeEnvironment
 import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
-class CartItemCardTest {
+class CartDetailItemCardTest {
 
     @get:Rule
     val testRule = createComposeRule()
@@ -28,7 +28,7 @@ class CartItemCardTest {
     private val application = RuntimeEnvironment.getApplication()
     val priceFormat = R.string.price_format
 
-    private val cartItem = CartItem(
+    private val cartDetailItem = CartDetailItem(
         dish = Dish(
             id = "",
             title = "Dish Name",
@@ -48,24 +48,24 @@ class CartItemCardTest {
     fun dishTitle_isDisplayed() {
         // When an order item is rendered
         testRule.setContent {
-            CartItemCard(cartItem, {}, {}, {})
+            CartItemCard(cartDetailItem, {}, {}, {})
         }
 
         // Then, title is displayed
-        testRule.onNodeWithText(cartItem.dish.title).assertIsDisplayed()
+        testRule.onNodeWithText(cartDetailItem.dish.title).assertIsDisplayed()
     }
 
     @Test
     fun dishPrice_isDisplayed() {
         // When an order item is rendered
         testRule.setContent {
-            CartItemCard(cartItem, {}, {}, {})
+            CartItemCard(cartDetailItem, {}, {}, {})
         }
 
         // Then, price per item is displayed
         testRule.onNodeWithText(
             application.getString(
-                R.string.price_format_ea, cartItem.dish.price
+                R.string.price_format_ea, cartDetailItem.dish.price
             )
         ).assertIsDisplayed()
     }
@@ -74,13 +74,13 @@ class CartItemCardTest {
     fun discountedTotalPrice_isDisplayed() {
         // When an order item is rendered
         testRule.setContent {
-            CartItemCard(cartItem, {}, {}, {})
+            CartItemCard(cartDetailItem, {}, {}, {})
         }
 
         // Then, total discounted price is displayed
         testRule.onNodeWithText(
             application.getString(
-                priceFormat, cartItem.dish.discountedPrice?.times(cartItem.quantity)
+                priceFormat, cartDetailItem.dish.discountedPrice?.times(cartDetailItem.quantity)
             )
         ).assertIsDisplayed()
     }
@@ -89,13 +89,13 @@ class CartItemCardTest {
     fun totalPrice_isDisplayed() {
         // When an order item is rendered
         testRule.setContent {
-            CartItemCard(cartItem, {}, {}, {})
+            CartItemCard(cartDetailItem, {}, {}, {})
         }
 
         // Then, total price is displayed
         testRule.onNodeWithText(
             "$" + application.getString(
-                priceFormat, (cartItem.dish.price * cartItem.quantity)
+                priceFormat, (cartDetailItem.dish.price * cartDetailItem.quantity)
             )
         ).assertIsDisplayed()
     }
@@ -105,7 +105,7 @@ class CartItemCardTest {
         // When an order item is rendered
         testRule.setContent {
             CartItemCard(
-                cartItem.copy(dish = cartItem.dish.copy(discountedPrice = null)),
+                cartDetailItem.copy(dish = cartDetailItem.dish.copy(discountedPrice = null)),
                 {},
                 {},
                 {})
@@ -115,7 +115,7 @@ class CartItemCardTest {
         // NOTE: In the main price area, the $ is separate from the actual amount.
         testRule.onNodeWithText(
             application.getString(
-                priceFormat, (cartItem.dish.price * cartItem.quantity)
+                priceFormat, (cartDetailItem.dish.price * cartDetailItem.quantity)
             )
         ).assertIsDisplayed()
     }
@@ -126,7 +126,7 @@ class CartItemCardTest {
         var callbackTriggered = false
         testRule.setContent {
             CartItemCard(
-                cartItem.copy(dish = cartItem.dish.copy(discountedPrice = null)),
+                cartDetailItem.copy(dish = cartDetailItem.dish.copy(discountedPrice = null)),
                 { callbackTriggered = true },
                 {},
                 {})
@@ -145,7 +145,7 @@ class CartItemCardTest {
         var callbackTriggered = false
         testRule.setContent {
             CartItemCard(
-                cartItem.copy(dish = cartItem.dish.copy(discountedPrice = null)),
+                cartDetailItem.copy(dish = cartDetailItem.dish.copy(discountedPrice = null)),
                 { },
                 { callbackTriggered = true },
                 {})
@@ -164,7 +164,7 @@ class CartItemCardTest {
         var callbackTriggered = false
         testRule.setContent {
             CartItemCard(
-                cartItem.copy(dish = cartItem.dish.copy(discountedPrice = null)),
+                cartDetailItem.copy(dish = cartDetailItem.dish.copy(discountedPrice = null)),
                 { },
                 { },
                 { callbackTriggered = true })

@@ -1,11 +1,7 @@
 package com.littlelemon.application.shared.cart.data
 
 import app.cash.turbine.test
-import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
 import com.littlelemon.application.cart.data.remote.FakeCartRemoteDataSource
-import com.littlelemon.application.shared.cart.data.remote.models.CartItemDTO
-import com.littlelemon.application.shared.cart.domain.CartRepository
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
 import com.littlelemon.application.database.cart.FakeCartDao
@@ -13,8 +9,10 @@ import com.littlelemon.application.database.cart.mappers.toDTO
 import com.littlelemon.application.database.cart.mappers.toEntity
 import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.menu.utils.DishGenerator
-import com.littlelemon.application.shared.cart.data.CartErrorMessages
-import com.littlelemon.application.shared.cart.data.DefaultCartRepository
+import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
+import com.littlelemon.application.shared.cart.data.remote.models.CartItemDTO
+import com.littlelemon.application.shared.cart.domain.CartRepository
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
@@ -41,27 +39,27 @@ class DefaultCartRepositoryTest {
     private lateinit var repository: CartRepository
 
 
-    private val cartItems = List(1) {
-        CartItem(DishGenerator.generateDish(), Random.nextInt(5, 10))
+    private val cartDetailItems = List(1) {
+        CartDetailItem(DishGenerator.generateDish(), Random.nextInt(5, 10))
     }
 
     @BeforeEach
     fun setUp() {
-        remoteDS = FakeCartRemoteDataSource(cartItems.map { it.toDTO() })
-        localDS = FakeCartDao(cartItems.map { it.toEntity() })
+        remoteDS = FakeCartRemoteDataSource(cartDetailItems.map { it.toDTO() })
+        localDS = FakeCartDao(cartDetailItems.map { it.toEntity() })
 
         repository = DefaultCartRepository(remoteDS, localDS)
     }
 
     @Nested
-    inner class UpdateCartItem {
+    inner class UpdateCartDetailItem {
 
         @Test
         fun success_updatesItemLocallyAndInRemote() = runTest {
-            val cartItem = CartItem(DishGenerator.generateDish(), 5)
+            val cartDetailItem = CartDetailItem(DishGenerator.generateDish(), 5)
 
             // When an item is upserted into the repository
-            repository.upsertCartItem(cartItem)
+            repository.upsertCartItem(cartDetailItem)
 
 
             // Then, the getAllCartItems flow emits success with new item
@@ -69,15 +67,15 @@ class DefaultCartRepositoryTest {
             // Testing with direct comparison will require modifying the fakeDao to pass in both the Dish
             // and CartItem so, a simpler approach is to ensure that the item exists, and it has the right
             // quantity, which satisfies the domain of the test
-            val actualCartItem = upsertedItem.find { it.dish.id == cartItem.dish.id }
+            val actualCartItem = upsertedItem.find { it.dish.id == cartDetailItem.dish.id }
             assertNotNull(actualCartItem)
-            assertEquals(cartItem.quantity, actualCartItem.quantity)
+            assertEquals(cartDetailItem.quantity, actualCartItem.quantity)
         }
 
         @Test
         fun remoteFailure_rollbackItem() = runTest {
             // Given remote failure
-            val itemToUpdate = cartItems.first()
+            val itemToUpdate = cartDetailItems.first()
             remoteDS = FakeCartRemoteDataSource(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
 
@@ -103,7 +101,7 @@ class DefaultCartRepositoryTest {
 
             repository.errorMessages.test {
                 // When an item is upserted into the repository
-                repository.upsertCartItem(cartItems.first().copy(quantity = 100))
+                repository.upsertCartItem(cartDetailItems.first().copy(quantity = 100))
 
                 // Then, the error message channel is updated with an error message
                 val message = awaitItem()
@@ -119,7 +117,7 @@ class DefaultCartRepositoryTest {
 
             repository.errorMessages.test {
                 // When an item is upserted into the repository
-                repository.upsertCartItem(cartItems.first().copy(quantity = 100))
+                repository.upsertCartItem(cartDetailItems.first().copy(quantity = 100))
 
                 // Then, the error message channel is updated with an error message
                 val message = awaitItem()
@@ -131,7 +129,7 @@ class DefaultCartRepositoryTest {
 
     @Nested
     @OptIn(ExperimentalUuidApi::class)
-    inner class GetAllCartItem {
+    inner class GetAllCartDetailItem {
 
         private val offlineCartItemEntity = List(1) {
             CartItemEntity(Uuid.generateV4().toString(), Random.nextInt(5, 10))

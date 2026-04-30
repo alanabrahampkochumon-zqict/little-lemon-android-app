@@ -9,7 +9,7 @@ import com.littlelemon.application.shared.cart.CartConstants
 import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
 import com.littlelemon.application.shared.cart.data.remote.mappers.toEntity
 import com.littlelemon.application.shared.cart.domain.CartRepository
-import com.littlelemon.application.shared.cart.domain.models.CartItem
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,9 +43,9 @@ class DefaultCartRepository(
 
 
     override suspend fun upsertCartItem(
-        cartItem: CartItem
+        cartDetailItem: CartDetailItem
     ) {
-        val dishId = cartItem.dish.id
+        val dishId = cartDetailItem.dish.id
         try {
             // Check if a default value exists in the cache,
             // If not, update with a value from the cache
@@ -53,7 +53,7 @@ class DefaultCartRepository(
                 localDataSource.getQuantity(dishId)
 
             // Update the database to reflect the updated cart quantity
-            localDataSource.upsertCartItem(cartItem.toEntity())
+            localDataSource.upsertCartItem(cartDetailItem.toEntity())
         } catch (_: Exception) {
             currentCoroutineContext().ensureActive()
             _errorMessages.emit(CartErrorMessages.ERROR_UPDATING_CART)
@@ -66,13 +66,13 @@ class DefaultCartRepository(
         cartJobs[dishId] = scope.launch {
             try {
                 delay(CartConstants.NETWORK_DEBOUNCE)
-                remoteDataSource.updateCart(cartItem.toDTO())
+                remoteDataSource.updateCart(cartDetailItem.toDTO())
             } catch (_: Exception) {
                 currentCoroutineContext().ensureActive()
                 _errorMessages.emit(CartErrorMessages.ERROR_UPDATING_CART)
                 // Removing when the cart item is zero is handled by the DAO
                 localDataSource.upsertOrRemoveCartItem(
-                    cartItem.copy(
+                    cartDetailItem.copy(
                         quantity = cartDefault[dishId] ?: 0
                     ).toEntity()
                 )
@@ -96,7 +96,7 @@ class DefaultCartRepository(
         return Resource.Success()
     }
 
-    override fun getAllCartItems(): Flow<List<CartItem>> =
+    override fun getAllCartItems(): Flow<List<CartDetailItem>> =
         localDataSource.getAllCartItemDetails().onStart {
             try {
                 val remoteCart = remoteDataSource.getCart().map { it.toEntity() }

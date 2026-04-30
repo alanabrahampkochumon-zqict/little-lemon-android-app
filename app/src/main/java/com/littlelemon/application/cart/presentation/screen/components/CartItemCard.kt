@@ -24,12 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import com.littlelemon.application.R
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.core.presentation.components.BasicStepper
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.utils.applyShadow
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.menu.domain.models.Dish
 import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.LocalDateTime
@@ -39,7 +39,7 @@ import kotlinx.datetime.LocalDateTime
 // TODO: Check connect button
 @Composable
 fun CartItemCard(
-    cartItem: CartItem,
+    cartDetailItem: CartDetailItem,
     onIncreaseQuantity: () -> Unit,
     onDecreaseQuantity: () -> Unit,
     onRemoveItem: () -> Unit,
@@ -50,8 +50,8 @@ fun CartItemCard(
 
     val fontOffset = -LittleLemonTheme.dimens.sizeSM
 
-    val orderTotal = cartItem.quantity * cartItem.dish.price
-    val discountedTotal = cartItem.quantity * (cartItem.dish.discountedPrice ?: 0.0)
+    val orderTotal = cartDetailItem.quantity * cartDetailItem.dish.price
+    val discountedTotal = cartDetailItem.quantity * (cartDetailItem.dish.discountedPrice ?: 0.0)
     Column(
         modifier = modifier
             .applyShadow(cardShape, LittleLemonTheme.shadows.dropSM)
@@ -66,7 +66,7 @@ fun CartItemCard(
                 .zIndex(1f)
         ) {
             AsyncImage(
-                model = cartItem.dish.imageURL,
+                model = cartDetailItem.dish.imageURL,
                 modifier = Modifier
                     .size(80.dp)
                     .offset(y = imageOffset)
@@ -75,7 +75,7 @@ fun CartItemCard(
                         shape = LittleLemonTheme.shapes.xs
                     ),
                 placeholder = painterResource(R.drawable.ic_gallery), // TODO: Change
-                contentDescription = cartItem.dish.title
+                contentDescription = cartDetailItem.dish.title
             )
             Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
             Column(
@@ -85,12 +85,12 @@ fun CartItemCard(
                 verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XS)
             ) {
                 Text(
-                    text = cartItem.dish.title,
+                    text = cartDetailItem.dish.title,
                     style = LittleLemonTheme.typography.labelLarge,
                     color = LittleLemonTheme.colors.contentPrimary
                 )
                 Text(
-                    text = stringResource(R.string.price_format_ea, cartItem.dish.price),
+                    text = stringResource(R.string.price_format_ea, cartDetailItem.dish.price),
                     style = LittleLemonTheme.typography.bodySmall,
                     color = LittleLemonTheme.colors.contentTertiary
                 )
@@ -112,14 +112,14 @@ fun CartItemCard(
                     Text(
                         stringResource(
                             R.string.price_format,
-                            if (cartItem.dish.discountedPrice != null) discountedTotal else orderTotal
+                            if (cartDetailItem.dish.discountedPrice != null) discountedTotal else orderTotal
                         ),
                         style = LittleLemonTheme.typography.displayMedium.copy(textAlign = TextAlign.End),
                         color = LittleLemonTheme.colors.contentOnAction,
                         modifier = Modifier.alignByBaseline()
                     )
                 }
-                cartItem.dish.discountedPrice?.let {
+                cartDetailItem.dish.discountedPrice?.let {
                     Column(
                         horizontalAlignment = Alignment.End,
                         modifier = Modifier.offset(y = fontOffset)
@@ -154,7 +154,7 @@ fun CartItemCard(
                 modifier = Modifier.weight(1f)
             )
             BasicStepper(
-                cartItem.quantity,
+                cartDetailItem.quantity,
                 onIncrease = onIncreaseQuantity,
                 onDecrease = onDecreaseQuantity
             )
@@ -186,8 +186,8 @@ private fun CartItemCardPreview() {
                 dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
                 popularityIndex = 11
             )
-            CartItemCard(CartItem(dish, 2), {}, {}, {})
-            CartItemCard(CartItem(dish.copy(discountedPrice = null), 4), {}, {}, {})
+            CartItemCard(CartDetailItem(dish, 2), {}, {}, {})
+            CartItemCard(CartDetailItem(dish.copy(discountedPrice = null), 4), {}, {}, {})
         }
     }
 }

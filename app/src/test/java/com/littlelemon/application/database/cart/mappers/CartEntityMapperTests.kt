@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class CartEntityMapperTests {
 
     @Nested
-    inner class ToCartItem {
+    inner class ToCartDetailItem {
 
         @Test
         fun mapsToCartItem() {

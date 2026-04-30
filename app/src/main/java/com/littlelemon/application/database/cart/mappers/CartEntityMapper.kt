@@ -1,12 +1,14 @@
 package com.littlelemon.application.database.cart.mappers
 
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.database.cart.models.CartItemDetails
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.menu.data.mappers.toDish
 
 
-fun List<CartItemDetails>.toCartItems(): List<CartItem> {
+fun List<CartItemDetails>.toCartItems(): List<CartDetailItem> {
     return map { (cartItem, dishEntity) ->
-        CartItem(dishEntity.toDish(), cartItem.quantity)
+        CartDetailItem(dishEntity.toDish(), cartItem.quantity)
     }
 }
+
+//fun List<CartItemEntity>.toCartItems(): List<CartItem> {}

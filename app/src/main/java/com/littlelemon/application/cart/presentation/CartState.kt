@@ -1,10 +1,10 @@
 package com.littlelemon.application.cart.presentation
 
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.core.presentation.UiText
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 
 data class CartState(
     val isLoading: Boolean = false,
     val errorMessage: UiText? = null,
-    val cartItems: List<CartItem> = emptyList()
+    val cartDetailItems: List<CartDetailItem> = emptyList()
 )

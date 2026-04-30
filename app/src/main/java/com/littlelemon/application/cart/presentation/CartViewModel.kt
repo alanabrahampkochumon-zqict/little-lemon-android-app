@@ -2,11 +2,11 @@ package com.littlelemon.application.cart.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.shared.cart.domain.usecase.ClearCartUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartErrorMessagesUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemsUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
-import com.littlelemon.application.core.presentation.UiText
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -23,7 +23,7 @@ class CartViewModel(
         CartState(
             isLoading = false,
             errorMessage = UiText.DynamicString(errorMessages),
-            cartItems = cartItems
+            cartDetailItems = cartItems
         )
     }.stateIn(
         viewModelScope,
@@ -35,15 +35,15 @@ class CartViewModel(
     fun onAction(action: CartAction) {
         when (action) {
             is CartAction.DecreaseQuantity -> viewModelScope.launch {
-                upsertCartItem(action.cartItem.copy(quantity = action.cartItem.quantity - 1))
+                upsertCartItem(action.cartDetailItem.copy(quantity = action.cartDetailItem.quantity - 1))
             }
 
             is CartAction.IncreaseQuantity -> viewModelScope.launch {
-                upsertCartItem(action.cartItem.copy(quantity = action.cartItem.quantity + 1))
+                upsertCartItem(action.cartDetailItem.copy(quantity = action.cartDetailItem.quantity + 1))
             }
 
             is CartAction.RemoveItem -> viewModelScope.launch {
-                upsertCartItem(action.cartItem.copy(quantity = 0))
+                upsertCartItem(action.cartDetailItem.copy(quantity = 0))
             }
         }
     }

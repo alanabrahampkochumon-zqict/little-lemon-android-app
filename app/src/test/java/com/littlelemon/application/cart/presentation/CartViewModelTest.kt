@@ -1,13 +1,13 @@
 package com.littlelemon.application.cart.presentation
 
 import app.cash.turbine.test
-import com.littlelemon.application.shared.cart.domain.models.CartItem
+import com.littlelemon.application.core.domain.utils.Resource
+import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.cart.domain.usecase.ClearCartUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartErrorMessagesUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemsUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
-import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -45,12 +45,12 @@ class CartViewModelTest {
 
 
     private val errorMessage = "ERROR MESSAGE"
-    private val cartItems = List(5) {
+    private val cartDetailItems = List(5) {
         val dish = DishGenerator.generateDish()
-        CartItem(dish, Random.nextInt(3, 5))
+        CartDetailItem(dish, Random.nextInt(3, 5))
     }
 
-    private val cartItemSharedFlow = MutableSharedFlow<List<CartItem>>(replay = 1)
+    private val cartDetailItemSharedFlow = MutableSharedFlow<List<CartDetailItem>>(replay = 1)
 
 
     @BeforeEach
@@ -67,8 +67,8 @@ class CartViewModelTest {
             SharingStarted.Eagerly, 1
         )
 
-        coEvery { getItemUseCase.invoke() } returns cartItemSharedFlow.asSharedFlow()
-        testScope.launch { cartItemSharedFlow.emit(cartItems) }
+        coEvery { getItemUseCase.invoke() } returns cartDetailItemSharedFlow.asSharedFlow()
+        testScope.launch { cartDetailItemSharedFlow.emit(cartDetailItems) }
         coEvery { upsertUseCase(any()) } returns Unit
         coEvery { clearCartUseCase.invoke() } returns Resource.Success()
 
@@ -85,7 +85,7 @@ class CartViewModelTest {
             viewModel.state.test {
                 val initialState = awaitItem()
                 assertTrue { initialState.isLoading }
-                assertEquals(0, initialState.cartItems.size)
+                assertEquals(0, initialState.cartDetailItems.size)
                 assertNull(initialState.errorMessage)
             }
         }
@@ -114,7 +114,7 @@ class CartViewModelTest {
             viewModel.state.test {
                 skipItems(1) // Initial state
                 val state = awaitItem()
-                assertEquals(cartItems, state.cartItems)
+                assertEquals(cartDetailItems, state.cartDetailItems)
             }
         }
     }
@@ -128,24 +128,24 @@ class CartViewModelTest {
 
             @Test
             fun increasesQuantityOfTheCartItem() = runTest {
-                val cartItem = cartItems.first()
+                val cartItem = cartDetailItems.first()
                 viewModel.state.test {
                     skipItems(1)
                     // Initially the quantity equals the quantity in our initial cart item
                     val initialItem = awaitItem()
-                    assertEquals(cartItem.quantity, initialItem.cartItems.first().quantity)
+                    assertEquals(cartItem.quantity, initialItem.cartDetailItems.first().quantity)
 
                     // When increase quantity action is performed
                     viewModel.onAction(CartAction.IncreaseQuantity(cartItem))
                     // Since we are mocking the usecase, the flow is not a hot path, i.e, it will only emit the values returned from mock's coEvery
-                    cartItemSharedFlow.emit(
-                        listOf(cartItem.copy(quantity = cartItem.quantity + 1)) + cartItems.drop(
+                    cartDetailItemSharedFlow.emit(
+                        listOf(cartItem.copy(quantity = cartItem.quantity + 1)) + cartDetailItems.drop(
                             1
                         )
                     )
                     // Then, the quantity is incremented by 1
                     val finalItem = awaitItem()
-                    assertEquals(cartItem.quantity + 1, finalItem.cartItems.first().quantity)
+                    assertEquals(cartItem.quantity + 1, finalItem.cartDetailItems.first().quantity)
                 }
             }
         }
@@ -155,26 +155,26 @@ class CartViewModelTest {
 
             @Test
             fun decreasesQuantityOfTheCartItem() = runTest(testScope.testScheduler) {
-                val cartItem = cartItems.first()
+                val cartItem = cartDetailItems.first()
                 viewModel.state.test {
                     println(awaitItem())
                     // Initially the quantity equals the quantity in our initial cart item
                     val initialItem = awaitItem()
                     println(initialItem)
-                    assertEquals(cartItem.quantity, initialItem.cartItems.first().quantity)
+                    assertEquals(cartItem.quantity, initialItem.cartDetailItems.first().quantity)
 
                     // When decrease quantity action is performed
                     viewModel.onAction(CartAction.DecreaseQuantity(cartItem))
                     // Since we are mocking the usecase, the flow is not a hot path, i.e, it will only emit the values returned from mock's coEvery
-                    cartItemSharedFlow.emit(
-                        listOf(cartItem.copy(quantity = cartItem.quantity - 1)) + cartItems.drop(
+                    cartDetailItemSharedFlow.emit(
+                        listOf(cartItem.copy(quantity = cartItem.quantity - 1)) + cartDetailItems.drop(
                             1
                         )
                     )
 
                     // Then, the quantity is decremented by 1
                     val finalItem = awaitItem()
-                    assertEquals(cartItem.quantity - 1, finalItem.cartItems.first().quantity)
+                    assertEquals(cartItem.quantity - 1, finalItem.cartDetailItems.first().quantity)
                 }
             }
         }
@@ -185,26 +185,26 @@ class CartViewModelTest {
 
             @Test
             fun removesItem() = runTest(testScope.testScheduler) {
-                val cartItem = cartItems.first()
+                val cartItem = cartDetailItems.first()
                 viewModel.state.test {
                     println(awaitItem())
                     // Initially the quantity equals the quantity in our initial cart item
                     val initialItem = awaitItem()
                     println(initialItem)
-                    assertEquals(cartItem.quantity, initialItem.cartItems.first().quantity)
+                    assertEquals(cartItem.quantity, initialItem.cartDetailItems.first().quantity)
 
                     // When decrease quantity action is performed
                     viewModel.onAction(CartAction.RemoveItem(cartItem))
                     // Since we are mocking the usecase, the flow is not a hot path, i.e, it will only emit the values returned from mock's coEvery
-                    cartItemSharedFlow.emit(
-                        cartItems.drop(
+                    cartDetailItemSharedFlow.emit(
+                        cartDetailItems.drop(
                             1
                         )
                     )
 
                     // Then, the quantity is decremented by 1
                     val finalItem = awaitItem()
-                    assertFalse(finalItem.cartItems.contains(cartItem))
+                    assertFalse(finalItem.cartDetailItems.contains(cartItem))
                 }
             }
         }

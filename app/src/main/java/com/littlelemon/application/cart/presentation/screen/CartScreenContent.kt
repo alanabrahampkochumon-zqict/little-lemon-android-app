@@ -21,12 +21,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.littlelemon.application.R
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.cart.presentation.screen.components.CartItemCard
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
 import com.littlelemon.application.core.presentation.components.PriceRow
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.menu.domain.models.Dish
 import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.LocalDateTime
@@ -104,7 +104,7 @@ fun PricingSection(modifier: Modifier = Modifier) {
 }
 
 fun LazyListScope.itemsSection() {
-    val cartItems = List(5) {
+    val cartDetailItems = List(5) {
         Dish(
             id = "",
             title = "Dish $it",
@@ -118,11 +118,15 @@ fun LazyListScope.itemsSection() {
             dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
             popularityIndex = 11
         )
-    }.map { CartItem(it, Random.nextInt(3, 5)) }
+    }.map { CartDetailItem(it, Random.nextInt(3, 5)) }
 
-    items(cartItems) { cartItem ->
+    items(cartDetailItems) { cartItem ->
         Box(modifier = Modifier.padding(horizontal = LittleLemonTheme.dimens.sizeXL)) {
-            CartItemCard(cartItem = cartItem, { /** TODO */ }, { /** TODO */ }, { /** TODO */ })
+            CartItemCard(
+                cartDetailItem = cartItem,
+                { /** TODO */ },
+                { /** TODO */ },
+                { /** TODO */ })
         }
     }
 
@@ -147,7 +151,7 @@ private fun CartScreenContentPreview() {
             dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
             popularityIndex = 11
         )
-    }.map { CartItem(it, Random.nextInt(3, 5)) }
+    }.map { CartDetailItem(it, Random.nextInt(3, 5)) }
 
     LittleLemonTheme {
         CartScreenContent()

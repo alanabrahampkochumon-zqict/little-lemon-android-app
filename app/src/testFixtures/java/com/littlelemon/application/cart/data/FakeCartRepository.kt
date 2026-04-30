@@ -1,9 +1,9 @@
 package com.littlelemon.application.cart.data
 
-import com.littlelemon.application.shared.cart.domain.CartRepository
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.shared.cart.domain.CartRepository
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlin.random.Random
 
 class FakeCartRepository(
-    initialItems: List<CartItem>? = null,
+    initialItems: List<CartDetailItem>? = null,
     private val throwError: Boolean = false
 ) :
     CartRepository {
@@ -24,25 +24,25 @@ class FakeCartRepository(
     override val errorMessages: SharedFlow<String>
         get() = _errorMessages
 
-    private val _data = mutableListOf<CartItem>()
+    private val _data = mutableListOf<CartDetailItem>()
 
     init {
         if (initialItems == null) {
             val range = Random.nextInt(5, 10)
             repeat(range) {
                 val dish = DishGenerator.generateDish()
-                val cartItem = CartItem(dish = dish, quantity = Random.nextInt(3, 5))
-                _data.add(cartItem)
+                val cartDetailItem = CartDetailItem(dish = dish, quantity = Random.nextInt(3, 5))
+                _data.add(cartDetailItem)
             }
         } else {
             _data.addAll(initialItems)
         }
     }
 
-    override suspend fun upsertCartItem(cartItem: CartItem) {
+    override suspend fun upsertCartItem(cartDetailItem: CartDetailItem) {
         if (throwError)
             _errorMessages.tryEmit(ERROR_MESSAGE)
-        _data.add(cartItem)
+        _data.add(cartDetailItem)
     }
 
     override suspend fun clearCart(): Resource<Unit> {
@@ -52,7 +52,7 @@ class FakeCartRepository(
         return Resource.Success()
     }
 
-    override fun getAllCartItems(): Flow<List<CartItem>> = flow {
+    override fun getAllCartItems(): Flow<List<CartDetailItem>> = flow {
         if (throwError) {
             _errorMessages.tryEmit(ERROR_MESSAGE)
             emit(emptyList())
