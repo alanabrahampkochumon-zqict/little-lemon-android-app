@@ -46,6 +46,6 @@ class SupabaseCartRemoteDataSource(private val client: SupabaseClient) : CartRem
         HttpRequestException::class
     )
     override suspend fun getCartSummary(): CartSummaryDTO {
-        TODO("Not yet implemented")
+        return client.postgrest.rpc(SupabaseRPC.GetCartSummary.RPC_NAME).decodeSingle()
     }
 }

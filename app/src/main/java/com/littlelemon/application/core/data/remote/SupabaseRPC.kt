@@ -38,5 +38,9 @@ object SupabaseRPC {
         const val RPC_NAME = "clear_cart"
     }
 
+    object GetCartSummary {
+        const val RPC_NAME = "get_cart_summary"
+    }
+
 
 }
