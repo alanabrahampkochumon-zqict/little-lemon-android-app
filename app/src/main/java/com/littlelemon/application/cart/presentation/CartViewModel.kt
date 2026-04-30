@@ -35,10 +35,13 @@ class CartViewModel(
     fun onAction(action: CartAction) {
         when (action) {
             is CartAction.DecreaseQuantity -> viewModelScope.launch {
+                upsertCartItem(action.cartItem.copy(quantity = action.cartItem.quantity - 1))
+            }
+
+            is CartAction.IncreaseQuantity -> viewModelScope.launch {
                 upsertCartItem(action.cartItem.copy(quantity = action.cartItem.quantity + 1))
             }
 
-            is CartAction.IncreaseQuantity -> TODO()
             is CartAction.RemoveItem -> TODO()
         }
     }

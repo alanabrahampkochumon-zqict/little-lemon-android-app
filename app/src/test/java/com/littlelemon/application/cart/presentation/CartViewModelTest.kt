@@ -137,7 +137,12 @@ class CartViewModelTest {
 
                     // When increase quantity action is performed
                     viewModel.onAction(CartAction.IncreaseQuantity(cartItem))
-
+                    // Since we are mocking the usecase, the flow is not a hot path, i.e, it will only emit the values returned from mock's coEvery
+                    cartItemSharedFlow.emit(
+                        listOf(cartItem.copy(quantity = cartItem.quantity + 1)) + cartItems.drop(
+                            1
+                        )
+                    )
                     // Then, the quantity is incremented by 1
                     val finalItem = awaitItem()
                     assertEquals(cartItem.quantity + 1, finalItem.cartItems.first().quantity)
@@ -160,6 +165,7 @@ class CartViewModelTest {
 
                     // When decrease quantity action is performed
                     viewModel.onAction(CartAction.DecreaseQuantity(cartItem))
+                    // Since we are mocking the usecase, the flow is not a hot path, i.e, it will only emit the values returned from mock's coEvery
                     cartItemSharedFlow.emit(
                         listOf(cartItem.copy(quantity = cartItem.quantity - 1)) + cartItems.drop(
                             1
