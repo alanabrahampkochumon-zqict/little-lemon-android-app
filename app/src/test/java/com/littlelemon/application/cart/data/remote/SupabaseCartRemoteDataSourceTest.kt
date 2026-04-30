@@ -1,6 +1,7 @@
 package com.littlelemon.application.cart.data.remote
 
 import com.littlelemon.application.cart.data.remote.models.CartItemDTO
+import com.littlelemon.application.cart.data.remote.models.CartSummaryDTO
 import com.littlelemon.application.utils.createFakeSupabaseClient
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.exception.PostgrestRestException
@@ -145,6 +146,43 @@ class SupabaseCartRemoteDataSourceTest {
             val retrievedCartItems = dataSource.getCart()
 
             assertEquals(cartItems, retrievedCartItems)
+        }
+    }
+
+
+    @Nested
+    inner class GetCartSummary {
+
+        @Test
+        fun networkError_throwsError() = runTest {
+            client = createFakeSupabaseClient {
+                respond(
+                    errorResponse,
+                    errorCode,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }
+            dataSource = SupabaseCartRemoteDataSource(client)
+
+            assertThrows<PostgrestRestException> { dataSource.getCartSummary() }
+        }
+
+        @Test
+        fun networkSuccess_returnsUpdatedDTO() = runTest {
+            val cartSummary = CartSummaryDTO(150, 10, 5, 0, 155)
+            val response = Json.encodeToString(listOf(cartSummary))
+            client = createFakeSupabaseClient {
+                respond(
+                    response,
+                    HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json")
+                )
+            }
+            dataSource = SupabaseCartRemoteDataSource(client)
+
+            val retrievedCartSummary = dataSource.getCartSummary()
+
+            assertEquals(cartSummary, retrievedCartSummary)
         }
     }
 
