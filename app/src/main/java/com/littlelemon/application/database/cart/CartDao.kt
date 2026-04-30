@@ -27,6 +27,7 @@ interface CartDao {
     @Query("SELECT * FROM cartitementity")
     fun getAllCartItemDetails(): Flow<List<CartItemDetails>>
 
+
     @Query("SELECT * FROM cartitementity")
     fun getAllCartItems(): Flow<List<CartItemEntity>>
 

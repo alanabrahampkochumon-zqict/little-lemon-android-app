@@ -61,6 +61,11 @@ class FakeCartDao(
         })
     }
 
+    override fun getAllCartItems(): Flow<List<CartItemEntity>> = flow {
+        if (throwError) throw IllegalArgumentException()
+        emit(database)
+    }
+
     override fun clearCartItems() {
         if (throwError) throw IllegalArgumentException()
         database.clear()
