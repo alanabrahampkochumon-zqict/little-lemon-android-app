@@ -58,7 +58,7 @@ class CartDaoTest {
         cartDao.upsertCartItem(cartItem)
 
         // Then, it is inserted
-        val cartDetails = cartDao.getAllCartItems().first()
+        val cartDetails = cartDao.getAllCartItemDetails().first()
         assertEquals(cartItem, cartDetails.first().cartItem)
     }
 
@@ -72,7 +72,7 @@ class CartDaoTest {
         cartDao.upsertCartItem(cartItem)
 
         // And queried
-        val cartDetails = cartDao.getAllCartItems().first()
+        val cartDetails = cartDao.getAllCartItemDetails().first()
 
         // Then, the cart item is updated.
         assertEquals(cartItem, cartDetails.first().cartItem)
@@ -91,7 +91,7 @@ class CartDaoTest {
         cartDao.removeCartItem(removeId)
 
         // Then, it is removed
-        val cartDetails = cartDao.getAllCartItems().first()
+        val cartDetails = cartDao.getAllCartItemDetails().first()
         assertTrue { cartDetails.indexOfFirst { it.cartItem.dishId == removeId } == -1 }
     }
 
@@ -107,7 +107,7 @@ class CartDaoTest {
         cartDao.removeCartItem(removeId)
 
         // Then, no item is removed
-        val cartDetails = cartDao.getAllCartItems().first()
+        val cartDetails = cartDao.getAllCartItemDetails().first()
         assertTrue {
             dishes.all { dish ->
                 cartDetails.map { cartDetailItem -> cartDetailItem.dish.dish.dishId }
@@ -129,7 +129,7 @@ class CartDaoTest {
         cartDao.upsertOrRemoveCartItem(newCartItem)
 
         // Then, it is inserted
-        val cartDetails = cartDao.getAllCartItems().first()
+        val cartDetails = cartDao.getAllCartItemDetails().first()
         assertTrue { cartDetails.map { it.cartItem.dishId }.contains(newCartItem.dishId) }
     }
 
@@ -146,7 +146,7 @@ class CartDaoTest {
         cartDao.upsertOrRemoveCartItem(updatedCartItem)
 
         // Then, it is updated
-        val cartDetails = cartDao.getAllCartItems().first()
+        val cartDetails = cartDao.getAllCartItemDetails().first()
         assertEquals(
             updatedCartItem.quantity,
             cartDetails.find { it.cartItem.dishId == updatedCartItem.dishId }?.cartItem?.quantity
@@ -167,7 +167,7 @@ class CartDaoTest {
         cartDao.upsertOrRemoveCartItem(updatedCartItem)
 
         // Then, it is updated
-        val cartDetails = cartDao.getAllCartItems().first()
+        val cartDetails = cartDao.getAllCartItemDetails().first()
         assertTrue { cartDetails.indexOfFirst { it.cartItem.dishId == updatedCartItem.dishId } == -1 }
     }
 
@@ -183,13 +183,13 @@ class CartDaoTest {
         cartDao.upsertOrRemoveCartItem(updatedCartItem)
 
         // Then, it is updated
-        val cartDetails = cartDao.getAllCartItems().first()
+        val cartDetails = cartDao.getAllCartItemDetails().first()
         assertTrue { cartDetails.indexOfFirst { it.cartItem.dishId == updatedCartItem.dishId } == -1 }
     }
 
     @Test
-    fun getAllCartItems_emptyDb_returnsEmptyList() = runTest {
-        val result = cartDao.getAllCartItems().first()
+    fun getAllCartItemDetails_emptyDb_returnsEmptyList() = runTest {
+        val result = cartDao.getAllCartItemDetails().first()
         assertEquals(0, result.size)
     }
 
@@ -202,7 +202,7 @@ class CartDaoTest {
         }
 
         // When, queried for cartItems
-        val queriedCartItems = cartDao.getAllCartItems().first()
+        val queriedCartItems = cartDao.getAllCartItemDetails().first()
         val queriedCartIds = queriedCartItems.map { cartDetails -> cartDetails.dish.dish.dishId }
 
         // Then, it contains all the items
@@ -223,7 +223,7 @@ class CartDaoTest {
 
 
         // Then, an empty list is returned
-        val items = cartDao.getAllCartItems().first()
+        val items = cartDao.getAllCartItemDetails().first()
         assertEquals(0, items.size)
     }
 

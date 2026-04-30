@@ -51,7 +51,7 @@ class FakeCartDao(
         database = database.filter { it.dishId != dishId }.toMutableList()
     }
 
-    override fun getAllCartItems(): Flow<List<CartItemDetails>> = flow {
+    override fun getAllCartItemDetails(): Flow<List<CartItemDetails>> = flow {
         if (throwError) throw IllegalArgumentException()
         emit(database.map {
             CartItemDetails(

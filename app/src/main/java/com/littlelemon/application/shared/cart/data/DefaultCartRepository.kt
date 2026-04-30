@@ -1,15 +1,15 @@
 package com.littlelemon.application.shared.cart.data
 
-import com.littlelemon.application.shared.cart.CartConstants
-import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
-import com.littlelemon.application.shared.cart.data.remote.mappers.toEntity
-import com.littlelemon.application.shared.cart.domain.CartRepository
-import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
 import com.littlelemon.application.database.cart.mappers.toCartItems
 import com.littlelemon.application.database.cart.mappers.toDTO
 import com.littlelemon.application.database.cart.mappers.toEntity
+import com.littlelemon.application.shared.cart.CartConstants
+import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
+import com.littlelemon.application.shared.cart.data.remote.mappers.toEntity
+import com.littlelemon.application.shared.cart.domain.CartRepository
+import com.littlelemon.application.shared.cart.domain.models.CartItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import kotlin.collections.map
 
 class DefaultCartRepository(
     private val remoteDataSource: CartRemoteDataSource,
@@ -98,7 +97,7 @@ class DefaultCartRepository(
     }
 
     override fun getAllCartItems(): Flow<List<CartItem>> =
-        localDataSource.getAllCartItems().onStart {
+        localDataSource.getAllCartItemDetails().onStart {
             try {
                 val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
                 if (remoteCart.isEmpty()) {
