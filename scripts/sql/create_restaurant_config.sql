@@ -6,7 +6,9 @@ CREATE TABLE
         lat_lng geography (POINT),
         opening_time TIME,
         closing_time TIME,
-        service_radius_miles float
+        service_radius_miles float,
+        shipping_cost BIGINT,
+        tax_rate NUMERIC
     );
 
 INSERT INTO
@@ -16,7 +18,9 @@ INSERT INTO
         lat_lng,
         opening_time,
         closing_time,
-        service_radius_miles
+        service_radius_miles,
+        shipping_cost,
+        tax_rate
     )
 VALUES
     (
@@ -25,5 +29,7 @@ VALUES
         'POINT(-87.667010 41.903794)',
         '10:00:00',
         '22:00:00',
-        10.0
+        10.0,
+        0,
+        0.18
     );
