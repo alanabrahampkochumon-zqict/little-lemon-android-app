@@ -1,4 +1,4 @@
-package com.littlelemon.application.orders.domain.models
+package com.littlelemon.application.shared.orders.domain.models
 
 import kotlinx.datetime.LocalDateTime
 

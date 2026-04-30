@@ -22,7 +22,7 @@ import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
 import com.littlelemon.application.address.domain.usecase.ReverseGeocodeLocationUseCase
 import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
 import com.littlelemon.application.address.presentation.AddressViewModel
-import com.littlelemon.application.core.domain.AddressManager
+import com.littlelemon.application.shared.address.domain.AddressManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module

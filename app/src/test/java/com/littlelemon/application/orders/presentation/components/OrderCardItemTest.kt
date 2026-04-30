@@ -6,10 +6,10 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.littlelemon.application.R
-import com.littlelemon.application.orders.domain.models.MenuItem
-import com.littlelemon.application.orders.domain.models.OrderItem
 import com.littlelemon.application.shared.menu.domain.models.Category
 import com.littlelemon.application.shared.menu.domain.models.Dish
+import com.littlelemon.application.shared.orders.domain.models.MenuItem
+import com.littlelemon.application.shared.orders.domain.models.OrderItem
 import kotlinx.datetime.LocalDateTime
 import org.junit.Rule
 import org.junit.Test

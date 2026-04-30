@@ -2,9 +2,9 @@ package com.littlelemon.application.core.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.littlelemon.application.core.domain.AddressManager
 import com.littlelemon.application.core.domain.SessionManager
 import com.littlelemon.application.core.domain.model.SessionStatus
+import com.littlelemon.application.shared.address.domain.AddressManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow

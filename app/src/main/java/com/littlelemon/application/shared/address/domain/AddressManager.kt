@@ -1,4 +1,4 @@
-package com.littlelemon.application.core.domain
+package com.littlelemon.application.shared.address.domain
 
 /**
  * Interface that manages address related function for the core module.

@@ -1,7 +1,7 @@
-package com.littlelemon.application.orders.domain
+package com.littlelemon.application.shared.orders.domain
 
 import com.littlelemon.application.core.domain.utils.Resource
-import com.littlelemon.application.orders.domain.models.CartItem
+import com.littlelemon.application.shared.orders.domain.models.CartItem
 import kotlinx.coroutines.flow.Flow
 
 interface OrderRepository {

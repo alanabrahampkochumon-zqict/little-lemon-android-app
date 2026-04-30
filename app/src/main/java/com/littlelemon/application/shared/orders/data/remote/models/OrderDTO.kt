@@ -1,4 +1,4 @@
-package com.littlelemon.application.orders.data.remote.models
+package com.littlelemon.application.shared.orders.data.remote.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
