@@ -1,6 +1,6 @@
 package com.littlelemon.application.cart.presentation
 
-import com.littlelemon.application.cart.domain.models.CartItem
+import com.littlelemon.application.shared.cart.domain.models.CartItem
 
 
 sealed interface CartAction {

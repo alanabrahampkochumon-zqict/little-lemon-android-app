@@ -6,7 +6,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.littlelemon.application.R
-import com.littlelemon.application.cart.domain.models.CartItem
+import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.cart.presentation.screen.components.CartItemCard
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.shared.menu.domain.models.Dish

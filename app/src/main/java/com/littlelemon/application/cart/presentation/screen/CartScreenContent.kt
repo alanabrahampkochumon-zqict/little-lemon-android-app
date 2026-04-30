@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.littlelemon.application.R
-import com.littlelemon.application.cart.domain.models.CartItem
+import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.cart.presentation.screen.components.CartItemCard
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant

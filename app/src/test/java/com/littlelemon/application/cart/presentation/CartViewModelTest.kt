@@ -1,11 +1,11 @@
 package com.littlelemon.application.cart.presentation
 
 import app.cash.turbine.test
-import com.littlelemon.application.cart.domain.models.CartItem
-import com.littlelemon.application.cart.domain.usecase.ClearCartUseCase
-import com.littlelemon.application.cart.domain.usecase.GetCartErrorMessagesUseCase
-import com.littlelemon.application.cart.domain.usecase.GetCartItemsUseCase
-import com.littlelemon.application.cart.domain.usecase.UpsertCartItemUseCase
+import com.littlelemon.application.shared.cart.domain.models.CartItem
+import com.littlelemon.application.shared.cart.domain.usecase.ClearCartUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.GetCartErrorMessagesUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemsUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.utils.StandardTestDispatcherRule

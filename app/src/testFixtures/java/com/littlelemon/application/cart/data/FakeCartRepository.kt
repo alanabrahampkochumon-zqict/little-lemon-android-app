@@ -1,7 +1,7 @@
 package com.littlelemon.application.cart.data
 
-import com.littlelemon.application.cart.domain.CartRepository
-import com.littlelemon.application.cart.domain.models.CartItem
+import com.littlelemon.application.shared.cart.domain.CartRepository
+import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.utils.DishGenerator
 import kotlinx.coroutines.flow.Flow

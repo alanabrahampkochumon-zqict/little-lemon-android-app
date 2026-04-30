@@ -1,6 +1,6 @@
 package com.littlelemon.application.database.cart.mappers
 
-import com.littlelemon.application.cart.domain.models.CartItem
+import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.menu.utils.DishGenerator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested

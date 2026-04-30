@@ -8,6 +8,7 @@ import com.littlelemon.application.core.di.coreModule
 import com.littlelemon.application.database.di.databaseModule
 import com.littlelemon.application.home.di.homeModule
 import com.littlelemon.application.menu.di.dishModule
+import com.littlelemon.application.shared.cart.di.sharedCartModule
 import com.littlelemon.application.shared.menu.di.sharedDishModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -22,6 +23,7 @@ class LittleLemonApplication : Application() {
             androidLogger()
             androidContext(this@LittleLemonApplication)
             modules(sharedDishModule)
+            modules(sharedCartModule)
             modules(databaseModule)
             modules(authModule)
             modules(coreModule)

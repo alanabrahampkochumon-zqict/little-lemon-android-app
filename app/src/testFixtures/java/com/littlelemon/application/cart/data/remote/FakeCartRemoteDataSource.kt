@@ -1,7 +1,8 @@
 package com.littlelemon.application.cart.data.remote
 
-import com.littlelemon.application.cart.data.remote.models.CartItemDTO
-import com.littlelemon.application.cart.data.remote.models.CartSummaryDTO
+import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
+import com.littlelemon.application.shared.cart.data.remote.models.CartItemDTO
+import com.littlelemon.application.shared.cart.data.remote.models.CartSummaryDTO
 import kotlin.random.Random
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

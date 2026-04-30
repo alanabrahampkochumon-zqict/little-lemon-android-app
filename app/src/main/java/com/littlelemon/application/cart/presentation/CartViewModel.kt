@@ -2,10 +2,10 @@ package com.littlelemon.application.cart.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.littlelemon.application.cart.domain.usecase.ClearCartUseCase
-import com.littlelemon.application.cart.domain.usecase.GetCartErrorMessagesUseCase
-import com.littlelemon.application.cart.domain.usecase.GetCartItemsUseCase
-import com.littlelemon.application.cart.domain.usecase.UpsertCartItemUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.ClearCartUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.GetCartErrorMessagesUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemsUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import com.littlelemon.application.core.presentation.UiText
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
