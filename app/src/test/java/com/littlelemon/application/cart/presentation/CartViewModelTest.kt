@@ -178,5 +178,35 @@ class CartViewModelTest {
                 }
             }
         }
+
+
+        @Nested
+        inner class RemoveItemTests {
+
+            @Test
+            fun removesItem() = runTest(testScope.testScheduler) {
+                val cartItem = cartItems.first()
+                viewModel.state.test {
+                    println(awaitItem())
+                    // Initially the quantity equals the quantity in our initial cart item
+                    val initialItem = awaitItem()
+                    println(initialItem)
+                    assertEquals(cartItem.quantity, initialItem.cartItems.first().quantity)
+
+                    // When decrease quantity action is performed
+                    viewModel.onAction(CartAction.RemoveItem(cartItem))
+                    // Since we are mocking the usecase, the flow is not a hot path, i.e, it will only emit the values returned from mock's coEvery
+                    cartItemSharedFlow.emit(
+                        cartItems.drop(
+                            1
+                        )
+                    )
+
+                    // Then, the quantity is decremented by 1
+                    val finalItem = awaitItem()
+                    assertFalse(finalItem.cartItems.contains(cartItem))
+                }
+            }
+        }
     }
 }
