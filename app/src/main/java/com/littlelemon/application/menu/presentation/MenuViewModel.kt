@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.R
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
+import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemUseCase
 import com.littlelemon.application.shared.menu.domain.usecase.GetCategoriesUseCase
 import com.littlelemon.application.shared.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.shared.menu.domain.util.DishFilter
@@ -24,7 +25,8 @@ import kotlinx.coroutines.flow.update
 
 class MenuViewModel(
     private val getDishes: GetDishesUseCase,
-    private val getCategories: GetCategoriesUseCase,
+    getCategories: GetCategoriesUseCase,
+    getCartItem: GetCartItemUseCase,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel(
 ) {
@@ -56,8 +58,11 @@ class MenuViewModel(
         viewModelScope, SharingStarted.WhileSubscribed(5000L), CategoryState(isLoading = true)
     )
 
+
+    // To prevent unnecessary refreshes especially when updating items
+    // The cart item flows has been separated.
     @OptIn(ExperimentalCoroutinesApi::class)
-    val state = combine(
+    val baseState = combine(
         _dishSortingFlow, _filterFlow, _forceFetch, _currentCategory
     ) { sorting, filtering, forceFetch, currentCategory ->
         DishDataParams(
@@ -65,10 +70,36 @@ class MenuViewModel(
         )
     }.flatMapLatest { (sorting, filter, forceFetch, currentCategory) ->
         getDishes(sorting, filter, forceFetch, currentCategory)
-    }.map { resource ->
+    }
+//        .map { resource ->
+//        when (resource) {
+//            is Resource.Failure -> MenuState(
+//                dishesDepr = resource.data,
+//                dishes = resource.data?.map { dish -> DishUiState(dish) },
+//                isLoading = false,
+//                error = if (resource.errorMessage != null) UiText.DynamicString(resource.errorMessage) else UiText.StringResource(
+//                    R.string.generic_error_message
+//                )
+//            )
+//
+//            is Resource.Loading -> MenuState(isLoading = true, error = null)
+//            is Resource.Success -> MenuState(
+//                dishesDepr = resource.data, isLoading = false, error = null
+//            )
+//        }
+//    }
+        .flowOn(ioDispatcher)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Resource.Loading())
+
+    val state = combine(baseState, getCartItem()) { resource, cartItem ->
         when (resource) {
             is Resource.Failure -> MenuState(
-                dishes = resource.data,
+                dishes = resource.data?.map { dish ->
+                    DishUiState(
+                        dish,
+                        cartItem.find { it.dishId == dish.id }?.quantity ?: 0
+                    )
+                },
                 isLoading = false,
                 error = if (resource.errorMessage != null) UiText.DynamicString(resource.errorMessage) else UiText.StringResource(
                     R.string.generic_error_message
@@ -77,11 +108,15 @@ class MenuViewModel(
 
             is Resource.Loading -> MenuState(isLoading = true, error = null)
             is Resource.Success -> MenuState(
-                dishes = resource.data, isLoading = false, error = null
+                dishes = resource.data?.map { dish ->
+                    DishUiState(
+                        dish,
+                        cartItem.find { it.dishId == dish.id }?.quantity ?: 0
+                    )
+                }, isLoading = false, error = null
             )
         }
-    }.flowOn(ioDispatcher)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MenuState(isLoading = true))
+    }
 
     fun onAction(action: MenuActions) {
         when (action) {

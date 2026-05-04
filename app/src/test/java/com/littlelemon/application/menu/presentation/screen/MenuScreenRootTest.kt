@@ -36,7 +36,7 @@ class MenuScreenRootTest {
     private val dishes = List(10) { DishGenerator.generateDish() }
     private val categories = dishes.fold(listOf<Category>()) { list, dish -> list + dish.category }
     private val categoryState = CategoryState(categories = categories)
-    private val state = MenuState(dishes = dishes)
+    private val state = MenuState(dishesDepr = dishes)
     // TODO: Add error state test
 
     @Test

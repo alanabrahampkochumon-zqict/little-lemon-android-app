@@ -70,7 +70,7 @@ class MenuViewModelTest {
             @Test
             fun initialStateIsSetToLoading() = runTest {
                 // Given viewmodel is created
-                viewModel.state.test {
+                viewModel.baseState.test {
                     // Then, initial state is loading
                     assertTrue(awaitItem().isLoading)
                 }
@@ -80,7 +80,7 @@ class MenuViewModelTest {
             @Test
             fun getsDishesFromUseCase() = runTest {
                 // Given viewmodel is created
-                viewModel.state.test {
+                viewModel.baseState.test {
                     awaitItem() // Skips the initial loading
 
                     // Then, then result is populated
@@ -88,7 +88,7 @@ class MenuViewModelTest {
 
                     assertFalse(state.isLoading)
                     assertNull(state.error)
-                    assertEquals(dishes, state.dishes)
+                    assertEquals(dishes, state.dishesDepr)
                 }
             }
         }
@@ -155,7 +155,7 @@ class MenuViewModelTest {
 
             @Test
             fun outOfStockFilter_emitsDishesIncludingOutOfStock() = runTest {
-                viewModel.state.test {
+                viewModel.baseState.test {
                     awaitItem() // Skip the initial loading
 
                     // When, include out of stock filter is applied
@@ -163,13 +163,13 @@ class MenuViewModelTest {
 
                     // Then, the result contains dishes including out of stock dishes
                     val state = awaitItem()
-                    assertEquals(dishes + outOfStockDishes, state.dishes)
+                    assertEquals(dishes + outOfStockDishes, state.dishesDepr)
                 }
             }
 
             @Test
             fun noFilterApplied_emitsOnlyInStockDishes() = runTest {
-                viewModel.state.test {
+                viewModel.baseState.test {
                     awaitItem() // Skip the initial loading
 
                     // When, include out of stock filter is applied
@@ -177,7 +177,7 @@ class MenuViewModelTest {
 
                     // Then, the result contains dishes including out of stock dishes
                     val state = awaitItem()
-                    assertEquals(dishes, state.dishes)
+                    assertEquals(dishes, state.dishesDepr)
                 }
             }
         }
@@ -203,7 +203,7 @@ class MenuViewModelTest {
 
             @Test
             fun sortedByNameAscending_emitsDishesSortedByNameAscending() = runTest {
-                viewModel.state.test {
+                viewModel.baseState.test {
                     awaitItem() // Skip the initial loading
 
                     // When, sort by name ascending is applied
@@ -211,8 +211,8 @@ class MenuViewModelTest {
 
                     // Then, the result contains dishes sorted by name ascending
                     val state = awaitItem()
-                    assertNotNull(state.dishes)
-                    assertTrue(state.dishes.zipWithNext { firstDish, secondDish -> firstDish.title <= secondDish.title }
+                    assertNotNull(state.dishesDepr)
+                    assertTrue(state.dishesDepr.zipWithNext { firstDish, secondDish -> firstDish.title <= secondDish.title }
                         .all { it })
                     assertFalse(state.isLoading) // and isLoading is false
                 }
@@ -220,7 +220,7 @@ class MenuViewModelTest {
 
             @Test
             fun sortedByNameDescending_emitsDishesSortedByNameAscending() = runTest {
-                viewModel.state.test {
+                viewModel.baseState.test {
                     awaitItem() // Skip the initial loading
 
                     // When, sort by name ascending is applied
@@ -228,8 +228,8 @@ class MenuViewModelTest {
 
                     // Then, the result contains dishes sorted by name ascending
                     val state = awaitItem()
-                    assertNotNull(state.dishes)
-                    assertTrue(state.dishes.zipWithNext { firstDish, secondDish -> firstDish.title >= secondDish.title }
+                    assertNotNull(state.dishesDepr)
+                    assertTrue(state.dishesDepr.zipWithNext { firstDish, secondDish -> firstDish.title >= secondDish.title }
                         .all { it })
                     assertFalse(state.isLoading) // and isLoading is false
                 }
@@ -257,7 +257,7 @@ class MenuViewModelTest {
 
             @Test
             fun withFromRemote_fetchesItemFromRemote() = runTest {
-                viewModel.state.test {
+                viewModel.baseState.test {
                     awaitItem() // Skip the initial loading
 
                     // When forceFetch is called
@@ -265,14 +265,14 @@ class MenuViewModelTest {
 
                     // Then, items are fetched from remote
                     val state = awaitItem()
-                    assertNotNull(state.dishes)
-                    assertEquals(remoteDishes, state.dishes)
+                    assertNotNull(state.dishesDepr)
+                    assertEquals(remoteDishes, state.dishesDepr)
                 }
             }
 
             @Test
             fun withoutFromRemote_fetchesItemFromCache() = runTest {
-                viewModel.state.test {
+                viewModel.baseState.test {
                     awaitItem() // Skip the initial loading
 
                     // When forceFetch is called
@@ -280,8 +280,8 @@ class MenuViewModelTest {
 
                     // Then, items are fetched from cache
                     val state = awaitItem()
-                    assertNotNull(state.dishes)
-                    assertEquals(dishes, state.dishes)
+                    assertNotNull(state.dishesDepr)
+                    assertEquals(dishes, state.dishesDepr)
                 }
             }
         }
@@ -308,7 +308,7 @@ class MenuViewModelTest {
 
             @Test
             fun nullCategory_returnsAllDishes() = runTest {
-                viewModel.state.test {
+                viewModel.baseState.test {
                     awaitItem() // Skip the initial loading
 
                     // When UpdateDishCategoryAction is triggered null category
@@ -316,14 +316,14 @@ class MenuViewModelTest {
 
                     // Then, the original dishes are emitted
                     val state = awaitItem()
-                    assertNotNull(state.dishes)
-                    assertEquals(dishes, state.dishes)
+                    assertNotNull(state.dishesDepr)
+                    assertEquals(dishes, state.dishesDepr)
                 }
             }
 
             @Test
             fun validCategory_returnsFilteredDishes() = runTest {
-                viewModel.state.test {
+                viewModel.baseState.test {
                     awaitItem() // Skip the initial loading
 
                     // When UpdateDishCategoryAction is triggered null category
@@ -331,8 +331,8 @@ class MenuViewModelTest {
 
                     // Then, the filtered dishes are emitted
                     val state = awaitItem()
-                    assertNotNull(state.dishes)
-                    assertEquals(categoryFilteredDishes, state.dishes)
+                    assertNotNull(state.dishesDepr)
+                    assertEquals(categoryFilteredDishes, state.dishesDepr)
                 }
             }
         }

@@ -52,7 +52,7 @@ import kotlin.random.Random
 
 @Composable
 fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
-    val menuState by viewModel.state.collectAsStateWithLifecycle()
+    val menuState by viewModel.baseState.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()
     val currentCategory by viewModel.currentCategory.collectAsStateWithLifecycle()
     MenuScreenRoot(
@@ -168,11 +168,11 @@ fun MenuScreenRoot(
             }
         }
 
-        if (menuState.dishes == null) {
+        if (menuState.dishesDepr == null) {
             // TODO: ERROR UI
             item { Text("There was an error loading the dishes.") }
         } else {
-            items(menuState.dishes, key = { it.title }) { dish ->
+            items(menuState.dishesDepr, key = { it.title }) { dish ->
                 Box(
                     Modifier
                         .fillMaxWidth()
