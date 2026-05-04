@@ -39,6 +39,7 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.home.presentation.components.CategoryCard
 import com.littlelemon.application.menu.MenuTestTags
 import com.littlelemon.application.menu.presentation.CategoryState
+import com.littlelemon.application.menu.presentation.DishUiState
 import com.littlelemon.application.menu.presentation.MenuActions
 import com.littlelemon.application.menu.presentation.MenuState
 import com.littlelemon.application.menu.presentation.MenuViewModel
@@ -168,21 +169,21 @@ fun MenuScreenRoot(
             }
         }
 
-        if (menuState.dishesDepr == null) {
+        if (menuState.dishes == null) {
             // TODO: ERROR UI
             item { Text("There was an error loading the dishes.") }
         } else {
-            items(menuState.dishesDepr, key = { it.title }) { dish ->
+            items(menuState.dishes, key = { it.dish.id }) { dishState ->
                 Box(
                     Modifier
                         .fillMaxWidth()
                         .background(Color.Red)
                 )
                 MenuCard(
-                    dish,
+                    dishState.dish,
                     Random.nextInt(5),
-                    { onIncreaseQuantity(dish) },
-                    { onDecreaseQuantity(dish) },
+                    { onIncreaseQuantity(dishState.dish) },
+                    { onDecreaseQuantity(dishState.dish) },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = placeholder
                 )
@@ -224,7 +225,7 @@ private fun MenuScreenRootPreview() {
 
     val dishes = List(10) { generateDish() }
     val categories = dishes.first().category
-    val state = MenuState(dishes)
+    val state = MenuState(dishes.map { DishUiState(it, Random.nextInt(0, 3)) })
     LittleLemonTheme {
         MenuScreenRoot(state, CategoryState(categories = categories), null, {}, {}, {})
     }

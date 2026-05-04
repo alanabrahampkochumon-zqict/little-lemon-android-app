@@ -67,23 +67,6 @@ class MenuViewModel(
     }.flatMapLatest { (sorting, filter, forceFetch, currentCategory) ->
         getDishes(sorting, filter, forceFetch, currentCategory)
     }
-//        .map { resource ->
-//        when (resource) {
-//            is Resource.Failure -> MenuState(
-//                dishesDepr = resource.data,
-//                dishes = resource.data?.map { dish -> DishUiState(dish) },
-//                isLoading = false,
-//                error = if (resource.errorMessage != null) UiText.DynamicString(resource.errorMessage) else UiText.StringResource(
-//                    R.string.generic_error_message
-//                )
-//            )
-//
-//            is Resource.Loading -> MenuState(isLoading = true, error = null)
-//            is Resource.Success -> MenuState(
-//                dishesDepr = resource.data, isLoading = false, error = null
-//            )
-//        }
-//    }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Resource.Loading())
 
     val state = combine(baseState, getCartItem()) { resource, cartItem ->

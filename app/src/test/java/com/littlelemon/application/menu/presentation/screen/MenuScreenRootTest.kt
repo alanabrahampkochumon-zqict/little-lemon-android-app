@@ -13,6 +13,7 @@ import com.littlelemon.application.R
 import com.littlelemon.application.core.CoreTestTags
 import com.littlelemon.application.menu.MenuTestTags
 import com.littlelemon.application.menu.presentation.CategoryState
+import com.littlelemon.application.menu.presentation.DishUiState
 import com.littlelemon.application.menu.presentation.MenuState
 import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.shared.menu.domain.models.Category
@@ -22,6 +23,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import kotlin.random.Random
 import kotlin.test.assertEquals
 
 @RunWith(RobolectricTestRunner::class)
@@ -36,7 +38,7 @@ class MenuScreenRootTest {
     private val dishes = List(10) { DishGenerator.generateDish() }
     private val categories = dishes.fold(listOf<Category>()) { list, dish -> list + dish.category }
     private val categoryState = CategoryState(categories = categories)
-    private val state = MenuState(dishesDepr = dishes)
+    private val state = MenuState(dishes = dishes.map { DishUiState(it, Random.nextInt(0, 3)) })
     // TODO: Add error state test
 
     @Test
