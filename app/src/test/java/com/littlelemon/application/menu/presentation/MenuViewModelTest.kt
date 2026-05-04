@@ -4,8 +4,10 @@ import androidx.test.filters.SmallTest
 import app.cash.turbine.test
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.cart.domain.models.CartItem
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import com.littlelemon.application.shared.menu.data.mappers.toDish
 import com.littlelemon.application.shared.menu.domain.usecase.GetCategoriesUseCase
 import com.littlelemon.application.shared.menu.domain.usecase.GetDishesUseCase
@@ -13,7 +15,9 @@ import com.littlelemon.application.shared.menu.domain.util.DishFilter
 import com.littlelemon.application.shared.menu.domain.util.DishSorting
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.slot
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
@@ -47,6 +51,8 @@ class MenuViewModelTest {
     private lateinit var getDishesUseCase: GetDishesUseCase
     private lateinit var getCategoriesUseCase: GetCategoriesUseCase
     private lateinit var getCartItemUseCase: GetCartItemUseCase
+
+    private lateinit var upsertCartItemUseCase: UpsertCartItemUseCase
     private lateinit var viewModel: MenuViewModel
 
     @BeforeEach
@@ -54,6 +60,7 @@ class MenuViewModelTest {
         getDishesUseCase = mockk()
         getCategoriesUseCase = mockk()
         getCartItemUseCase = mockk()
+        upsertCartItemUseCase = mockk()
 
         coEvery { getDishesUseCase.invoke() } returns flow {
             emit(Resource.Success(dishes))
@@ -64,8 +71,14 @@ class MenuViewModelTest {
         coEvery { getCartItemUseCase.invoke() } returns flow {
             emit(cartItems)
         }
+        coEvery { upsertCartItemUseCase.invoke(any()) } returns Unit
 
-        viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
+        viewModel = MenuViewModel(
+            getDishesUseCase,
+            getCategoriesUseCase,
+            getCartItemUseCase,
+            upsertCartItemUseCase
+        )
     }
 
 
@@ -144,7 +157,12 @@ class MenuViewModelTest {
                     emit(Resource.Failure())
                 }
                 viewModel =
-                    MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
+                    MenuViewModel(
+                        getDishesUseCase,
+                        getCategoriesUseCase,
+                        getCartItemUseCase,
+                        upsertCartItemUseCase
+                    )
 
                 viewModel.categories.test {
                     awaitItem() // Skip initial state
@@ -174,7 +192,12 @@ class MenuViewModelTest {
                     emit(Resource.Success(dishes))
                 }
                 viewModel =
-                    MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
+                    MenuViewModel(
+                        getDishesUseCase,
+                        getCategoriesUseCase,
+                        getCartItemUseCase,
+                        upsertCartItemUseCase
+                    )
             }
 
             @Test
@@ -222,7 +245,12 @@ class MenuViewModelTest {
                     )
                 }
                 viewModel =
-                    MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
+                    MenuViewModel(
+                        getDishesUseCase,
+                        getCategoriesUseCase,
+                        getCartItemUseCase,
+                        upsertCartItemUseCase
+                    )
             }
 
 
@@ -280,7 +308,12 @@ class MenuViewModelTest {
                     )
                 }
                 viewModel =
-                    MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
+                    MenuViewModel(
+                        getDishesUseCase,
+                        getCategoriesUseCase,
+                        getCartItemUseCase,
+                        upsertCartItemUseCase
+                    )
             }
 
             @Test
@@ -331,7 +364,12 @@ class MenuViewModelTest {
                 }
 
                 viewModel =
-                    MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
+                    MenuViewModel(
+                        getDishesUseCase,
+                        getCategoriesUseCase,
+                        getCartItemUseCase,
+                        upsertCartItemUseCase
+                    )
             }
 
 
@@ -365,6 +403,34 @@ class MenuViewModelTest {
                         categoryFilteredDishes,
                         state.dishes.map { it.dish })
                 }
+            }
+        }
+
+
+        @Nested
+        inner class AddToCartTests {
+
+            @Test
+            fun invokesUseCaseWithIncrementedQuantity() = runTest {
+                val cartDetailItem = CartDetailItem(
+                    dishes[0],
+                    cartItems.find { it.dishId == dishes[0].id }?.quantity?.plus(1) ?: 0
+                )
+                val slot = slot<CartDetailItem>()
+                // Verify that the method the usecase is called
+                coVerify { upsertCartItemUseCase.invoke(capture(slot)) }
+                viewModel =
+                    MenuViewModel(
+                        getDishesUseCase,
+                        getCategoriesUseCase,
+                        getCartItemUseCase,
+                        upsertCartItemUseCase
+                    )
+
+                viewModel.onAction(MenuActions.AddToCart(dishes[0]))
+                // And the value passed in has it quantity increased by 1
+                assertEquals(cartDetailItem, slot.captured)
+
             }
         }
     }

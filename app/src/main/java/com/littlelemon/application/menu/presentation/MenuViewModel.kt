@@ -6,6 +6,7 @@ import com.littlelemon.application.R
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import com.littlelemon.application.shared.menu.domain.usecase.GetCategoriesUseCase
 import com.littlelemon.application.shared.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.shared.menu.domain.util.DishFilter
@@ -23,7 +24,8 @@ import kotlinx.coroutines.flow.update
 class MenuViewModel(
     private val getDishes: GetDishesUseCase,
     getCategories: GetCategoriesUseCase,
-    getCartItem: GetCartItemUseCase
+    getCartItem: GetCartItemUseCase,
+    updateCartItem: UpsertCartItemUseCase
 ) : ViewModel(
 ) {
     private val _filterFlow = MutableStateFlow<DishFilter?>(null)
@@ -104,6 +106,8 @@ class MenuViewModel(
             is MenuActions.ApplySorting -> _dishSortingFlow.update { action.sorting }
             is MenuActions.FetchDishes -> _forceFetch.update { action.fromRemote }
             is MenuActions.UpdateDishCategory -> _currentCategory.update { action.category }
+            is MenuActions.AddToCart -> TODO()
+            is MenuActions.RemoveFromCart -> TODO()
         }
     }
 
