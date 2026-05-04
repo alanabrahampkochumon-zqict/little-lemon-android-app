@@ -10,15 +10,12 @@ import com.littlelemon.application.shared.menu.domain.usecase.GetCategoriesUseCa
 import com.littlelemon.application.shared.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.shared.menu.domain.util.DishFilter
 import com.littlelemon.application.shared.menu.domain.util.DishSorting
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -26,8 +23,7 @@ import kotlinx.coroutines.flow.update
 class MenuViewModel(
     private val getDishes: GetDishesUseCase,
     getCategories: GetCategoriesUseCase,
-    getCartItem: GetCartItemUseCase,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    getCartItem: GetCartItemUseCase
 ) : ViewModel(
 ) {
     private val _filterFlow = MutableStateFlow<DishFilter?>(null)
@@ -88,7 +84,6 @@ class MenuViewModel(
 //            )
 //        }
 //    }
-        .flowOn(ioDispatcher)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Resource.Loading())
 
     val state = combine(baseState, getCartItem()) { resource, cartItem ->
@@ -117,6 +112,8 @@ class MenuViewModel(
             )
         }
     }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MenuState(isLoading = true))
+
 
     fun onAction(action: MenuActions) {
         when (action) {

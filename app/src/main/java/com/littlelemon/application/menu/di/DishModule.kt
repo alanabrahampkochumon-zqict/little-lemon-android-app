@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val dishModule = module {
     viewModel<MenuViewModel> {
-        MenuViewModel(get(), get())
+        MenuViewModel(get(), get(), get())
     }
 }

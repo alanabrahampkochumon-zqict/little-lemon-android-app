@@ -4,6 +4,8 @@ import androidx.test.filters.SmallTest
 import app.cash.turbine.test
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.utils.DishGenerator
+import com.littlelemon.application.shared.cart.domain.models.CartItem
+import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemUseCase
 import com.littlelemon.application.shared.menu.data.mappers.toDish
 import com.littlelemon.application.shared.menu.domain.usecase.GetCategoriesUseCase
 import com.littlelemon.application.shared.menu.domain.usecase.GetDishesUseCase
@@ -20,24 +22,23 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertNull
-import org.junit.jupiter.api.extension.RegisterExtension
+import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.random.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @SmallTest
+@OptIn(ExperimentalCoroutinesApi::class)
+@ExtendWith(StandardTestDispatcherRule::class)
 class MenuViewModelTest {
-
-    @JvmField
-    @RegisterExtension
-    val coroutineRule = StandardTestDispatcherRule()
-
-    private val testDispatcher = coroutineRule.testDispatcher
 
     private val dishes =
         DishGenerator.generateDishWithCategories(10).map { (dishEntity, _) -> dishEntity.toDish() }
+
+    val cartItems = dishes.drop(5).map { dish -> CartItem(dish.id, Random.nextInt(3, 5)) }
+
     private val categories = dishes.flatMap { it.category }.distinct()
     private val outOfStockDishes = DishGenerator.generateDishWithCategories(5)
         .map { (dishEntity, _) -> dishEntity.toDish().copy(stock = 0) }
@@ -45,12 +46,14 @@ class MenuViewModelTest {
         DishGenerator.generateDishWithCategories(15).map { (dishEntity, _) -> dishEntity.toDish() }
     private lateinit var getDishesUseCase: GetDishesUseCase
     private lateinit var getCategoriesUseCase: GetCategoriesUseCase
+    private lateinit var getCartItemUseCase: GetCartItemUseCase
     private lateinit var viewModel: MenuViewModel
 
     @BeforeEach
     fun setUp() {
         getDishesUseCase = mockk()
         getCategoriesUseCase = mockk()
+        getCartItemUseCase = mockk()
 
         coEvery { getDishesUseCase.invoke() } returns flow {
             emit(Resource.Success(dishes))
@@ -58,7 +61,11 @@ class MenuViewModelTest {
         coEvery { getCategoriesUseCase.invoke() } returns flow {
             emit(Resource.Success(categories))
         }
-        viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
+        coEvery { getCartItemUseCase.invoke() } returns flow {
+            emit(cartItems)
+        }
+
+        viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
     }
 
 
@@ -70,7 +77,7 @@ class MenuViewModelTest {
             @Test
             fun initialStateIsSetToLoading() = runTest {
                 // Given viewmodel is created
-                viewModel.baseState.test {
+                viewModel.state.test {
                     // Then, initial state is loading
                     assertTrue(awaitItem().isLoading)
                 }
@@ -80,7 +87,7 @@ class MenuViewModelTest {
             @Test
             fun getsDishesFromUseCase() = runTest {
                 // Given viewmodel is created
-                viewModel.baseState.test {
+                viewModel.state.test {
                     awaitItem() // Skips the initial loading
 
                     // Then, then result is populated
@@ -88,7 +95,7 @@ class MenuViewModelTest {
 
                     assertFalse(state.isLoading)
                     assertNull(state.error)
-                    assertEquals(dishes, state.dishesDepr)
+                    assertEquals(dishes, state.dishes?.map { it.dish })
                 }
             }
         }
@@ -121,7 +128,8 @@ class MenuViewModelTest {
                 coEvery { getCategoriesUseCase.invoke() } returns flow {
                     emit(Resource.Failure())
                 }
-                viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
+                viewModel =
+                    MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
 
                 viewModel.categories.test {
                     awaitItem() // Skip initial state
@@ -150,12 +158,13 @@ class MenuViewModelTest {
                 coEvery { getDishesUseCase.invoke(filter = null) } returns flow {
                     emit(Resource.Success(dishes))
                 }
-                viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
+                viewModel =
+                    MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
             }
 
             @Test
             fun outOfStockFilter_emitsDishesIncludingOutOfStock() = runTest {
-                viewModel.baseState.test {
+                viewModel.state.test {
                     awaitItem() // Skip the initial loading
 
                     // When, include out of stock filter is applied
@@ -163,13 +172,13 @@ class MenuViewModelTest {
 
                     // Then, the result contains dishes including out of stock dishes
                     val state = awaitItem()
-                    assertEquals(dishes + outOfStockDishes, state.dishesDepr)
+                    assertEquals(dishes + outOfStockDishes, state.dishes?.map { it.dish })
                 }
             }
 
             @Test
             fun noFilterApplied_emitsOnlyInStockDishes() = runTest {
-                viewModel.baseState.test {
+                viewModel.state.test {
                     awaitItem() // Skip the initial loading
 
                     // When, include out of stock filter is applied
@@ -177,7 +186,7 @@ class MenuViewModelTest {
 
                     // Then, the result contains dishes including out of stock dishes
                     val state = awaitItem()
-                    assertEquals(dishes, state.dishesDepr)
+                    assertEquals(dishes, state.dishes?.map { it.dish })
                 }
             }
         }
@@ -197,13 +206,14 @@ class MenuViewModelTest {
                         Resource.Success(dishes.sortedByDescending { dish -> dish.title })
                     )
                 }
-                viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
+                viewModel =
+                    MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
             }
 
 
             @Test
             fun sortedByNameAscending_emitsDishesSortedByNameAscending() = runTest {
-                viewModel.baseState.test {
+                viewModel.state.test {
                     awaitItem() // Skip the initial loading
 
                     // When, sort by name ascending is applied
@@ -211,8 +221,9 @@ class MenuViewModelTest {
 
                     // Then, the result contains dishes sorted by name ascending
                     val state = awaitItem()
-                    assertNotNull(state.dishesDepr)
-                    assertTrue(state.dishesDepr.zipWithNext { firstDish, secondDish -> firstDish.title <= secondDish.title }
+                    assertNotNull(state.dishes)
+                    assertTrue(state.dishes.map { it.dish }
+                        .zipWithNext { firstDish, secondDish -> firstDish.title <= secondDish.title }
                         .all { it })
                     assertFalse(state.isLoading) // and isLoading is false
                 }
@@ -220,7 +231,7 @@ class MenuViewModelTest {
 
             @Test
             fun sortedByNameDescending_emitsDishesSortedByNameAscending() = runTest {
-                viewModel.baseState.test {
+                viewModel.state.test {
                     awaitItem() // Skip the initial loading
 
                     // When, sort by name ascending is applied
@@ -228,8 +239,9 @@ class MenuViewModelTest {
 
                     // Then, the result contains dishes sorted by name ascending
                     val state = awaitItem()
-                    assertNotNull(state.dishesDepr)
-                    assertTrue(state.dishesDepr.zipWithNext { firstDish, secondDish -> firstDish.title >= secondDish.title }
+                    assertNotNull(state.dishes)
+                    assertTrue(state.dishes.map { it.dish }
+                        .zipWithNext { firstDish, secondDish -> firstDish.title >= secondDish.title }
                         .all { it })
                     assertFalse(state.isLoading) // and isLoading is false
                 }
@@ -252,12 +264,13 @@ class MenuViewModelTest {
                         Resource.Success(dishes)
                     )
                 }
-                viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
+                viewModel =
+                    MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
             }
 
             @Test
             fun withFromRemote_fetchesItemFromRemote() = runTest {
-                viewModel.baseState.test {
+                viewModel.state.test {
                     awaitItem() // Skip the initial loading
 
                     // When forceFetch is called
@@ -265,14 +278,14 @@ class MenuViewModelTest {
 
                     // Then, items are fetched from remote
                     val state = awaitItem()
-                    assertNotNull(state.dishesDepr)
-                    assertEquals(remoteDishes, state.dishesDepr)
+                    assertNotNull(state.dishes)
+                    assertEquals(remoteDishes, state.dishes.map { it.dish })
                 }
             }
 
             @Test
             fun withoutFromRemote_fetchesItemFromCache() = runTest {
-                viewModel.baseState.test {
+                viewModel.state.test {
                     awaitItem() // Skip the initial loading
 
                     // When forceFetch is called
@@ -280,8 +293,8 @@ class MenuViewModelTest {
 
                     // Then, items are fetched from cache
                     val state = awaitItem()
-                    assertNotNull(state.dishesDepr)
-                    assertEquals(dishes, state.dishesDepr)
+                    assertNotNull(state.dishes)
+                    assertEquals(dishes, state.dishes.map { it.dish })
                 }
             }
         }
@@ -302,13 +315,14 @@ class MenuViewModelTest {
                     emit(Resource.Success(categoryFilteredDishes))
                 }
 
-                viewModel = MenuViewModel(getDishesUseCase, getCategoriesUseCase, testDispatcher)
+                viewModel =
+                    MenuViewModel(getDishesUseCase, getCategoriesUseCase, getCartItemUseCase)
             }
 
 
             @Test
             fun nullCategory_returnsAllDishes() = runTest {
-                viewModel.baseState.test {
+                viewModel.state.test {
                     awaitItem() // Skip the initial loading
 
                     // When UpdateDishCategoryAction is triggered null category
@@ -316,14 +330,14 @@ class MenuViewModelTest {
 
                     // Then, the original dishes are emitted
                     val state = awaitItem()
-                    assertNotNull(state.dishesDepr)
-                    assertEquals(dishes, state.dishesDepr)
+                    assertNotNull(state.dishes)
+                    assertEquals(dishes, state.dishes.map { it.dish })
                 }
             }
 
             @Test
             fun validCategory_returnsFilteredDishes() = runTest {
-                viewModel.baseState.test {
+                viewModel.state.test {
                     awaitItem() // Skip the initial loading
 
                     // When UpdateDishCategoryAction is triggered null category
@@ -331,8 +345,10 @@ class MenuViewModelTest {
 
                     // Then, the filtered dishes are emitted
                     val state = awaitItem()
-                    assertNotNull(state.dishesDepr)
-                    assertEquals(categoryFilteredDishes, state.dishesDepr)
+                    assertNotNull(state.dishes)
+                    assertEquals(
+                        categoryFilteredDishes,
+                        state.dishes.map { it.dish })
                 }
             }
         }
