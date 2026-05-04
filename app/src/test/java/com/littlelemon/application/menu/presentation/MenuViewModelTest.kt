@@ -443,6 +443,42 @@ class MenuViewModelTest {
 
             }
         }
+
+        @Nested
+        @ExtendWith(MainTestDispatcherRule::class)
+        inner class RemoveFromTests {
+
+            @Test
+            fun invokesUseCaseWithDecrementedQuantity() = runTest {
+                val currentQuantity = 10
+                val cartDetailItem = CartDetailItem(
+                    dishes[0],
+                    currentQuantity - 1
+                )
+                val slot = slot<CartDetailItem>()
+                viewModel =
+                    MenuViewModel(
+                        getDishesUseCase,
+                        getCategoriesUseCase,
+                        getCartItemUseCase,
+                        upsertCartItemUseCase
+                    )
+
+                viewModel.onAction(
+                    MenuActions.RemoveFromCart(
+                        dishUiState = DishUiState(
+                            dishes[0],
+                            currentQuantity
+                        )
+                    )
+                )
+                // Verify that the method the usecase is called
+                coVerify { upsertCartItemUseCase(capture(slot)) }
+                // And the value passed in has it quantity decreased by 1
+                assertEquals(cartDetailItem, slot.captured)
+
+            }
+        }
     }
 
 }
