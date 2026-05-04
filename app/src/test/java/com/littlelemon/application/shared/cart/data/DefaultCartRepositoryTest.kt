@@ -5,11 +5,13 @@ import com.littlelemon.application.cart.data.remote.FakeCartRemoteDataSource
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
 import com.littlelemon.application.database.cart.FakeCartDao
+import com.littlelemon.application.database.cart.mappers.toCartItems
 import com.littlelemon.application.database.cart.mappers.toDTO
 import com.littlelemon.application.database.cart.mappers.toEntity
 import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
+import com.littlelemon.application.shared.cart.data.remote.mappers.toEntity
 import com.littlelemon.application.shared.cart.data.remote.models.CartItemDTO
 import com.littlelemon.application.shared.cart.domain.CartRepository
 import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
@@ -227,6 +229,109 @@ class DefaultCartRepositoryTest {
 
     }
 
+    @Nested
+    @OptIn(ExperimentalUuidApi::class)
+    inner class GetAllCartItem {
+
+        private val offlineCartItemEntity = List(1) {
+            CartItemEntity(Uuid.generateV4().toString(), Random.nextInt(5, 10))
+        }
+        private val onlineCartDTO = List(1) {
+            CartItemDTO(Uuid.generateV4().toString(), Random.nextInt(5, 10))
+        }
+
+
+        @BeforeEach
+        fun setUp() {
+            remoteDS = FakeCartRemoteDataSource(onlineCartDTO)
+            localDS = FakeCartDao(offlineCartItemEntity)
+
+            repository = DefaultCartRepository(remoteDS, localDS)
+        }
+
+        @Test
+        fun success_returnsOfflineCacheFirst() = runTest {
+            val items = repository.getAllCartItems().first()
+
+            assertEquals(offlineCartItemEntity.toCartItems(), items)
+//            val retrievedIds = items.map { it. }
+//            offlineCartItemEntity.forEach { (dishId, _) ->
+//                assertContains(retrievedIds, dishId)
+//            }
+        }
+
+        @Test
+        fun success_returnsRemoteDataAfterCacheRefresh() = runTest {
+            val items = repository.getAllCartItems().take(2).last()
+
+            assertEquals(offlineCartItemEntity.toCartItems() + onlineCartDTO.map { it.toEntity() }
+                .toCartItems(), items)
+//            val retrievedIds = items.map { it.dish.id }
+//            val expectedIds =
+//                offlineCartItemEntity.map { it.dishId } + onlineCartDTO.map { it.dishId }
+//            expectedIds.forEach { id ->
+//                assertContains(retrievedIds, id)
+//            }
+        }
+
+        @Test
+        fun remoteFailure_returnsCachedData() = runTest {
+            remoteDS = FakeCartRemoteDataSource(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            val items = repository.getAllCartItems().first()
+
+            assertEquals(offlineCartItemEntity.toCartItems(), items)
+//            val retrievedIds = items.map { it.dish.id }
+//            offlineCartItemEntity.forEach { (dishId, _) ->
+//                assertContains(retrievedIds, dishId)
+//            }
+        }
+
+        @Test
+        fun remoteFailure_emitsErrorMessageStream() = runTest {
+            remoteDS = FakeCartRemoteDataSource(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+
+            repository.errorMessages.test {
+                // When cart is retrieved from repository
+                repository.getAllCartItems().first()
+
+                // Then, the error message channel is updated with an error message
+                val message = awaitItem()
+                assertEquals(CartErrorMessages.ERROR_RETRIEVING_CART, message)
+            }
+        }
+
+        @Test
+        fun dbFailure_returnsEmptyList() = runTest {
+            localDS = FakeCartDao(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            val items = repository.getAllDetailedCartItems().first()
+
+            assertEquals(0, items.size)
+        }
+
+
+        @Test
+        fun dbFailure_emitsErrorMessageStream() = runTest {
+            localDS = FakeCartDao(throwError = true)
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            repository.errorMessages.test {
+                // When cart is retrieved from repository
+                repository.getAllDetailedCartItems().first()
+
+                // Then, the error message channel is updated with an error message
+                val message = awaitItem()
+                assertEquals(CartErrorMessages.ERROR_RETRIEVING_CART, message)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    }
 
     @Nested
     inner class ClearCart {
