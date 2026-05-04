@@ -7,11 +7,14 @@ import com.littlelemon.application.shared.cart.domain.CartRepository
 import com.littlelemon.application.shared.cart.domain.usecase.ClearCartUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartErrorMessagesUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemDetailsUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import org.koin.dsl.module
 
 val sharedCartModule = module {
     single<UpsertCartItemUseCase> { UpsertCartItemUseCase(get()) }
+    
+    single<GetCartItemUseCase> { GetCartItemUseCase(get()) }
 
     single<ClearCartUseCase> { ClearCartUseCase(get()) }
 
