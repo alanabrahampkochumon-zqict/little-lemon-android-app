@@ -249,29 +249,14 @@ class DefaultCartRepositoryTest {
             repository = DefaultCartRepository(remoteDS, localDS)
         }
 
-        @Test
-        fun success_returnsOfflineCacheFirst() = runTest {
-            val items = repository.getAllCartItems().first()
-
-            assertEquals(offlineCartItemEntity.toCartItems(), items)
-//            val retrievedIds = items.map { it. }
-//            offlineCartItemEntity.forEach { (dishId, _) ->
-//                assertContains(retrievedIds, dishId)
-//            }
-        }
-
+        
         @Test
         fun success_returnsRemoteDataAfterCacheRefresh() = runTest {
             val items = repository.getAllCartItems().take(2).last()
 
             assertEquals(offlineCartItemEntity.toCartItems() + onlineCartDTO.map { it.toEntity() }
                 .toCartItems(), items)
-//            val retrievedIds = items.map { it.dish.id }
-//            val expectedIds =
-//                offlineCartItemEntity.map { it.dishId } + onlineCartDTO.map { it.dishId }
-//            expectedIds.forEach { id ->
-//                assertContains(retrievedIds, id)
-//            }
+
         }
 
         @Test
@@ -282,10 +267,6 @@ class DefaultCartRepositoryTest {
             val items = repository.getAllCartItems().first()
 
             assertEquals(offlineCartItemEntity.toCartItems(), items)
-//            val retrievedIds = items.map { it.dish.id }
-//            offlineCartItemEntity.forEach { (dishId, _) ->
-//                assertContains(retrievedIds, dishId)
-//            }
         }
 
         @Test
@@ -309,7 +290,7 @@ class DefaultCartRepositoryTest {
             localDS = FakeCartDao(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
 
-            val items = repository.getAllDetailedCartItems().first()
+            val items = repository.getAllCartItems().first()
 
             assertEquals(0, items.size)
         }
@@ -322,7 +303,7 @@ class DefaultCartRepositoryTest {
 
             repository.errorMessages.test {
                 // When cart is retrieved from repository
-                repository.getAllDetailedCartItems().first()
+                repository.getAllCartItems().first()
 
                 // Then, the error message channel is updated with an error message
                 val message = awaitItem()

@@ -3,6 +3,7 @@ package com.littlelemon.application.shared.cart.data
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
 import com.littlelemon.application.database.cart.mappers.toCartDetailItems
+import com.littlelemon.application.database.cart.mappers.toCartItems
 import com.littlelemon.application.database.cart.mappers.toDTO
 import com.littlelemon.application.database.cart.mappers.toEntity
 import com.littlelemon.application.shared.cart.CartConstants
@@ -117,9 +118,23 @@ class DefaultCartRepository(
             emit(emptyList())
         }
 
-    override fun getAllCartItems(): Flow<List<CartItem>> {
-        TODO()
-    }
+    override fun getAllCartItems(): Flow<List<CartItem>> =
+        localDataSource.getAllCartItems().onStart {
+            try {
+                val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
+                if (remoteCart.isEmpty()) {
+                    localDataSource.clearCartItems()
+                } else {
+                    remoteCart.forEach { localDataSource.upsertCartItem(it) }
+                }
+            } catch (_: Exception) {
+                currentCoroutineContext().ensureActive()
+                _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
+            }
+        }.map { cartItemEntities -> cartItemEntities.toCartItems() }.catch {
+            _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
+            emit(emptyList())
+        }
 
 
 }
