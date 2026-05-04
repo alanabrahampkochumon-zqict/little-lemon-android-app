@@ -61,8 +61,8 @@ fun MenuScreen(viewModel: MenuViewModel, modifier: Modifier = Modifier) {
         categories,
         currentCategory,
         { viewModel.onAction(MenuActions.UpdateDishCategory(it)) },
-        { /** TODO */ },
-        { /** TODO */ },
+        { viewModel.onAction(MenuActions.AddToCart(it)) },
+        { viewModel.onAction(MenuActions.RemoveFromCart(it)) },
         modifier
     )
 }
@@ -73,8 +73,8 @@ fun MenuScreenRoot(
     categories: CategoryState,
     currentCategory: String?,
     onCategoryChanged: (String?) -> Unit,
-    onIncreaseQuantity: (Dish) -> Unit,
-    onDecreaseQuantity: (Dish) -> Unit,
+    onIncreaseQuantity: (DishUiState) -> Unit,
+    onDecreaseQuantity: (DishUiState) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -181,9 +181,9 @@ fun MenuScreenRoot(
                 )
                 MenuCard(
                     dishState.dish,
-                    Random.nextInt(5),
-                    { onIncreaseQuantity(dishState.dish) },
-                    { onDecreaseQuantity(dishState.dish) },
+                    dishState.quantity,
+                    { onIncreaseQuantity(dishState) },
+                    { onDecreaseQuantity(dishState) },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = placeholder
                 )
