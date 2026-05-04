@@ -117,7 +117,14 @@ class MenuViewModel(
                 )
             }
 
-            is MenuActions.RemoveFromCart -> TODO()
+            is MenuActions.RemoveFromCart -> viewModelScope.launch {
+                updateCartItem(
+                    CartDetailItem(
+                        action.dishUiState.dish,
+                        action.dishUiState.quantity - 1
+                    )
+                )
+            }
         }
     }
 
