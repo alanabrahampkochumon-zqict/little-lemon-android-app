@@ -3,8 +3,6 @@ package com.littlelemon.application.shared.cart.domain.usecase
 import app.cash.turbine.test
 import com.littlelemon.application.cart.data.FakeCartRepository
 import com.littlelemon.application.shared.cart.domain.CartRepository
-import com.littlelemon.application.shared.cart.domain.usecase.GetCartErrorMessagesUseCase
-import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemsUseCase
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -24,7 +22,7 @@ class GetCartErrorMessagesUseCaseTest {
         // Given a repository that throws error
         repository = FakeCartRepository(throwError = true)
         useCase = GetCartErrorMessagesUseCase(repository)
-        val getItem = GetCartItemsUseCase(repository)
+        val getItem = GetCartItemDetailsUseCase(repository)
 
         useCase().test {
             // When, a function is invoked that emits events

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.shared.cart.domain.usecase.ClearCartUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartErrorMessagesUseCase
-import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemsUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemDetailsUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class CartViewModel(
-    getCartItems: GetCartItemsUseCase,
+    getCartItems: GetCartItemDetailsUseCase,
     getCartError: GetCartErrorMessagesUseCase,
     private val upsertCartItem: UpsertCartItemUseCase,
     private val clearCart: ClearCartUseCase

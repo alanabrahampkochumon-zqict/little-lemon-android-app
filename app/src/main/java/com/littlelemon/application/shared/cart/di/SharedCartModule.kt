@@ -6,7 +6,7 @@ import com.littlelemon.application.shared.cart.data.remote.SupabaseCartRemoteDat
 import com.littlelemon.application.shared.cart.domain.CartRepository
 import com.littlelemon.application.shared.cart.domain.usecase.ClearCartUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartErrorMessagesUseCase
-import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemsUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemDetailsUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import org.koin.dsl.module
 
@@ -17,8 +17,8 @@ val sharedCartModule = module {
 
     single<GetCartErrorMessagesUseCase> { GetCartErrorMessagesUseCase(get()) }
 
-    single<GetCartItemsUseCase> {
-        GetCartItemsUseCase(get())
+    single<GetCartItemDetailsUseCase> {
+        GetCartItemDetailsUseCase(get())
     }
 
     single<CartRepository> {

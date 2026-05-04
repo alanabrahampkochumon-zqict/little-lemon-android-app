@@ -6,7 +6,7 @@ import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.cart.domain.usecase.ClearCartUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartErrorMessagesUseCase
-import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemsUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemDetailsUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
@@ -35,7 +35,7 @@ import kotlin.test.assertTrue
 class CartViewModelTest {
 
     private lateinit var errorMessageUseCase: GetCartErrorMessagesUseCase
-    private lateinit var getItemUseCase: GetCartItemsUseCase
+    private lateinit var getItemUseCase: GetCartItemDetailsUseCase
     private lateinit var upsertUseCase: UpsertCartItemUseCase
     private lateinit var clearCartUseCase: ClearCartUseCase
 
