@@ -98,6 +98,21 @@ class MenuViewModelTest {
                     assertEquals(dishes, state.dishes?.map { it.dish })
                 }
             }
+
+            @Test
+            fun combinesDishesWithCartItem() = runTest {
+                // Given viewmodel is created
+                viewModel.state.test {
+                    awaitItem() // Skips the initial loading
+
+                    // Then, then result is populated
+                    val state = awaitItem()
+
+                    assertFalse(state.isLoading)
+                    assertNull(state.error)
+                    assertTrue { cartItems.all { cartItem -> state.dishes?.find { it.dish.id == cartItem.dishId }?.quantity == cartItem.quantity } }
+                }
+            }
         }
 
 
