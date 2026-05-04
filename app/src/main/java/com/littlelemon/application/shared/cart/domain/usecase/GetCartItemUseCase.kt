@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 class GetCartItemUseCase(private val repository: CartRepository) {
 
-    suspend operator fun invoke(): Flow<List<CartItem>> = TODO()
+    operator fun invoke(): Flow<List<CartItem>> = repository.getAllCartItems()
 }
