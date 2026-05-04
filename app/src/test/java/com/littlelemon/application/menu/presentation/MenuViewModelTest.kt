@@ -13,6 +13,7 @@ import com.littlelemon.application.shared.menu.domain.usecase.GetCategoriesUseCa
 import com.littlelemon.application.shared.menu.domain.usecase.GetDishesUseCase
 import com.littlelemon.application.shared.menu.domain.util.DishFilter
 import com.littlelemon.application.shared.menu.domain.util.DishSorting
+import com.littlelemon.application.utils.MainTestDispatcherRule
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -408,17 +409,17 @@ class MenuViewModelTest {
 
 
         @Nested
+        @ExtendWith(MainTestDispatcherRule::class)
         inner class AddToCartTests {
 
             @Test
             fun invokesUseCaseWithIncrementedQuantity() = runTest {
+                val currentQuantity = 10
                 val cartDetailItem = CartDetailItem(
                     dishes[0],
-                    cartItems.find { it.dishId == dishes[0].id }?.quantity?.plus(1) ?: 0
+                    currentQuantity + 1
                 )
                 val slot = slot<CartDetailItem>()
-                // Verify that the method the usecase is called
-                coVerify { upsertCartItemUseCase.invoke(capture(slot)) }
                 viewModel =
                     MenuViewModel(
                         getDishesUseCase,
@@ -427,7 +428,16 @@ class MenuViewModelTest {
                         upsertCartItemUseCase
                     )
 
-                viewModel.onAction(MenuActions.AddToCart(dishes[0]))
+                viewModel.onAction(
+                    MenuActions.AddToCart(
+                        dishUiState = DishUiState(
+                            dishes[0],
+                            currentQuantity
+                        )
+                    )
+                )
+                // Verify that the method the usecase is called
+                coVerify { upsertCartItemUseCase(capture(slot)) }
                 // And the value passed in has it quantity increased by 1
                 assertEquals(cartDetailItem, slot.captured)
 

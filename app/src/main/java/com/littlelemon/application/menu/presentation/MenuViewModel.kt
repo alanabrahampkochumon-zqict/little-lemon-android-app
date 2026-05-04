@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.littlelemon.application.R
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
+import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import com.littlelemon.application.shared.menu.domain.usecase.GetCategoriesUseCase
@@ -20,12 +21,13 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class MenuViewModel(
     private val getDishes: GetDishesUseCase,
     getCategories: GetCategoriesUseCase,
     getCartItem: GetCartItemUseCase,
-    updateCartItem: UpsertCartItemUseCase
+    private val updateCartItem: UpsertCartItemUseCase
 ) : ViewModel(
 ) {
     private val _filterFlow = MutableStateFlow<DishFilter?>(null)
@@ -106,7 +108,15 @@ class MenuViewModel(
             is MenuActions.ApplySorting -> _dishSortingFlow.update { action.sorting }
             is MenuActions.FetchDishes -> _forceFetch.update { action.fromRemote }
             is MenuActions.UpdateDishCategory -> _currentCategory.update { action.category }
-            is MenuActions.AddToCart -> TODO()
+            is MenuActions.AddToCart -> viewModelScope.launch {
+                updateCartItem(
+                    CartDetailItem(
+                        action.dishUiState.dish,
+                        action.dishUiState.quantity + 1
+                    )
+                )
+            }
+
             is MenuActions.RemoveFromCart -> TODO()
         }
     }
