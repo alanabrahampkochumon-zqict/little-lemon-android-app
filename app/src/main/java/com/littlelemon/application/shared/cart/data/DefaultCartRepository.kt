@@ -121,6 +121,10 @@ class DefaultCartRepository(
                 emit(emptyList())
             }
 
+    override fun refreshCart(): Resource<Unit> {
+        TODO("Not yet implemented")
+    }
+
     // TODO: Add refresh cart method
 
 }

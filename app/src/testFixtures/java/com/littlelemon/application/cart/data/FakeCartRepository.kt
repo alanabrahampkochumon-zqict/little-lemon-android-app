@@ -70,4 +70,10 @@ class FakeCartRepository(
             emit(_data.map { CartItem(dishId = it.dish.id, quantity = it.quantity) })
         }
     }
+
+    override fun refreshCart(): Resource<Unit> {
+        if (throwError)
+            return Resource.Failure()
+        return Resource.Success()
+    }
 }

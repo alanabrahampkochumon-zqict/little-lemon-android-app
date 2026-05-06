@@ -19,4 +19,6 @@ interface CartRepository {
     fun getAllDetailedCartItems(): Flow<List<CartDetailItem>>
 
     fun getAllCartItems(): Flow<List<CartItem>>
+
+    fun refreshCart(): Resource<Unit>
 }
