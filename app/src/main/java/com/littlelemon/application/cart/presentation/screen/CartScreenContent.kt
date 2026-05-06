@@ -44,13 +44,22 @@ fun CartScreenContent(
     cartViewModel: CartViewModel = koinViewModel<CartViewModel>()
 ) {
     val state by cartViewModel.state.collectAsStateWithLifecycle()
-
+    val (priceBeforeDiscount, priceAfterDiscount) = state.cartDetailItems.fold(0.0 to 0.0) { initial, cartDetailItem ->
+        val runningTotal = initial.first + cartDetailItem.dish.price
+        val runningDiscountedTotal =
+            initial.second + (cartDetailItem.dish.discountedPrice ?: cartDetailItem.dish.price)
+        runningTotal to runningDiscountedTotal
+    }
     LazyColumn(
         modifier,
         verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)
     ) {
         item {
-            PricingSection(modifier = Modifier.fillMaxWidth())
+            PricingSection(
+                subtotal = priceBeforeDiscount,
+                discountedPrice = priceAfterDiscount,
+                modifier = Modifier.fillMaxWidth()
+            )
             Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
         }
         cartItemsSection(
@@ -63,7 +72,11 @@ fun CartScreenContent(
 
 // TODO: Add test
 @Composable
-fun PricingSection(modifier: Modifier = Modifier) {
+fun PricingSection(
+    subtotal: Double,
+    discountedPrice: Double,
+    modifier: Modifier = Modifier
+) {
     // TODO: REPLACE
     val cartQuantity = 5
     val price = 88.58
@@ -72,7 +85,10 @@ fun PricingSection(modifier: Modifier = Modifier) {
     val shipping = 0.0
     val total = 104.56
     val formattedTotal =
-        stringResource(R.string.currency_symbol) + stringResource(R.string.price_format, total)
+        stringResource(R.string.currency_symbol) + stringResource(
+            R.string.price_format,
+            discountedPrice
+        )
     ////////
     Column(
         modifier = modifier
@@ -88,17 +104,15 @@ fun PricingSection(modifier: Modifier = Modifier) {
         )
         Spacer(Modifier.height(LittleLemonTheme.dimens.sizeLG))
         Column(verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeXS)) {
-            PriceRow(stringResource(R.string.subtotal), price)
-            PriceRow(label = stringResource(R.string.taxes), taxes)
-            PriceRow(stringResource(R.string.discounts), discount)
-            PriceRow(stringResource(R.string.shipping), shipping)
+            PriceRow(stringResource(R.string.subtotal), subtotal)
+            PriceRow(stringResource(R.string.discounts), subtotal - discountedPrice)
         }
         Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
         HorizontalDivider(color = LittleLemonTheme.colors.outlineSecondary)
         Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
         Row {
             Text(
-                stringResource(R.string.amount_payable),
+                stringResource(R.string.subtotal_ex_taxes),
                 style = LittleLemonTheme.typography.bodyMedium,
                 color = LittleLemonTheme.colors.contentSecondary,
                 modifier = Modifier.weight(1f)

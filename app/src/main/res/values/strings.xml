@@ -169,6 +169,7 @@
     <string name="proceed_to_checkout">Proceed to Checkout</string>
     <string name="addresses">Addresses</string>
     <string name="default_tag">Default</string>
+    <string name="subtotal_ex_taxes">Subtotal (Exclusive of taxes)</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>
