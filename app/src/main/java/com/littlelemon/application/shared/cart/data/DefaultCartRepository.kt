@@ -68,7 +68,7 @@ class DefaultCartRepository(
             try {
                 delay(CartConstants.NETWORK_DEBOUNCE)
                 remoteDataSource.updateCart(cartDetailItem.toDTO())
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 currentCoroutineContext().ensureActive()
                 _errorMessages.emit(CartErrorMessages.ERROR_UPDATING_CART)
                 // Removing when the cart item is zero is handled by the DAO

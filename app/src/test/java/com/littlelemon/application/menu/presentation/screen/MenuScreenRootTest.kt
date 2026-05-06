@@ -68,7 +68,7 @@ class MenuScreenRootTest {
                 .assertIsDisplayed()
         }
     }
-
+// TODO: Fix tests
 
     @Test
     fun displaysDish() {
