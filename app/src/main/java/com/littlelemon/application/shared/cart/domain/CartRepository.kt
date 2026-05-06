@@ -20,5 +20,5 @@ interface CartRepository {
 
     fun getAllCartItems(): Flow<List<CartItem>>
 
-    fun refreshCart(): Resource<Unit>
+    suspend fun refreshCart(): Resource<Unit>
 }

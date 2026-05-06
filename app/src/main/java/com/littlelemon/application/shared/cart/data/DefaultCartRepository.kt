@@ -9,6 +9,7 @@ import com.littlelemon.application.database.cart.mappers.toDTO
 import com.littlelemon.application.database.cart.mappers.toEntity
 import com.littlelemon.application.shared.cart.CartConstants
 import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
+import com.littlelemon.application.shared.cart.data.remote.mappers.toEntity
 import com.littlelemon.application.shared.cart.domain.CartRepository
 import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.cart.domain.models.CartItem
@@ -121,8 +122,17 @@ class DefaultCartRepository(
                 emit(emptyList())
             }
 
-    override fun refreshCart(): Resource<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun refreshCart(): Resource<Unit> {
+        try {
+            val cartItems = remoteDataSource.getCart().map { it.toEntity() }
+            localDataSource.clearCartItems()
+            cartItems.forEach { cartItemEntity -> localDataSource.upsertCartItem(cartItemEntity) }
+            return Resource.Success()
+        } catch (_: Exception) {
+            currentCoroutineContext().ensureActive()
+            _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
+            return Resource.Failure()
+        }
     }
 
     // TODO: Add refresh cart method

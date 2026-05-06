@@ -71,7 +71,7 @@ class FakeCartRepository(
         }
     }
 
-    override fun refreshCart(): Resource<Unit> {
+    override suspend fun refreshCart(): Resource<Unit> {
         if (throwError)
             return Resource.Failure()
         return Resource.Success()
