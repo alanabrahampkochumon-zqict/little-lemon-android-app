@@ -7,6 +7,7 @@ import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.cart.domain.usecase.ClearCartUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartErrorMessagesUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.GetCartItemDetailsUseCase
+import com.littlelemon.application.shared.cart.domain.usecase.RefreshCartUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
@@ -39,6 +40,8 @@ class CartViewModelTest {
     private lateinit var upsertUseCase: UpsertCartItemUseCase
     private lateinit var clearCartUseCase: ClearCartUseCase
 
+    private lateinit var refreshCartUseCase: RefreshCartUseCase
+
     private lateinit var testScope: TestScope
 
     private lateinit var viewModel: CartViewModel
@@ -59,6 +62,7 @@ class CartViewModelTest {
         getItemUseCase = mockk()
         upsertUseCase = mockk()
         clearCartUseCase = mockk()
+        refreshCartUseCase = mockk()
 
         testScope = TestScope(StandardTestDispatcher())
 
@@ -71,9 +75,16 @@ class CartViewModelTest {
         testScope.launch { cartDetailItemSharedFlow.emit(cartDetailItems) }
         coEvery { upsertUseCase(any()) } returns Unit
         coEvery { clearCartUseCase.invoke() } returns Resource.Success()
+        coEvery { refreshCartUseCase.invoke() } returns Resource.Success()
 
         viewModel =
-            CartViewModel(getItemUseCase, errorMessageUseCase, upsertUseCase, clearCartUseCase)
+            CartViewModel(
+                getItemUseCase,
+                errorMessageUseCase,
+                refreshCartUseCase,
+                upsertUseCase,
+                clearCartUseCase
+            )
 
     }
 
