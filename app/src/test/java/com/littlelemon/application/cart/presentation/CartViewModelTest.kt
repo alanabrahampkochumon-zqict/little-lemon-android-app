@@ -1,6 +1,7 @@
 package com.littlelemon.application.cart.presentation
 
 import app.cash.turbine.test
+import app.cash.turbine.turbineScope
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
@@ -11,6 +12,7 @@ import com.littlelemon.application.shared.cart.domain.usecase.RefreshCartUseCase
 import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseCase
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -86,6 +88,28 @@ class CartViewModelTest {
                 clearCartUseCase
             )
 
+    }
+
+    @Nested
+    inner class InstantiationTests {
+
+        @Test
+        fun refreshCartIsInvokedOnVMInstantiation() = runTest {
+            turbineScope {
+                // When a VM is instantiated
+                viewModel = CartViewModel(
+                    getItemUseCase,
+                    errorMessageUseCase,
+                    refreshCartUseCase,
+                    upsertUseCase,
+                    clearCartUseCase,
+                    testScheduler
+                )
+
+                // Then, the RefreshCart use case is invoked.
+                coVerify { refreshCartUseCase.invoke() }
+            }
+        }
     }
 
     @Nested
