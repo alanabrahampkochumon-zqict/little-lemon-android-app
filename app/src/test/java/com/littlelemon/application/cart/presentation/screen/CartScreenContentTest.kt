@@ -145,5 +145,19 @@ class CartScreenContentTest {
             .assertIsDisplayed()
     }
 
+    @Test
+    fun pricingSection_displaysCartItemCount() {
+        val subtotal = 55.83
+        val discountedPrice = 49.59
+        val cartItemCount = 10
+        testRule.setContent {
+            PricingSection(subtotal, discountedPrice, cartItemCount)
+        }
+        testRule.onNodeWithText(
+            cartItemCount.toString(), substring = true
+        )
+            .assertIsDisplayed()
+    }
+
 
 }

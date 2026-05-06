@@ -29,6 +29,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.LocalLocation
 import com.littlelemon.application.address.presentation.AddressViewModel
+import com.littlelemon.application.cart.presentation.screen.CartScreenContent
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.home.presentation.CartRoute
 import com.littlelemon.application.home.presentation.HomeRoute
@@ -130,12 +131,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     }
 
                     is CartRoute -> NavEntry(entry) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Text("Cart")
-                        }
+                        CartScreenContent()
                     }
 
                     is ProfileRoute -> NavEntry(entry) {
