@@ -53,7 +53,7 @@ fun CartScreenContent(
             PricingSection(modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
         }
-        itemsSection(
+        cartItemsSection(
             state, onIncreaseQuantity = { cartViewModel.onAction(CartAction.IncreaseQuantity(it)) },
             onDecreaseQuantity = { cartViewModel.onAction(CartAction.DecreaseQuantity(it)) },
             onRemoveItem = { cartViewModel.onAction(CartAction.RemoveItem(it)) }
@@ -118,7 +118,7 @@ fun PricingSection(modifier: Modifier = Modifier) {
     }
 }
 
-fun LazyListScope.itemsSection(
+fun LazyListScope.cartItemsSection(
     state: CartState,
     onIncreaseQuantity: (CartDetailItem) -> Unit,
     onDecreaseQuantity: (CartDetailItem) -> Unit,
