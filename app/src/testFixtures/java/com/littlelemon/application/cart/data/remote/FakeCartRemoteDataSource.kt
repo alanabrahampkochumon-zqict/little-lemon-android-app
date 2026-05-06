@@ -49,6 +49,11 @@ class FakeCartRemoteDataSource(
         return remoteData
     }
 
+    override suspend fun refreshCart() {
+        if (throwError) throw IllegalArgumentException()
+        // NO-OP
+    }
+
     override suspend fun getCartSummary(): CartSummaryDTO {
         if (throwError)
             throw IllegalArgumentException()

@@ -10,5 +10,7 @@ interface CartRemoteDataSource {
 
     suspend fun getCart(): List<CartItemDTO>
 
+    suspend fun refreshCart()
+
     suspend fun getCartSummary(): CartSummaryDTO
 }

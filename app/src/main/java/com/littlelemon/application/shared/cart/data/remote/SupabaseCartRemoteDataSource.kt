@@ -44,6 +44,10 @@ class SupabaseCartRemoteDataSource(private val client: SupabaseClient) : CartRem
         return client.postgrest.from(SupabaseTables.CART).select().decodeList()
     }
 
+    override suspend fun refreshCart() {
+        TODO("Not yet implemented")
+    }
+
     // TODO: Move to order
     @Throws(
         PostgrestRestException::class,
