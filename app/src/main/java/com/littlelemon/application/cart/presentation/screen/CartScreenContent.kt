@@ -16,11 +16,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.R
+import com.littlelemon.application.cart.presentation.CartAction
+import com.littlelemon.application.cart.presentation.CartState
+import com.littlelemon.application.cart.presentation.CartViewModel
 import com.littlelemon.application.cart.presentation.screen.components.CartItemCard
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.ButtonVariant
@@ -30,10 +35,16 @@ import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.menu.domain.models.Dish
 import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
 import kotlinx.datetime.LocalDateTime
+import org.koin.androidx.compose.koinViewModel
 import kotlin.random.Random
 
 @Composable
-fun CartScreenContent(modifier: Modifier = Modifier) {
+fun CartScreenContent(
+    modifier: Modifier = Modifier,
+    cartViewModel: CartViewModel = koinViewModel<CartViewModel>()
+) {
+    val state by cartViewModel.state.collectAsStateWithLifecycle()
+
     LazyColumn(
         modifier,
         verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)
@@ -42,7 +53,11 @@ fun CartScreenContent(modifier: Modifier = Modifier) {
             PricingSection(modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
         }
-        itemsSection()
+        itemsSection(
+            state, onIncreaseQuantity = { cartViewModel.onAction(CartAction.IncreaseQuantity(it)) },
+            onDecreaseQuantity = { cartViewModel.onAction(CartAction.DecreaseQuantity(it)) },
+            onRemoveItem = { cartViewModel.onAction(CartAction.RemoveItem(it)) }
+        )
     }
 }
 
@@ -103,7 +118,12 @@ fun PricingSection(modifier: Modifier = Modifier) {
     }
 }
 
-fun LazyListScope.itemsSection() {
+fun LazyListScope.itemsSection(
+    state: CartState,
+    onIncreaseQuantity: (CartDetailItem) -> Unit,
+    onDecreaseQuantity: (CartDetailItem) -> Unit,
+    onRemoveItem: (CartDetailItem) -> Unit
+) {
     val cartDetailItems = List(5) {
         Dish(
             id = "",
@@ -120,13 +140,13 @@ fun LazyListScope.itemsSection() {
         )
     }.map { CartDetailItem(it, Random.nextInt(3, 5)) }
 
-    items(cartDetailItems) { cartItem ->
+    items(state.cartDetailItems) { cartItem ->
         Box(modifier = Modifier.padding(horizontal = LittleLemonTheme.dimens.sizeXL)) {
             CartItemCard(
                 cartDetailItem = cartItem,
-                { /** TODO */ },
-                { /** TODO */ },
-                { /** TODO */ })
+                { onIncreaseQuantity(cartItem) },
+                { onDecreaseQuantity(cartItem) },
+                { onRemoveItem(cartItem) })
         }
     }
 
