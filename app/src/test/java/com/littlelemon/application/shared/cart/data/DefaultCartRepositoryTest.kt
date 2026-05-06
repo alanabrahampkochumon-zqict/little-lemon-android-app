@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertNull
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.random.Random
 import kotlin.test.assertContains
@@ -69,6 +70,26 @@ class DefaultCartRepositoryTest {
             val actualCartItem = upsertedItem.find { it.dish.id == cartDetailItem.dish.id }
             assertNotNull(actualCartItem)
             assertEquals(cartDetailItem.quantity, actualCartItem.quantity)
+        }
+
+        @Test
+        fun upsertWithAQuantityOfZero_removesTheItem() = runTest {
+            val cartDetailItem = CartDetailItem(DishGenerator.generateDish(), 5)
+
+            // When an item is upserted into the repository
+            repository.upsertCartItem(cartDetailItem)
+            // Initial assert: Item exists in the database
+            val initialItems = repository.getAllDetailedCartItems().first()
+            val initialItem = initialItems.find { it.dish.id == cartDetailItem.dish.id }
+            assertNotNull(initialItem)
+
+            // When the item is upserted with quantity of 0
+            repository.upsertCartItem(cartDetailItem.copy(quantity = 0))
+
+            // Then, it is removed from the database.
+            val finalItems = repository.getAllDetailedCartItems().first()
+            val finalItem = finalItems.find { it.dish.id == cartDetailItem.dish.id }
+            assertNull(finalItem)
         }
 
         @Test

@@ -54,7 +54,7 @@ class DefaultCartRepository(
                 localDataSource.getQuantity(dishId)
 
             // Update the database to reflect the updated cart quantity
-            localDataSource.upsertCartItem(cartDetailItem.toEntity())
+            localDataSource.upsertOrRemoveCartItem(cartDetailItem.toEntity())
         } catch (_: Exception) {
             currentCoroutineContext().ensureActive()
             _errorMessages.emit(CartErrorMessages.ERROR_UPDATING_CART)
