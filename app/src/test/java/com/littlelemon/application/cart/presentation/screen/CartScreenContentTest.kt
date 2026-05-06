@@ -108,4 +108,42 @@ class CartScreenContentTest {
         assertTrue { callbackTriggered }
     }
 
+
+    @Test
+    fun pricingSection_displaysSubtotal() {
+        val subtotal = 55.83
+        val discountedPrice = 49.59
+        testRule.setContent {
+            PricingSection(subtotal, discountedPrice, 0)
+        }
+        testRule.onNodeWithText(subtotal.toString(), substring = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun pricingSection_displaysDiscountedPrice() {
+        val subtotal = 55.83
+        val discountedPrice = 49.59
+        testRule.setContent {
+            PricingSection(subtotal, discountedPrice, 0)
+        }
+        testRule.onNodeWithText(discountedPrice.toString(), substring = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun pricingSection_displaysDiscount() {
+        val subtotal = 55.83
+        val discountedPrice = 49.59
+        testRule.setContent {
+            PricingSection(subtotal, discountedPrice, 0)
+        }
+        testRule.onNodeWithText(
+            application.getString(
+                R.string.price_format,
+                (subtotal - discountedPrice)
+            ), substring = true
+        )
+            .assertIsDisplayed()
+    }
+
+
 }
