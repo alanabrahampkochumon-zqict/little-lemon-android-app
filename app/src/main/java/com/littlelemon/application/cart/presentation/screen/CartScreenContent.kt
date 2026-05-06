@@ -1,5 +1,6 @@
 package com.littlelemon.application.cart.presentation.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,6 +51,7 @@ fun CartScreenContent(
             initial.second + (cartDetailItem.dish.discountedPrice ?: cartDetailItem.dish.price)
         runningTotal to runningDiscountedTotal
     }
+    Log.d("Cart", state.toString())
     LazyColumn(
         modifier,
         verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)
@@ -71,7 +73,7 @@ fun CartScreenContent(
     }
 }
 
-// TODO: Add test
+
 @Composable
 fun PricingSection(
     subtotal: Double,

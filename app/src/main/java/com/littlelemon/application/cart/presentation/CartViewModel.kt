@@ -11,6 +11,8 @@ import com.littlelemon.application.shared.cart.domain.usecase.UpsertCartItemUseC
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
@@ -24,17 +26,19 @@ class CartViewModel(
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : ViewModel() {
 
-    val state = combine(getCartError(), getCartItems()) { errorMessages, cartItems ->
-        CartState(
-            isLoading = false,
-            errorMessage = UiText.DynamicString(errorMessages),
-            cartDetailItems = cartItems
-        )
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        CartState(isLoading = true, null, emptyList())
-    )
+    val state =
+        combine(getCartError().onStart { emit("") }, getCartItems()) { errorMessages, cartItems ->
+            CartState(
+                isLoading = false,
+                errorMessage = UiText.DynamicString(errorMessages),
+                cartDetailItems = cartItems
+            )
+        }.flowOn(coroutineContext)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                CartState(isLoading = true, null, emptyList())
+            )
 
     init {
         viewModelScope.launch(coroutineContext) {
