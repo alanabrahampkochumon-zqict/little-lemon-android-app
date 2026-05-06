@@ -1,6 +1,5 @@
 package com.littlelemon.application.shared.cart.data
 
-import android.util.Log
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
 import com.littlelemon.application.database.cart.mappers.toCartDetailItems
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.koin.core.component.getScopeId
 
 class DefaultCartRepository(
     private val remoteDataSource: CartRemoteDataSource,
@@ -61,22 +59,16 @@ class DefaultCartRepository(
             currentCoroutineContext().ensureActive()
             _errorMessages.emit(CartErrorMessages.ERROR_UPDATING_CART)
         }
-        Log.d("Cart", "DishID: ${dishId}, CartDefault: ${cartDefault[dishId]}")
 
         // Cancel any previous network jobs
         cartJobs[dishId]?.cancel()
 
         // Start a new job to update the remote DS
         cartJobs[dishId] = scope.launch {
-            Log.d("Cart", "Coroutine Launching.. ${coroutineContext.getScopeId()}")
             try {
                 delay(CartConstants.NETWORK_DEBOUNCE)
-
-                Log.d("Cart", "Updating.. ${cartDetailItem}")
-                Log.d("Cart", "Updating.. ${cartDetailItem.quantity}")
                 remoteDataSource.updateCart(cartDetailItem.toDTO())
             } catch (e: Exception) {
-                Log.d("Cart", "Error remote.. ${e.message}")
                 currentCoroutineContext().ensureActive()
                 _errorMessages.emit(CartErrorMessages.ERROR_UPDATING_CART)
                 // Removing when the cart item is zero is handled by the DAO
@@ -87,7 +79,6 @@ class DefaultCartRepository(
                 )
             } finally {
                 // Invalidate the cache
-                Log.d("Cart", "Coroutine Exiting.. ${coroutineContext.getScopeId()}")
                 cartDefault.remove(dishId)
                 cartJobs.remove(dishId)
             }
@@ -106,6 +97,7 @@ class DefaultCartRepository(
         return Resource.Success()
     }
 
+
     override fun getAllDetailedCartItems(): Flow<List<CartDetailItem>> =
         localDataSource.getAllCartItemDetails().map { cartItemDetails ->
             cartItemDetails.toCartDetailItems()
@@ -114,7 +106,7 @@ class DefaultCartRepository(
             emit(emptyList())
         }
 
-    // TODO: Fix upsert cart item
+
     override fun getAllCartItems(): Flow<List<CartItem>> =
         localDataSource.getAllCartItems().map { cartItemEntities -> cartItemEntities.toCartItems() }
             .catch {
