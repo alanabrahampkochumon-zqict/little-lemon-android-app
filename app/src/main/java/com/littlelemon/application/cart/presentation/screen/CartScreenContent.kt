@@ -58,6 +58,7 @@ fun CartScreenContent(
             PricingSection(
                 subtotal = priceBeforeDiscount,
                 discountedPrice = priceAfterDiscount,
+                cartQuantity = state.cartDetailItems.size,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
@@ -75,21 +76,14 @@ fun CartScreenContent(
 fun PricingSection(
     subtotal: Double,
     discountedPrice: Double,
+    cartQuantity: Int,
     modifier: Modifier = Modifier
 ) {
-    // TODO: REPLACE
-    val cartQuantity = 5
-    val price = 88.58
-    val taxes = 15.95
-    val discount = -14.58
-    val shipping = 0.0
-    val total = 104.56
     val formattedTotal =
         stringResource(R.string.currency_symbol) + stringResource(
             R.string.price_format,
             discountedPrice
         )
-    ////////
     Column(
         modifier = modifier
             .background(LittleLemonTheme.colors.secondary, LittleLemonTheme.shapes.md)
