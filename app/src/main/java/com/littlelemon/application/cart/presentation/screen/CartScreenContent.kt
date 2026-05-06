@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,6 +54,7 @@ fun CartScreenContent(
     }
     LazyColumn(
         modifier,
+        contentPadding = PaddingValues(bottom = LittleLemonTheme.dimens.size2XL),
         verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)
     ) {
         item {
@@ -133,22 +135,6 @@ fun LazyListScope.cartItemsSection(
     onDecreaseQuantity: (CartDetailItem) -> Unit,
     onRemoveItem: (CartDetailItem) -> Unit
 ) {
-    val cartDetailItems = List(5) {
-        Dish(
-            id = "",
-            title = "Dish $it",
-            description = "Long description for the dish that is generated at index $it",
-            price = 14.99,
-            imageURL = "https://images.pexels.com/photos/1108117/pexels-photo-1108117.jpeg",
-            stock = 25,
-            nutritionInfo = NutritionInfo(150, 1, 2, 3),
-            discountedPrice = 8.99,
-            category = listOf(),
-            dateAdded = LocalDateTime(1999, 12, 30, 11, 11, 11),
-            popularityIndex = 11
-        )
-    }.map { CartDetailItem(it, Random.nextInt(3, 5)) }
-
     items(state.cartDetailItems) { cartItem ->
         Box(modifier = Modifier.padding(horizontal = LittleLemonTheme.dimens.sizeXL)) {
             CartItemCard(
