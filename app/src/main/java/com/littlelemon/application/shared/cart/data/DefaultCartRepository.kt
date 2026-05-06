@@ -127,6 +127,4 @@ class DefaultCartRepository(
         }
     }
 
-    // TODO: Add refresh cart method
-
 }

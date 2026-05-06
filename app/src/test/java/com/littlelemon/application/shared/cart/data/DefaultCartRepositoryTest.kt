@@ -249,7 +249,7 @@ class DefaultCartRepositoryTest {
             repository = DefaultCartRepository(remoteDS, localDS)
         }
 
-        
+
         @Test
         fun success_returnsRemoteDataAfterCacheRefresh() = runTest {
             val items = repository.getAllCartItems().take(2).last()
@@ -359,6 +359,74 @@ class DefaultCartRepositoryTest {
             repository = DefaultCartRepository(remoteDS, localDS)
 
             assertIs<Resource.Failure<Unit>>(repository.clearCart())
+        }
+    }
+
+
+    @Nested
+    inner class RefreshCart {
+        @Test
+        fun success_updatesDatabaseWithRemoteData() = runTest {
+            remoteDS = FakeCartRemoteDataSource(cartDetailItems.map { it.toDTO() })
+            localDS = FakeCartDao()
+
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            // When a cart is refreshed
+            repository.refreshCart()
+
+            // Then data is updated in the database
+            val data = repository.getAllDetailedCartItems().first()
+            assertEquals(cartDetailItems.map { it.dish.id }, data.map { it.dish.id })
+        }
+
+        @Test
+        fun success_returnsResourceSuccess() = runTest {
+            val status = repository.refreshCart()
+            assertIs<Resource.Success<Unit>>(status)
+        }
+
+        @Test
+        fun success_clearsLocalCache() = runTest {
+            remoteDS = FakeCartRemoteDataSource(emptyList())
+            localDS = FakeCartDao(cartDetailItems.map { it.toEntity() })
+
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            // When a cart is refreshed
+            repository.refreshCart()
+
+            // Then, data is updated in the database
+            val data = repository.getAllDetailedCartItems().first()
+            assertEquals(0, data.size)
+        }
+
+
+        @Test
+        fun remoteFailure_returnsResourceFailure() = runTest {
+            remoteDS = FakeCartRemoteDataSource(throwError = true)
+            localDS = FakeCartDao(cartDetailItems.map { it.toEntity() })
+
+            repository = DefaultCartRepository(remoteDS, localDS)
+            val status = repository.refreshCart()
+            assertIs<Resource.Failure<Unit>>(status)
+        }
+
+        @Test
+        fun remoteFailure_doNotClearLocalCache() = runTest {
+            // Given remote failure
+            remoteDS = FakeCartRemoteDataSource(throwError = true)
+            localDS = FakeCartDao(cartDetailItems.map { it.toEntity() })
+
+            repository = DefaultCartRepository(remoteDS, localDS)
+
+            // When a cart is refreshed
+            repository.refreshCart()
+
+            // Then, data is in the cache is not invalidated
+            val data = repository.getAllDetailedCartItems().first()
+            // We can only test the id, since the fake db generates dishes on the fly
+            assertEquals(cartDetailItems.map { it.dish.id }, data.map { it.dish.id })
         }
     }
 

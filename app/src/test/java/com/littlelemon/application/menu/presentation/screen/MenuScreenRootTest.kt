@@ -17,7 +17,6 @@ import com.littlelemon.application.menu.presentation.DishUiState
 import com.littlelemon.application.menu.presentation.MenuState
 import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.shared.menu.domain.models.Category
-import com.littlelemon.application.shared.menu.domain.models.Dish
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -88,28 +87,28 @@ class MenuScreenRootTest {
     @Test
     fun onIncreaseQuantity_triggersCallbackWithDish() {
         val dishCardIndex = 0
-        var triggeredDish: Dish? = null
+        var triggeredDish: DishUiState? = null
         composeTestRule.setContent {
             MenuScreenRoot(state, categoryState, null, {}, { triggeredDish = it }, {})
         }
 
         composeTestRule.onAllNodesWithTag(CoreTestTags.STEPPER_INCREASE)[dishCardIndex].performClick()
 
-        assertEquals(dishes[dishCardIndex], triggeredDish)
+        assertEquals(dishes[dishCardIndex], triggeredDish?.dish)
     }
 
 
     @Test
     fun onDecreaseQuantity_triggersCallbackWithDish() {
         val dishCardIndex = 0
-        var triggeredDish: Dish? = null
+        var triggeredDish: DishUiState? = null
         composeTestRule.setContent {
             MenuScreenRoot(state, categoryState, null, {}, { }, { triggeredDish = it })
         }
 
         composeTestRule.onAllNodesWithTag(CoreTestTags.STEPPER_DECREASE)[dishCardIndex].performClick()
 
-        assertEquals(dishes[dishCardIndex], triggeredDish)
+        assertEquals(dishes[dishCardIndex], triggeredDish?.dish)
     }
 
     @Test
