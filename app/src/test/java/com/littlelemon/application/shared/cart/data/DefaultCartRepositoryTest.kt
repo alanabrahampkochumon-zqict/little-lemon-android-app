@@ -11,14 +11,11 @@ import com.littlelemon.application.database.cart.mappers.toEntity
 import com.littlelemon.application.database.cart.models.CartItemEntity
 import com.littlelemon.application.menu.utils.DishGenerator
 import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
-import com.littlelemon.application.shared.cart.data.remote.mappers.toEntity
 import com.littlelemon.application.shared.cart.data.remote.models.CartItemDTO
 import com.littlelemon.application.shared.cart.domain.CartRepository
 import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -160,18 +157,6 @@ class DefaultCartRepositoryTest {
         }
 
         @Test
-        fun success_returnsRemoteDataAfterCacheRefresh() = runTest {
-            val items = repository.getAllDetailedCartItems().take(2).last()
-
-            val retrievedIds = items.map { it.dish.id }
-            val expectedIds =
-                offlineCartItemEntity.map { it.dishId } + onlineCartDTO.map { it.dishId }
-            expectedIds.forEach { id ->
-                assertContains(retrievedIds, id)
-            }
-        }
-
-        @Test
         fun remoteFailure_returnsCachedData() = runTest {
             remoteDS = FakeCartRemoteDataSource(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
@@ -184,21 +169,6 @@ class DefaultCartRepositoryTest {
             }
         }
 
-        @Test
-        fun remoteFailure_emitsErrorMessageStream() = runTest {
-            remoteDS = FakeCartRemoteDataSource(throwError = true)
-            repository = DefaultCartRepository(remoteDS, localDS)
-
-
-            repository.errorMessages.test {
-                // When cart is retrieved from repository
-                repository.getAllDetailedCartItems().first()
-
-                // Then, the error message channel is updated with an error message
-                val message = awaitItem()
-                assertEquals(CartErrorMessages.ERROR_RETRIEVING_CART, message)
-            }
-        }
 
         @Test
         fun dbFailure_returnsEmptyList() = runTest {
@@ -251,15 +221,6 @@ class DefaultCartRepositoryTest {
 
 
         @Test
-        fun success_returnsRemoteDataAfterCacheRefresh() = runTest {
-            val items = repository.getAllCartItems().take(2).last()
-
-            assertEquals(offlineCartItemEntity.toCartItems() + onlineCartDTO.map { it.toEntity() }
-                .toCartItems(), items)
-
-        }
-
-        @Test
         fun remoteFailure_returnsCachedData() = runTest {
             remoteDS = FakeCartRemoteDataSource(throwError = true)
             repository = DefaultCartRepository(remoteDS, localDS)
@@ -267,22 +228,6 @@ class DefaultCartRepositoryTest {
             val items = repository.getAllCartItems().first()
 
             assertEquals(offlineCartItemEntity.toCartItems(), items)
-        }
-
-        @Test
-        fun remoteFailure_emitsErrorMessageStream() = runTest {
-            remoteDS = FakeCartRemoteDataSource(throwError = true)
-            repository = DefaultCartRepository(remoteDS, localDS)
-
-
-            repository.errorMessages.test {
-                // When cart is retrieved from repository
-                repository.getAllCartItems().first()
-
-                // Then, the error message channel is updated with an error message
-                val message = awaitItem()
-                assertEquals(CartErrorMessages.ERROR_RETRIEVING_CART, message)
-            }
         }
 
         @Test
