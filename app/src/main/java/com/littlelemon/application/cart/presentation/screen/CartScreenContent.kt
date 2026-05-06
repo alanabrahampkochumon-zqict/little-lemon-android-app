@@ -1,6 +1,5 @@
 package com.littlelemon.application.cart.presentation.screen
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,12 +45,12 @@ fun CartScreenContent(
 ) {
     val state by cartViewModel.state.collectAsStateWithLifecycle()
     val (priceBeforeDiscount, priceAfterDiscount) = state.cartDetailItems.fold(0.0 to 0.0) { initial, cartDetailItem ->
-        val runningTotal = initial.first + cartDetailItem.dish.price
+        val runningTotal = initial.first + (cartDetailItem.quantity * cartDetailItem.dish.price)
         val runningDiscountedTotal =
-            initial.second + (cartDetailItem.dish.discountedPrice ?: cartDetailItem.dish.price)
+            initial.second + cartDetailItem.quantity * (cartDetailItem.dish.discountedPrice
+                ?: cartDetailItem.dish.price)
         runningTotal to runningDiscountedTotal
     }
-    Log.d("Cart", state.toString())
     LazyColumn(
         modifier,
         verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.size2XL)
