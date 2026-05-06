@@ -1,9 +1,9 @@
 package com.littlelemon.application.shared.cart.data.remote
 
-import com.littlelemon.application.shared.cart.data.remote.models.CartItemDTO
-import com.littlelemon.application.shared.cart.data.remote.models.CartSummaryDTO
 import com.littlelemon.application.core.data.remote.SupabaseRPC
 import com.littlelemon.application.core.data.remote.SupabaseTables
+import com.littlelemon.application.shared.cart.data.remote.models.CartItemDTO
+import com.littlelemon.application.shared.cart.data.remote.models.CartSummaryDTO
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.exceptions.HttpRequestException
 import io.github.jan.supabase.postgrest.exception.PostgrestRestException
@@ -20,10 +20,14 @@ class SupabaseCartRemoteDataSource(private val client: SupabaseClient) : CartRem
         HttpRequestException::class
     )
     override suspend fun updateCart(cartItem: CartItemDTO): CartItemDTO? {
-        return client.postgrest.rpc(SupabaseRPC.UpdateCart.RPC_NAME, buildJsonObject {
-            put(SupabaseRPC.UpdateCart.P_DISH_ID, cartItem.dishId)
-            put(SupabaseRPC.UpdateCart.P_QUANTITY, cartItem.quantity)
-        }).decodeSingleOrNull<CartItemDTO>()
+        val res = client.postgrest.rpc(
+            function = SupabaseRPC.UpdateCart.RPC_NAME,
+            parameters = buildJsonObject {
+                put("p_dish_id", cartItem.dishId)
+                put("p_quantity", cartItem.quantity)
+            }
+        )
+        return res.decodeAsOrNull<CartItemDTO>()
     }
 
 

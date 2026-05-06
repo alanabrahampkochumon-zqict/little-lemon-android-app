@@ -1,5 +1,6 @@
 package com.littlelemon.application.shared.cart.data
 
+import android.util.Log
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.cart.CartDao
 import com.littlelemon.application.database.cart.mappers.toCartDetailItems
@@ -8,7 +9,6 @@ import com.littlelemon.application.database.cart.mappers.toDTO
 import com.littlelemon.application.database.cart.mappers.toEntity
 import com.littlelemon.application.shared.cart.CartConstants
 import com.littlelemon.application.shared.cart.data.remote.CartRemoteDataSource
-import com.littlelemon.application.shared.cart.data.remote.mappers.toEntity
 import com.littlelemon.application.shared.cart.domain.CartRepository
 import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
 import com.littlelemon.application.shared.cart.domain.models.CartItem
@@ -25,8 +25,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import org.koin.core.component.getScopeId
 
 class DefaultCartRepository(
     private val remoteDataSource: CartRemoteDataSource,
@@ -60,16 +60,22 @@ class DefaultCartRepository(
             currentCoroutineContext().ensureActive()
             _errorMessages.emit(CartErrorMessages.ERROR_UPDATING_CART)
         }
+        Log.d("Cart", "DishID: ${dishId}, CartDefault: ${cartDefault[dishId]}")
 
         // Cancel any previous network jobs
         cartJobs[dishId]?.cancel()
 
         // Start a new job to update the remote DS
         cartJobs[dishId] = scope.launch {
+            Log.d("Cart", "Coroutine Launching.. ${coroutineContext.getScopeId()}")
             try {
                 delay(CartConstants.NETWORK_DEBOUNCE)
+
+                Log.d("Cart", "Updating.. ${cartDetailItem}")
+                Log.d("Cart", "Updating.. ${cartDetailItem.quantity}")
                 remoteDataSource.updateCart(cartDetailItem.toDTO())
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                Log.d("Cart", "Error remote.. ${e.message}")
                 currentCoroutineContext().ensureActive()
                 _errorMessages.emit(CartErrorMessages.ERROR_UPDATING_CART)
                 // Removing when the cart item is zero is handled by the DAO
@@ -80,6 +86,7 @@ class DefaultCartRepository(
                 )
             } finally {
                 // Invalidate the cache
+                Log.d("Cart", "Coroutine Exiting.. ${coroutineContext.getScopeId()}")
                 cartDefault.remove(dishId)
                 cartJobs.remove(dishId)
             }
@@ -99,42 +106,21 @@ class DefaultCartRepository(
     }
 
     override fun getAllDetailedCartItems(): Flow<List<CartDetailItem>> =
-        localDataSource.getAllCartItemDetails().onStart {
-            try {
-                val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
-                if (remoteCart.isEmpty()) {
-                    localDataSource.clearCartItems()
-                } else {
-                    remoteCart.forEach { localDataSource.upsertCartItem(it) }
-                }
-            } catch (_: Exception) {
-                currentCoroutineContext().ensureActive()
-                _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
-            }
-        }.map { cartItemDetails ->
+        localDataSource.getAllCartItemDetails().map { cartItemDetails ->
             cartItemDetails.toCartDetailItems()
         }.catch {
             _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
             emit(emptyList())
         }
 
+    // TODO: Fix upsert cart item
     override fun getAllCartItems(): Flow<List<CartItem>> =
-        localDataSource.getAllCartItems().onStart {
-            try {
-                val remoteCart = remoteDataSource.getCart().map { it.toEntity() }
-                if (remoteCart.isEmpty()) {
-                    localDataSource.clearCartItems()
-                } else {
-                    remoteCart.forEach { localDataSource.upsertCartItem(it) }
-                }
-            } catch (_: Exception) {
-                currentCoroutineContext().ensureActive()
+        localDataSource.getAllCartItems().map { cartItemEntities -> cartItemEntities.toCartItems() }
+            .catch {
                 _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
+                emit(emptyList())
             }
-        }.map { cartItemEntities -> cartItemEntities.toCartItems() }.catch {
-            _errorMessages.tryEmit(CartErrorMessages.ERROR_RETRIEVING_CART)
-            emit(emptyList())
-        }
 
+    // TODO: Add refresh cart method
 
 }
