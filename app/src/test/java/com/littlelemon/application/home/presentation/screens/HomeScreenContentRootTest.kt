@@ -36,7 +36,7 @@ class HomeScreenContentRootTest {
     @Test
     fun categoryHeaderIsDisplayed() {
         testRule.setContent {
-            HomeScreenContentRoot(HomeState(), {}, {}, {})
+            HomeScreenContentRoot(HomeState(), {}, {})
         }
 
         testRule.onNodeWithText(application.getString(R.string.heading_order_for_delivery))
@@ -46,7 +46,7 @@ class HomeScreenContentRootTest {
     @Test
     fun popularOrderHeaderIsDisplayed() {
         testRule.setContent {
-            HomeScreenContentRoot(HomeState(), {}, {}, {})
+            HomeScreenContentRoot(HomeState(), {}, {})
         }
 
         testRule.onNodeWithText(application.getString(R.string.heading_popular_orders))
@@ -79,7 +79,7 @@ class HomeScreenContentRootTest {
             HomeScreenContentRoot(
                 HomeState(popularDishes = dishes, categories = categories), {},
                 {},
-                {})
+            )
         }
         categories.forEach { category ->
             testRule.onNodeWithText(category.categoryName)
@@ -95,7 +95,7 @@ class HomeScreenContentRootTest {
                 HomeState(popularDishes = dishes, categories = categories),
                 { categoryTriggered = it },
                 {},
-                {})
+            )
         }
         categories.forEach { category ->
             testRule.onNodeWithText(category.categoryName)
@@ -112,7 +112,7 @@ class HomeScreenContentRootTest {
             HomeScreenContentRoot(
                 HomeState(popularDishes = dishes, categories = categories), {},
                 { callbackTriggered = true },
-                {})
+            )
         }
         testRule.onNodeWithText(application.getString(R.string.view_all)).performClick()
         assertTrue(callbackTriggered)
