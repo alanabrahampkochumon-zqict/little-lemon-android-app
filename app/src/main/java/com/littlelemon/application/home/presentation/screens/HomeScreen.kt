@@ -40,6 +40,7 @@ import com.littlelemon.application.home.presentation.components.NavigationOption
 import com.littlelemon.application.home.presentation.components.TopAppBar
 import com.littlelemon.application.menu.presentation.MenuViewModel
 import com.littlelemon.application.menu.presentation.screen.MenuScreen
+import com.littlelemon.application.profile.presentation.ProfileScreen
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -62,31 +63,31 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
     Scaffold(
         bottomBar = {
-        BottomNavigation(
-            { newDestination ->
-                currentDestination = newDestination
-                backStack.clear()
-                when (newDestination) {
-                    NavigationOption.HOME -> backStack.add(HomeRoute)
-                    NavigationOption.MENU -> backStack.add(MenuRoute)
-                    NavigationOption.ORDER -> backStack.add(OrdersRoute)
-                    NavigationOption.CART -> backStack.add(CartRoute)
-                    NavigationOption.PROFILE -> backStack.add(ProfileRoute)
-                }
-            }, selected = currentDestination
-        )
-    }, topBar = {
-        TopAppBar(
-            state.addresses.find { it.isDefault } ?: state.addresses.firstOrNull(),
-            addressLoading = state.addressLoading,
-            addressError = state.addressError?.asString(LocalContext.current),
-            {/* TODO(Implementation) */ },
-            onAddressClick = {
-                currentDestination = NavigationOption.PROFILE
-                backStack.clear()
-                backStack.add(ProfileRoute)
-            })
-    }, containerColor = LittleLemonTheme.colors.secondary, modifier = modifier.fillMaxWidth()
+            BottomNavigation(
+                { newDestination ->
+                    currentDestination = newDestination
+                    backStack.clear()
+                    when (newDestination) {
+                        NavigationOption.HOME -> backStack.add(HomeRoute)
+                        NavigationOption.MENU -> backStack.add(MenuRoute)
+                        NavigationOption.ORDER -> backStack.add(OrdersRoute)
+                        NavigationOption.CART -> backStack.add(CartRoute)
+                        NavigationOption.PROFILE -> backStack.add(ProfileRoute)
+                    }
+                }, selected = currentDestination
+            )
+        }, topBar = {
+            TopAppBar(
+                state.addresses.find { it.isDefault } ?: state.addresses.firstOrNull(),
+                addressLoading = state.addressLoading,
+                addressError = state.addressError?.asString(LocalContext.current),
+                {/* TODO(Implementation) */ },
+                onAddressClick = {
+                    currentDestination = NavigationOption.PROFILE
+                    backStack.clear()
+                    backStack.add(ProfileRoute)
+                })
+        }, containerColor = LittleLemonTheme.colors.secondary, modifier = modifier.fillMaxWidth()
     ) { innerPadding ->
         NavDisplay(
             backStack = backStack,
@@ -140,14 +141,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     }
 
                     is ProfileRoute -> NavEntry(entry) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .background(Color.LightGray)
-                                .fillMaxSize()
-                        ) {
-                            Text("Profile")
-                        }
+                        ProfileScreen()
                     }
 
                     else -> NavEntry(entry) { Text("UnknownRoute") }
