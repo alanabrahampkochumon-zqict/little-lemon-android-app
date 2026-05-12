@@ -26,7 +26,10 @@ class TopAppBarTest {
     fun displaysLogo() {
         // When a top app bar is displayed
         testRule.setContent {
-            TopAppBar(localLocation, {})
+            TopAppBar(
+                localLocation, addressLoading = false, addressError = null, onAddressClick = {},
+                onSearchClick = {},
+            )
         }
 
         // Then, the logo is displayed
@@ -37,7 +40,10 @@ class TopAppBarTest {
     fun displaysSearchButton() {
         // When a top app bar is displayed
         testRule.setContent {
-            TopAppBar(localLocation, {})
+            TopAppBar(
+                localLocation, addressLoading = false, addressError = null, onAddressClick = {},
+                onSearchClick = {},
+            )
         }
 
         // Then, the search button is displayed
@@ -50,11 +56,35 @@ class TopAppBarTest {
         // Given a top app bar
         var callbackTriggered = false
         testRule.setContent {
-            TopAppBar(localLocation, { callbackTriggered = true })
+            TopAppBar(
+                localLocation, addressLoading = false, addressError = null, onAddressClick = {},
+                onSearchClick = { callbackTriggered = true },
+            )
         }
 
         // When, the search button is pressed
         testRule.onNodeWithTag(HomeTestTags.SEARCH_BUTTON).performClick()
+
+        // Then, callback is triggered
+        assertTrue(callbackTriggered)
+    }
+
+    @Test
+    fun addressBarClicked_triggersCallback() {
+        // Given a top app bar
+        var callbackTriggered = false
+        testRule.setContent {
+            TopAppBar(
+                localLocation,
+                addressLoading = false,
+                addressError = null,
+                onAddressClick = { callbackTriggered = true },
+                onSearchClick = { },
+            )
+        }
+
+        // When, the address bar is clicked
+        testRule.onNodeWithTag(HomeTestTags.ADDRESS_BAR).performClick()
 
         // Then, callback is triggered
         assertTrue(callbackTriggered)

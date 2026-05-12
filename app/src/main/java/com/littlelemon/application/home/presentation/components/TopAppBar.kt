@@ -82,7 +82,13 @@ fun TopAppBar(
         )
         Spacer(Modifier.height(LittleLemonTheme.dimens.sizeLG))
         Row {
-            AddressPicker(address, modifier = Modifier.weight(1f), onAddressChange = onAddressClick)
+            AddressPicker(
+                address,
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag(HomeTestTags.ADDRESS_BAR),
+                onAddressChange = onAddressClick
+            )
             Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
             PrimaryIconButton(
                 R.drawable.ic_search,

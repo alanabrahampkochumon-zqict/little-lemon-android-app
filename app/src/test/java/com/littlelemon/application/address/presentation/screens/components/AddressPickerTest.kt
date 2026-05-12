@@ -3,6 +3,7 @@ package com.littlelemon.application.address.presentation.screens.components
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.components.AddressPicker
 import org.junit.Rule
@@ -10,6 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 class AddressPickerTest {
@@ -27,7 +29,7 @@ class AddressPickerTest {
         // Given an address picker
         testRule.setContent {
             AddressPicker(
-                address = currentAddress
+                address = currentAddress, onAddressChange = {}
             )
         }
 
@@ -41,7 +43,7 @@ class AddressPickerTest {
         testRule.setContent {
             AddressPicker(
                 address = currentAddress,
-                deliverable = true
+                deliverable = true, onAddressChange = {}
             )
         }
 
@@ -55,12 +57,29 @@ class AddressPickerTest {
         testRule.setContent {
             AddressPicker(
                 address = currentAddress,
-                deliverable = false
+                deliverable = false, onAddressChange = {}
             )
         }
 
         // Then, delivery to headline is displayed
         testRule.onNodeWithText(application.getString(notDeliverableTo)).assertIsDisplayed()
+    }
+
+    @Test
+    fun onAddressChange_triggersCallback() {
+        // Given an address picker with deliverable set to true
+        var callbackTriggered = false
+        testRule.setContent {
+            AddressPicker(
+                address = currentAddress,
+                deliverable = false, onAddressChange = { callbackTriggered = true }
+            )
+        }
+
+        // Then, delivery to headline is displayed
+        testRule.onNodeWithText(currentAddress).performClick()
+
+        assertTrue { callbackTriggered }
     }
 
 }
