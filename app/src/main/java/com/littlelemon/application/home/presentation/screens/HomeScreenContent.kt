@@ -1,35 +1,19 @@
 package com.littlelemon.application.home.presentation.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.littlelemon.application.R
-import com.littlelemon.application.core.presentation.components.Header
-import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
-import com.littlelemon.application.core.presentation.components.shimmer
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.home.presentation.HomeState
 import com.littlelemon.application.home.presentation.HomeViewModel
 import com.littlelemon.application.reservation.domain.models.Reservation
-import com.littlelemon.application.reservation.presentation.screens.components.ReservationCard
 import com.littlelemon.application.shared.menu.domain.models.Category
 import com.littlelemon.application.shared.menu.domain.models.Dish
 import com.littlelemon.application.shared.menu.domain.models.NutritionInfo
@@ -79,49 +63,50 @@ fun HomeScreenContentRoot(
         reservationStatus = Reservation.ReservationStatus.Expired,
         reservedFor = 5,
     )
-    val reservations = listOf(reservation1, reservation2, reservation3)
+//    val reservations = listOf(reservation1, reservation2, reservation3)
 
-    val contentPadding = LittleLemonTheme.dimens.sizeXL
+    val contentPadding = LittleLemonTheme.dimens.size2XL
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(vertical = contentPadding)
     ) {
-        item {
-            Box(
-                Modifier
-                    .size(300.dp)
-                    .shimmer()
-            )
-            Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
-
-            // Upcoming reservations | Conditionally render
-            Header(
-                label = pluralStringResource(
-                    R.plurals.heading_upcoming_reservation, reservations.size
-                ),
-                typeStyle = HeaderTypeStyle.Secondary,
-                modifier = Modifier.padding(horizontal = contentPadding)
-            )
-            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeMD))
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(
-                    LittleLemonTheme.dimens.sizeLG
-                ),
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = contentPadding)
-            ) {
-                items(reservations) { reservation ->
-                    ReservationCard(
-                        reservation = reservation,
-                        onGetRoute = onGetRoute,
-                        modifier = Modifier.width(cardWidth)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.size3XL))
-        }
+//        item {
+//            Box(
+//                Modifier
+//                    .size(300.dp)
+//                    .shimmer()
+//            )
+//            Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
+//
+//            // Upcoming reservations | Conditionally render
+//            Header(
+//                label = pluralStringResource(
+//                    R.plurals.heading_upcoming_reservation, reservations.size
+//                ),
+//                typeStyle = HeaderTypeStyle.Secondary,
+//                modifier = Modifier.padding(horizontal = contentPadding)
+//            )
+//            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeMD))
+//            LazyRow(
+//                horizontalArrangement = Arrangement.spacedBy(
+//                    LittleLemonTheme.dimens.sizeLG
+//                ),
+//                modifier = Modifier.fillMaxWidth(),
+//                contentPadding = PaddingValues(horizontal = contentPadding)
+//            ) {
+//                items(reservations) { reservation ->
+//                    ReservationCard(
+//                        reservation = reservation,
+//                        onGetRoute = onGetRoute,
+//                        modifier = Modifier.width(cardWidth)
+//                    )
+//                }
+//            }
+//
+//            Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.size3XL))
+//        }
         foodDeliveryContent(state, onCategoryChange, onViewAll, contentPadding)
     }
 }
