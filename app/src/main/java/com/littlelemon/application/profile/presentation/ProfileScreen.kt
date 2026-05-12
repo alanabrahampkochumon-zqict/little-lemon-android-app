@@ -87,7 +87,7 @@ fun ProfileScreen(
             ) // TODO: Add action content
         }
         items(addressState.address) { address ->
-            AddressCard(address)
+            AddressCard(address, {/** TODO */}, {/** TODO */}, {/** TODO */})
         }
     }
 }

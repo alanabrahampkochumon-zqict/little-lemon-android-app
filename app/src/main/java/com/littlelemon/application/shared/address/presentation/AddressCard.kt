@@ -2,6 +2,7 @@ package com.littlelemon.application.shared.address.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,7 +28,13 @@ import com.littlelemon.application.core.presentation.utils.applyShadow
 
 
 @Composable
-fun AddressCard(address: LocalAddress, modifier: Modifier = Modifier) {
+fun AddressCard(
+    address: LocalAddress,
+    onDeleteAddress: () -> Unit,
+    onEditAddress: () -> Unit,
+    onMakeDefault: () -> Unit,
+    modifier: Modifier = Modifier
+) {
 
     val shape = LittleLemonTheme.shapes.lg
 
@@ -72,16 +80,23 @@ fun AddressCard(address: LocalAddress, modifier: Modifier = Modifier) {
                 Tag(stringResource(R.string.default_tag), variant = TagVariant.SuccessFilled)
 
             Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.End) {
-                Box(modifier = Modifier.minimumInteractiveComponentSize()) {
+                Box(
+                    modifier = Modifier
+                        .clickable(onClick = onEditAddress)
+                        .minimumInteractiveComponentSize()
+                ) {
                     Image(
-                        painterResource(R.drawable.ic_trash),
+                        painterResource(R.drawable.ic_delete),
                         contentDescription = stringResource(R.string.delete_address)
                     )
                 }
-// TODO: Update image
-                Box(modifier = Modifier.minimumInteractiveComponentSize()) {
+                Box(
+                    modifier = Modifier
+                        .clickable(onClick = onDeleteAddress)
+                        .minimumInteractiveComponentSize()
+                ) {
                     Image(
-                        painterResource(R.drawable.ic_pencilsimple),
+                        painterResource(R.drawable.ic_edit),
                         contentDescription = stringResource(R.string.delete_address)
                     )
                 }
@@ -105,7 +120,7 @@ private fun AddressCardPreview() {
                     state = "Some state",
                     pinCode = "12349324"
                 )
-            )
+            ), {}, {}, {}
         )
     }
 }
