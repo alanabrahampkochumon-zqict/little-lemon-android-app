@@ -8,8 +8,11 @@ import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.profile.domain.ProfileRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -34,7 +37,11 @@ class ProfileViewModel(profileRepository: ProfileRepository, getAddresses: GetAd
                 address = resource.data ?: emptyList()
             )
         }
-    }
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        ProfileAddressState(addressLoading = true)
+    )
 
     init {
         viewModelScope.launch {

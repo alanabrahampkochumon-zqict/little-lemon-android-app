@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,6 +29,7 @@ import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.components.HeaderTypeStyle
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.utils.applyShadow
+import com.littlelemon.application.shared.address.presentation.AddressCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -39,6 +41,8 @@ fun ProfileScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val name = state.userName
     val email = state.email
+
+    val addressState by viewModel.addresses.collectAsStateWithLifecycle()
 
     ///////
     LazyColumn(
@@ -82,8 +86,8 @@ fun ProfileScreen(
                 typeStyle = HeaderTypeStyle.Secondary
             ) // TODO: Add action content
         }
-        items(5) {
-//            AddressCard
+        items(addressState.address) { address ->
+            AddressCard(address)
         }
     }
 }
