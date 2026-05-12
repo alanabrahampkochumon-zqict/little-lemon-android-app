@@ -2,6 +2,8 @@ package com.littlelemon.application.core.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -29,6 +32,7 @@ import com.littlelemon.application.core.presentation.utils.applyShadow
 fun AddressPicker(
     address: String,
     modifier: Modifier = Modifier,
+    onAddressChange: () -> Unit,
     deliverable: Boolean = true,
     elevated: Boolean = false
 ) {
@@ -51,6 +55,10 @@ fun AddressPicker(
                 ) else Modifier
             )
             .background(surfaceColor, shape)
+            .clickable(
+                indication = null, onClick = onAddressChange,
+                interactionSource = remember { MutableInteractionSource() },
+            )
             .padding(
                 top = LittleLemonTheme.dimens.sizeMD,
                 bottom = LittleLemonTheme.dimens.sizeMD,
@@ -102,16 +110,32 @@ private fun AddressPickerPreview() {
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            AddressPicker("Work (Lincoln Park) ", deliverable = true, elevated = false)
-            AddressPicker("Work (Lincoln Park) ", deliverable = false, elevated = false)
+            AddressPicker(
+                "Work (Lincoln Park) ",
+                deliverable = true,
+                elevated = false,
+                onAddressChange = {})
+            AddressPicker(
+                "Work (Lincoln Park) ",
+                deliverable = false,
+                elevated = false,
+                onAddressChange = {})
             AddressPicker(
                 "Work (Very Long Address that will overflow) ",
                 deliverable = false,
-                elevated = false
+                elevated = false, onAddressChange = {}
             )
 
-            AddressPicker("Work (Lincoln Park) ", deliverable = true, elevated = true)
-            AddressPicker("Work (Lincoln Park) ", deliverable = false, elevated = true)
+            AddressPicker(
+                "Work (Lincoln Park) ",
+                deliverable = true,
+                elevated = true,
+                onAddressChange = {})
+            AddressPicker(
+                "Work (Lincoln Park) ",
+                deliverable = false,
+                elevated = true,
+                onAddressChange = {})
         }
     }
 }

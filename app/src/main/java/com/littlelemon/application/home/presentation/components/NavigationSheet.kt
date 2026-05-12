@@ -44,7 +44,7 @@ import com.littlelemon.application.home.HomeTestTags
 @Composable
 fun NavigationSheet(content: @Composable () -> Unit, modifier: Modifier = Modifier) {
     var selectedItem by remember { mutableStateOf(NavigationOption.HOME) } // TODO: Hoist
-    val contentCardShape =LittleLemonTheme.shapes.xl.copy(
+    val contentCardShape = LittleLemonTheme.shapes.xl.copy(
         bottomStart = CornerSize(0.dp),
         bottomEnd = CornerSize(0.dp)
     )
@@ -63,10 +63,17 @@ fun NavigationSheet(content: @Composable () -> Unit, modifier: Modifier = Modifi
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(painterResource(R.drawable.logo_full), null, modifier = Modifier.height(48.dp).testTag(
-                CoreTestTags.LOGO))
+            Image(
+                painterResource(R.drawable.logo_full),
+                null,
+                modifier = Modifier
+                    .height(48.dp)
+                    .testTag(
+                        CoreTestTags.LOGO
+                    )
+            )
             Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
-            AddressPicker("Some address: Replace", elevated = true)
+            AddressPicker("Some address: Replace", onAddressChange = {}, elevated = true)
             Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
             NavigationOption.entries.forEach { navigationOption ->
                 NavigationItem(
@@ -83,8 +90,9 @@ fun NavigationSheet(content: @Composable () -> Unit, modifier: Modifier = Modifi
                 .applyShadow(contentCardShape, LittleLemonTheme.shadows.dropLG)
                 .background(
                     LittleLemonTheme.colors.primary,
-                    shape =contentCardShape
-                ).padding(horizontal = LittleLemonTheme.dimens.sizeSM)
+                    shape = contentCardShape
+                )
+                .padding(horizontal = LittleLemonTheme.dimens.sizeSM)
         ) {
             content()
         }

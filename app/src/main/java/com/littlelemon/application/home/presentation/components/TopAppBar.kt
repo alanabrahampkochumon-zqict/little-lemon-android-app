@@ -38,6 +38,7 @@ fun TopAppBar(
     addressLoading: Boolean,
     addressError: String?,
     onSearchClick: () -> Unit,
+    onAddressClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val shape =
@@ -81,7 +82,7 @@ fun TopAppBar(
         )
         Spacer(Modifier.height(LittleLemonTheme.dimens.sizeLG))
         Row {
-            AddressPicker(address, modifier = Modifier.weight(1f))
+            AddressPicker(address, modifier = Modifier.weight(1f), onAddressChange = onAddressClick)
             Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
             PrimaryIconButton(
                 R.drawable.ic_search,
@@ -112,7 +113,7 @@ private fun TopAppBarPreview() {
                 ),
                 location = LocalLocation(1.234, 12.343),
                 isDefault = true
-            ), false, {})
+            ), false, null, {}, {})
 
         TopAppBar(
             LocalAddress(
@@ -127,6 +128,6 @@ private fun TopAppBarPreview() {
                 ),
                 location = LocalLocation(1.234, 12.343),
                 isDefault = true
-            ), true, {})
+            ), true, null, {}, {})
     }
 }

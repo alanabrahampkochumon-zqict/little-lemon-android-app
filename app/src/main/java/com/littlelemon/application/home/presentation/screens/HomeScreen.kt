@@ -62,49 +62,49 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
     Scaffold(
         bottomBar = {
-            BottomNavigation(
-                { newDestination ->
-                    currentDestination = newDestination
-                    backStack.clear()
-                    when (newDestination) {
-                        NavigationOption.HOME -> backStack.add(HomeRoute)
-                        NavigationOption.MENU -> backStack.add(MenuRoute)
-                        NavigationOption.ORDER -> backStack.add(OrdersRoute)
-                        NavigationOption.CART -> backStack.add(CartRoute)
-                        NavigationOption.PROFILE -> backStack.add(ProfileRoute)
-                    }
-                },
-                selected = currentDestination
-            )
-        },
-        topBar = {
-            TopAppBar(
-                state.addresses.find { it.isDefault } ?: state.addresses.firstOrNull(),
-                addressLoading = state.addressLoading,
-                addressError = state.addressError?.asString(LocalContext.current),
-                {/* TODO(Implementation) */ })
-        },
-        containerColor = LittleLemonTheme.colors.secondary,
-        modifier = modifier
-            .fillMaxWidth()
+        BottomNavigation(
+            { newDestination ->
+                currentDestination = newDestination
+                backStack.clear()
+                when (newDestination) {
+                    NavigationOption.HOME -> backStack.add(HomeRoute)
+                    NavigationOption.MENU -> backStack.add(MenuRoute)
+                    NavigationOption.ORDER -> backStack.add(OrdersRoute)
+                    NavigationOption.CART -> backStack.add(CartRoute)
+                    NavigationOption.PROFILE -> backStack.add(ProfileRoute)
+                }
+            }, selected = currentDestination
+        )
+    }, topBar = {
+        TopAppBar(
+            state.addresses.find { it.isDefault } ?: state.addresses.firstOrNull(),
+            addressLoading = state.addressLoading,
+            addressError = state.addressError?.asString(LocalContext.current),
+            {/* TODO(Implementation) */ },
+            onAddressClick = {
+                currentDestination = NavigationOption.PROFILE
+                backStack.clear()
+                backStack.add(ProfileRoute)
+            })
+    }, containerColor = LittleLemonTheme.colors.secondary, modifier = modifier.fillMaxWidth()
     ) { innerPadding ->
         NavDisplay(
             backStack = backStack,
             modifier = Modifier.padding(innerPadding),
             transitionSpec = {
                 // Slide in from right when navigating forward
-                slideInHorizontally(initialOffsetX = { it }) togetherWith
-                        slideOutHorizontally(targetOffsetX = { -it })
+                slideInHorizontally(initialOffsetX = { it }) togetherWith slideOutHorizontally(
+                    targetOffsetX = { -it })
             },
             popTransitionSpec = {
                 // Slide in from left when navigating back
-                slideInHorizontally(initialOffsetX = { -it }) togetherWith
-                        slideOutHorizontally(targetOffsetX = { it })
+                slideInHorizontally(initialOffsetX = { -it }) togetherWith slideOutHorizontally(
+                    targetOffsetX = { it })
             },
             predictivePopTransitionSpec = {
                 // Slide in from left when navigating back
-                slideInHorizontally(initialOffsetX = { -it }) togetherWith
-                        slideOutHorizontally(targetOffsetX = { it })
+                slideInHorizontally(initialOffsetX = { -it }) togetherWith slideOutHorizontally(
+                    targetOffsetX = { it })
             },
             entryProvider = { entry ->
                 when (entry) {
@@ -118,8 +118,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
                     is MenuRoute -> NavEntry(entry) {
                         Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier.fillMaxSize()
+                            contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
                         ) {
                             MenuScreen(koinViewModel<MenuViewModel>())
                         }
