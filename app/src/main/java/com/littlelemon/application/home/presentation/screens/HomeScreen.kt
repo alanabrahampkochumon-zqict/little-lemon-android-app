@@ -107,7 +107,11 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             entryProvider = { entry ->
                 when (entry) {
                     is HomeRoute -> NavEntry(entry) {
-                        HomeScreenContent(koinViewModel<HomeViewModel>())
+                        HomeScreenContent(koinViewModel<HomeViewModel>(), onViewAll = {
+                            backStack.clear()
+                            backStack.add(MenuRoute)
+                            currentDestination = NavigationOption.MENU
+                        })
                     }
 
                     is MenuRoute -> NavEntry(entry) {

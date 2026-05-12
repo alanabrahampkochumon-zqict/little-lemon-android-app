@@ -19,9 +19,9 @@ import kotlinx.datetime.LocalDateTime
 import kotlin.math.roundToInt
 
 @Composable
-fun HomeScreenContent(viewModel: HomeViewModel, modifier: Modifier = Modifier) {
+fun HomeScreenContent(viewModel: HomeViewModel, onViewAll: () -> Unit, modifier: Modifier = Modifier) {
     val homeState by viewModel.state.collectAsStateWithLifecycle()
-    HomeScreenContentRoot(homeState, {/* TODO */ }, {/* TODO */ }, modifier)
+    HomeScreenContentRoot(homeState, {/* TODO */ }, onViewAll, modifier)
 }
 
 
