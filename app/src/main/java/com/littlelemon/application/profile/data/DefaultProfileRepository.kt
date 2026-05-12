@@ -10,4 +10,8 @@ class DefaultProfileRepository(private val supabaseProfileRemoteDataSource: Supa
     override suspend fun getUserProfile(): UserProfile {
         return supabaseProfileRemoteDataSource.getCurrentUserInfo().toUserProfile()
     }
+
+    override suspend fun signOut() {
+        return supabaseProfileRemoteDataSource.signOut()
+    }
 }

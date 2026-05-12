@@ -5,4 +5,6 @@ import com.littlelemon.application.profile.domain.data.UserProfile
 interface ProfileRepository {
 
     suspend fun getUserProfile(): UserProfile
+
+    suspend fun signOut()
 }

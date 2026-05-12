@@ -11,4 +11,8 @@ class SupabaseProfileRemoteDataSource(
     suspend fun getCurrentUserInfo(): UserInfo {
         return client.auth.retrieveUserForCurrentSession(updateSession = true)
     }
+
+    suspend fun signOut() {
+        return client.auth.signOut()
+    }
 }
