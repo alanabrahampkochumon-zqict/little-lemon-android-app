@@ -26,9 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.littlelemon.application.address.domain.models.LocalAddress
-import com.littlelemon.application.address.domain.models.LocalLocation
-import com.littlelemon.application.address.presentation.AddressViewModel
 import com.littlelemon.application.cart.presentation.screen.CartScreenContent
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.home.presentation.CartRoute
@@ -49,8 +46,10 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
 
-    val addressViewModel = koinViewModel<AddressViewModel>()
-    val addresses by addressViewModel.addresses.collectAsStateWithLifecycle()
+    val homeViewModel = koinViewModel<HomeViewModel>()
+    val state by homeViewModel.state.collectAsStateWithLifecycle()
+//    val addressViewModel = koinViewModel<AddressViewModel>()
+//    val addresses by addressViewModel.addresses.collectAsStateWithLifecycle()
 
     var currentDestination: NavigationOption by remember { mutableStateOf(NavigationOption.HOME) }
     val backStack = rememberNavBackStack(HomeRoute)
@@ -79,7 +78,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         },
         topBar = {
             TopAppBar(
-                LocalAddress(location = LocalLocation(1.234, 5.31234)),
+                state.addresses.find { it.isDefault } ?: state.addresses.firstOrNull(),
+                addressLoading = state.addressLoading,
                 {/* TODO(Implementation) */ })
         },
         containerColor = LittleLemonTheme.colors.secondary,
@@ -107,7 +107,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             entryProvider = { entry ->
                 when (entry) {
                     is HomeRoute -> NavEntry(entry) {
-                        HomeScreenContent(koinViewModel<HomeViewModel>(), onViewAll = {
+                        HomeScreenContent(homeViewModel, onViewAll = {
                             backStack.clear()
                             backStack.add(MenuRoute)
                             currentDestination = NavigationOption.MENU

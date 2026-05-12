@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
@@ -33,15 +34,26 @@ import com.littlelemon.application.home.HomeTestTags
 // TODO: Add address picker tests
 @Composable
 fun TopAppBar(
-    defaultAddress: LocalAddress,
+    defaultAddress: LocalAddress?,
+    addressLoading: Boolean,
     onSearchClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val shape =
         LittleLemonTheme.shapes.lg.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp))
-
-    val address =
-        defaultAddress.label + " (" + if (defaultAddress.address?.address?.isNotBlank() == true) defaultAddress.address.address else defaultAddress.address?.streetAddress + ")"
+    val address = if (!addressLoading && defaultAddress != null) {
+        var address = ""
+        if (defaultAddress.label?.isNotBlank() == true)
+            address += defaultAddress.label
+        address += if (address.isNotEmpty())
+            "(${if (defaultAddress.address?.address?.isNotBlank() == true) defaultAddress.address.address else defaultAddress.address?.streetAddress})"
+        else
+            "${if (defaultAddress.address?.address?.isNotBlank() == true) defaultAddress.address.address else defaultAddress.address?.streetAddress}"
+        address
+    } else if (addressLoading)
+        stringResource(R.string.address_loading) // TODO: Update to shimmering loader
+    else
+        stringResource(R.string.address_loading_error_message)
 
     Column(
         modifier = modifier
@@ -100,6 +112,21 @@ private fun TopAppBarPreview() {
                 ),
                 location = LocalLocation(1.234, 12.343),
                 isDefault = true
-            ), {})
+            ), false, {})
+
+        TopAppBar(
+            LocalAddress(
+                id = "1234",
+                label = "Home",
+                address = PhysicalAddress(
+                    address = "1234 Building Name",
+                    streetAddress = "Javier's Street",
+                    city = "Chicago",
+                    state = "Illinois",
+                    pinCode = "123485"
+                ),
+                location = LocalLocation(1.234, 12.343),
+                isDefault = true
+            ), true, {})
     }
 }
