@@ -2,6 +2,7 @@ package com.littlelemon.application.profile.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -50,7 +51,7 @@ fun ProfileScreen(
         contentPadding = PaddingValues(
             vertical = LittleLemonTheme.dimens.size2XL,
             horizontal = LittleLemonTheme.dimens.sizeLG
-        )
+        ), verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeXL)
     ) {
         // Basic information
         item {
@@ -80,11 +81,11 @@ fun ProfileScreen(
             }
         }
         item {
-            Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
+            Spacer(Modifier.height(LittleLemonTheme.dimens.sizeXL))
             Header(
                 stringResource(R.string.addresses),
                 typeStyle = HeaderTypeStyle.Secondary
-            ) // TODO: Add action content
+            )
         }
         items(addressState.address) { address ->
             AddressCard(address, {/** TODO */}, {/** TODO */}, {/** TODO */})
