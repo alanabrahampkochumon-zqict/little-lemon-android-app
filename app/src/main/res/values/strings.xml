@@ -171,6 +171,8 @@
     <string name="default_tag">Default</string>
     <string name="subtotal_ex_taxes">Subtotal (Exclusive of taxes)</string>
     <string name="address_loading">Address Loading...</string>
+    <string name="unknown_location">Unknown Location</string>
+    <string name="delete_address">Delete current address</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>
