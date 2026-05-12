@@ -36,12 +36,13 @@ import com.littlelemon.application.home.HomeTestTags
 fun TopAppBar(
     defaultAddress: LocalAddress?,
     addressLoading: Boolean,
+    addressError: String?,
     onSearchClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val shape =
         LittleLemonTheme.shapes.lg.copy(topStart = CornerSize(0.dp), topEnd = CornerSize(0.dp))
-    val address = if (!addressLoading && defaultAddress != null) {
+    val address = if (!addressLoading && defaultAddress != null && addressError == null) {
         var address = ""
         if (defaultAddress.label?.isNotBlank() == true)
             address += defaultAddress.label
@@ -52,8 +53,7 @@ fun TopAppBar(
         address
     } else if (addressLoading)
         stringResource(R.string.address_loading) // TODO: Update to shimmering loader
-    else
-        stringResource(R.string.address_loading_error_message)
+    else addressError ?: stringResource(R.string.address_loading_error_message)
 
     Column(
         modifier = modifier

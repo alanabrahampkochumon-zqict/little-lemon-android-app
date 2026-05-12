@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -80,6 +81,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             TopAppBar(
                 state.addresses.find { it.isDefault } ?: state.addresses.firstOrNull(),
                 addressLoading = state.addressLoading,
+                addressError = state.addressError?.asString(LocalContext.current),
                 {/* TODO(Implementation) */ })
         },
         containerColor = LittleLemonTheme.colors.secondary,
