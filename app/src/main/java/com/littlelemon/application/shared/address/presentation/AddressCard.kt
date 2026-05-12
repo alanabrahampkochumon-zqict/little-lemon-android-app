@@ -29,13 +29,27 @@ import com.littlelemon.application.core.presentation.utils.applyShadow
 fun AddressCard(address: LocalAddress, modifier: Modifier = Modifier) {
 
     val shape = LittleLemonTheme.shapes.lg
-    val addressString = if (address.address != null) {
-        "${address.address.address},\n${address.address.streetAddress},\n${address.address.city}\n${address.address.state} - ${address.address.pinCode}"
-    } else if (address.location != null) {
+
+    var addressString = ""
+    if (address.address != null) {
+        addressString += if (address.address.address.isNotBlank()) address.address.address + ",\n" else ""
+        addressString += if (address.address.streetAddress.isNotBlank()) address.address.streetAddress + ",\n" else ""
+        addressString += if (address.address.city.isNotBlank()) address.address.city + ",\n" else ""
+        addressString += address.address.state.ifBlank { "" }
+        addressString += if (address.address.pinCode.isNotBlank()) " - ${address.address.pinCode}" else ""
+
+    }
+
+    if (addressString.isBlank() && address.location != null) {
         "(${address.location.latitude}, ${address.location.longitude})"
-    } else {
+    }
+
+    if (addressString.isBlank()) {
         stringResource(R.string.unknown_location)
     }
+
+    var label =
+        if (address.label?.isNullOrBlank() == false) address.label else stringResource(R.string.unnamed_address_label)
 
     Column(
         modifier = Modifier
@@ -47,7 +61,7 @@ fun AddressCard(address: LocalAddress, modifier: Modifier = Modifier) {
             )
     ) {
         Text(
-            address.label ?: stringResource(R.string.unnamed_address_label),
+            label,
             style = LittleLemonTheme.typography.displaySmall
         )
         Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
