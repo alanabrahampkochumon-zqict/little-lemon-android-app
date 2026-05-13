@@ -35,8 +35,8 @@ class FakeAddressRemoteDataSource(
         return newAddress
     }
 
-    override suspend fun deleteAddress(address: AddressRequestDTO) {
+    override suspend fun deleteAddress(addressId: String) {
         if (throwError) throw IllegalArgumentException()
-        _address.remove(address.toResponse())
+        _address.removeIf { (id) -> addressId == id }
     }
 }

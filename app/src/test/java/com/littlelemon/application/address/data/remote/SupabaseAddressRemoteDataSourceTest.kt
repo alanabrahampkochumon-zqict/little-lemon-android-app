@@ -123,7 +123,7 @@ class SupabaseAddressRemoteDataSourceTest {
         remoteDatasource = SupabaseAddressRemoteDataSource(client)
 
         // Act & Assert
-        assertDoesNotThrow { remoteDatasource.deleteAddress(address.toRequestDTO()) }
+        assertDoesNotThrow { remoteDatasource.deleteAddress(address.id) }
     }
 
     @Test
@@ -140,6 +140,6 @@ class SupabaseAddressRemoteDataSourceTest {
         remoteDatasource = SupabaseAddressRemoteDataSource(client)
 
         // Act & Assert
-        assertThrows<PostgrestRestException> { remoteDatasource.deleteAddress(address.toRequestDTO()) }
+        assertThrows<PostgrestRestException> { remoteDatasource.deleteAddress(address.id) }
     }
 }

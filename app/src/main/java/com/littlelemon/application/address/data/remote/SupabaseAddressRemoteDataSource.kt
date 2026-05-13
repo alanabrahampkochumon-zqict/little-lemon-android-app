@@ -52,9 +52,9 @@ class SupabaseAddressRemoteDataSource(
         HttpRequestTimeoutException::class,
         HttpRequestException::class
     )
-    override suspend fun deleteAddress(address: AddressRequestDTO) {
-        if (address.id == null) return // Won't hit this case unless as id is only null for fresh addresses coming from VM
-        client.from(SupabaseTables.USER_ADDRESS).delete { filter { eq("id", address.id) } }
+    override suspend fun deleteAddress(addressId: String) {
+//        if (addressId == null) return // Won't hit this case unless as id is only null for fresh addresses coming from VM
+        client.from(SupabaseTables.USER_ADDRESS).delete { filter { eq("id", addressId) } }
     }
 
 }
