@@ -88,7 +88,12 @@ fun ProfileScreen(
             )
         }
         items(addressState.address) { address ->
-            AddressCard(address, {/** TODO */}, {/** TODO */}, {/** TODO */})
+            AddressCard(
+                address,
+                // TODO: Add popup
+                { viewModel.onAction(ProfileActions.RemoveAddress(address)) },
+                { /** TODO */ },
+                { /** TODO */ })
         }
     }
 }

@@ -62,7 +62,8 @@ fun AddressCard(
     Column(
         modifier = Modifier
             .applyShadow(shape, LittleLemonTheme.shadows.dropSM)
-            .background(LittleLemonTheme.colors.primary, shape).clip(shape)
+            .background(LittleLemonTheme.colors.primary, shape)
+            .clip(shape)
             .padding(
                 start = LittleLemonTheme.dimens.sizeXL,
                 top = LittleLemonTheme.dimens.sizeLG
@@ -82,7 +83,7 @@ fun AddressCard(
             Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.End) {
                 Box(
                     modifier = Modifier
-                        .clickable(onClick = onEditAddress)
+                        .clickable(onClick = onDeleteAddress)
                         .minimumInteractiveComponentSize()
                 ) {
                     Image(
@@ -92,7 +93,7 @@ fun AddressCard(
                 }
                 Box(
                     modifier = Modifier
-                        .clickable(onClick = onDeleteAddress)
+                        .clickable(onClick = onEditAddress)
                         .minimumInteractiveComponentSize()
                 ) {
                     Image(
