@@ -1,9 +1,12 @@
 package com.littlelemon.application.home.presentation.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -78,7 +81,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 }, selected = currentDestination
             )
         }, topBar = {
-            if (currentDestination != NavigationOption.PROFILE)
+            AnimatedVisibility(currentDestination != NavigationOption.PROFILE, exit = slideOutVertically { -it }, enter = slideInVertically { -it }) {
                 TopAppBar(
                     state.addresses.find { it.isDefault } ?: state.addresses.firstOrNull(),
                     addressLoading = state.addressLoading,
@@ -88,6 +91,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         backStack.clear()
                         backStack.add(ProfileRoute)
                     })
+            }
         }, containerColor = LittleLemonTheme.colors.secondary, modifier = modifier.fillMaxWidth()
     ) { innerPadding ->
         NavDisplay(

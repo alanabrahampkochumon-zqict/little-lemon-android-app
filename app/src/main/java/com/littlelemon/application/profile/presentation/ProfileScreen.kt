@@ -2,18 +2,22 @@ package com.littlelemon.application.profile.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,7 +51,16 @@ fun ProfileScreen(
 
     ///////
     LazyColumn(
-        modifier,
+        modifier
+            .padding(top = LittleLemonTheme.dimens.sizeLG)
+            .fillMaxHeight()
+            .background(
+                LittleLemonTheme.colors.primary,
+                LittleLemonTheme.shapes.xl.copy(
+                    bottomStart = CornerSize(0.dp),
+                    bottomEnd = CornerSize(0.dp)
+                )
+            ),
         contentPadding = PaddingValues(
             vertical = LittleLemonTheme.dimens.size2XL,
             horizontal = LittleLemonTheme.dimens.sizeLG
@@ -55,12 +68,20 @@ fun ProfileScreen(
     ) {
         // Basic information
         item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = LittleLemonTheme.dimens.sizeMD)
+            ) {
                 Box(
                     modifier = Modifier
                         .size(80.dp)
                         .applyShadow(LittleLemonTheme.shapes.xl, LittleLemonTheme.shadows.dropXS)
                         .background(LittleLemonTheme.colors.primary, LittleLemonTheme.shapes.xl)
+                        .border(
+                            LittleLemonTheme.dimens.size2XS,
+                            LittleLemonTheme.colors.outlineSecondary,
+                            LittleLemonTheme.shapes.xl
+                        )
                 ) {
                     Image(
                         painterResource(R.drawable.profile),

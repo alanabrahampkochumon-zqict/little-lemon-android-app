@@ -28,47 +28,13 @@ class TopAppBarTest {
         testRule.setContent {
             TopAppBar(
                 localLocation, addressLoading = false, addressError = null, onAddressClick = {},
-                onSearchClick = {},
             )
         }
 
         // Then, the logo is displayed
         testRule.onNodeWithTag(HomeTestTags.LOGO).assertIsDisplayed()
     }
-
-    @Test
-    fun displaysSearchButton() {
-        // When a top app bar is displayed
-        testRule.setContent {
-            TopAppBar(
-                localLocation, addressLoading = false, addressError = null, onAddressClick = {},
-                onSearchClick = {},
-            )
-        }
-
-        // Then, the search button is displayed
-        testRule.onNodeWithTag(HomeTestTags.SEARCH_BUTTON).assertIsDisplayed()
-
-    }
-
-    @Test
-    fun searchButtonClick_triggersCallback() {
-        // Given a top app bar
-        var callbackTriggered = false
-        testRule.setContent {
-            TopAppBar(
-                localLocation, addressLoading = false, addressError = null, onAddressClick = {},
-                onSearchClick = { callbackTriggered = true },
-            )
-        }
-
-        // When, the search button is pressed
-        testRule.onNodeWithTag(HomeTestTags.SEARCH_BUTTON).performClick()
-
-        // Then, callback is triggered
-        assertTrue(callbackTriggered)
-    }
-
+    
     @Test
     fun addressBarClicked_triggersCallback() {
         // Given a top app bar
@@ -79,7 +45,6 @@ class TopAppBarTest {
                 addressLoading = false,
                 addressError = null,
                 onAddressClick = { callbackTriggered = true },
-                onSearchClick = { },
             )
         }
 
