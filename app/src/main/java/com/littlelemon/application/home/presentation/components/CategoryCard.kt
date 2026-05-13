@@ -86,9 +86,9 @@ fun CategoryCard(
                         .graphicsLayer(alpha = alpha),
                     colorFilter = ColorFilter.tint(contentColor)
                 )
+                Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.sizeMD))
             }
         }
-        Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.sizeMD))
         Text(label, style = LittleLemonTheme.typography.labelSmall, color = contentColor)
     }
 }
