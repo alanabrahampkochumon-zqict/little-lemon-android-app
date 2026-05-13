@@ -10,8 +10,11 @@ import com.littlelemon.application.profile.domain.ProfileRepository
 import com.littlelemon.application.profile.domain.data.UserProfile
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -139,4 +142,24 @@ class ProfileViewModelTest {
     }
 
 
+    @Nested
+    inner class Actions {
+
+        @Nested
+        inner class RemoveAddress {
+
+            @OptIn(ExperimentalCoroutinesApi::class)
+            @Test
+            fun removeAddressInvokesUseCase() = runTest(UnconfinedTestDispatcher()) {
+                turbineScope {
+                    viewModel =
+                        ProfileViewModel(
+                            profileRepository, getAddressUseCase, removeAddressUseCase
+                        )
+                    viewModel.onAction(ProfileActions.RemoveAddress(address[0]))
+                    coVerify { removeAddressUseCase.invoke(any()) }
+                }
+            }
+        }
+    }
 }

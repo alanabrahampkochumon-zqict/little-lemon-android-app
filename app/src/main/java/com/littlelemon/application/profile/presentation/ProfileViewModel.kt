@@ -8,6 +8,8 @@ import com.littlelemon.application.address.domain.usecase.RemoveAddressUseCase
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
 import com.littlelemon.application.profile.domain.ProfileRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +21,8 @@ import kotlinx.coroutines.launch
 class ProfileViewModel(
     profileRepository: ProfileRepository,
     getAddresses: GetAddressUseCase,
-    private val removeAddress: RemoveAddressUseCase
+    private val removeAddress: RemoveAddressUseCase,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) :
     ViewModel() {
 
@@ -63,7 +66,11 @@ class ProfileViewModel(
 
     fun onAction(action: ProfileActions) {
         when (action) {
-            is ProfileActions.RemoveAddress -> viewModelScope.launch { removeAddress(action.address) }
+            is ProfileActions.RemoveAddress -> viewModelScope.launch(dispatcher) {
+                removeAddress(
+                    action.address
+                )
+            }
         }
     }
 
