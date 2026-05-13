@@ -35,7 +35,7 @@ fun AddressPicker(
     modifier: Modifier = Modifier,
     onAddressChange: () -> Unit,
     deliverable: Boolean = true,
-    elevated: Boolean = false
+    elevated: Boolean = false,
 ) {
 
     val icon = if (deliverable) R.drawable.ic_map_point else R.drawable.ic_close_circle
@@ -90,13 +90,13 @@ fun AddressPicker(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        Spacer(Modifier.width(LittleLemonTheme.dimens.sizeSM))
-        Image(
-            painterResource(R.drawable.ic_chevron_down),
-            null,
-            colorFilter = ColorFilter.tint(LittleLemonTheme.colors.contentPlaceholder),
-            modifier = Modifier.size(16.dp)
-        )
+//        Spacer(Modifier.width(LittleLemonTheme.dimens.sizeSM))
+//        Image(
+//            painterResource(R.drawable.ic_chevron_down),
+//            null,
+//            colorFilter = ColorFilter.tint(LittleLemonTheme.colors.contentPlaceholder),
+//            modifier = Modifier.size(16.dp)
+//        )
     }
 }
 

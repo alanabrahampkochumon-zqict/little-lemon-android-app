@@ -45,6 +45,7 @@ import org.koin.androidx.compose.koinViewModel
 
 
 // TODO: Add cardinality to animation
+// TODO: Add search to menu item screen
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
 
@@ -77,16 +78,16 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 }, selected = currentDestination
             )
         }, topBar = {
-            TopAppBar(
-                state.addresses.find { it.isDefault } ?: state.addresses.firstOrNull(),
-                addressLoading = state.addressLoading,
-                addressError = state.addressError?.asString(LocalContext.current),
-                {/* TODO(Implementation) */ },
-                onAddressClick = {
-                    currentDestination = NavigationOption.PROFILE
-                    backStack.clear()
-                    backStack.add(ProfileRoute)
-                })
+            if (currentDestination != NavigationOption.PROFILE)
+                TopAppBar(
+                    state.addresses.find { it.isDefault } ?: state.addresses.firstOrNull(),
+                    addressLoading = state.addressLoading,
+                    addressError = state.addressError?.asString(LocalContext.current),
+                    onAddressClick = {
+                        currentDestination = NavigationOption.PROFILE
+                        backStack.clear()
+                        backStack.add(ProfileRoute)
+                    })
         }, containerColor = LittleLemonTheme.colors.secondary, modifier = modifier.fillMaxWidth()
     ) { innerPadding ->
         NavDisplay(

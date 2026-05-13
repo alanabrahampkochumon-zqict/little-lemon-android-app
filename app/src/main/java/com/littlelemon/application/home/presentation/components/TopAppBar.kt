@@ -37,7 +37,6 @@ fun TopAppBar(
     defaultAddress: LocalAddress?,
     addressLoading: Boolean,
     addressError: String?,
-    onSearchClick: () -> Unit,
     onAddressClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -89,14 +88,14 @@ fun TopAppBar(
                     .testTag(HomeTestTags.ADDRESS_BAR),
                 onAddressChange = onAddressClick
             )
-            Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
-            PrimaryIconButton(
-                R.drawable.ic_search,
-                onClick = onSearchClick,
-                modifier
-                    .size(52.dp)
-                    .testTag(HomeTestTags.SEARCH_BUTTON)
-            )
+//            Spacer(Modifier.width(LittleLemonTheme.dimens.sizeMD))
+//            PrimaryIconButton(
+//                R.drawable.ic_search,
+//                onClick = onSearchClick,
+//                modifier
+//                    .size(52.dp)
+//                    .testTag(HomeTestTags.SEARCH_BUTTON)
+//            )
         }
     }
 }
@@ -119,7 +118,7 @@ private fun TopAppBarPreview() {
                 ),
                 location = LocalLocation(1.234, 12.343),
                 isDefault = true
-            ), false, null, {}, {})
+            ), false, null, {}, )
 
         TopAppBar(
             LocalAddress(
@@ -134,6 +133,6 @@ private fun TopAppBarPreview() {
                 ),
                 location = LocalLocation(1.234, 12.343),
                 isDefault = true
-            ), true, null, {}, {})
+            ), true, null, {})
     }
 }
