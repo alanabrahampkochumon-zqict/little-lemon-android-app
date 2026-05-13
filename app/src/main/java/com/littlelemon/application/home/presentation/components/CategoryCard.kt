@@ -1,7 +1,7 @@
 package com.littlelemon.application.home.presentation.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,10 +16,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
@@ -49,6 +51,10 @@ fun CategoryCard(
     val shape = LittleLemonTheme.shapes.xs
     val shadow = LittleLemonTheme.shadows.dropXS
 
+    val alpha by animateFloatAsState(
+        targetValue = if (selected) 1f else 0f,
+    )
+
     Row(
         modifier = modifier
             .then(if (enabled && !selected) Modifier.applyShadow(shape, shadow) else Modifier)
@@ -65,8 +71,7 @@ fun CategoryCard(
             .padding(
                 horizontal = LittleLemonTheme.dimens.size2XL,
                 vertical = LittleLemonTheme.dimens.sizeMD
-            )
-            .animateContentSize(), verticalAlignment = Alignment.CenterVertically
+            ), verticalAlignment = Alignment.CenterVertically
     ) {
         AnimatedVisibility(selected) {
             Row {
@@ -77,12 +82,13 @@ fun CategoryCard(
                         .size(
                             LittleLemonTheme.dimens.sizeXL
                         )
-                        .testTag(HomeTestTags.CATEGORY_CARD_CHECK_MARK),
+                        .testTag(HomeTestTags.CATEGORY_CARD_CHECK_MARK)
+                        .graphicsLayer(alpha = alpha),
                     colorFilter = ColorFilter.tint(contentColor)
                 )
-                Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.sizeMD))
             }
         }
+        Spacer(modifier = Modifier.width(LittleLemonTheme.dimens.sizeMD))
         Text(label, style = LittleLemonTheme.typography.labelSmall, color = contentColor)
     }
 }
