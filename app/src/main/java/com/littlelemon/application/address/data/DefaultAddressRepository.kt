@@ -215,6 +215,15 @@ class DefaultAddressRepository(
     }
 
     override suspend fun removeAddress(address: LocalAddress) {
+        addressLocalDataSource.removeAddress(address.id!!)
+        addressRemoteDataSource.deleteAddress(address.id)
+        try {
+            val addressEntities =
+                addressRemoteDataSource.getAddress().map { it.toAddressEntity() }
+            addressLocalDataSource.clearAndInsertAddress(addressEntities)
+        } catch (e: Exception) {
+            currentCoroutineContext().ensureActive()
+        }
         TODO()
 //        val addressEntity = addressLocalDataSource.removeAddress(address.toEntity)
     }

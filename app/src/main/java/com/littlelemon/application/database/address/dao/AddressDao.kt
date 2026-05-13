@@ -23,8 +23,20 @@ interface AddressDao {
     @Query("SELECT * FROM ADDRESSENTITY ORDER BY createdAt DESC")
     fun getAllAddress(): Flow<List<AddressEntity>>
 
+
+    @Query("SELECT * FROM ADDRESSENTITY WHERE id = :id LIMIT 1")
+    suspend fun getAddress(id: String): AddressEntity
+
     @Query("DELETE FROM ADDRESSENTITY WHERE id = :id")
-    suspend fun deleteAddress(id: String): Int
+    suspend fun deleteAddress(id: String)
+
+
+    @Transaction
+    suspend fun deleteAddressAndReturn(id: String): AddressEntity {
+        val entity = getAddress(id)
+        deleteAddress(id)
+        return entity
+    }
 
     @Query("DELETE FROM ADDRESSENTITY")
     suspend fun clear(): Int

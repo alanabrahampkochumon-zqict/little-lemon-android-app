@@ -58,7 +58,7 @@ class DefaultAddressLocalDataSource(
     override suspend fun getAddressCount(): Int = dao.getAddressCount()
 
     override suspend fun removeAddress(addressId: String) {
-        dao.deleteAddress(addressId)
+        return dao.deleteAddress(addressId)
     }
 
     override suspend fun clearAndInsertAddress(addresses: List<AddressEntity>) {
