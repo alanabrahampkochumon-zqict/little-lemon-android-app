@@ -12,7 +12,7 @@ class FakeAddressLocalDataSource(
     private val location: Location? = null
 ) : AddressLocalDataSource {
 
-    private var _address = mutableListOf<AddressEntity>()
+    var _address = mutableListOf<AddressEntity>()
 
     init {
         _address.addAll(initialData)

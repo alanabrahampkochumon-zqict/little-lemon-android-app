@@ -8,6 +8,7 @@ import com.littlelemon.application.address.data.local.dao.FakeGeocodingDao
 import com.littlelemon.application.address.data.mappers.toAddressEntity
 import com.littlelemon.application.address.data.mappers.toLocalAddress
 import com.littlelemon.application.address.data.mappers.toRequestDTO
+import com.littlelemon.application.address.data.mappers.toResponse
 import com.littlelemon.application.address.data.remote.AddressRemoteDataSource
 import com.littlelemon.application.address.data.remote.FakeAddressRemoteDataSource
 import com.littlelemon.application.address.data.remote.FakeGeocodingRemoteDataSource
@@ -23,7 +24,9 @@ import com.littlelemon.application.database.address.dao.GeocodingDao
 import com.littlelemon.application.utils.StandardTestDispatcherRule
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -921,9 +924,6 @@ class DefaultAddressRepositoryTest {
                 val addressResource = awaitItem()
                 assertIs<Resource.Success<List<LocalAddress>>>(addressResource)
                 // Then old cache data is removed
-                println("REMOTE: $remoteAddresses")
-                println("LOCAL: $localAddresses")
-                println(addressResource.data)
                 assertTrue(remoteAddresses.all { addressDTO ->
                     addressResource.data?.contains(
                         addressDTO.toAddressEntity().toLocalAddress()
@@ -939,6 +939,54 @@ class DefaultAddressRepositoryTest {
             }
         }
 
+    }
 
+    @Nested
+    inner class RemoveAddressTests {
+
+        @Test
+        fun remoteSuccess_removesAddress() = runTest {
+            val numAddress = 3
+            val cachedAddress = List(numAddress) { AddressGenerator.generateAddressEntity() }
+            addressLocalDataSource = FakeAddressLocalDataSource(initialData = cachedAddress)
+            addressRemoteDataSource = FakeAddressRemoteDataSource(initialData = cachedAddress.map {
+                it.toLocalAddress().toRequestDTO().toResponse()
+            })
+            repository = DefaultAddressRepository(
+                addressLocalDataSource,
+                addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            repository.removeAddress(cachedAddress[0].toLocalAddress())
+
+            val addresses = repository.getAddress().drop(2).last()
+
+            assertIs<Resource.Success<List<LocalAddress>>>(addresses)
+            assertTrue { addresses.data?.contains(cachedAddress[0].toLocalAddress()) == false }
+        }
+
+        @Test
+        fun remoteFailure_doesNotRemoveAddress() = runTest {
+            val numAddress = 3
+            val cachedAddress = List(numAddress) { AddressGenerator.generateAddressEntity() }
+            addressLocalDataSource = FakeAddressLocalDataSource(initialData = cachedAddress)
+            addressRemoteDataSource = FakeAddressRemoteDataSource(throwError = true)
+            repository = DefaultAddressRepository(
+                addressLocalDataSource,
+                addressRemoteDataSource,
+                geocodingLocalDataSource,
+                geocodingRemoteDataSource
+            )
+
+            repository.removeAddress(cachedAddress[0].toLocalAddress())
+            // Due to tight coupling of error state with flow, returning error resource
+            // we cannot test the remaining address with repository
+            // So, we need to access the LocalDataSource variable and assert the results there
+            val addresses = (addressLocalDataSource as FakeAddressLocalDataSource)._address
+
+            assertTrue { addresses.contains(cachedAddress[0]) }
+        }
     }
 }
