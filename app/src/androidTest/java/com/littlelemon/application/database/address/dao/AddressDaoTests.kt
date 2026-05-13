@@ -227,6 +227,70 @@ class AddressDaoTests {
     }
 
 
+    //////// DELETE GET ADDRESS ////////
+    @Test
+    fun onDeleteAddressAndReturn_validAddress_removesOnlyThePassedInAddress() = runTest {
+        // Given a list of address
+        val addresses = List(5) { AddressGenerator.generateAddressEntity() }
+        val addressToRemove = addresses[0]
+        dao.insertAddress(addresses)
+
+        // When an address is removed
+        dao.deleteAddressAndReturn(addressToRemove.id)
+        val retrievedAddress = dao.getAllAddress().first()
+
+        // Then, that address is not in the list
+        assertFalse { retrievedAddress.contains(addressToRemove) }
+        // And all the other address are in the list
+        addresses.drop(1).forEach { address ->
+            assertTrue("$address was not found!") { retrievedAddress.contains(address) }
+        }
+    }
+
+    @Test
+    fun onDeleteAddressAndReturn_validAddress_returnsAddress() = runTest {
+        // Given a list of address
+        val addresses = List(5) { AddressGenerator.generateAddressEntity() }
+        val addressToRemove = addresses[0]
+        dao.insertAddress(addresses)
+
+        // When an address is removed
+        val retrievedAddress = dao.deleteAddressAndReturn(addressToRemove.id)
+
+        // Then, the deleted address is returned
+        assertEquals(addressToRemove, retrievedAddress)
+    }
+
+    @Test
+    fun onDeleteAddressAndReturn_invalidAddress_removesNoAddress() = runTest {
+        // Given a list of address
+        val addresses = List(5) { AddressGenerator.generateAddressEntity() }
+        val addressToRemove = AddressGenerator.generateAddressEntity()
+        dao.insertAddress(addresses)
+
+        // When an invalid address is removed
+        dao.deleteAddressAndReturn(addressToRemove.id)
+        val retrievedAddress = dao.getAllAddress().first()
+
+        // Then, no address are removed from the db
+        addresses.forEach { address ->
+            assertTrue("$address was not found!") { retrievedAddress.contains(address) }
+        }
+    }
+
+    @Test
+    fun onDeleteAddressAndReturn_invalidAddress_returnsNull() = runTest {
+        // Given a list of address
+        val addresses = List(5) { AddressGenerator.generateAddressEntity() }
+        val addressToRemove = AddressGenerator.generateAddressEntity()
+        dao.insertAddress(addresses)
+
+        // When an invalid address is removed
+        val retrievedAddress = dao.deleteAddressAndReturn(addressToRemove.id)
+
+        // Then, the deleted address is returned
+        assertNull(retrievedAddress)
+    }
     ////////// CLEAR ADDRESS ///////////
 
     @Test
