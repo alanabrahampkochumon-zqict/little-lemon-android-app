@@ -15,11 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.littlelemon.application.R
 import com.littlelemon.application.address.domain.models.LocalAddress
 import com.littlelemon.application.address.domain.models.PhysicalAddress
@@ -28,7 +30,7 @@ import com.littlelemon.application.core.presentation.components.TagVariant
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.core.presentation.utils.applyShadow
 
-
+// TODO: Add screenshot testing
 @Composable
 fun AddressCard(
     address: LocalAddress,
@@ -62,7 +64,7 @@ fun AddressCard(
         if (address.label?.isNullOrBlank() == false) address.label else stringResource(R.string.unnamed_address_label)
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .applyShadow(shape, LittleLemonTheme.shadows.dropSM)
             .background(LittleLemonTheme.colors.primary, shape)
             .clip(shape)
@@ -77,7 +79,7 @@ fun AddressCard(
         )
         Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
         Text(addressString, style = LittleLemonTheme.typography.bodySmall)
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             if (address.isDefault)
                 Tag(stringResource(R.string.default_tag), variant = TagVariant.SuccessFilled)
             else
@@ -123,7 +125,7 @@ fun AddressCard(
                 ) {
                     Image(
                         painterResource(R.drawable.ic_edit),
-                        contentDescription = stringResource(R.string.delete_address)
+                        contentDescription = stringResource(R.string.edit_address)
                     )
                 }
             }
@@ -132,21 +134,35 @@ fun AddressCard(
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun AddressCardPreview() {
 
     LittleLemonTheme {
-        AddressCard(
-            address = LocalAddress(
-                id = "1234", label = "Physical Address", address = PhysicalAddress(
-                    address = "Some street",
-                    streetAddress = "some street address",
-                    city = "Some city",
-                    state = "Some state",
-                    pinCode = "12349324"
-                )
-            ), {}, {}, {}
-        )
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            AddressCard(
+                address = LocalAddress(
+                    id = "1234", label = "Physical Address", address = PhysicalAddress(
+                        address = "Some street",
+                        streetAddress = "some street address",
+                        city = "Some city",
+                        state = "Some state",
+                        pinCode = "12349324"
+                    )
+                ), {}, {}, {}
+            )
+
+            AddressCard(
+                address = LocalAddress(
+                    id = "1234", label = "Physical Address", address = PhysicalAddress(
+                        address = "Some street",
+                        streetAddress = "some street address",
+                        city = "Some city",
+                        state = "Some state",
+                        pinCode = "12349324"
+                    ), isDefault = true
+                ), {}, {}, {}
+            )
+        }
     }
 }
