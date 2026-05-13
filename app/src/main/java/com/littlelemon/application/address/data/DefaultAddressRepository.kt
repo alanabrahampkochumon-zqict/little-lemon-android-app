@@ -20,6 +20,7 @@ import com.littlelemon.application.core.domain.exceptions.LocationUnavailableExc
 import com.littlelemon.application.core.domain.mappers.mapToDomainError
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.database.address.dao.GeocodingDao
+import com.littlelemon.application.database.address.models.AddressEntity
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
@@ -215,16 +216,17 @@ class DefaultAddressRepository(
     }
 
     override suspend fun removeAddress(address: LocalAddress) {
-        addressLocalDataSource.removeAddress(address.id!!)
-        addressRemoteDataSource.deleteAddress(address.id)
+        var addressEntity: AddressEntity? = null
         try {
-            val addressEntities =
-                addressRemoteDataSource.getAddress().map { it.toAddressEntity() }
-            addressLocalDataSource.clearAndInsertAddress(addressEntities)
+            address.id?.let { id ->
+                addressEntity = addressLocalDataSource.removeAddress(id)
+                addressRemoteDataSource.deleteAddress(id)
+            }
         } catch (e: Exception) {
+            // If there was an error, save the address back into database
+            if (addressEntity != null)
+                addressLocalDataSource.saveAddress(addressEntity)
             currentCoroutineContext().ensureActive()
         }
-        TODO()
-//        val addressEntity = addressLocalDataSource.removeAddress(address.toEntity)
     }
 }
