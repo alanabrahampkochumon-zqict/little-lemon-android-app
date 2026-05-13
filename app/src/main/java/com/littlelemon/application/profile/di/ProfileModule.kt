@@ -9,7 +9,7 @@ import org.koin.dsl.module
 
 val profileModule = module {
     viewModel<ProfileViewModel> {
-        ProfileViewModel(get(), get())
+        ProfileViewModel(get(), get(), get())
     }
 
     single<ProfileRepository> {

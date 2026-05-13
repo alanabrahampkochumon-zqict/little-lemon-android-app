@@ -19,6 +19,7 @@ import com.littlelemon.application.address.domain.usecase.GeocodeAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetAddressCountUseCase
 import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.domain.usecase.GetLocationUseCase
+import com.littlelemon.application.address.domain.usecase.RemoveAddressUseCase
 import com.littlelemon.application.address.domain.usecase.ReverseGeocodeLocationUseCase
 import com.littlelemon.application.address.domain.usecase.SaveAddressUseCase
 import com.littlelemon.application.address.presentation.AddressViewModel
@@ -40,7 +41,7 @@ val addressModule = module {
     single<SaveAddressUseCase> { SaveAddressUseCase(get()) }
     single<ReverseGeocodeLocationUseCase> { ReverseGeocodeLocationUseCase(get()) }
     single<GeocodeAddressUseCase> { GeocodeAddressUseCase(get()) }
-
+    single<RemoveAddressUseCase> { RemoveAddressUseCase(get()) }
     single<AddressRepository> { DefaultAddressRepository(get(), get(), get(), get()) }
 
     single<AddressRemoteDataSource> { SupabaseAddressRemoteDataSource(get()) }

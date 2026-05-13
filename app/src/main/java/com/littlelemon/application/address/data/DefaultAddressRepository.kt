@@ -222,7 +222,7 @@ class DefaultAddressRepository(
                 addressEntity = addressLocalDataSource.removeAddress(id)
                 addressRemoteDataSource.deleteAddress(id)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // If there was an error, save the address back into database
             if (addressEntity != null)
                 addressLocalDataSource.saveAddress(addressEntity)
