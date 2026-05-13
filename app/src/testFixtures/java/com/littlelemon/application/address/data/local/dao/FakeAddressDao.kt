@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 class FakeAddressDao(entriesCount: Int? = null, private val throwError: Boolean = false) :
     AddressDao {
 
-    private val addressList = mutableListOf<AddressEntity>()
+    private var addressList = mutableListOf<AddressEntity>()
 
     init {
         if (entriesCount != null) {
@@ -39,9 +39,11 @@ class FakeAddressDao(entriesCount: Int? = null, private val throwError: Boolean 
         emit(addressList)
     }
 
-    override suspend fun deleteAddress(address: AddressEntity): Int {
+    override suspend fun deleteAddress(id: String): Int {
         if (throwError) throw IllegalArgumentException()
-        return if (addressList.remove(address)) 1 else 0
+        val initialSize = addressList.size
+        addressList = addressList.filter { it.id != id }.toMutableList()
+        return if (addressList.size == initialSize) 0 else 1
     }
 
     override suspend fun clear(): Int {

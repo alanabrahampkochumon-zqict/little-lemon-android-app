@@ -90,3 +90,19 @@ fun LocalAddress.toRequestDTO(): AddressRequestDTO {
         isDefault = isDefault
     )
 }
+
+//fun LocalAddress.toAddressEntity(): AddressEntity {
+//    return AddressEntity(
+//        id = id!!,
+//        label = label,
+//        address = address?.address,
+//        streetAddress = address?.streetAddress,
+//        city = address?.city,
+//        state = address?.state,
+//        pinCode = address?.pinCode,
+//        latitude = location?.latitude,
+//        longitude = location?.longitude,
+//        createdAt = ,
+//        isDefault = isDefault
+//    )
+//}

@@ -12,7 +12,7 @@ class FakeAddressLocalDataSource(
     private val location: Location? = null
 ) : AddressLocalDataSource {
 
-    private val _address = mutableListOf<AddressEntity>()
+    private var _address = mutableListOf<AddressEntity>()
 
     init {
         _address.addAll(initialData)
@@ -45,11 +45,11 @@ class FakeAddressLocalDataSource(
         return _address.size
     }
 
-    override suspend fun removeAddress(address: AddressEntity) {
+    override suspend fun removeAddress(addressId: String) {
         if (throwError) throw IllegalArgumentException()
-        _address.remove(address)
+        _address = _address.filter { it.id != addressId }.toMutableList()
     }
-
+    
     override suspend fun clearAndInsertAddress(addresses: List<AddressEntity>) {
         if (throwError) throw IllegalArgumentException()
         _address.clear()

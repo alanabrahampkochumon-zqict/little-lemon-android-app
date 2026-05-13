@@ -56,13 +56,13 @@ fun AddressCard(
         stringResource(R.string.unknown_location)
     }
 
-    var label =
+    val label =
         if (address.label?.isNullOrBlank() == false) address.label else stringResource(R.string.unnamed_address_label)
 
     Column(
         modifier = Modifier
             .applyShadow(shape, LittleLemonTheme.shadows.dropSM)
-            .background(LittleLemonTheme.colors.primary, shape)
+            .background(LittleLemonTheme.colors.primary, shape).clip(shape)
             .padding(
                 start = LittleLemonTheme.dimens.sizeXL,
                 top = LittleLemonTheme.dimens.sizeLG

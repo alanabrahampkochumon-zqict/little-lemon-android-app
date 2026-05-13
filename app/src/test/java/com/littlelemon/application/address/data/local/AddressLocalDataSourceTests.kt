@@ -269,7 +269,7 @@ class AddressLocalDataSourceTests {
             dao = FakeAddressDao(throwError = true)
             datasource = DefaultAddressLocalDataSource(locationProvider, dao)
 
-            assertThrows<IllegalArgumentException> { datasource.removeAddress(addresses[0]) }
+            assertThrows<IllegalArgumentException> { datasource.removeAddress(addresses[0].id) }
         }
 
         @Test
@@ -283,7 +283,7 @@ class AddressLocalDataSourceTests {
             datasource.saveAddresses(addresses)
 
             // When an address is removed
-            datasource.removeAddress(addressToRemove)
+            datasource.removeAddress(addressToRemove.id)
 
             // Then, that address are removed
             val retrievedAddresses = datasource.getAddress().first()

@@ -53,8 +53,7 @@ class DefaultAddressRepository(
 
     }
 
-    //TODO: Add Service to retry saving to network in case of network error.
-    // TODO: Implement better caching, hit once, fetch on save
+
     override suspend fun saveAddress(address: LocalAddress): Resource<Unit> {
         return try {
             val remoteData = addressRemoteDataSource.saveAddress(address.toRequestDTO())
@@ -213,5 +212,10 @@ class DefaultAddressRepository(
                 error = e.mapToDomainError()
             )
         }
+    }
+
+    override suspend fun removeAddress(address: LocalAddress) {
+        TODO()
+//        val addressEntity = addressLocalDataSource.removeAddress(address.toEntity)
     }
 }
