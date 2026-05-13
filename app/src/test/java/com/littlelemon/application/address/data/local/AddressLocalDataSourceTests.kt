@@ -273,7 +273,7 @@ class AddressLocalDataSourceTests {
         }
 
         @Test
-        fun dbSuccess_clearAddressAndInsertsNewAddress() = runTest {
+        fun dbSuccess_removesAddress() = runTest {
             val addresses = List(5) { AddressGenerator.generateAddressEntity() }
             val addressToRemove = addresses[0]
 
@@ -296,5 +296,25 @@ class AddressLocalDataSourceTests {
             }
 
         }
+
+        @Test
+        fun dbSuccess_returnsRemovedAddress() = runTest {
+            val addresses = List(5) { AddressGenerator.generateAddressEntity() }
+            val addressToRemove = addresses[0]
+
+            // Given a data source with non-empty addresses
+            dao = FakeAddressDao(0)
+            datasource = DefaultAddressLocalDataSource(locationProvider, dao)
+            datasource.saveAddresses(addresses)
+
+            // When an address is removed
+            val retrievedAddresses = datasource.removeAddress(addressToRemove.id)
+
+            // Then, that address are removed
+            assertEquals(addressToRemove, retrievedAddresses)
+
+        }
+
+
     }
 }
