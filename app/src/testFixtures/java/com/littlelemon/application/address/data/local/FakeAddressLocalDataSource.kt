@@ -45,11 +45,13 @@ class FakeAddressLocalDataSource(
         return _address.size
     }
 
-    override suspend fun removeAddress(addressId: String) {
+    override suspend fun removeAddress(addressId: String): AddressEntity? {
         if (throwError) throw IllegalArgumentException()
-        _address = _address.filter { it.id != addressId }.toMutableList()
+        val address = _address.find { it.id == addressId }
+        _address.removeIf { it.id == addressId }
+        return address
     }
-    
+
     override suspend fun clearAndInsertAddress(addresses: List<AddressEntity>) {
         if (throwError) throw IllegalArgumentException()
         _address.clear()

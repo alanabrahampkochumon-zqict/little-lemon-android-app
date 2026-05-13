@@ -25,14 +25,14 @@ interface AddressDao {
 
 
     @Query("SELECT * FROM ADDRESSENTITY WHERE id = :id LIMIT 1")
-    suspend fun getAddress(id: String): AddressEntity
+    suspend fun getAddress(id: String): AddressEntity?
 
     @Query("DELETE FROM ADDRESSENTITY WHERE id = :id")
-    suspend fun deleteAddress(id: String)
+    suspend fun deleteAddress(id: String): Int
 
 
     @Transaction
-    suspend fun deleteAddressAndReturn(id: String): AddressEntity {
+    suspend fun deleteAddressAndReturn(id: String): AddressEntity? {
         val entity = getAddress(id)
         deleteAddress(id)
         return entity

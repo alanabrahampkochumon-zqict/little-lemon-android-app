@@ -16,7 +16,7 @@ interface AddressLocalDataSource {
 
     suspend fun getAddressCount(): Int
 
-    suspend fun removeAddress(addressId: String): AddressEntity
+    suspend fun removeAddress(addressId: String): AddressEntity?
 
     suspend fun clearAndInsertAddress(addresses: List<AddressEntity>)
 }

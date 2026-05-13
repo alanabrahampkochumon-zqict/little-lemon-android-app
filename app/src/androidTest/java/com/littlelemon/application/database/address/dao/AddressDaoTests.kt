@@ -13,14 +13,14 @@ import org.junit.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class AddressDaoTests {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
 
-    private lateinit
-    var db: LittleLemonDatabase
+    private lateinit var db: LittleLemonDatabase
     private lateinit var dao: AddressDao
 
     @Before
@@ -123,12 +123,13 @@ class AddressDaoTests {
         assertEquals(numAddresses, count)
     }
 
+
     //////// DELETE ADDRESS ///////////
 
     @Test
     fun onDeleteAddress_emptyDb_returnsZero() = runTest {
         val address = AddressGenerator.generateAddressEntity()
-        assertEquals(0, dao.deleteAddress(address))
+        assertEquals(0, dao.deleteAddress(address.id))
     }
 
     @Test
@@ -139,7 +140,7 @@ class AddressDaoTests {
         dao.insertAddress(addresses)
 
         // When an address is removed
-        val status = dao.deleteAddress(addressToRemove)
+        val status = dao.deleteAddress(addressToRemove.id)
 
         // Then, a status of 1 is returned
         assertEquals(1, status)
@@ -153,7 +154,7 @@ class AddressDaoTests {
         dao.insertAddress(addresses)
 
         // When an address is removed
-        dao.deleteAddress(addressToRemove)
+        dao.deleteAddress(addressToRemove.id)
         val retrievedAddress = dao.getAllAddress().first()
 
         // Then, that address is not in the list
@@ -172,7 +173,7 @@ class AddressDaoTests {
         dao.insertAddress(addresses)
 
         // When an address is removed
-        val status = dao.deleteAddress(addressToRemove)
+        val status = dao.deleteAddress(addressToRemove.id)
 
         // Then, a status of 0 is returned
         assertEquals(0, status)
@@ -186,13 +187,43 @@ class AddressDaoTests {
         dao.insertAddress(addresses)
 
         // When an address is removed
-        dao.deleteAddress(addressToRemove)
+        dao.deleteAddress(addressToRemove.id)
         val retrievedAddress = dao.getAllAddress().first()
 
         // Then, no address is removed
         addresses.forEach { address ->
             assertTrue("$address was not found!") { retrievedAddress.contains(address) }
         }
+    }
+
+    //////// GET ADDRESS ////////
+
+    @Test
+    fun onGetAddress_validId_returnsCorrectAddress() = runTest {
+        // Given a list of address
+        val addresses = List(5) { AddressGenerator.generateAddressEntity() }
+        val address = addresses[0]
+        dao.insertAddress(addresses)
+
+        // When an address is queried
+        val retrievedAddress = dao.getAddress(address.id)
+
+        // Then, no address is removed
+        assertEquals(address, retrievedAddress)
+    }
+
+    @Test
+    fun onGetAddress_invalidId_returnsNull() = runTest {
+        // Given a list of address
+        val addresses = List(5) { AddressGenerator.generateAddressEntity() }
+        val address = AddressGenerator.generateAddressEntity()
+        dao.insertAddress(addresses)
+
+        // When an address is queried
+        val retrievedAddress = dao.getAddress(address.id)
+
+        // Then, no address is removed
+        assertNull(retrievedAddress)
     }
 
 
@@ -257,8 +288,7 @@ class AddressDaoTests {
         val newAddresses = List(numAddress) { AddressGenerator.generateAddressEntity() }
         dao.insertAddress(oldAddresses)
         assertEquals(
-            numAddress,
-            dao.getAddressCount()
+            numAddress, dao.getAddressCount()
         ) // Assert to ensure that the old addresses are inserted.
 
         // When addresses are cleared and inserted

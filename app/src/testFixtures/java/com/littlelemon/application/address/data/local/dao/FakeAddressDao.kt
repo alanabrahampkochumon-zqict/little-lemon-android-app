@@ -39,6 +39,11 @@ class FakeAddressDao(entriesCount: Int? = null, private val throwError: Boolean 
         emit(addressList)
     }
 
+    override suspend fun getAddress(id: String): AddressEntity? {
+        if (throwError) throw IllegalArgumentException()
+        return addressList.find { it.id == id }
+    }
+
     override suspend fun deleteAddress(id: String): Int {
         if (throwError) throw IllegalArgumentException()
         val initialSize = addressList.size
