@@ -6,7 +6,8 @@ import com.littlelemon.application.core.presentation.UiText
 data class ProfileState(
 
     val userName: String = "",
-    val email: String = ""
+    val email: String = "",
+    val isLoading: Boolean = false
 )
 
 data class ProfileAddressState(

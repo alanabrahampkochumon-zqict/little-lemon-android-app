@@ -1,4 +1,4 @@
-package com.littlelemon.application.profile
+package com.littlelemon.application.profile.presentation
 
 import com.littlelemon.application.address.domain.models.LocalAddress
 

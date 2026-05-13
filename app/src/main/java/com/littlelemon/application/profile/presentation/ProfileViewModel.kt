@@ -7,7 +7,6 @@ import com.littlelemon.application.address.domain.usecase.GetAddressUseCase
 import com.littlelemon.application.address.domain.usecase.RemoveAddressUseCase
 import com.littlelemon.application.core.domain.utils.Resource
 import com.littlelemon.application.core.presentation.UiText
-import com.littlelemon.application.profile.ProfileActions
 import com.littlelemon.application.profile.domain.ProfileRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,7 +25,7 @@ class ProfileViewModel(
 
 
     // TODO: Add test
-    private val _state = MutableStateFlow(ProfileState())
+    private val _state = MutableStateFlow(ProfileState(isLoading = true))
     val state = _state.asStateFlow()
 
     val addresses = getAddresses().map { resource ->
@@ -51,7 +50,13 @@ class ProfileViewModel(
     init {
         viewModelScope.launch {
             val profile = profileRepository.getUserProfile()
-            _state.update { it.copy(userName = profile.name, email = profile.email) }
+            _state.update {
+                it.copy(
+                    userName = profile.name,
+                    email = profile.email,
+                    isLoading = false
+                )
+            }
         }
     }
 
