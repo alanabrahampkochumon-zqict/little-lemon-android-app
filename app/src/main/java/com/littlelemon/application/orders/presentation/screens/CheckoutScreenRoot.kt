@@ -97,6 +97,7 @@ fun CheckoutScreenRoot(
             }
 
             item {
+                Spacer(Modifier.height(LittleLemonTheme.dimens.sizeXL))
                 Column(
                     modifier = Modifier.background(
                         LittleLemonTheme.colors.secondary,
@@ -105,7 +106,7 @@ fun CheckoutScreenRoot(
                 ) {
                     Column(
                         modifier = Modifier.padding(
-                            top = LittleLemonTheme.dimens.sizeXL,
+                            top = LittleLemonTheme.dimens.sizeLG,
                             bottom = LittleLemonTheme.dimens.sizeXL,
                             start = LittleLemonTheme.dimens.sizeXL,
                             end = LittleLemonTheme.dimens.sizeXL
@@ -133,19 +134,19 @@ fun NoAddressCard(onSelectAddress: () -> Unit, modifier: Modifier = Modifier) {
             contentDescription = null,
             modifier = Modifier.size(40.dp)
         )
-        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
         Text(
             stringResource(R.string.no_delivery_address),
             style = LittleLemonTheme.typography.headlineSmall.copy(textAlign = TextAlign.Center),
             color = LittleLemonTheme.colors.contentSecondary
         )
-        Spacer(Modifier.height(LittleLemonTheme.dimens.size2XS))
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
         Text(
             stringResource(R.string.select_address_to_continue),
             style = LittleLemonTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
             color = LittleLemonTheme.colors.contentSecondary
         )
-        Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
+        Spacer(Modifier.height(LittleLemonTheme.dimens.size3XL))
         Button(stringResource(R.string.select_address), onClick = onSelectAddress)
     }
 }
