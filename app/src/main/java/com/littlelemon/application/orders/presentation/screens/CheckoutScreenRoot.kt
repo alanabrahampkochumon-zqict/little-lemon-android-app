@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
@@ -23,10 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.R
 import com.littlelemon.application.cart.presentation.screen.components.CartItemCard
+import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
 import com.littlelemon.application.shared.cart.domain.models.CartDetailItem
@@ -47,9 +51,7 @@ fun CheckoutScreen(
 
 @Composable
 fun CheckoutScreenRoot(
-    cartItems: List<CartDetailItem>,
-    onNavigateBack: () -> Unit,
-    modifier: Modifier = Modifier
+    cartItems: List<CartDetailItem>, onNavigateBack: () -> Unit, modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -110,6 +112,30 @@ fun CheckoutScreenRoot(
     // Order cards
     // Delivering to
     // Order Summary
+}
+
+@Composable
+fun NoAddressCard(onSelectAddress: () -> Unit, modifier: Modifier = Modifier) {
+    Column(modifier) {
+        Image(
+            painterResource(R.drawable.ic_street_map),
+            contentDescription = null,
+            modifier = Modifier.size(40.dp)
+        )
+        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeSM))
+        Text(
+            stringResource(R.string.no_delivery_address),
+            style = LittleLemonTheme.typography.headlineSmall.copy(textAlign = TextAlign.Center),
+            color = LittleLemonTheme.colors.contentSecondary
+        )
+        Text(
+            stringResource(R.string.select_address_to_continue),
+            style = LittleLemonTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
+            color = LittleLemonTheme.colors.contentSecondary
+        )
+        Spacer(Modifier.height(LittleLemonTheme.dimens.size2XL))
+        Button(stringResource(R.string.select_address), onClick = onSelectAddress)
+    }
 }
 
 
