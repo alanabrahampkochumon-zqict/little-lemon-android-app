@@ -35,7 +35,7 @@ class SupabaseAddressRemoteDataSource(
         return client.postgrest.rpc(
             SupabaseRPC.UpsertAddress.RPC_NAME, buildJsonObject {
                 put(SupabaseRPC.UpsertAddress.P_LOCATION, address.location)
-                put(SupabaseRPC.UpsertAddress.P_CREATED_AT, address.createdAt.toString())
+                put(SupabaseRPC.UpsertAddress.P_CREATED_AT, address.createdAt)
                 put(SupabaseRPC.UpsertAddress.P_IS_DEFAULT, address.isDefault)
                 put(SupabaseRPC.UpsertAddress.P_ID, address.id)
                 put(SupabaseRPC.UpsertAddress.P_LABEL, address.label)
@@ -53,7 +53,6 @@ class SupabaseAddressRemoteDataSource(
         HttpRequestException::class
     )
     override suspend fun deleteAddress(addressId: String) {
-//        if (addressId == null) return // Won't hit this case unless as id is only null for fresh addresses coming from VM
         client.from(SupabaseTables.USER_ADDRESS).delete { filter { eq("id", addressId) } }
     }
 

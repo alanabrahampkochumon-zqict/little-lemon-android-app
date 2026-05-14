@@ -31,8 +31,8 @@ WITH
         ) < 5
     );
 
-CREATE POLICY "User can see their own addresses" ON user_address FOR
-SELECT
+CREATE POLICY "User can see and alter their own addresses" ON user_address FOR
+ALL
     USING (auth.uid () = user_id);
 
 CREATE VIEW user_addresses_view AS

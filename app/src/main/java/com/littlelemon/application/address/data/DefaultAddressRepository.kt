@@ -1,6 +1,7 @@
 package com.littlelemon.application.address.data
 
 import android.Manifest
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.littlelemon.application.address.data.local.AddressLocalDataSource
 import com.littlelemon.application.address.data.mappers.toAddressEntity
@@ -222,7 +223,10 @@ class DefaultAddressRepository(
                 addressEntity = addressLocalDataSource.removeAddress(id)
                 addressRemoteDataSource.deleteAddress(id)
             }
-        } catch (_: Exception) {
+            Log.d("Entity", "$addressEntity")
+            Log.d("Address", "Addressed deleted!")
+        } catch (e: Exception) {
+            Log.d("Error", "${e.message}")
             // If there was an error, save the address back into database
             if (addressEntity != null)
                 addressLocalDataSource.saveAddress(addressEntity)
