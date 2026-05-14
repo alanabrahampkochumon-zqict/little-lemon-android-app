@@ -35,7 +35,7 @@ CREATE POLICY "User can see and alter their own addresses" ON user_address FOR
 ALL
     USING (auth.uid () = user_id);
 
-CREATE VIEW user_addresses_view AS
+CREATE OR REPLACE VIEW user_addresses_view AS
 SELECT
   user_address.id,
   user_address.label,
@@ -48,4 +48,4 @@ SELECT
   st_x(location::geometry) as longitude,
   user_address.created_at,
   user_address.is_default
-FROM user_address;
+FROM user_address WHERE user_id = auth.user_id();
