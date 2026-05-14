@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val orderModule = module {
     viewModel<OrderScreenViewModel> {
-        OrderScreenViewModel(get())
+        OrderScreenViewModel(get(), get())
     }
 }

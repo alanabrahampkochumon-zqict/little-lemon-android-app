@@ -25,18 +25,17 @@ class OrderScreenViewModel(
             isAddressLoading = true
         )
 
-        when (addressResource) {
-            is Resource.Failure -> OrderScreenState(
+        state = when (addressResource) {
+            is Resource.Failure -> state.copy(
                 isAddressLoading = false,
                 addressError = UiText.StringResource(R.string.address_loading_error_message)
             )
 
-            is Resource.Loading -> Unit
-            is Resource.Success -> OrderScreenState(
+            is Resource.Loading -> state
+            is Resource.Success -> state.copy(
                 addressError = null,
                 isAddressLoading = false,
-                defaultAddress = addressResource.data?.first { it.isDefault }
-                    ?: addressResource.data?.first())
+                defaultAddress = addressResource.data?.first { it.isDefault })
         }
 
         state
