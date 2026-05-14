@@ -177,6 +177,7 @@
     <string name="edit_address">Edit current address</string>
     <string name="back_to_cart">Navigate back to cart</string>
     <string name="review_r">Review order</string>
+    <string name="review_order">Review order</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>
