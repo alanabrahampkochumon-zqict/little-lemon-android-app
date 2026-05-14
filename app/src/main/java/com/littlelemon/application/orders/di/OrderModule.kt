@@ -1,11 +1,11 @@
 package com.littlelemon.application.orders.di
 
-import com.littlelemon.application.orders.presentation.screens.OrderScreenViewModel
+import com.littlelemon.application.orders.presentation.screens.OrdersViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val orderModule = module {
-    viewModel<OrderScreenViewModel> {
-        OrderScreenViewModel(get(), get())
+    viewModel<OrdersViewModel> {
+        OrdersViewModel(get(), get())
     }
 }

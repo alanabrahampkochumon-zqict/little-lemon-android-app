@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
-class OrderScreenViewModel(
+class OrdersViewModel(
     getCartItems: GetCartItemDetailsUseCase,
     getAddress: GetAddressUseCase,
 ) : ViewModel() {
@@ -35,7 +35,7 @@ class OrderScreenViewModel(
             is Resource.Success -> state.copy(
                 addressError = null,
                 isAddressLoading = false,
-                defaultAddress = addressResource.data?.first { it.isDefault })
+                defaultAddress = addressResource.data?.firstOrNull { it.isDefault })
         }
 
         state

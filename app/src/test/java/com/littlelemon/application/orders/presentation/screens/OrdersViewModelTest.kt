@@ -31,11 +31,11 @@ import kotlin.test.assertTrue
 
 
 @ExtendWith(StandardTestDispatcherRule::class)
-class OrderScreenViewModelTest {
+class OrdersViewModelTest {
 
     private lateinit var getItemUseCase: GetCartItemDetailsUseCase
     private lateinit var getAddressUseCase: GetAddressUseCase
-    private lateinit var viewModel: OrderScreenViewModel
+    private lateinit var viewModel: OrdersViewModel
     private lateinit var testScope: TestScope
 
 
@@ -66,7 +66,7 @@ class OrderScreenViewModelTest {
         coEvery { getAddressUseCase.invoke() } returns flow { emit(Resource.Success(addresses)) }
 
 
-        viewModel = OrderScreenViewModel(
+        viewModel = OrdersViewModel(
             getItemUseCase, getAddressUseCase
         )
 
@@ -145,7 +145,7 @@ class OrderScreenViewModelTest {
                     )
                 }
 
-                viewModel = OrderScreenViewModel(
+                viewModel = OrdersViewModel(
                     getItemUseCase, getAddressUseCase
                 )
                 viewModel.state.test {

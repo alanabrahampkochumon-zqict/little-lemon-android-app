@@ -43,10 +43,10 @@ import org.koin.androidx.compose.koinViewModel
 fun CheckoutScreen(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
-    viewModel: OrderScreenViewModel = koinViewModel()
+    viewModel: OrdersViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    CheckoutScreenRoot(state.cartItems, onNavigateBack)
+    CheckoutScreenRoot(state.cartItems, onNavigateBack, modifier = modifier)
 }
 
 @Composable
@@ -58,7 +58,9 @@ fun CheckoutScreenRoot(
             .fillMaxSize()
             .background(LittleLemonTheme.colors.primary)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Box(
                 modifier = Modifier
                     .clickable(onClick = onNavigateBack)
@@ -85,7 +87,7 @@ fun CheckoutScreenRoot(
             modifier = Modifier.background(LittleLemonTheme.colors.primary),
             verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeXL)
         ) {
-            this.items(cartItems) { cartItem ->
+            items(cartItems) { cartItem ->
                 CartItemCard(
                     cartItem,
                     onIncreaseQuantity = { /** TODO */ },
@@ -96,15 +98,24 @@ fun CheckoutScreenRoot(
 
             item {
                 Column(
-                    modifier = Modifier.padding(
-                        top = LittleLemonTheme.dimens.sizeXL,
-                        bottom = LittleLemonTheme.dimens.size4XL,
-                        start = LittleLemonTheme.dimens.sizeXL,
-                        end = LittleLemonTheme.dimens.sizeXL
+                    modifier = Modifier.background(
+                        LittleLemonTheme.colors.secondary,
+                        shape = LittleLemonTheme.shapes.md
                     )
                 ) {
-                    Header(stringResource(R.string.delivering_to))
-                    // Address
+                    Column(
+                        modifier = Modifier.padding(
+                            top = LittleLemonTheme.dimens.sizeXL,
+                            bottom = LittleLemonTheme.dimens.sizeXL,
+                            start = LittleLemonTheme.dimens.sizeXL,
+                            end = LittleLemonTheme.dimens.sizeXL
+                        ), horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Header(stringResource(R.string.delivering_to))
+                        Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
+                        NoAddressCard({ /** TODO */ })
+                        // Address
+                    }
                 }
             }
         }
@@ -116,7 +127,7 @@ fun CheckoutScreenRoot(
 
 @Composable
 fun NoAddressCard(onSelectAddress: () -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier) {
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Image(
             painterResource(R.drawable.ic_street_map),
             contentDescription = null,
@@ -128,6 +139,7 @@ fun NoAddressCard(onSelectAddress: () -> Unit, modifier: Modifier = Modifier) {
             style = LittleLemonTheme.typography.headlineSmall.copy(textAlign = TextAlign.Center),
             color = LittleLemonTheme.colors.contentSecondary
         )
+        Spacer(Modifier.height(LittleLemonTheme.dimens.size2XS))
         Text(
             stringResource(R.string.select_address_to_continue),
             style = LittleLemonTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
