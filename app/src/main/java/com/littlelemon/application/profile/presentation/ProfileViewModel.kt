@@ -25,9 +25,7 @@ class ProfileViewModel(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) :
     ViewModel() {
-
-
-    // TODO: Add test
+    
     private val _state = MutableStateFlow(ProfileState(isLoading = true))
     val state = _state.asStateFlow()
 
