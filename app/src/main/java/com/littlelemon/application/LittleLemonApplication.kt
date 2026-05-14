@@ -8,6 +8,7 @@ import com.littlelemon.application.core.di.coreModule
 import com.littlelemon.application.database.di.databaseModule
 import com.littlelemon.application.home.di.homeModule
 import com.littlelemon.application.menu.di.dishModule
+import com.littlelemon.application.orders.di.orderModule
 import com.littlelemon.application.profile.di.profileModule
 import com.littlelemon.application.shared.cart.di.sharedCartModule
 import com.littlelemon.application.shared.menu.di.sharedDishModule
@@ -33,6 +34,7 @@ class LittleLemonApplication : Application() {
             modules(homeModule)
             modules(cartModule)
             modules(profileModule)
+            modules(orderModule)
         }
     }
 }

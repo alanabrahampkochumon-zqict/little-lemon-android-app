@@ -20,16 +20,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.littlelemon.application.R
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
+import org.koin.androidx.compose.koinViewModel
+
 
 @Composable
-fun CheckoutScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
+fun CheckoutScreen(
+    modifier: Modifier = Modifier,
+    viewModel: OrderScreenViewModel = koinViewModel()
+) {
+
+}
+
+@Composable
+fun CheckoutScreenRoot(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(LittleLemonTheme.colors.primary)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(modifier = Modifier.clickable(onClick = onNavigateBack).minimumInteractiveComponentSize()) {
+            Box(
+                modifier = Modifier
+                    .clickable(onClick = onNavigateBack)
+                    .minimumInteractiveComponentSize()
+            ) {
                 Image(
                     painterResource(R.drawable.ic_x),
                     contentDescription = stringResource(R.string.back_to_cart)
@@ -51,8 +65,8 @@ fun CheckoutScreen(onNavigateBack: () -> Unit, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-private fun CheckoutScreenPreview() {
+private fun CheckoutScreenRootPreview() {
     LittleLemonTheme {
-        CheckoutScreen({})
+        CheckoutScreenRoot({})
     }
 }
