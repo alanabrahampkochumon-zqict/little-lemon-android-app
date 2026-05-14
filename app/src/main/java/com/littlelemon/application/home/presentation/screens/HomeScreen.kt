@@ -8,7 +8,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -43,6 +41,7 @@ import com.littlelemon.application.home.presentation.components.NavigationOption
 import com.littlelemon.application.home.presentation.components.TopAppBar
 import com.littlelemon.application.menu.presentation.MenuViewModel
 import com.littlelemon.application.menu.presentation.screen.MenuScreen
+import com.littlelemon.application.orders.presentation.screens.CheckoutScreen
 import com.littlelemon.application.profile.presentation.ProfileScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -81,7 +80,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 }, selected = currentDestination
             )
         }, topBar = {
-            AnimatedVisibility(currentDestination != NavigationOption.PROFILE, exit = slideOutVertically { -it }, enter = slideInVertically { -it }) {
+            AnimatedVisibility(
+                currentDestination != NavigationOption.PROFILE,
+                exit = slideOutVertically { -it },
+                enter = slideInVertically { -it }) {
                 TopAppBar(
                     state.addresses.find { it.isDefault } ?: state.addresses.firstOrNull(),
                     addressLoading = state.addressLoading,
@@ -131,14 +133,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     }
 
                     is OrdersRoute -> NavEntry(entry) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .background(Color.LightGray)
-                                .fillMaxSize()
-                        ) {
-                            Text("Orders")
-                        }
+                        CheckoutScreen(onNavigateBack = {/* TODO: Change to root navigation */ })
                     }
 
                     is CartRoute -> NavEntry(entry) {
