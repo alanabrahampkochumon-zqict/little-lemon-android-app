@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlelemon.application.R
 import com.littlelemon.application.cart.presentation.screen.components.CartItemCard
+import com.littlelemon.application.core.presentation.components.AddressViewCard
 import com.littlelemon.application.core.presentation.components.Button
 import com.littlelemon.application.core.presentation.components.Header
 import com.littlelemon.application.core.presentation.designsystem.LittleLemonTheme
@@ -46,13 +47,24 @@ fun CheckoutScreen(
     viewModel: OrdersViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    CheckoutScreenRoot(state.cartItems, onNavigateBack, modifier = modifier)
+    CheckoutScreenRoot(state, onNavigateBack, modifier = modifier)
 }
 
 @Composable
 fun CheckoutScreenRoot(
-    cartItems: List<CartDetailItem>, onNavigateBack: () -> Unit, modifier: Modifier = Modifier
+    state: OrderScreenState, onNavigateBack: () -> Unit, modifier: Modifier = Modifier
 ) {
+
+    val fullAddress = if (state.defaultAddress != null) {
+        var add = ""
+        val physicalAddress = state.defaultAddress.address
+        add += if (physicalAddress?.address != null) "${physicalAddress.address},\n" else ""
+        add += if (physicalAddress?.streetAddress != null) "${physicalAddress.streetAddress},\n" else ""
+        add += if (physicalAddress?.city != null) "${physicalAddress.city},\n" else ""
+        add += if (physicalAddress?.state != null) physicalAddress.state else ""
+        add += if (physicalAddress?.pinCode != null) " - ${physicalAddress.pinCode}" else ""
+        add
+    } else ""
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -87,7 +99,7 @@ fun CheckoutScreenRoot(
             modifier = Modifier.background(LittleLemonTheme.colors.primary),
             verticalArrangement = Arrangement.spacedBy(LittleLemonTheme.dimens.sizeXL)
         ) {
-            items(cartItems) { cartItem ->
+            items(state.cartItems) { cartItem ->
                 CartItemCard(
                     cartItem,
                     onIncreaseQuantity = { /** TODO */ },
@@ -114,7 +126,21 @@ fun CheckoutScreenRoot(
                     ) {
                         Header(stringResource(R.string.delivering_to))
                         Spacer(Modifier.height(LittleLemonTheme.dimens.sizeMD))
-                        NoAddressCard({ /** TODO */ })
+                        if (state.isAddressLoading) {
+                            // TODO Show shimmering animation
+                        } else if (state.defaultAddress == null || fullAddress.isBlank()) {
+                            NoAddressCard({ /** TODO */ })
+                        } else if (state.addressError != null) {
+                            /** TODO */
+                        } else {
+                            AddressViewCard(
+                                state.defaultAddress.label
+                                    ?: stringResource(R.string.no_label_address),
+                                fullAddress = fullAddress,
+                                selected = false,
+                                default = false,
+                            )
+                        }
                         // Address
                     }
                 }
@@ -157,17 +183,19 @@ fun NoAddressCard(onSelectAddress: () -> Unit, modifier: Modifier = Modifier) {
 private fun CheckoutScreenRootPreview() {
     LittleLemonTheme {
         CheckoutScreenRoot(
-            listOf(
-                CartDetailItem(
-                    dish = Dish(
-                        "1234", "Dish 1", "Description", 15.59,
-                        imageURL = "",
-                        stock = 15,
-                        nutritionInfo = null,
-                        discountedPrice = 12.99,
-                        category = emptyList(),
-                        dateAdded = LocalDateTime(2026, 12, 12, 30, 30),
-                        popularityIndex = 55,
+            OrderScreenState(
+                cartItems = listOf(
+                    CartDetailItem(
+                        dish = Dish(
+                            "1234", "Dish 1", "Description", 15.59,
+                            imageURL = "",
+                            stock = 15,
+                            nutritionInfo = null,
+                            discountedPrice = 12.99,
+                            category = emptyList(),
+                            dateAdded = LocalDateTime(2026, 12, 12, 30, 30),
+                            popularityIndex = 55,
+                        )
                     )
                 )
             ), {})
@@ -179,17 +207,19 @@ private fun CheckoutScreenRootPreview() {
 private fun CheckoutScreenRootPreviewTab() {
     LittleLemonTheme {
         CheckoutScreenRoot(
-            listOf(
-                CartDetailItem(
-                    dish = Dish(
-                        "1234", "Dish 1", "Description", 15.59,
-                        imageURL = "",
-                        stock = 15,
-                        nutritionInfo = null,
-                        discountedPrice = 12.99,
-                        category = emptyList(),
-                        dateAdded = LocalDateTime(2026, 12, 12, 30, 30),
-                        popularityIndex = 55,
+            OrderScreenState(
+                cartItems = listOf(
+                    CartDetailItem(
+                        dish = Dish(
+                            "1234", "Dish 1", "Description", 15.59,
+                            imageURL = "",
+                            stock = 15,
+                            nutritionInfo = null,
+                            discountedPrice = 12.99,
+                            category = emptyList(),
+                            dateAdded = LocalDateTime(2026, 12, 12, 30, 30),
+                            popularityIndex = 55,
+                        )
                     )
                 )
             ), {})

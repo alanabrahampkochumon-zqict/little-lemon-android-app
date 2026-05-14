@@ -182,6 +182,7 @@
     <string name="no_delivery_address">No delivery address!</string>
     <string name="select_address_to_continue">Please select or add an address to proceed to checkout.</string>
     <string name="select_address">Select Address</string>
+    <string name="no_label_address">Unnamed address</string>
     <plurals name="heading_upcoming_reservation">
         <item quantity="one">Upcoming Reservation</item>
         <item quantity="other">Upcoming Reservations</item>

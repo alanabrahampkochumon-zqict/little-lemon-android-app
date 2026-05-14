@@ -18,15 +18,12 @@ import com.littlelemon.application.core.presentation.designsystem.LittleLemonThe
 import com.littlelemon.application.core.presentation.utils.applyShadow
 
 @Composable
-fun AddressCard(
+fun AddressViewCard(
     addressLabel: String,
     fullAddress: String,
     default: Boolean,
     selected: Boolean,
     modifier: Modifier = Modifier,
-    onSelect: () -> Unit = {},
-    onDelete: () -> Unit = {},
-    onEdit: () -> Unit = {},
 ) {
 
     val tagVariant = if (selected) TagVariant.SuccessLight else TagVariant.SuccessFilled
@@ -51,10 +48,9 @@ fun AddressCard(
             color = LittleLemonTheme.colors.contentTertiary
         )
         Spacer(modifier = Modifier.height(LittleLemonTheme.dimens.sizeLG))
-        Row() {
+        Row {
             if (default)
                 Tag(text = stringResource(R.string.default_tag), variant = tagVariant)
-            // TODO: Add actions
         }
     }
 }
@@ -69,13 +65,13 @@ private fun AddressCardPreview() {
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(12.dp)
         ) {
-            AddressCard(
+            AddressViewCard(
                 "Workplace", "16281 Washington Avenue,\nLincoln Park,\nChicago - 60614", true, true
             )
-            AddressCard(
+            AddressViewCard(
                 "Workplace", "16281 Washington Avenue,\nLincoln Park,\nChicago - 60614", true, false
             )
-            AddressCard(
+            AddressViewCard(
                 "Workplace",
                 "16281 Washington Avenue,\nLincoln Park,\nChicago - 60614",
                 false,

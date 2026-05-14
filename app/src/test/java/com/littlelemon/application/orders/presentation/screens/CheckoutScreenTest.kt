@@ -35,7 +35,9 @@ class CheckoutScreenTest {
     fun onClickBack_triggersCallback() = runTest {
         var callbackTriggered = false
         testRule.setContent {
-            CheckoutScreenRoot(cartDetailItems, { callbackTriggered = true })
+            CheckoutScreenRoot(
+                OrderScreenState(cartItems = cartDetailItems),
+                { callbackTriggered = true })
         }
 
         testRule.onNodeWithContentDescription(application.getString(R.string.back_to_cart))
